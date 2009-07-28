@@ -44,9 +44,9 @@ ddply(BodyWeight,.(Rat),summarise,mean=mean(weight))
 ## Conclusion: ddply is the most concise way of doing this.
 
 
-get.means <- function(d)ddply(d,.(groups),summarise,mx=mean(x),my=mean(y))
+get.means <- function(d,debug=F)ddply(d,.(groups),summarise,x=mean(x),y=mean(y))
 parallel.lines <- function(d,debug=F){
-  means <- get.means(d)
+  means <- rename(get.means(d),c(x="mx",y="my"))
   big <- merge(d,means,by="groups")
   fit <- lm(my~mx,means)
   b <- coef(fit)[1]
@@ -79,8 +79,8 @@ parallel.lines <- function(d,debug=F){
   }
   winners[,c("x","y","groups")]
 }
-empty.grid <- function(d,debug=F){
-  means <- get.means(d)
+empty.grid <- function(d,debug=F,loc.fun=get.means){
+  loc <- loc.fun(d,debug)
   gl <- function(v){
     s <- seq(from=min(d[,v]),to=max(d[,v]),l=10)
     list(centers=s,diff=(s[2]-s[1])/2)
@@ -96,17 +96,16 @@ empty.grid <- function(d,debug=F){
     c(data=sum(d$x%inside%c(left,right) & d$y%inside%c(bottom,top)))
   g3 <- transform(subset(mdply(g2,inbox),data==0))
   res <- data.frame()
-  for(v in means$groups){
-    r <- subset(means,groups==v)
-    len <- sqrt((r$mx-g3$x)^2+(r$my-g3$y)^2)
+  for(v in loc$groups){
+    r <- subset(loc,groups==v)
+    len <- sqrt((r$x-g3$x)^2+(r$y-g3$y)^2)
     i <- which.min(len) ## the box to use for this group
     res <- rbind(res,g3[i,c("x","y")])
     g3 <- g3[-i,]
   }
-  cbind(res,groups=means$groups)
+  cbind(res,groups=loc$groups)
 }
 direct.labels <- function(x,y,subscripts,groups,debug=F,method=parallel.lines,...){
-  browser()
   panel.superpose(x,y,subscripts,groups,...)
   groups <- groups[subscripts]
   d <- data.frame(x,y,groups)
@@ -122,13 +121,35 @@ direct.labels <- function(x,y,subscripts,groups,debug=F,method=parallel.lines,..
             just=just,
             default.units="native")
 }
+empty.grid.2 <- function(d,debug)empty.grid(d,debug,parallel.lines)
 library(ggplot2)
 data(mpg)
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
-xyplot(.resid~.fitted,mpgf,groups=factor(cyl),method=empty.grid,
-       panel=direct.labels)
-
+xyplot(.resid~.fitted,mpgf,groups=factor(cyl),method=get.means,panel=direct.labels)
+xyplot(.resid~.fitted,mpgf,groups=factor(cyl),method=parallel.lines,panel=direct.labels)
+xyplot(.resid~.fitted,mpgf,groups=factor(cyl),method=empty.grid,panel=direct.labels)
+xyplot(.resid~.fitted,mpgf,groups=factor(cyl),method=empty.grid.2,panel=direct.labels)
+xyplot(.resid~.fitted,mpgf,groups=factor(class),method=get.means,panel=direct.labels)
+xyplot(.resid~.fitted,mpgf,groups=factor(class),method=parallel.lines,panel=direct.labels)
+xyplot(.resid~.fitted,mpgf,groups=factor(class),method=empty.grid,panel=direct.labels)
+xyplot(.resid~.fitted,mpgf,groups=factor(class),method=empty.grid.2,panel=direct.labels)
+## there are 4 methods so far for placement of group labels on a
+## scatterplot:
+meth.list <- c("get.means","parallel.lines","empty.grid","empty.grid.2")
+compare.methods <- function(m){
+  newpage <- T
+  L <- length(m)
+  for(i in seq_along(m)){
+    FUN <- get(m[i])
+    P <- xyplot(.resid~.fitted,mpgf,main=m[i],
+                groups=factor(class),method=FUN,panel=direct.labels)
+    plot(P,split=c(1,i,1,L),newpage=newpage)
+    newpage <- FALSE
+  }
+}
+debug(compare.methods)
+compare.methods(meth.list)
 
 first.point <- function(d,debug=F){
   ddply(d,.(groups),summarise,x=x[1],y=y[1])
