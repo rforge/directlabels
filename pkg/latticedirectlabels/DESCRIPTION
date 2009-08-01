@@ -1,0 +1,7 @@
+Package: latticedl
+Maintainer: Toby Dylan Hocking <toby.hocking@etu.upmc.fr>
+Author: Toby Dylan Hocking
+Version: 1.0
+License: GPL-3
+Title: Lattice direct labels
+Description: Direct label panel functions for the lattice package.
