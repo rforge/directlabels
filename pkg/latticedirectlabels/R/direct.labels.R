@@ -63,9 +63,10 @@ dl <- function
  ){
   m <- match.call()
   if(is.null(panel))panel <- get(paste("panel.",m$p,sep=""))
+  type <- if(is.null(m$type))"" else m$type
   if(is.null(method))method <- 
     switch(paste(m$p),
-           xyplot=empty.grid.2,
+           xyplot=switch(type,l=first.points,empty.grid.2),
            densityplot=top.points,
            stop("No default direct label placement method for ",
                 m$p,".\nPlease specify method."))
