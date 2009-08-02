@@ -82,7 +82,7 @@ compare.methods <- function(m){
 dl.panel <- function
 ### Convert a normal panel into a direct label panel function
 (panel
-## The panel function to transform.
+### The panel function to transform.
  ){
   function(...){
     panel(...)
@@ -112,7 +112,6 @@ direct.labels <- function
   groups <- groups[subscripts]
   d <- data.frame(x,y,groups)
   labs <- method(d,debug)
-  print(labs)
   just <- labs$just
   if(is.null(just))just <- "centre"
   Col <-
@@ -133,6 +132,8 @@ dl <- function
 ### Plot formula to be passed to lattice.
  groups,
 ### To pass to high-level plot function.
+ method=NULL,
+### Method for direct labeling --- this is a function that accepts 2 arguments: d a data frame of the points to plot with columns x y groups, and debug a logical flag indicating if debug output should be shown. NULL indicates to make a logical choice based on the high-level plot function chosen.
  panel=NULL,
 ### Panel function to use. Defaults to corresponding default panel
 ### function for the high-level plot function.
@@ -141,12 +142,19 @@ dl <- function
  ){
   m <- match.call()
   if(is.null(panel))panel <- get(paste("panel.",m$p,sep=""))
+  if(is.null(method))method <- 
+    switch(paste(m$p),
+           xyplot=empty.grid.2
+           )
+  pdx <- dl.panel(panel)
+  m$panel <- pdx
+  m$method <- method
   m[[1]] <- m[[2]]
   eval(m[-2])
 }
-library(proto,lib="~/lib")
-library(ggplot2,lib="~/lib")
+library(proto)#,lib="~/lib")
+library(ggplot2)#,lib="~/lib")
 data(mpg)
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
-dl(xyplot,mpgf,.resid~.fitted,factor(cyl))
+plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),panel=function(...){panel.abline(1);panel.xyplot(...)},main="foobar2",method=parallel.lines))
