@@ -2,8 +2,12 @@
 ### scatterplot
 meth.list <- c("get.means","parallel.lines","empty.grid","empty.grid.2")
 
-compare.methods <- function(m){
-  newpage <- T
+compare.methods <- function
+### Plot several label placement methods on the same page.
+(m
+### Vector of label placement function names.
+ ){
+  newpage <- TRUE
   L <- length(m)
   for(i in seq_along(m)){
     FUN <- get(m[i])

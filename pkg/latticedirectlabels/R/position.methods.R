@@ -59,11 +59,12 @@ empty.grid <- function
 ### Function that takes d and returns a data frame with 1 column for each group, giving the point we will use to look for a close point on the grid, to put the group label.
  ){
   loc <- loc.fun(d,debug)
+  NREP <- 10
   gl <- function(v){
-    s <- seq(from=min(d[,v]),to=max(d[,v]),l=10)
+    s <- seq(from=min(d[,v]),to=max(d[,v]),l=NREP)
     list(centers=s,diff=(s[2]-s[1])/2)
   }
-  L <- sapply(c("x","y"),gl,simplify=F)
+  L <- sapply(c("x","y"),gl,simplify=FALSE)
   g <- expand.grid(x=L$x$centers,y=L$y$centers)
   g2 <- transform(g,
                   left=x-L$x$diff,
@@ -72,15 +73,21 @@ empty.grid <- function
                   bottom=y-L$y$diff)
   inbox <- function(x,y,left,right,top,bottom)
     c(data=sum(d$x%inside%c(left,right) & d$y%inside%c(bottom,top)))
-  g3 <- transform(subset(mdply(g2,inbox),data==0))
+  count.tab <- cbind(mdply(g2,inbox),expand.grid(i=1:NREP,j=1:NREP))
+  count.mat <- matrix(count.tab$data,nrow=NREP,ncol=NREP,
+                      byrow=TRUE,dimnames=list(1:NREP,1:NREP))[NREP:1,]
+  mode(count.mat) <- "character"
+  g3 <- transform(subset(count.tab,data==0))
   res <- data.frame()
   for(v in loc$groups){
     r <- subset(loc,groups==v)
     len <- sqrt((r$x-g3$x)^2+(r$y-g3$y)^2)
     i <- which.min(len) ## the box to use for this group
+    count.mat[as.character(g3[i,"j"]),as.character(g3[i,"i"])] <- paste("*",v,sep="")
     res <- rbind(res,g3[i,c("x","y")])
     g3 <- g3[-i,]
   }
+  if(debug)print(count.mat)
   cbind(res,groups=loc$groups)
 ### Data frame with columns groups x y, 1 line for each group, giving the positions on the grid closest to each cluster.
 }
