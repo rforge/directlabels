@@ -32,15 +32,15 @@ direct.labels <- function
   d <- data.frame(x,groups)
   if(!missing(y))d$y <- y
   labs <- method(d,debug)
+  for(p in c("hjust","vjust"))
+    labs[,p] <- if(p %in% names(labs))as.character(labs[,p]) else 0.5
   print(labs)
-  just <- labs$just
-  if(is.null(just))just <- "centre"
   Col <-
     if("col"%in%names(labs))labs$col
     else trellis.par.get("superpose.symbol")$col #FIXME
   grid.text(labs$groups,labs$x,labs$y,
             gp=gpar(col=Col),
-            just=just,
+            hjust=labs$hjust,vjust=labs$vjust,
             default.units="native")
 }
 dl <- function
