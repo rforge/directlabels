@@ -99,15 +99,3 @@ dl <- function
   print(m)
   eval(m)
 }
-dl.indep <- function
-### makes a function you can use to specify the location of each group
-### independently.
-(FUN
-### function that takes a subset of the d data frame, with data from
-### only a single group, and returns the direct label position.
- ){
-  function(d,debug){
-    ddply(d,.(groups),FUN,debug)
-  }
-### The constructed label position function.
-}
