@@ -6,4 +6,4 @@ mpgf <- fortify(m,mpg)
 plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),
         panel=function(...){panel.abline(1);panel.xyplot(...)},main="foobar2",
         method=parallel.lines))
-plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),debug=T))
+plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),debug=TRUE))

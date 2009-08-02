@@ -4,14 +4,40 @@ dl.panel <- function
 ### The panel function to transform.
  ){
   function(...){
-    panel(...)
-    direct.labels(...)
+    panel.superpose(panel.groups=panel,...)
+    labs <- direct.labels(...)
+    panel.superpose(panel.groups=dl.text,labs=labs,...)
   }
 ### A new panel function that first calls panel, then calls
 ### direct.labels.
 }
+dl.text <- function
+(labs,
+### table of labels and positions constructed by direct.labels
+ group.number,
+### which group we are currently plotting, according to levels(labs$groups)
+ col.line=NULL,
+### line color
+ col.points=NULL,
+### point color
+ col=NULL,
+### general color
+ col.symbol=NULL,
+### symbol color
+ type=NULL,
+### plot type
+ ...){
+### ignored
+  ##print(cbind(col,col.line,col.points,col.symbol,type))
+  col.text <- switch(type,p=col.symbol,l=col.line,col.line)
+  g <- labs[levels(labs$groups)[group.number]==labs$groups,]
+  grid.text(g$groups,g$x,g$y,
+            hjust=g$hjust,vjust=g$vjust,
+            gp=gpar(col=col.text),
+            default.units="native")
+}
 direct.labels <- function
-### Panel function that draws text labels for groups.
+### Calculates table of positions of each label for each panel.
 (x,
 ### x values of points to draw.
  y,
@@ -31,17 +57,12 @@ direct.labels <- function
   groups <- groups[subscripts]
   d <- data.frame(x,groups)
   if(!missing(y))d$y <- y
-  labs <- method(d,debug)
+  labs <- try(method(d,debug))
+  if(class(labs)=="try-error")stop("direct label placement method failed")
   for(p in c("hjust","vjust"))
     labs[,p] <- if(p %in% names(labs))as.character(labs[,p]) else 0.5
   print(labs)
-  Col <-
-    if("col"%in%names(labs))labs$col
-    else trellis.par.get("superpose.symbol")$col #FIXME
-  grid.text(labs$groups,labs$x,labs$y,
-            gp=gpar(col=Col),
-            hjust=labs$hjust,vjust=labs$vjust,
-            default.units="native")
+  labs
 }
 dl <- function
 ### Lattice plot using direct labels.
@@ -88,4 +109,5 @@ dl.indep <- function
   function(d,debug){
     ddply(d,.(groups),FUN,debug)
   }
+### The constructed label position function.
 }
