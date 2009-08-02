@@ -1,50 +1,5 @@
-library(lattice)
-library(grid)
-library(nlme)
-data(BodyWeight)
-loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
-                   type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
-top.points <- function(...){
-  browser()
-}
-direct.labels <- function(x, ..., group.number) {
-  panel.densityplot(x=x, ...)
-  d <- density(x)
-  maxy <- which.max(d$y)
-  grid.text(levels(loci$type)[group.number],
-            d$x[maxy], d$y[maxy],
-            default.units="native",just="bottom")
-}
-densityplot(~ppp,loci,groups = type,panel = direct.labels,
-            method=top.points,
-            show.points=F,n=500)
-direct.labels2 <- function(x,y,...,group.number){
-  panel.xyplot(x=x,y=y,...)
-  i <- 1
-  f <- get("groups",env=parent.frame())
-  lab <- levels(f)[group.number]
-  grid.text(lab,x[i],y[i],default.units="native",just="right")
-}
-
-
-
-
-
-
-
-
-
-## verify if we matched everything up right
-sapply(levels(BodyWeight$Rat),function(id)length(BodyWeight[BodyWeight$Rat==id,"weight"]))
-reshape(BodyWeight,idvar=c("Rat","Diet"),timevar="Time",dir="wide")
-
-
-library(plyr)
-ddply(BodyWeight,.(Rat),summarise,mean=mean(weight))
-## Conclusion: ddply is the most concise way of doing this.
-
-
-get.means <- function(d,debug=F)ddply(d,.(groups),summarise,x=mean(x),y=mean(y))
+get.means <- function(d,debug=F)
+  ddply(d,.(groups),summarise,x=mean(x),y=mean(y))
 parallel.lines <- function(d,debug=F){
   means <- rename(get.means(d),c(x="mx",y="my"))
   big <- merge(d,means,by="groups")
@@ -105,8 +60,55 @@ empty.grid <- function(d,debug=F,loc.fun=get.means){
   }
   cbind(res,groups=loc$groups)
 }
-direct.labels <- function(x,y,subscripts,groups,debug=F,method=parallel.lines,...){
-  panel.superpose(x,y,subscripts,groups,...)
+empty.grid.2 <- function(d,debug)empty.grid(d,debug,parallel.lines)
+
+### there are 4 methods so far for placement of group labels on a
+### scatterplot
+meth.list <- c("get.means","parallel.lines","empty.grid","empty.grid.2")
+
+compare.methods <- function(m){
+  newpage <- T
+  L <- length(m)
+  for(i in seq_along(m)){
+    FUN <- get(m[i])
+    P <- xyplot(.resid~.fitted,mpgf,main=m[i],
+                groups=factor(class),method=FUN,panel=direct.labels)
+    plot(P,split=c(1,i,1,L),newpage=newpage)
+    newpage <- FALSE
+  }
+}
+##compare.methods(meth.list)
+
+dl.panel <- function
+### Convert a normal panel into a direct label panel function
+(panel
+## The panel function to transform.
+ ){
+  function(...){
+    panel(...)
+    direct.labels(...)
+  }
+### A new panel function that first calls panel, then calls
+### direct.labels.
+}
+direct.labels <- function
+### Panel function that draws text labels for groups.
+(x,
+### x values of points to draw.
+ y,
+### y values of points to draw.
+ subscripts,
+### subscripts of groups to consider.
+ groups,
+### vector of groups.
+ debug=FALSE,
+### logical indicating whether debug annotations should be added to
+### the plot.
+ method=parallel.lines,
+### function used to choose position of labels.
+ ...
+### ignored.
+ ){
   groups <- groups[subscripts]
   d <- data.frame(x,y,groups)
   labs <- method(d,debug)
@@ -121,38 +123,30 @@ direct.labels <- function(x,y,subscripts,groups,debug=F,method=parallel.lines,..
             just=just,
             default.units="native")
 }
-empty.grid.2 <- function(d,debug)empty.grid(d,debug,parallel.lines)
-library(ggplot2)
+dl <- function
+### Lattice plot using direct labels.
+(p,
+### High-level lattice plot function to use.
+ data,
+### Data set to be passed to lattice.
+ x,
+### Plot formula to be passed to lattice.
+ groups,
+### To pass to high-level plot function.
+ panel=NULL,
+### Panel function to use. Defaults to corresponding default panel
+### function for the high-level plot function.
+ ...
+### Other arguments to pass to the high-level plot function.
+ ){
+  m <- match.call()
+  if(is.null(panel))panel <- get(paste("panel.",m$p,sep=""))
+  m[[1]] <- m[[2]]
+  eval(m[-2])
+}
+library(proto,lib="~/lib")
+library(ggplot2,lib="~/lib")
 data(mpg)
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
-xyplot(.resid~.fitted,mpgf,groups=factor(cyl),method=get.means,panel=direct.labels)
-xyplot(.resid~.fitted,mpgf,groups=factor(cyl),method=parallel.lines,panel=direct.labels)
-xyplot(.resid~.fitted,mpgf,groups=factor(cyl),method=empty.grid,panel=direct.labels)
-xyplot(.resid~.fitted,mpgf,groups=factor(cyl),method=empty.grid.2,panel=direct.labels)
-xyplot(.resid~.fitted,mpgf,groups=factor(class),method=get.means,panel=direct.labels)
-xyplot(.resid~.fitted,mpgf,groups=factor(class),method=parallel.lines,panel=direct.labels)
-xyplot(.resid~.fitted,mpgf,groups=factor(class),method=empty.grid,panel=direct.labels)
-xyplot(.resid~.fitted,mpgf,groups=factor(class),method=empty.grid.2,panel=direct.labels)
-## there are 4 methods so far for placement of group labels on a
-## scatterplot:
-meth.list <- c("get.means","parallel.lines","empty.grid","empty.grid.2")
-compare.methods <- function(m){
-  newpage <- T
-  L <- length(m)
-  for(i in seq_along(m)){
-    FUN <- get(m[i])
-    P <- xyplot(.resid~.fitted,mpgf,main=m[i],
-                groups=factor(class),method=FUN,panel=direct.labels)
-    plot(P,split=c(1,i,1,L),newpage=newpage)
-    newpage <- FALSE
-  }
-}
-debug(compare.methods)
-compare.methods(meth.list)
-
-first.point <- function(d,debug=F){
-  ddply(d,.(groups),summarise,x=x[1],y=y[1])
-}
-xyplot(weight~Time|Diet,BodyWeight,type='l',groups=Rat,layout=c(3,1),
-       panel=direct.labels,method=first.point)
+dl(xyplot,mpgf,.resid~.fitted,factor(cyl))

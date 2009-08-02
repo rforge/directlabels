@@ -5,3 +5,4 @@ Version: 1.0
 License: GPL-3
 Title: Lattice direct labels
 Description: Direct label panel functions for the lattice package.
+Depends: plyr, lattice, grid
