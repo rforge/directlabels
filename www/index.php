@@ -112,6 +112,14 @@ dl(xyplot,bw,weight~Time|Diet,Rat,
 </pre>
 <img src="longitudinal-custom.png" />
 
+<h2>Comparing methods for label positioning on scatterplots</h2>
+<pre>
+library(latticedl)
+compare.methods(meth.list)
+## specify method with dl(...,method="empty.grid")
+</pre>
+<img src="compare.png" />
+
 
 <p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
