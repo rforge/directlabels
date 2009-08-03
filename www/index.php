@@ -18,10 +18,10 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
   <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title><?php echo $group_name; ?></title>
-	<link href="<?php echo $themeroot; ?>styles/estilo1.css" rel="stylesheet" type="text/css" />
+	<link href="estilo1.css" rel="stylesheet" type="text/css" />
   </head>
 
-<body>
+<body class="normal">
 
 <!-- R-Forge Logo
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -73,13 +73,14 @@ is inherently more intuitive and obvious to decode.</p>
 Direct labeling is a lot of tedious work! I can live with these shitty
 legends!"</p>
 
-<p><b>Don't live with confusing legends any longer. Instead, use
-direct labels.</b> This package is an attempt to make direct labeling
+<h2>Don't live with confusing legends any longer. Instead, use
+direct labels.</h2>
+
+<p>This package is an attempt to make direct labeling
 a reality in everyday statistical practice by making available a body
 of useful functions that make direct labeling of common plots easy to
 do. The first working examples are based on lattice graphics:</p>
 
-<h2>Density estimates for some simulated PPP-values under 3 conditions</h2>
 <pre>
 library(latticedl)
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
@@ -104,7 +105,7 @@ problems</h2>
 labels based on the data points. This is done by the Positioning
 Function, specified by the method= argument to dl.</li>
 
-<li><b>Drawing the labels.</b> We will always take care of drawing the
+<li><b>Drawing the labels:</b> we will always take care of drawing the
 labels for you, using the right color.</li>
 
 </ul>
