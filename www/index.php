@@ -115,11 +115,16 @@ dl(xyplot,bw,weight~Time|Diet,Rat,
 <h2>Comparing methods for label positioning on scatterplots</h2>
 <pre>
 library(latticedl)
-compare.methods(meth.list)
-## specify method with dl(...,method="empty.grid")
+compare.methods(c("get.means","parallel.lines","empty.grid","empty.grid.2"),
+                xyplot,mpgf,.resid~.fitted,factor(class))
 </pre>
 <img src="compare.png" />
 
+<pre>
+compare.methods(c("first.points","last.points"),
+                xyplot,BodyWeight,weight~Time|Diet,Rat,type="l",layout=c(3,1))
+</pre>
+<img src="compare-long.png" />
 
 <p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
