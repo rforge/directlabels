@@ -42,5 +42,11 @@ pdfpng("longitudinal-custom",
 
 source("compare.R")
 png("compare.png",h=1000,w=500)
-compare.methods(meth.list)
+compare.methods(c("get.means","parallel.lines","empty.grid","empty.grid.2"),
+                xyplot,mpgf,.resid~.fitted,factor(class))
+dev.off()
+
+png("compare-long.png",h=800,w=1000)
+compare.methods(c("first.points","last.points"),
+                xyplot,BodyWeight,weight~Time|Diet,Rat,type="l",layout=c(3,1))
 dev.off()

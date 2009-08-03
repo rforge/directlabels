@@ -123,7 +123,19 @@ first <- function
 ### Data frame with 1 row
 }
 ### For multiple time series or longitudinal data
+last <- function
+### Return the last data point in d as a data frame. This works for time series data when already sorted and separated into groups.
+(d,
+### Data frame with columns x y
+ debug=FALSE
+### Show debug graphics?
+ ){
+  data.frame(d[nrow(d),c("x","y")],hjust=0,vjust=0.5)
+### Data frame with 1 row
+}
+### For multiple time series or longitudinal data
 first.points <- dl.indep(first)
+last.points <- dl.indep(last)
 
 most.likely <- function
 ### Considering a density estimate of d$x, return the most likely point.
