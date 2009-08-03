@@ -142,6 +142,10 @@ each group.</p>
 lattice graphics framework, but we can use Positioning Functions with
 other plotting frameworks, i.e. ggplot2.</p>
 
+<p>Please send email to <a
+href="http://r-forge.r-project.org/sendmessage.php?touser=1571">Toby
+Dylan Hocking</a> if you are using this package, thanks!</p>
+
 <p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
 </body>
