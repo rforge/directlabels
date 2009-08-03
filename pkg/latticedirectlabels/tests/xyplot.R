@@ -1,18 +1,10 @@
+library(latticedl)
 library(proto)
 library(ggplot2)
 data(mpg)
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
-p <- dl(xyplot,mpgf,.resid~.fitted,factor(cyl))
-pdfpng <- function(N,P,...){
-  pdf.file <- paste(N,".pdf",sep="")
-  png.file <- paste(N,".png",sep="")
-  pdf(pdf.file,...)
-  plot(P)
-  dev.off()
-  system(paste("convert",pdf.file,png.file))
-}
-pdfpng("scatter",p)
+plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl)))
 
 plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),
         panel=function(...){panel.abline(1);panel.xyplot(...)},

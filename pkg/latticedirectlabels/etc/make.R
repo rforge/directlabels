@@ -1,0 +1,42 @@
+pdfpng <- function(N,P,...){
+  pdf.file <- paste(N,".pdf",sep="")
+  png.file <- paste(N,".png",sep="")
+  pdf(pdf.file,...)
+  plot(P)
+  dev.off()
+  system(paste("convert",pdf.file,png.file))
+  system(paste("display",png.file,"&"))
+}
+
+library(lattice)
+library(proto)
+library(ggplot2)
+data(mpg)
+m <- lm(cty~displ,data=mpg)
+mpgf <- fortify(m,mpg)
+pdfpng("scatter",dl(xyplot,mpgf,.resid~.fitted,factor(cyl)))
+
+loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
+                   type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
+pdfpng("density",dl(densityplot,loci,~ppp,type,n=500))
+
+data(BodyWeight,package="nlme")
+pdfpng("longitudinal",dl(xyplot,BodyWeight,weight~Time|Diet,Rat,
+                         type='l',layout=c(3,1)),h=7,w=14)
+
+## Say we want to use a simple linear model to explain rat body weight:
+fit <- lm(weight~Time+Diet+Rat,BodyWeight)
+bw <- fortify(fit,BodyWeight)
+## And we want to use this panel function to display the model fits:
+panel.model <- function(x,subscripts,col.line,...){
+  panel.xyplot(x=x,subscripts=subscripts,col.line=col.line,...)
+  llines(x,bw[subscripts,".fitted"],col=col.line,lty=2)
+}
+## Just specify the custom panel function as usual:
+dl(xyplot,bw,weight~Time|Diet,Rat,
+   type='l',layout=c(3,1),panel=panel.model)
+pdfpng("longitudinal-custom",
+       dl(xyplot,bw,weight~Time|Diet,Rat,
+          type='l',layout=c(3,1),panel=panel.model)
+       ,h=7,w=14)
+
