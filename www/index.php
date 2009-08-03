@@ -75,7 +75,7 @@ dl(densityplot,loci,~ppp,type,
 </pre>
 <img src="density.png" />
 
-<h2>Longitudinal data for body weight of 18 rats and 3 different medical treatments</h2>
+<h2>Longitudinal data for body weight of 16 rats and 3 different medical treatments</h2>
 <pre>
 library(latticedl)
 data(BodyWeight,package="nlme")
@@ -92,10 +92,25 @@ library(latticedl)
 data(mpg)
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
-plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl)))
+dl(xyplot,mpgf,.resid~.fitted,factor(cyl))
 </pre>
 <img src="scatter.png" />
 
+<h2>Custom panel function for the rat body weight data</h2>
+<pre>
+## Say we want to use a simple linear model to explain rat body weight:
+fit <- lm(weight~Time+Diet+Rat,BodyWeight)
+bw <- fortify(fit,BodyWeight)
+## And we want to use this panel function to display the model fits:
+panel.model <- function(x,subscripts,col.line,...){
+  panel.xyplot(x=x,subscripts=subscripts,col.line=col.line,...)
+  llines(x,bw[subscripts,".fitted"],col=col.line,lty=2)
+}
+## Just specify the custom panel function as usual:
+dl(xyplot,bw,weight~Time|Diet,Rat,
+   type='l',layout=c(3,1),panel=panel.model)
+</pre>
+<img src="longitudinal-custom.png" />
 
 
 <p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
