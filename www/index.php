@@ -54,16 +54,30 @@ variable?</p>
 <p>In most statistical packages the answer to this question is given
 by a <b>legend or key</b> that you have to decode. <b>This sucks</b>
 because it can be at best, hard to decode, or at worst, downright
-confusing.</p>
+confusing. Here's an example <b>that sucks:</b></p>
 
-<p><b>Instead, use direct labels.</b> That is, just put the label
-right next to the color lines/points, in the same color. So then it's
-obvious and clear what you're plotting.</p>
+<pre>
+library(lattice)
+loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
+                   type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
+densityplot(~ppp,loci,groups = type,auto.key=list(space="top",columns=3))
+</pre>
+<img src="confusing.png" />
 
-<p>This package is an attempt to make direct labeling a reality in
-everyday statistical practice by making available a body of useful
-functions that make direct labeling of common plots easy to do. The
-first working examples are based on lattice graphics:</p>
+<p>Look closely. Is the curve for BAL on the left or right? An easy
+fix for this problem would be putting the label right next to the
+colored lines. Then we're using the data for label positioning, which
+is inherently more intuitive and obvious to decode.</p>
+
+<p>"But," you say, "lattice makes it so easy to makes these legends!
+Direct labeling is a lot of tedious work! I can live with these shitty
+legends!"</p>
+
+<p><b>Don't live with confusing legends any longer. Instead, use
+direct labels.</b> This package is an attempt to make direct labeling
+a reality in everyday statistical practice by making available a body
+of useful functions that make direct labeling of common plots easy to
+do. The first working examples are based on lattice graphics:</p>
 
 <h2>Density estimates for some simulated PPP-values under 3 conditions</h2>
 <pre>
@@ -74,57 +88,58 @@ dl(densityplot,loci,~ppp,type,
    n=500)
 </pre>
 <img src="density.png" />
+<p>
+<a href="examples.php">More examples...</a>
+</p>
 
-<h2>Longitudinal data for body weight of 16 rats and 3 different medical treatments</h2>
+<h2>An extensible framework for thinking about direct labeling
+problems</h2>
+
+<p> Direct labeling a plot basically consists of 2 steps:
+</p>
+
+<ul> 
+
+<li><b>Label positioning:</b> calculating where you want to put the
+labels based on the data points. This is done by the Positioning
+Function, specified by the method= argument to dl.</li>
+
+<li><b>Drawing the labels.</b> We will always take care of drawing the
+labels for you, using the right color.</li>
+
+</ul>
+
+<p>Label positioning is something that changes from graphic to
+graphic. Thus we introduce the concept of a Positioning
+Function. Change the Positioning Function, and you change the position
+of your direct labels. For example, we can label longitudinal data
+either on the left or right of the lines, using included Positioning
+Functions as follows:</p>
+
 <pre>
 library(latticedl)
 data(BodyWeight,package="nlme")
-dl(xyplot,BodyWeight,weight~Time|Diet,Rat,
-   type='l',layout=c(3,1))
-</pre>
-<img src="longitudinal.png" />
-
-<h2>Residuals versus fitted values for a linear model for some cars, grouped by number of cylinders in the engine</h2>
-<pre>
-library(proto)
-library(ggplot2)
-library(latticedl)
-data(mpg)
-m <- lm(cty~displ,data=mpg)
-mpgf <- fortify(m,mpg)
-dl(xyplot,mpgf,.resid~.fitted,factor(cyl))
-</pre>
-<img src="scatter.png" />
-
-<h2>Custom panel function for the rat body weight data</h2>
-<pre>
-## Say we want to use a simple linear model to explain rat body weight:
-fit <- lm(weight~Time+Diet+Rat,BodyWeight)
-bw <- fortify(fit,BodyWeight)
-## And we want to use this panel function to display the model fits:
-panel.model <- function(x,subscripts,col.line,...){
-  panel.xyplot(x=x,subscripts=subscripts,col.line=col.line,...)
-  llines(x,bw[subscripts,".fitted"],col=col.line,lty=2)
-}
-## Just specify the custom panel function as usual:
-dl(xyplot,bw,weight~Time|Diet,Rat,
-   type='l',layout=c(3,1),panel=panel.model)
-</pre>
-<img src="longitudinal-custom.png" />
-
-<h2>Comparing methods for label positioning on scatterplots</h2>
-<pre>
-library(latticedl)
-compare.methods(c("get.means","parallel.lines","empty.grid","empty.grid.2"),
-                xyplot,mpgf,.resid~.fitted,factor(class))
-</pre>
-<img src="compare.png" />
-
-<pre>
-compare.methods(c("first.points","last.points"),
-                xyplot,BodyWeight,weight~Time|Diet,Rat,type="l",layout=c(3,1))
+dl(xyplot,BodyWeight,weight~Time|Diet,Rat,type="l",layout=c(3,1),
+   method=first.points)
+dl(xyplot,BodyWeight,weight~Time|Diet,Rat,type="l",layout=c(3,1),
+   method=last.points)
 </pre>
 <img src="compare-long.png" />
+
+<p>The package comes with several built-in positioning functions, and
+tries to choose the best one to use based on your choice of high-level
+lattice function. The defaults can't be right for every one of your
+graphs, but you can always make the labels appear at the right place
+by writing your own Positioning Functions tailored to your data. If
+you want to position your labels yourself, write a Positioning
+Function that takes the input data points as a data frame with columns
+<tt>x y groups</tt>, and returns a data frame with columns <tt>x y
+groups</tt> that describes where the labels should be positioned for
+each group.</p>
+
+<p>Also note that the drawing functions are totally linked to the
+lattice graphics framework, but we can use Positioning Functions with
+other plotting frameworks, i.e. ggplot2.</p>
 
 <p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
