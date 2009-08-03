@@ -4,10 +4,12 @@
 \title{compare.methods}
 \description{Plot several label placement methods on the same page.}
 \usage{
-compare.methods(m)
+compare.methods(m, ...)
 }
 \arguments{
   \item{m}{Vector of label placement function names.}
+  \item{\dots}{
+}
 }
 \details{
 }

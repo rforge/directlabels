@@ -9,9 +9,9 @@ plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl)))
 plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),
         panel=function(...){panel.abline(1);panel.xyplot(...)},
         main="foobar2",
-        method=parallel.lines))
+        method=perpendicular.lines))
 plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),debug=TRUE))
-## Should fail: (default method includes parallel line calculation, which makes no sense for only 1 group per panel
+## Should fail: (default method includes perpendicular line calculation, which makes no sense for only 1 group per panel
 plot(dl(xyplot,mpgf,.resid~.fitted|cyl,factor(cyl)))
 ## Should work, but not very informative:
 plot(dl(xyplot,mpgf,.resid~.fitted|cyl,factor(cyl),method=empty.grid))

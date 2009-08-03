@@ -4,7 +4,7 @@
 \title{direct.labels}
 \description{Calculates table of positions of each label for each panel.}
 \usage{
-direct.labels(x, y, subscripts, groups, debug = FALSE, method = parallel.lines, ...)
+direct.labels(x, y, subscripts, groups, debug = FALSE, method = perpendicular.lines, ...)
 }
 \arguments{
   \item{x}{x values of points to draw.}

@@ -12,6 +12,9 @@ dl.panel <- function
 ### direct.labels.
 }
 dl.text <- function
+### To be used as panel.groups= argument in panel.superpose. Analyzes
+### arguments to determine correct text color for this group, and then
+### draws the direct label text.
 (labs,
 ### table of labels and positions constructed by direct.labels
  group.number,
@@ -26,8 +29,9 @@ dl.text <- function
 ### symbol color
  type=NULL,
 ### plot type
- ...){
+ ...
 ### ignored
+ ){
   ##print(cbind(col,col.line,col.points,col.symbol,type))
   col.text <- switch(type,p=col.symbol,l=col.line,col.line)
   g <- labs[levels(labs$groups)[group.number]==labs$groups,]
@@ -49,7 +53,7 @@ direct.labels <- function
  debug=FALSE,
 ### logical indicating whether debug annotations should be added to
 ### the plot.
- method=parallel.lines,
+ method=perpendicular.lines,
 ### function used to choose position of labels.
  ...
 ### ignored.

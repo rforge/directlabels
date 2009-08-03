@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{empty.grid.2}
 \title{empty.grid.2}
-\description{Use the parallel lines method in combination with the empty grid method.}
+\description{Use the perpendicular lines method in combination with the empty grid method.}
 \usage{
 empty.grid.2(d, debug)
 }

@@ -42,7 +42,7 @@ pdfpng("longitudinal-custom",
 
 source("compare.R")
 png("compare.png",h=1000,w=500)
-compare.methods(c("get.means","parallel.lines","empty.grid","empty.grid.2"),
+compare.methods(c("get.means","perpendicular.lines","empty.grid","empty.grid.2"),
                 xyplot,mpgf,.resid~.fitted,factor(class))
 dev.off()
 

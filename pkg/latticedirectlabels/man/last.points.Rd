@@ -1,10 +1,10 @@
-\name{top.points}
+\name{last.points}
 \Rdversion{1.1}
-\alias{top.points}
-\title{top.points}
-\description{For density plots}
+\alias{last.points}
+\title{last.points}
+\description{Position Function for labeling last points of longitudinal data}
 \usage{
-top.points(d, debug)
+last.points(d, debug)
 }
 \arguments{
   \item{d}{

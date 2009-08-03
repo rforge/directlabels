@@ -2,8 +2,7 @@
 \Rdversion{1.1}
 \alias{dl.text}
 \title{dl.text}
-\description{
-}
+\description{To be used as panel.groups= argument in panel.superpose. Analyzes arguments to determine correct text color for this group, and then draws the direct label text.}
 \usage{
 dl.text(labs, group.number, col.line = NULL, col.points = NULL, col = NULL, col.symbol = NULL, type = NULL, ...)
 }

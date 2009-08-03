@@ -2,8 +2,7 @@
 \Rdversion{1.1}
 \alias{first.points}
 \title{first.points}
-\description{
-}
+\description{Position Function for labeling first points of longitudinal data}
 \usage{
 first.points(d, debug)
 }

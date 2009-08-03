@@ -8,7 +8,7 @@ get.means <- function
   ddply(d,.(groups),summarise,x=mean(x),y=mean(y))
 ### data frame with groups x y, 1 row for each group, with the calculated mean values
 }
-parallel.lines <- function
+perpendicular.lines <- function
 ### Draw a line between the centers of each cluster, then draw a perpendicular line for each cluster that goes through its center. For each cluster, return the point the lies furthest out along this line.
 (d,
 ### data frame with groups x y
@@ -92,12 +92,12 @@ empty.grid <- function
 ### Data frame with columns groups x y, 1 line for each group, giving the positions on the grid closest to each cluster.
 }
 empty.grid.2 <- function
-### Use the parallel lines method in combination with the empty grid method.
+### Use the perpendicular lines method in combination with the empty grid method.
 (d,
 ### Data frame with columns groups x y
  debug
 ### Show debugging graphics on the plot?
- )empty.grid(d,debug,parallel.lines)
+ )empty.grid(d,debug,perpendicular.lines)
 
 dl.indep <- function
 ### Makes a function you can use to specify the location of each group
@@ -133,8 +133,9 @@ last <- function
   data.frame(d[nrow(d),c("x","y")],hjust=0,vjust=0.5)
 ### Data frame with 1 row
 }
-### For multiple time series or longitudinal data
+### Position Function for labeling first points of longitudinal data
 first.points <- dl.indep(first)
+### Position Function for labeling last points of longitudinal data
 last.points <- dl.indep(last)
 
 most.likely <- function
