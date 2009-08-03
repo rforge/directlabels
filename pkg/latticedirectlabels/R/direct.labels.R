@@ -57,6 +57,7 @@ direct.labels <- function
   groups <- groups[subscripts]
   d <- data.frame(x,groups)
   if(!missing(y))d$y <- y
+  if(class(method)=="character")method <- get(method)
   labs <- try(method(d,debug))
   if(class(labs)=="try-error")stop("direct label placement method failed")
   for(p in c("hjust","vjust"))
@@ -87,15 +88,18 @@ dl <- function
   type <- if(is.null(m$type))"" else m$type
   if(is.null(method))method <- 
     switch(paste(m$p),
-           xyplot=switch(type,l=first.points,empty.grid.2),
-           densityplot=top.points,
+           xyplot=switch(type,l="first.points","empty.grid.2"),
+           densityplot="top.points",
            stop("No default direct label placement method for ",
                 m$p,".\nPlease specify method."))
-  pdx <- dl.panel(panel)
-  m$panel <- pdx
+  m$panel <- dl.panel(panel)
   m$method <- method
   m[[1]] <- m[[2]]
   m <- m[-2]
+  for(r in names(m))if((!r %in% c("data")) && class(m[[r]])=="call"){
+    R <- try(eval(m[[r]],parent.frame()),TRUE)
+    if(class(R)!="try-error")m[[r]] <- R
+  }
   print(m)
   eval(m)
 }

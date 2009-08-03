@@ -40,3 +40,7 @@ pdfpng("longitudinal-custom",
           type='l',layout=c(3,1),panel=panel.model)
        ,h=7,w=14)
 
+source("compare.R")
+png("compare.png",h=1000,w=500)
+compare.methods(meth.list)
+dev.off()

@@ -10,9 +10,9 @@ compare.methods <- function
   newpage <- TRUE
   L <- length(m)
   for(i in seq_along(m)){
-    FUN <- get(m[i])
-    P <- xyplot(.resid~.fitted,mpgf,main=m[i],
-                groups=factor(class),method=FUN,panel=direct.labels)
+    P <- dl(xyplot,mpgf,.resid~.fitted,factor(class),
+            main=m[i],
+            method=m[i])
     plot(P,split=c(1,i,1,L),newpage=newpage)
     newpage <- FALSE
   }
