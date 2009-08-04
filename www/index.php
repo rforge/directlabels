@@ -82,6 +82,8 @@ of useful functions that make direct labeling of common plots easy to
 do. The first working examples are based on lattice graphics:</p>
 
 <pre>
+install.packages("ggplot2") # for dependencies on CRAN
+install.packages("latticedl", repos="http://R-Forge.R-project.org")
 library(latticedl)
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
