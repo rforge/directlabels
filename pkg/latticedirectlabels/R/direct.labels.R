@@ -66,7 +66,7 @@ direct.labels <- function
   if(class(labs)=="try-error")stop("direct label placement method failed")
   for(p in c("hjust","vjust"))
     labs[,p] <- if(p %in% names(labs))as.character(labs[,p]) else 0.5
-  print(labs)
+  ##print(labs)
   labs
 }
 dl <- function
@@ -100,11 +100,12 @@ dl <- function
   m$method <- method
   m[[1]] <- m[[2]]
   m <- m[-2]
-  for(r in names(m))if((!r %in% c("data")) && class(m[[r]])=="call"){
+  if(class(m$groups)=="name")m$groups <- call("factor",m$groups)
+  m$data <- eval(m$data,parent.frame())
+  for(r in names(m))if(class(m[[r]])=="call"){
     R <- try(eval(m[[r]],parent.frame()),TRUE)
     if(class(R)!="try-error")m[[r]] <- R
   }
-  print(m)
   eval(m)
 }
 
