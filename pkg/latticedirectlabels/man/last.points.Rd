@@ -25,3 +25,4 @@ last.points(d, debug)
 
 \seealso{
 }
+\examples{}

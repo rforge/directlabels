@@ -23,3 +23,4 @@ empty.grid.2(d, debug)
 
 \seealso{
 }
+\examples{}

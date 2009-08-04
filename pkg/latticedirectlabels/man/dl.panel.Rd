@@ -21,3 +21,4 @@ dl.panel(panel)
 
 \seealso{
 }
+\examples{}

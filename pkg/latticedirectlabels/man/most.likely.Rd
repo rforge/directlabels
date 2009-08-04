@@ -22,3 +22,4 @@ most.likely(d, debug)
 
 \seealso{
 }
+\examples{}

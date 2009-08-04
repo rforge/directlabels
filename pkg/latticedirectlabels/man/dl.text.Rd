@@ -30,3 +30,4 @@ dl.text(labs, group.number, col.line = NULL, col.points = NULL, col = NULL, col.
 
 \seealso{
 }
+\examples{}

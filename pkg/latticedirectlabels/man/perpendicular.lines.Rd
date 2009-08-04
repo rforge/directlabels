@@ -22,3 +22,4 @@ perpendicular.lines(d, debug = FALSE)
 
 \seealso{
 }
+\examples{}

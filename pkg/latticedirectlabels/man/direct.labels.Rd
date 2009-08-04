@@ -29,3 +29,4 @@ direct.labels(x, y, subscripts, groups, debug = FALSE, method = perpendicular.li
 
 \seealso{
 }
+\examples{}

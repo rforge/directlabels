@@ -21,3 +21,4 @@ dl.indep(FUN)
 
 \seealso{
 }
+\examples{}

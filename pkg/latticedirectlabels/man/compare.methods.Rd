@@ -24,3 +24,4 @@ compare.methods(m, ...)
 
 \seealso{
 }
+\examples{}

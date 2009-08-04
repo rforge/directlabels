@@ -22,3 +22,4 @@ first(d, debug = FALSE)
 
 \seealso{
 }
+\examples{}

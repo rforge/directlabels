@@ -22,3 +22,4 @@ get.means(d, debug)
 
 \seealso{
 }
+\examples{}
