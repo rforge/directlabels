@@ -2,29 +2,22 @@
 \Rdversion{1.1}
 \alias{latticedl-package}
 \docType{package}
-\title{
-What the package does (short line)
-}
-\description{
-More about what it does (maybe more than one line)
-}
+\title{Lattice direct labels}
+\description{Direct label panel functions for the lattice package.}
 \details{
-\tabular{ll}{
-Package: \tab latticedl\cr
-Type: \tab Package\cr
+\tabular{ll}{Package: \tab latticedl\cr
+Maintainer: \tab Toby Dylan Hocking <toby.hocking@etu.upmc.fr>\cr
+Author: \tab Toby Dylan Hocking\cr
 Version: \tab 1.0\cr
-Date: \tab 2009-08-03\cr
-License: \tab What license is it under?\cr
-LazyLoad: \tab yes\cr
+License: \tab GPL-3\cr
+Title: \tab Lattice direct labels\cr
+Description: \tab Direct label panel functions for the lattice package.\cr
+Depends: \tab plyr, lattice, grid\cr}
 }
-}
-\author{
-Who wrote it
-
-Maintainer: Who to complain to <yourfault@somewhere.net>
-}
+\author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}
 \references{
 }
 \keyword{ package }
 \seealso{
 }
+\examples{}
