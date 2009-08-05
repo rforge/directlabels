@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{last.points}
 \title{last.points}
-\description{Position Function for labeling last points of longitudinal data}
+\description{Positioning Function for last points of longitudinal data.}
 \usage{
 last.points(d, debug)
 }

@@ -7,13 +7,13 @@
 empty.grid.2(d, debug)
 }
 \arguments{
-  \item{d}{Data frame with columns groups x y}
-  \item{debug}{
-}
+  \item{d}{Data frame with columns groups x y.}
+  \item{debug}{Show debugging graphics on the plot?}
 }
 \details{
 }
-\value{Show debugging graphics on the plot?}
+\value{
+}
 \references{
 }
 \author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}

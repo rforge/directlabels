@@ -7,12 +7,12 @@
 perpendicular.lines(d, debug = FALSE)
 }
 \arguments{
-  \item{d}{data frame with groups x y}
-  \item{debug}{if TRUE will draw points at the center of each cluster and some lines that show how the points returned were chosen}
+  \item{d}{Data frame with groups x y.}
+  \item{debug}{If TRUE will draw points at the center of each cluster and some lines that show how the points returned were chosen.}
 }
 \details{
 }
-\value{data frame with groups x y, giving the point for each cluster which is the furthest out along the line drawn through its center}
+\value{Data frame with groups x y, giving the point for each cluster which is the furthest out along the line drawn through its center.}
 \references{
 }
 \author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}

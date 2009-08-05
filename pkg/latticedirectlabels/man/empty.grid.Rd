@@ -7,7 +7,7 @@
 empty.grid(d, debug = FALSE, loc.fun = get.means)
 }
 \arguments{
-  \item{d}{data frame of points on the scatterplot with columns groups x y}
+  \item{d}{Data frame of points on the scatterplot with columns groups x y.}
   \item{debug}{Show debugging info on the plot? This is passed to loc.fun.}
   \item{loc.fun}{Function that takes d and returns a data frame with 1 column for each group, giving the point we will use to look for a close point on the grid, to put the group label.}
 }

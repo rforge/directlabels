@@ -2,17 +2,20 @@
 \Rdversion{1.1}
 \alias{get.means}
 \title{get.means}
-\description{get the mean of each cluster of points}
+\description{Positioning Function for the mean of each cluster of points.}
 \usage{
 get.means(d, debug)
 }
 \arguments{
-  \item{d}{data frame with groups x y}
-  \item{debug}{ignored}
+  \item{d}{
+}
+  \item{debug}{
+}
 }
 \details{
 }
-\value{data frame with groups x y, 1 row for each group, with the calculated mean values}
+\value{
+}
 \references{
 }
 \author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}

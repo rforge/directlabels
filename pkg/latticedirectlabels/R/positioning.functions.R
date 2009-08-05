@@ -1,19 +1,13 @@
-get.means <- function
-### get the mean of each cluster of points
-(d,
-### data frame with groups x y
- debug
-### ignored
- ){
-  ddply(d,.(groups),summarise,x=mean(x),y=mean(y))
-### data frame with groups x y, 1 row for each group, with the calculated mean values
-}
 perpendicular.lines <- function
-### Draw a line between the centers of each cluster, then draw a perpendicular line for each cluster that goes through its center. For each cluster, return the point the lies furthest out along this line.
+### Draw a line between the centers of each cluster, then draw a
+### perpendicular line for each cluster that goes through its
+### center. For each cluster, return the point the lies furthest out
+### along this line.
 (d,
-### data frame with groups x y
+### Data frame with groups x y.
  debug=FALSE
-### if TRUE will draw points at the center of each cluster and some lines that show how the points returned were chosen
+### If TRUE will draw points at the center of each cluster and some
+### lines that show how the points returned were chosen.
  ){
   means <- rename(get.means(d),c(x="mx",y="my"))
   big <- merge(d,means,by="groups")
@@ -47,16 +41,23 @@ perpendicular.lines <- function
     for(v in means$groups)myline(f(v))
   }
   winners[,c("x","y","groups")]
-### data frame with groups x y, giving the point for each cluster which is the furthest out along the line drawn through its center
+### Data frame with groups x y, giving the point for each cluster
+### which is the furthest out along the line drawn through its center.
 }
 empty.grid <- function
-### Label placement method for scatterplots that ensures labels are placed in different places. A grid is drawn over the whole plot. Each cluster is considered in sequence and assigned to the point on this grid which is closest to the point given by loc.fun().
+### Label placement method for scatterplots that ensures labels are
+### placed in different places. A grid is drawn over the whole
+### plot. Each cluster is considered in sequence and assigned to the
+### point on this grid which is closest to the point given by
+### loc.fun().
 (d,
-### data frame of points on the scatterplot with columns groups x y
+### Data frame of points on the scatterplot with columns groups x y.
  debug=FALSE,
 ### Show debugging info on the plot? This is passed to loc.fun.
  loc.fun=get.means
-### Function that takes d and returns a data frame with 1 column for each group, giving the point we will use to look for a close point on the grid, to put the group label.
+### Function that takes d and returns a data frame with 1 column for
+### each group, giving the point we will use to look for a close point
+### on the grid, to put the group label.
  ){
   loc <- loc.fun(d,debug)
   NREP <- 10
@@ -89,66 +90,46 @@ empty.grid <- function
   }
   if(debug)print(count.mat)
   cbind(res,groups=loc$groups)
-### Data frame with columns groups x y, 1 line for each group, giving the positions on the grid closest to each cluster.
+### Data frame with columns groups x y, 1 line for each group, giving
+### the positions on the grid closest to each cluster.
 }
 empty.grid.2 <- function
-### Use the perpendicular lines method in combination with the empty grid method.
+### Use the perpendicular lines method in combination with the empty
+### grid method.
 (d,
-### Data frame with columns groups x y
+### Data frame with columns groups x y.
  debug
 ### Show debugging graphics on the plot?
- )empty.grid(d,debug,perpendicular.lines)
+ ){
+  empty.grid(d,debug,perpendicular.lines)
+}
 
 dl.indep <- function
 ### Makes a function you can use to specify the location of each group
 ### independently.
-(FUN
-### Function that takes a subset of the d data frame, with data from
+(expr
+### Expression that takes a subset of the d data frame, with data from
 ### only a single group, and returns the direct label position.
  ){
+  foo <- substitute(expr)
+  f <- function(d,debug)eval(foo)
   function(d,debug){
-    ddply(d,.(groups),FUN,debug)
+    ddply(d,.(groups),f,debug)
   }
 ### The constructed label position function.
 }
-
-first <- function
-### Return the first data point in d as a data frame. This works for time series data when already sorted and separated into groups.
-(d,
-### Data frame with columns x y
- debug=FALSE
-### Show debug graphics?
- ){
-  data.frame(d[1,c("x","y")],hjust=1,vjust=0.5)
-### Data frame with 1 row
-}
-### For multiple time series or longitudinal data
-last <- function
-### Return the last data point in d as a data frame. This works for time series data when already sorted and separated into groups.
-(d,
-### Data frame with columns x y
- debug=FALSE
-### Show debug graphics?
- ){
-  data.frame(d[nrow(d),c("x","y")],hjust=0,vjust=0.5)
-### Data frame with 1 row
-}
-### Position Function for labeling first points of longitudinal data
-first.points <- dl.indep(first)
-### Position Function for labeling last points of longitudinal data
-last.points <- dl.indep(last)
-
-most.likely <- function
-### Considering a density estimate of d$x, return the most likely point.
-(d,
-### Data frame with column x.
- debug
-### Show debugging graphics?
- ){
+### Positioning Function for the mode of a density estimate.
+top.points <- dl.indep({
   dens <- density(d$x)
   maxy <- which.max(dens$y)
   data.frame(x=dens$x[maxy],y=dens$y[maxy],hjust=0.5,vjust=0)
-### Data frame with 1 line.
-}
-### For density plots
-top.points <- dl.indep(most.likely)
+})
+### Positioning Function for first points of longitudinal data.
+first.points <-
+  dl.indep(data.frame(d[1,c("x","y")],hjust=1,vjust=0.5))
+### Positioning Function for last points of longitudinal data.
+last.points <-
+  dl.indep(data.frame(d[nrow(d),c("x","y")],hjust=0,vjust=0.5))
+### Positioning Function for the mean of each cluster of points.
+get.means <-
+  dl.indep(data.frame(x=mean(d$x),y=mean(d$y)))

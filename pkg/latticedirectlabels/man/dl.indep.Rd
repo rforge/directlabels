@@ -4,10 +4,10 @@
 \title{dl.indep}
 \description{Makes a function you can use to specify the location of each group independently.}
 \usage{
-dl.indep(FUN)
+dl.indep(expr)
 }
 \arguments{
-  \item{FUN}{Function that takes a subset of the d data frame, with data from only a single group, and returns the direct label position.}
+  \item{expr}{Expression that takes a subset of the d data frame, with data from only a single group, and returns the direct label position.}
 }
 \details{
 }
