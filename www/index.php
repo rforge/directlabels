@@ -66,8 +66,8 @@ densityplot(~ppp,loci,groups = type,auto.key=list(space="top",columns=3))
 
 <p>Look closely. Is the curve for BAL on the left or right? An easy
 fix for this problem would be putting the label right next to the
-colored lines. Then we using the data for label positioning, which is
-inherently more intuitive and obvious to decode.</p>
+colored lines. Then we would be using the data for label positioning,
+which is inherently more intuitive and obvious to decode.</p>
 
 <p>"But," you say, "lattice makes it so easy to makes these legends!
 Direct labeling is a lot of tedious work! I can live with these
