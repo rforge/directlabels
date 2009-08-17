@@ -84,7 +84,8 @@ empty.grid <- function
     r <- subset(loc,groups==v)
     len <- sqrt((r$x-g3$x)^2+(r$y-g3$y)^2)
     i <- which.min(len) ## the box to use for this group
-    count.mat[as.character(g3[i,"j"]),as.character(g3[i,"i"])] <- paste("*",v,sep="")
+    count.mat[as.character(g3[i,"j"]),
+              as.character(g3[i,"i"])] <- paste("*",v,sep="")
     res <- rbind(res,g3[i,c("x","y")])
     g3 <- g3[-i,]
   }
