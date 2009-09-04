@@ -4,5 +4,5 @@ Author: Toby Dylan Hocking
 Version: 1.0
 License: GPL-3
 Title: Lattice direct labels
-Description: Direct label panel functions for the lattice package.
+Description: Direct labeling functions that use the lattice package.
 Depends: plyr, lattice, grid
