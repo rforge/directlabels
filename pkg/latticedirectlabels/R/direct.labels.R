@@ -1,16 +1,3 @@
-dl.panel <- function
-### Convert a normal panel into a direct label panel function.
-(panel
-### The panel function to transform.
- ){
-  function(...){
-    panel.superpose(panel.groups=panel,...)
-    labs <- direct.labels(...)
-    panel.superpose(panel.groups=dl.text,labs=labs,...)
-  }
-### A new panel function that first calls panel, then calls
-### direct.labels.
-}
 dl.text <- function
 ### To be used as panel.groups= argument in panel.superpose. Analyzes
 ### arguments to determine correct text color for this group, and then
@@ -70,43 +57,31 @@ direct.labels <- function
   labs
 }
 dl <- function
-### Lattice plot using direct labels.
+### Add direct labels to a grouped lattice plot. The idea is that we
+### parse the object returned by the high level plot function and
+### return it changed such that it will plot direct labels.
 (p,
-### High-level lattice plot function to use.
- data,
-### Data set to be passed to lattice.
- x,
-### Plot formula to be passed to lattice.
- groups,
-### To pass to high-level plot function.
- method=NULL,
-### Method for direct labeling --- this is a function that accepts 2 arguments: d a data frame of the points to plot with columns x y groups, and debug a logical flag indicating if debug output should be shown. NULL indicates to make a logical choice based on the high-level plot function chosen.
- panel=NULL,
-### Panel function to use. Defaults to corresponding default panel
-### function for the high-level plot function.
- ...
-### Other arguments to pass to the high-level plot function.
+### The lattice plot (result of a call to a high-level lattice function).
+ method=NULL
+### Method for direct labeling --- this is a function that accepts 2
+### arguments: d a data frame of the points to plot with columns x y
+### groups, and debug a logical flag indicating if debug output should
+### be shown. NULL indicates to make a logical choice based on the
+### high-level plot function chosen.
  ){
-  m <- match.call()
-  if(is.null(panel))panel <- get(paste("panel.",m$p,sep=""))
-  type <- if(is.null(m$type))"" else m$type
   if(is.null(method))method <- 
-    switch(paste(m$p),
-           xyplot=switch(type,l="first.points","empty.grid.2"),
+    switch(paste(p$call[[1]]),
+           xyplot=switch(p$panel.args.common$type,l="first.points","empty.grid.2"),
            densityplot="top.points",
            stop("No default direct label placement method for ",
                 m$p,".\nPlease specify method."))
-  m$panel <- dl.panel(panel)
-  m$method <- method
-  m[[1]] <- m[[2]]
-  m <- m[-2]
-  if(class(m$groups)=="name")m$groups <- call("factor",m$groups)
-  m$data <- eval(m$data,parent.frame())
-  for(r in names(m))if(class(m[[r]])=="call"){
-    R <- try(eval(m[[r]],parent.frame()),TRUE)
-    if(class(R)!="try-error")m[[r]] <- R
+  old.panel <- get(p$panel)
+  p$panel <- function(...){
+    panel.superpose(panel.groups=old.panel,...)
+    labs <- direct.labels(...,method=method)
+    panel.superpose(panel.groups=dl.text,labs=labs,...)
   }
-  eval(m)
+  p
 }
 
 compare.methods <- function
