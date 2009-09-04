@@ -62,23 +62,29 @@ dl <- function
 ### return it changed such that it will plot direct labels.
 (p,
 ### The lattice plot (result of a call to a high-level lattice function).
- method=NULL
+ method=NULL,
 ### Method for direct labeling --- this is a function that accepts 2
 ### arguments: d a data frame of the points to plot with columns x y
 ### groups, and debug a logical flag indicating if debug output should
 ### be shown. NULL indicates to make a logical choice based on the
 ### high-level plot function chosen.
+ debug=FALSE
+### Show debug output?
  ){
+  type <- p$panel.args.common$type
+  if(is.null(type))type <- "NULL"
   if(is.null(method))method <- 
     switch(paste(p$call[[1]]),
-           xyplot=switch(p$panel.args.common$type,l="first.points","empty.grid.2"),
+           xyplot=switch(type,l="first.points","empty.grid.2"),
            densityplot="top.points",
            stop("No default direct label placement method for ",
                 m$p,".\nPlease specify method."))
-  old.panel <- get(p$panel)
-  p$panel <- function(...){
-    panel.superpose(panel.groups=old.panel,...)
-    labs <- direct.labels(...,method=method)
+  old.panel <- if(class(p$panel)=="character")get(p$panel) else p$panel
+  p$panel <- function(...,panel.groups){
+    if(! "panel.groups"%in%names(formals(old.panel)))
+      panel.superpose(panel.groups=old.panel,...)
+    else old.panel(...,panel.groups=panel.groups) #old.panel is panel.superpose (probably)
+    labs <- direct.labels(...,method=method,debug=debug)
     panel.superpose(panel.groups=dl.text,labs=labs,...)
   }
   p

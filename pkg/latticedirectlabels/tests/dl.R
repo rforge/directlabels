@@ -4,25 +4,34 @@ library(ggplot2)
 data(mpg)
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
-plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl)))
-
-plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),
-        panel=function(...){panel.abline(1);panel.xyplot(...)},
-        main="foobar2",
-        method=perpendicular.lines))
-plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),debug=TRUE))
-## Should fail: (default method includes perpendicular line calculation, which makes no sense for only 1 group per panel
-plot(dl(xyplot,mpgf,.resid~.fitted|cyl,factor(cyl)))
+mpg.scatter <- xyplot(.resid~.fitted,mpgf,groups=factor(cyl))
+plot(dl(mpg.scatter))
+plot(dl(mpg.scatter,debug=TRUE))
+plot(dl(
+        xyplot(.resid~.fitted,mpgf,groups=factor(cyl),
+               panel=function(...){panel.abline(1);panel.xyplot(...)},
+               main="foobar2")
+        ,method=perpendicular.lines))
+## Should plot but show direct label placement error in each panel:
+## default method includes perpendicular line calculation, which makes
+## no sense for only 1 group per panel
+trellised <- xyplot(.resid~.fitted|cyl,mpgf,groups=factor(cyl))
+plot(dl(trellised))
 ## Should work, but not very informative:
-plot(dl(xyplot,mpgf,.resid~.fitted|cyl,factor(cyl),method=empty.grid))
+plot(dl(trellised,method=empty.grid))
 mpgf$cyl10 <- sapply(mpgf$cyl,function(i)paste(rep(i,l=10),collapse=""))
-plot(dl(xyplot,mpgf,.resid~.fitted|cyl,factor(cyl10),method=empty.grid))
-plot(dl(xyplot,mpgf,.resid~.fitted|manufacturer,factor(cyl),method=empty.grid.2))
-library(latticedl)
-library(ggplot2)
+plot(dl(
+        xyplot(.resid~.fitted|cyl,mpgf,groups=factor(cyl10))
+        ,method=empty.grid))
+## Some label placements fail, some dont:
+plot(dl(
+        xyplot(.resid~.fitted|manufacturer,mpgf,groups=factor(cyl))
+        ,method=empty.grid.2))
+
 data(BodyWeight,package="nlme")
-print(dl(xyplot,BodyWeight,weight~Time|Diet,Rat,
-         type='l',layout=c(3,1)))
+print(dl(
+         xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
+         ))
 ## Say we want to use a simple linear model to explain rat body weight:
 fit <- lm(weight~Time+Diet+Rat,BodyWeight)
 bw <- fortify(fit,BodyWeight)
@@ -32,14 +41,17 @@ panel.model <- function(x,subscripts,col.line,...){
   llines(x,bw[subscripts,".fitted"],col=col.line,lty=2)
 }
 ## Just specify the custom panel function as usual:
-print(dl(xyplot,bw,weight~Time|Diet,Rat,
-         type='l',layout=c(3,1),panel=panel.model))
+print(dl(
+         xyplot(weight~Time|Diet,bw,groups=Rat,type='l',layout=c(3,1),
+                panel=panel.superpose,panel.groups=panel.model)
+         ))
 
 ## Fails: default method for scatterplot doesn't make sense here
 ##print(dl(xyplot,BodyWeight,weight~Time|Diet,Rat))
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
 library(latticedl)
+dl(densityplot(~ppp,loci,groups=type,n=500))
 print(dl(densityplot,loci,~ppp,type,n=500))
 ## Not very informative but it should work:
 print(dl(densityplot,loci,~ppp|type,type,n=500))
