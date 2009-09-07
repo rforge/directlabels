@@ -27,35 +27,6 @@ dl.text <- function
             gp=gpar(col=col.text),
             default.units="native")
 }
-label.positions <- function
-### Calculates table of positions of each label for each panel.
-(x,
-### x values of points to draw.
- y,
-### y values of points to draw.
- subscripts,
-### subscripts of groups to consider.
- groups,
-### vector of groups.
- debug=FALSE,
-### logical indicating whether debug annotations should be added to
-### the plot.
- method=perpendicular.lines,
-### function used to choose position of labels.
- ...
-### ignored.
- ){
-  groups <- groups[subscripts]
-  d <- data.frame(x,groups)
-  if(!missing(y))d$y <- y
-  if(class(method)=="character")method <- get(method)
-  labs <- try(method(d,debug))
-  if(class(labs)=="try-error")stop("direct label placement method failed")
-  for(p in c("hjust","vjust"))
-    labs[,p] <- if(p %in% names(labs))as.character(labs[,p]) else 0.5
-  ##print(labs)
-  labs
-}
 direct.label <- function
 ### Add direct labels to a grouped lattice plot. The idea is that we
 ### parse the trellis object returned by the high level plot function
