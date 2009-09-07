@@ -73,12 +73,13 @@ direct.label <- function
  ){
   type <- p$panel.args.common$type
   if(is.null(type))type <- "NULL"
+  lattice.fun.name <- paste(p$call[[1]])
   if(is.null(method))method <- 
-    switch(paste(p$call[[1]]),
+    switch(lattice.fun.name,
            xyplot=switch(type,l="first.points","empty.grid.2"),
            densityplot="top.points",
            stop("No default direct label placement method for ",
-                m$p,".\nPlease specify method."))
+                lattice.fun.name,". Please specify method."))
   old.panel <- if(class(p$panel)=="character")get(p$panel) else p$panel
   p$panel <- function(...,panel.groups){
     if(! "panel.groups"%in%names(formals(old.panel)))
