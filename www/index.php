@@ -60,7 +60,7 @@ confusing example that motivates the use of direct labeling:
 library(lattice)
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
-densityplot(~ppp,loci,groups = type,auto.key=list(space="top",columns=3))
+densityplot(~ppp,loci,groups=type,auto.key=list(space="top",columns=3))
 </pre>
 <img src="confusing.png" />
 
@@ -87,12 +87,43 @@ install.packages("latticedl", repos="http://R-Forge.R-project.org")
 library(latticedl)
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
-dl(densityplot,loci,~ppp,type,n=500)
+## Just add direct.label() around your lattice plot:
+direct.label(densityplot(~ppp,loci,groups=type,n=500))
 </pre>
 <img src="density.png" />
 <p>
 <a href="examples.php">More examples...</a>
 </p>
+
+<h2>For flexibility, 2 equivalent methods for adding direct
+labels</h2>
+
+<p>The direct.label() function above works well when you already have
+typed a lattice function call, and you want to add direct labels. This
+form is also useful since you can put the lattice plot on its own line
+if you ever want to just send that line by itself to the R
+interpreter.</p>
+
+<pre>
+direct.label(
+             densityplot(~ppp,loci,groups=type,n=500)
+             )
+</pre>
+
+<p>For direct labeling plots we always will specify the groups=
+argument. Thus to save a bit of typing the dl() shortcut function is
+provided:</p>
+
+<pre>
+dl(densityplot,loci,~ppp,type,n=500)
+</pre>
+
+<p>This will yield the same plot as above but notice that the argument
+order is different than usual: lattice.fun, data.set, lattice.formula,
+groups. You don't have to type groups= explicitly, since groups is the
+4th argument. This form also puts the lattice formula argument 3rd,
+next to the groups argument, which is intuitive since it puts together
+the arguments involving data variables.</p>
 
 <h2>An extensible framework for thinking about direct labeling
 problems</h2>
@@ -121,10 +152,9 @@ Functions as follows:</p>
 <pre>
 library(latticedl)
 data(BodyWeight,package="nlme")
-dl(xyplot,BodyWeight,weight~Time|Diet,Rat,type="l",layout=c(3,1),
-   method=first.points)
-dl(xyplot,BodyWeight,weight~Time|Diet,Rat,type="l",layout=c(3,1),
-   method=last.points)
+p <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
+direct.label(p,method=first.points)
+direct.label(p,method=last.points)
 </pre>
 <img src="compare-long.png" />
 
@@ -145,7 +175,8 @@ other plotting frameworks, i.e. ggplot2.</p>
 
 <p>Please send email to <a
 href="http://r-forge.r-project.org/sendmessage.php?touser=1571">Toby
-Dylan Hocking</a> if you are using this package, thanks!</p>
+Dylan Hocking</a> if you are using this package or have ideas to
+contribute, thanks!</p>
 
 <p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
 
