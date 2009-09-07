@@ -1,7 +1,7 @@
 \name{perpendicular.lines}
 \Rdversion{1.1}
 \alias{perpendicular.lines}
-\title{perpendicular.lines}
+\title{perpendicular lines}
 \description{Draw a line between the centers of each cluster, then draw a perpendicular line for each cluster that goes through its center. For each cluster, return the point the lies furthest out along this line.}
 \usage{
 perpendicular.lines(d, debug = FALSE)

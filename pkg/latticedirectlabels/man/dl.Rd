@@ -2,24 +2,23 @@
 \Rdversion{1.1}
 \alias{dl}
 \title{dl}
-\description{Lattice plot using direct labels.}
+\description{Shortcut for direct label lattice plots.}
 \usage{
-dl(p, data, x, groups, method = NULL, panel = NULL, ...)
+dl(lattice.fun, data, x, groups, method = NULL, debug = FALSE, ...)
 }
 \arguments{
-  \item{p}{High-level lattice plot function to use.}
-  \item{data}{Data set to be passed to lattice.}
-  \item{x}{Plot formula to be passed to lattice.}
-  \item{groups}{To pass to high-level plot function.}
-  \item{method}{Method for direct labeling --- this is a function that accepts 2 arguments: d a data frame of the points to plot with columns x y groups, and debug a logical flag indicating if debug output should be shown. NULL indicates to make a logical choice based on the high-level plot function chosen.}
-  \item{panel}{Panel function to use. Defaults to corresponding default panel function for the high-level plot function.}
+  \item{lattice.fun}{High-level lattice plot function to use.}
+  \item{data}{Data frame to use.}
+  \item{x}{Lattice model formula.}
+  \item{groups}{To be passed to lattice as groups= argument.}
+  \item{method}{Label placement method to be passed to direct.label.}
+  \item{debug}{Show debugging output? to be passed to direct.label.}
   \item{\dots}{
 }
 }
 \details{
 }
-\value{
-}
+\value{The lattice plot.}
 \references{
 }
 \author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}
@@ -35,7 +34,7 @@ library(ggplot2)
 data(mpg)
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
-plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl)))
+plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),method=get.means,par.settings=list()))
 
 plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),
         panel=function(...){panel.abline(1);panel.xyplot(...)},
@@ -49,8 +48,7 @@ plot(dl(xyplot,mpgf,.resid~.fitted|cyl,factor(cyl),method=empty.grid))
 mpgf$cyl10 <- sapply(mpgf$cyl,function(i)paste(rep(i,l=10),collapse=""))
 plot(dl(xyplot,mpgf,.resid~.fitted|cyl,factor(cyl10),method=empty.grid))
 plot(dl(xyplot,mpgf,.resid~.fitted|manufacturer,factor(cyl),method=empty.grid.2))
-library(latticedl)
-library(ggplot2)
+
 data(BodyWeight,package="nlme")
 print(dl(xyplot,BodyWeight,weight~Time|Diet,Rat,
          type='l',layout=c(3,1)))
@@ -70,7 +68,6 @@ print(dl(xyplot,bw,weight~Time|Diet,Rat,
 ##print(dl(xyplot,BodyWeight,weight~Time|Diet,Rat))
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
-library(latticedl)
 print(dl(densityplot,loci,~ppp,type,n=500))
 ## Not very informative but it should work:
 print(dl(densityplot,loci,~ppp|type,type,n=500))}

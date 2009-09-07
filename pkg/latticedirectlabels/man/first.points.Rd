@@ -1,7 +1,7 @@
 \name{first.points}
 \Rdversion{1.1}
 \alias{first.points}
-\title{first.points}
+\title{first points}
 \description{Positioning Function for first points of longitudinal data.}
 \usage{
 first.points(d, debug)

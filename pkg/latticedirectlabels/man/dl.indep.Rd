@@ -1,7 +1,7 @@
 \name{dl.indep}
 \Rdversion{1.1}
 \alias{dl.indep}
-\title{dl.indep}
+\title{dl indep}
 \description{Makes a function you can use to specify the location of each group independently.}
 \usage{
 dl.indep(expr)

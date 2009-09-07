@@ -1,10 +1,10 @@
-\name{direct.labels}
+\name{label.positions}
 \Rdversion{1.1}
-\alias{direct.labels}
-\title{direct.labels}
+\alias{label.positions}
+\title{label positions}
 \description{Calculates table of positions of each label for each panel.}
 \usage{
-direct.labels(x, y, subscripts, groups, debug = FALSE, method = perpendicular.lines, ...)
+label.positions(x, y, subscripts, groups, debug = FALSE, method = perpendicular.lines, ...)
 }
 \arguments{
   \item{x}{x values of points to draw.}

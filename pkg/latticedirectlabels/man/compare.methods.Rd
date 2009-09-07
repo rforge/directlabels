@@ -1,7 +1,7 @@
 \name{compare.methods}
 \Rdversion{1.1}
 \alias{compare.methods}
-\title{compare.methods}
+\title{compare methods}
 \description{Plot several label placement methods on the same page.}
 \usage{
 compare.methods(m, ...)

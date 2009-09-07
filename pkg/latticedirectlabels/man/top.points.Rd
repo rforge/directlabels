@@ -1,7 +1,7 @@
 \name{top.points}
 \Rdversion{1.1}
 \alias{top.points}
-\title{top.points}
+\title{top points}
 \description{Positioning Function for the mode of a density estimate.}
 \usage{
 top.points(d, debug)
