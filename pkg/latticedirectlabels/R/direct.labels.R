@@ -3,7 +3,7 @@ dl.text <- function
 ### arguments to determine correct text color for this group, and then
 ### draws the direct label text.
 (labs,
-### table of labels and positions constructed by direct.labels
+### table of labels and positions constructed by label.positions
  group.number,
 ### which group we are currently plotting, according to levels(labs$groups)
  col.line=NULL,
@@ -27,7 +27,7 @@ dl.text <- function
             gp=gpar(col=col.text),
             default.units="native")
 }
-direct.labels <- function
+label.positions <- function
 ### Calculates table of positions of each label for each panel.
 (x,
 ### x values of points to draw.
@@ -56,10 +56,10 @@ direct.labels <- function
   ##print(labs)
   labs
 }
-dl <- function
+direct.label <- function
 ### Add direct labels to a grouped lattice plot. The idea is that we
-### parse the object returned by the high level plot function and
-### return it changed such that it will plot direct labels.
+### parse the trellis object returned by the high level plot function
+### and return it changed such that it will plot direct labels.
 (p,
 ### The lattice plot (result of a call to a high-level lattice function).
  method=NULL,
@@ -84,12 +84,36 @@ dl <- function
     if(! "panel.groups"%in%names(formals(old.panel)))
       panel.superpose(panel.groups=old.panel,...)
     else old.panel(...,panel.groups=panel.groups) #old.panel is panel.superpose (probably)
-    labs <- direct.labels(...,method=method,debug=debug)
+    labs <- label.positions(...,method=method,debug=debug)
     panel.superpose(panel.groups=dl.text,labs=labs,...)
   }
   p
+### The lattice plot.
 }
-
+dl <- function
+### Shortcut for direct label lattice plots.
+(lattice.fun,
+### High-level lattice plot function to use.
+ data,
+### Data frame to use.
+ x,
+### Lattice model formula.
+ groups,
+### To be passed to lattice as groups= argument.
+ method=NULL,
+### Label placement method to be passed to direct.label.
+ debug=FALSE,
+### Show debugging output? to be passed to direct.label.
+ ...
+### Other arguments to be passed to lattice.fun.
+ ){
+  m <- match.call()
+  m <- m[!names(m)%in%c("method","debug")]
+  m <- m[-1]
+  p <- eval(m)
+  direct.label(p,method,debug)
+### The lattice plot.
+}
 compare.methods <- function
 ### Plot several label placement methods on the same page.
 (m,
