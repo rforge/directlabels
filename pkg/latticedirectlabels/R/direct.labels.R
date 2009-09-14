@@ -53,9 +53,15 @@ direct.label <- function
                 lattice.fun.name,". Please specify method."))
   old.panel <- if(class(p$panel)=="character")get(p$panel) else p$panel
   p$panel <- function(...,panel.groups){
-    if(! "panel.groups"%in%names(formals(old.panel)))
-      panel.superpose(panel.groups=old.panel,...)
-    else old.panel(...,panel.groups=panel.groups) #old.panel is panel.superpose (probably)
+    if("panel.groups"%in%names(p$panel.args.common))
+      ## If they specified panel.groups, then the original panel
+      ## function is probably already panel.superpose (or some
+      ## modification thereof), thus we should call it:
+      old.panel(...,panel.groups=panel.groups)
+    ## If panel.groups is unspecified, then we call panel.superpose
+    ## ourself with the panel function they specified:
+    else panel.superpose(panel.groups=old.panel,...)
+    ## Add direct labels:
     labs <- label.positions(...,method=method,debug=debug)
     panel.superpose(panel.groups=dl.text,labs=labs,...)
   }
