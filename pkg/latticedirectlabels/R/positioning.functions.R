@@ -1,5 +1,8 @@
 label.positions <- function
-### Calculates table of positions of each label.
+### Calculates table of positions of each label. This can be thought
+### of as a lattice panel function. It takes the same sort of
+### arguments but does not draw anything. Instead it is called for its
+### return value.
 (x,
 ### x values of points to draw.
  y,
@@ -26,6 +29,7 @@ label.positions <- function
     labs[,p] <- if(p %in% names(labs))as.character(labs[,p]) else 0.5
   ##print(labs)
   labs
+### Data frame describing where direct labels should be positioned.
 }
 
 perpendicular.lines <- function

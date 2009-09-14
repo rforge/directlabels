@@ -54,9 +54,9 @@ direct.label <- function
   old.panel <- if(class(p$panel)=="character")get(p$panel) else p$panel
   p$panel <- function(...,panel.groups){
     if("panel.groups"%in%names(p$panel.args.common))
-      ## If they specified panel.groups, then the original panel
-      ## function is probably already panel.superpose (or some
-      ## modification thereof), thus we should call it:
+      ## If they specified panel.groups, then old.panel is probably
+      ## already panel.superpose (or some modification thereof), thus
+      ## we should call it:
       old.panel(...,panel.groups=panel.groups)
     ## If panel.groups is unspecified, then we call panel.superpose
     ## ourself with the panel function they specified:
@@ -67,6 +67,22 @@ direct.label <- function
   }
   p
 ### The lattice plot.
+}
+make.panel.groups.fun <- function
+### Direct-label-ify a function you would normally use as the
+### panel.groups argument to panel.superpose. Note that this technique
+### only works with Positioning Functions that are group-independent.
+(old.panel,
+### Panel function to be converted to show direct labels, and to be
+### used as panel.groups.
+ method=get.means,
+ debug=FALSE
+ ){
+  function(...){
+    old.panel(...)
+    labs <- label.positions(...,groups=1,method=method,debug=debug)
+    dl.text(labs,...)
+  }
 }
 dl <- function
 ### Shortcut for direct label lattice plots.
