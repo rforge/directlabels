@@ -11,7 +11,8 @@ plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),
         main="foobar2",
         method=perpendicular.lines))
 plot(dl(xyplot,mpgf,.resid~.fitted,factor(cyl),debug=TRUE))
-## Should fail: (default method includes perpendicular line calculation, which makes no sense for only 1 group per panel
+## Should fail: (default method includes perpendicular line
+## calculation, which makes no sense for only 1 group per panel
 plot(dl(xyplot,mpgf,.resid~.fitted|cyl,factor(cyl)))
 ## Should work, but not very informative:
 plot(dl(xyplot,mpgf,.resid~.fitted|cyl,factor(cyl),method=empty.grid))
@@ -25,17 +26,30 @@ print(dl(xyplot,BodyWeight,weight~Time|Diet,Rat,
 ## Say we want to use a simple linear model to explain rat body weight:
 fit <- lm(weight~Time+Diet+Rat,BodyWeight)
 bw <- fortify(fit,BodyWeight)
-## And we want to use this panel function to display the model fits:
+## And we want to use this panel.groups function to display the model
+## fits:
 panel.model <- function(x,subscripts,col.line,...){
   panel.xyplot(x=x,subscripts=subscripts,col.line=col.line,...)
   llines(x,bw[subscripts,".fitted"],col=col.line,lty=2)
 }
-## Just specify the custom panel function as usual:
-print(dl(xyplot,bw,weight~Time|Diet,Rat,
-         type='l',layout=c(3,1),panel=panel.model))
+## Custom panel.groups functions:
+dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),
+   panel.groups=panel.model,method=first.points)
+## Custom panel function which highlights min and max values:
+panel.range <- function(y,...){
+  panel.abline(h=range(y))
+  panel.xyplot(y=y,...)
+}
+dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),panel=panel.range)
+## Custom panel and panel.groups functions:
+dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),
+   panel=panel.range,panel.groups=panel.model,method=first.points)
 
 ## Fails: default method for scatterplot doesn't make sense here
 ##print(dl(xyplot,BodyWeight,weight~Time|Diet,Rat))
+
+
+## dl with densityplots:
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
 print(dl(densityplot,loci,~ppp,type,n=500))

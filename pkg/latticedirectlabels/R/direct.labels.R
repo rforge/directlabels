@@ -44,51 +44,17 @@ direct.label <- function
 ### Show debug output?
  ){
   old.panel <- if(class(p$panel)=="character")get(p$panel) else p$panel
-  p$panel <- function(...,panel.groups){
-    if("panel.groups"%in%names(p$panel.args.common))
-      ## If they specified panel.groups, then old.panel is probably
-      ## already panel.superpose (or some modification thereof), thus
-      ## we should call it:
-      old.panel(...,panel.groups=panel.groups)
-    ## If panel.groups is unspecified, then we call panel.superpose
-    ## ourself with the panel function they specified:
-    else panel.superpose(panel.groups=old.panel,...)
-    ## Add direct labels:
-    panel.dl(method,debug,paste(p$call[[1]]),p$panel.args.common$type,...)
+  lattice.fun.name <- paste(p$call[[1]])
+  p$panel <-
+    function(panel.groups=paste("panel.",lattice.fun.name,sep=""),...){
+      panel.superpose.dl(panel.groups=panel.groups,
+                         .panel.superpose=old.panel,
+                         method=method,
+                         debug=debug,
+                         ...)
   }
   p
 ### The lattice plot.
-}
-panel.dl <- function
-### Panel function for adding direct labels to a plot.
-(method,
-### The direct labeling method.
- debug,
-### Show debugging output?
- lattice.fun.name,
-### used for default Positioning Function dispatch.
- type=NULL,
-### used for default Positioning Function dispatch.
- ...,
-### Arguments for label.positions and panel.superpose.
- end=0.03
-### used for default Positioning Function for rugs.
- ){
-  if(is.null(type))type <- "NULL"
-  if(is.null(method))method <- 
-    switch(lattice.fun.name,
-           xyplot=switch(type,l="first.points","empty.grid.2"),
-           densityplot="top.points",
-           rug=function(d,debug)
-             ddply(d,.(groups),function(d,debug)
-                   data.frame(x=mean(d$x),
-                              y=as.numeric(convertY(unit(end,"npc"),"native")),
-                              vjust=0)
-                   ,debug),
-           stop("No default direct label placement method for ",
-                lattice.fun.name,". Please specify method."))
-  labs <- label.positions(...,method=method,debug=debug)
-  panel.superpose(panel.groups=dl.text,labs=labs,type=type,...)
 }
 panel.superpose.dl <- function
 ### Call panel.superpose and then panel.dl.
@@ -107,16 +73,39 @@ panel.superpose.dl <- function
 ### Positioning Function to use for label placement.
  debug=FALSE,
 ### Show debug output?
+ .panel.superpose=panel.superpose,
+ type="p",
+ end=0.03,
  ...
 ### Arguments to panel.superpose and panel.dl.
  ){
-  panel.fun.name <- if(is.function(panel.groups))
-    substitute(panel.groups) else panel.groups
-  lattice.fun.name <- sub("panel.","",panel.fun.name)
-  panel.superpose(x=x,y=y,subscripts=subscripts,groups=groups,
-                  panel.groups=panel.groups,...)
-  panel.dl(method,debug,lattice.fun.name,...,
-           x=x,y=y,subscripts=subscripts,groups=groups)
+  ## FIXME: this is a total hack:
+  tryCatch(.panel.superpose(x=x,y=y,subscripts=subscripts,
+                            groups=groups,type=type,
+                            panel.groups=panel.groups,...),
+           error=function(e).panel.superpose(x=x,y=y,subscripts=subscripts,
+             groups=groups,type=type,...))
+  subs <-
+    if(is.character(panel.groups))panel.groups else substitute(panel.groups)
+  lattice.fun.name <-
+    if(is.character(subs))sub("panel.","",subs) else ""
+  if(is.null(type))type <- "NULL"
+  if(is.null(method))method <- 
+    switch(lattice.fun.name,
+           xyplot=switch(type,l="first.points","empty.grid.2"),
+           densityplot="top.points",
+           rug=function(d,debug)
+             ddply(d,.(groups),function(d,debug)
+                   data.frame(x=mean(d$x),
+                              y=as.numeric(convertY(unit(end,"npc"),"native")),
+                              vjust=0)
+                   ,debug),
+           stop("No default direct label placement method for ",
+                lattice.fun.name,". Please specify method."))
+  labs <- label.positions(method=method,debug=debug,groups=groups,
+                          subscripts=subscripts,x=x,y=y,...)
+  panel.superpose(panel.groups=dl.text,labs=labs,type=type,x=x,
+                  groups=groups,subscripts=subscripts,...)
 }
 dl <- function
 ### Shortcut for direct label lattice plots.
