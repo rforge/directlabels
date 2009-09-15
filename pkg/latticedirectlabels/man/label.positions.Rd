@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{label.positions}
 \title{label positions}
-\description{Calculates table of positions of each label for each panel.}
+\description{Calculates table of positions of each label. This can be thought of as a lattice panel function. It takes the same sort of arguments but does not draw anything. Instead it is called for its return value.}
 \usage{
 label.positions(x, y, subscripts, groups, debug = FALSE, method = perpendicular.lines, ...)
 }
@@ -18,8 +18,7 @@ label.positions(x, y, subscripts, groups, debug = FALSE, method = perpendicular.
 }
 \details{
 }
-\value{
-}
+\value{Data frame describing where direct labels should be positioned.}
 \references{
 }
 \author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}
