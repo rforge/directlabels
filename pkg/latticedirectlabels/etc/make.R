@@ -23,6 +23,18 @@ pdfpng("density",dl(densityplot,loci,~ppp,type,n=500))
 data(BodyWeight,package="nlme")
 pdfpng("longitudinal",dl(xyplot,BodyWeight,weight~Time|Diet,Rat,
                          type='l',layout=c(3,1)),h=7,w=14)
+pdfpng("longitudinal-custom-panel-groups",
+       dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),
+          panel=panel.superpose,panel.groups=panel.model,method=first.points)
+       ,h=7,w=14)
+pdfpng("longitudinal-custom-panel",
+       dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),
+          panel=panel.range)
+       ,h=7,w=14)
+pdfpng("longitudinal-custom-both",
+       dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),
+          panel=panel.range,panel.groups=panel.model,method=first.points)
+       ,h=7,w=14)
 
 ## Say we want to use a simple linear model to explain rat body weight:
 fit <- lm(weight~Time+Diet+Rat,BodyWeight)
