@@ -74,8 +74,11 @@ panel.superpose.dl <- function
  debug=FALSE,
 ### Show debug output?
  .panel.superpose=panel.superpose,
+### The panel function to use for drawing data points.
  type="p",
+### Plot type.
  end=0.03,
+### Rug end value in npc.
  ...
 ### Arguments to panel.superpose and panel.dl.
  ){
