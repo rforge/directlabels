@@ -34,11 +34,12 @@ panel.model <- function(x,subscripts,col.line,...){
 }
 ## Custom panel.groups functions:
 dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),
+   panel=panel.superpose,
    panel.groups=panel.model,method=first.points)
 ## Custom panel function which highlights min and max values:
 panel.range <- function(y,...){
   panel.abline(h=range(y))
-  panel.xyplot(y=y,...)
+  panel.superpose(y=y,...)
 }
 dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),panel=panel.range)
 ## Custom panel and panel.groups functions:
