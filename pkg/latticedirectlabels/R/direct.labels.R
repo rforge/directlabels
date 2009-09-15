@@ -66,10 +66,13 @@ panel.dl <- function
  debug,
 ### Show debugging output?
  lattice.fun.name,
- type,
- end,
- ...
+### used for default Positioning Function dispatch.
+ type=NULL,
+### used for default Positioning Function dispatch.
+ ...,
 ### Arguments for label.positions and panel.superpose.
+ end=0.03
+### used for default Positioning Function for rugs.
  ){
   if(is.null(type))type <- "NULL"
   if(is.null(method))method <- 
@@ -89,34 +92,31 @@ panel.dl <- function
 }
 panel.superpose.dl <- function
 ### Call panel.superpose and then panel.dl.
-(...,
-### Arguments to panel.superpose and panel.dl.
+(x,
+### vector of x values.
+ y=NULL,
+### vector of y values.
+ subscripts,
+### subscripts of x,y,groups.
+ groups,
+### vector of group ids.
  panel.groups,
- type=NULL,
+### To be parsed for default labeling method, and passed to
+### panel.superpose.
  method=NULL,
- debug=FALSE
+### Positioning Function to use for label placement.
+ debug=FALSE,
+### Show debug output?
+ ...
+### Arguments to panel.superpose and panel.dl.
  ){
   panel.fun.name <- if(is.function(panel.groups))
     substitute(panel.groups) else panel.groups
   lattice.fun.name <- sub("panel.","",panel.fun.name)
-  panel.superpose(...,panel.groups=panel.groups)
-  panel.dl(method,debug,lattice.fun.name,type,...)
-}
-make.panel.groups.fun <- function
-### Direct-label-ify a function you would normally use as the
-### panel.groups argument to panel.superpose. Note that this technique
-### only works with Positioning Functions that are group-independent.
-(old.panel,
-### Panel function to be converted to show direct labels, and to be
-### used as panel.groups.
- method=get.means,
- debug=FALSE
- ){
-  function(...){
-    old.panel(...)
-    labs <- label.positions(...,groups=1,method=method,debug=debug)
-    dl.text(labs,...)
-  }
+  panel.superpose(x=x,y=y,subscripts=subscripts,groups=groups,
+                  panel.groups=panel.groups,...)
+  panel.dl(method,debug,lattice.fun.name,...,
+           x=x,y=y,subscripts=subscripts,groups=groups)
 }
 dl <- function
 ### Shortcut for direct label lattice plots.
