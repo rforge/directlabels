@@ -85,7 +85,7 @@ compare.methods(c("first.points","last.points"),
 
 <p>The panel.superpose.dl function can be used in place of
 panel.superpose in your lattice plots. It behaves just like
-panel.superpose.dl, but it intelligently adds direct labels. If you
+panel.superpose, but it intelligently adds direct labels. If you
 specify panel.groups as a character rather than a function, then we
 can guess a Positioning Function. If not, you can always specify a
 Positioning Function with the method= argument.</p>
