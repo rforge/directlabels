@@ -22,7 +22,7 @@ dl.text <- function
   ##debugging output:
   ##print(cbind(col,col.line,col.points,col.symbol,type))
   col.text <- switch(type,p=col.symbol,l=col.line,col.line)
-  g <- labs[levels(labs$groups)[group.number]==labs$groups,]
+  g <- labs[levels(as.factor(labs$groups))[group.number]==labs$groups,]
   grid.text(g$groups,g$x,g$y,
             hjust=g$hjust,vjust=g$vjust,rot=g$rot,
             gp=gpar(col=col.text),
