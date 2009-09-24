@@ -24,7 +24,7 @@ dl.text <- function
   col.text <- switch(type,p=col.symbol,l=col.line,col.line)
   g <- labs[levels(labs$groups)[group.number]==labs$groups,]
   grid.text(g$groups,g$x,g$y,
-            hjust=g$hjust,vjust=g$vjust,
+            hjust=g$hjust,vjust=g$vjust,rot=g$rot,
             gp=gpar(col=col.text),
             default.units="native")
 }
@@ -95,6 +95,7 @@ panel.superpose.dl <- function
   if(is.null(type))type <- "NULL"
   if(is.null(method))method <- 
     switch(lattice.fun.name,
+           dotplot="last.points",
            xyplot=switch(type,l="first.points","empty.grid.2"),
            densityplot="top.points",
            rug=function(d,debug)
