@@ -22,11 +22,16 @@ label.positions <- function
   groups <- groups[subscripts]
   d <- data.frame(x,groups)
   if(!missing(y))d$y <- y
-  if(class(method)=="character")method <- get(method)
+  if(class(method)=="character"){
+    method.name <- paste(method," ",sep="")
+    method <- get(method)
+  }else method.name <- ""
   labs <- try(method(d,debug))
-  if(class(labs)=="try-error")stop("direct label placement method failed")
+  if(class(labs)=="try-error")
+    stop("direct label placement method ",method.name,"failed")
   for(p in c("hjust","vjust"))
     labs[,p] <- if(p %in% names(labs))as.character(labs[,p]) else 0.5
+  if(!"rot"%in%names(labs))labs$rot <- 0
   ##print(labs)
   labs
 ### Data frame describing where direct labels should be positioned.
@@ -161,10 +166,10 @@ top.points <- dl.indep({
 })
 ### Positioning Function for first points of longitudinal data.
 first.points <-
-  dl.indep(data.frame(d[1,c("x","y")],hjust=1,vjust=0.5))
+  dl.indep(data.frame(d[order(d$x),][1,c("x","y")],hjust=1,vjust=0.5))
 ### Positioning Function for last points of longitudinal data.
 last.points <-
-  dl.indep(data.frame(d[nrow(d),c("x","y")],hjust=0,vjust=0.5))
+  dl.indep(data.frame(d[order(d$x),][nrow(d),c("x","y")],hjust=0,vjust=0.5))
 ### Positioning Function for the mean of each cluster of points.
 get.means <-
   dl.indep(data.frame(x=mean(d$x),y=mean(d$y)))
