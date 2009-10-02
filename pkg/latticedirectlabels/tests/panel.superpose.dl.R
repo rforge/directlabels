@@ -2,16 +2,16 @@ loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
 library(latticedl)
 ## 4 ways to make the same plot:
-print(dl(densityplot,loci,~ppp,type))
+print(dl(densityplot,loci,~ppp,type,n=500))
 print(direct.label(
-                   densityplot(~ppp,loci,groups=type)
+                   densityplot(~ppp,loci,groups=type,n=500)
                    ))
 print(direct.label(
-                   densityplot(~ppp,loci,groups=type,
+                   densityplot(~ppp,loci,groups=type,n=500,
                                panel=panel.superpose,
                                panel.groups="panel.densityplot")
                    ))
-print(densityplot(~ppp,loci,groups=type,
+print(densityplot(~ppp,loci,groups=type,n=500,
                   panel=panel.superpose.dl,panel.groups="panel.densityplot"))
 
 ### Exploring custom panel and panel.groups functions

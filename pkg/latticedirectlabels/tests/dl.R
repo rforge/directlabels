@@ -33,18 +33,19 @@ panel.model <- function(x,subscripts,col.line,...){
   llines(x,bw[subscripts,".fitted"],col=col.line,lty=2)
 }
 ## Custom panel.groups functions:
-dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),
-   panel=panel.superpose,
-   panel.groups=panel.model,method=first.points)
+print(dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),
+         panel=panel.superpose,
+         panel.groups=panel.model,method=first.points))
 ## Custom panel function which highlights min and max values:
 panel.range <- function(y,...){
   panel.abline(h=range(y))
   panel.superpose(y=y,...)
 }
-dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),panel=panel.range)
+print(dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),
+         panel=panel.range))
 ## Custom panel and panel.groups functions:
-dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),
-   panel=panel.range,panel.groups=panel.model,method=first.points)
+print(dl(xyplot,bw,weight~Time|Diet,Rat,type="l",layout=c(3,1),
+         panel=panel.range,panel.groups=panel.model,method=first.points))
 
 ## Fails: default method for scatterplot doesn't make sense here
 ##print(dl(xyplot,BodyWeight,weight~Time|Diet,Rat))
