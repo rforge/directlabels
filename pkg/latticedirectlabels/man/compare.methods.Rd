@@ -8,8 +8,7 @@ compare.methods(m, ...)
 }
 \arguments{
   \item{m}{Vector of label placement function names.}
-  \item{\dots}{
-}
+  \item{\dots}{Args to pass to dl}
 }
 \details{
 }

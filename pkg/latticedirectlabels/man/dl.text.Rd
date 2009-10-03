@@ -14,8 +14,7 @@ dl.text(labs, group.number, col.line = NULL, col.points = NULL, col = NULL, col.
   \item{col}{general color}
   \item{col.symbol}{symbol color}
   \item{type}{plot type}
-  \item{\dots}{
-}
+  \item{\dots}{ignored}
 }
 \details{
 }

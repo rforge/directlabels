@@ -13,8 +13,7 @@ label.positions(x, y, subscripts, groups, debug = FALSE, method = perpendicular.
   \item{groups}{vector of groups.}
   \item{debug}{logical indicating whether debug annotations should be added to the plot.}
   \item{method}{function used to choose position of labels.}
-  \item{\dots}{
-}
+  \item{\dots}{ignored.}
 }
 \details{
 }

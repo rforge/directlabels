@@ -13,8 +13,7 @@ dl(lattice.fun, data, x, groups, method = NULL, debug = FALSE, ...)
   \item{groups}{To be passed to lattice as groups= argument.}
   \item{method}{Label placement method to be passed to direct.label.}
   \item{debug}{Show debugging output? to be passed to direct.label.}
-  \item{\dots}{
-}
+  \item{\dots}{Other arguments to be passed to lattice.fun.}
 }
 \details{
 }

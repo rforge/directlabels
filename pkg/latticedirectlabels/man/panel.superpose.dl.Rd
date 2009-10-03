@@ -17,8 +17,7 @@ panel.superpose.dl(x, y = NULL, subscripts, groups, panel.groups, method = NULL,
   \item{.panel.superpose}{The panel function to use for drawing data points.}
   \item{type}{Plot type.}
   \item{end}{Rug end value in npc.}
-  \item{\dots}{
-}
+  \item{\dots}{Arguments to panel.superpose and panel.dl.}
 }
 \details{
 }
