@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{panel.superpose.dl}
 \title{panel superpose dl}
-\description{Call panel.superpose and then panel.dl.}
+\description{Call panel.superpose with the data and then the direct labels.}
 \usage{
 panel.superpose.dl(x, y = NULL, subscripts, groups, panel.groups, method = NULL, debug = FALSE, .panel.superpose = panel.superpose, type = "p", end = 0.03, ...)
 }
@@ -17,7 +17,7 @@ panel.superpose.dl(x, y = NULL, subscripts, groups, panel.groups, method = NULL,
   \item{.panel.superpose}{The panel function to use for drawing data points.}
   \item{type}{Plot type.}
   \item{end}{Rug end value in npc.}
-  \item{\dots}{Arguments to panel.superpose and panel.dl.}
+  \item{\dots}{Additional arguments to panel.superpose.}
 }
 \details{
 }

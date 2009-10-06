@@ -57,7 +57,7 @@ direct.label <- function
 ### The lattice plot.
 }
 panel.superpose.dl <- function
-### Call panel.superpose and then panel.dl.
+### Call panel.superpose with the data and then the direct labels.
 (x,
 ### vector of x values.
  y=NULL,
@@ -80,7 +80,7 @@ panel.superpose.dl <- function
  end=0.03,
 ### Rug end value in npc.
  ...
-### Arguments to panel.superpose and panel.dl.
+### Additional arguments to panel.superpose.
  ){
   ## FIXME: this is a total hack:
   tryCatch(.panel.superpose(x=x,y=y,subscripts=subscripts,
