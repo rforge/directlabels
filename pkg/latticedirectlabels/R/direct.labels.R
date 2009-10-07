@@ -93,12 +93,12 @@ panel.superpose.dl <- function
  ...
 ### Additional arguments to panel.superpose.
  ){
+  rgs <- list(x=x,subscripts=subscripts,groups=groups,type=type,`...`=...)
+  if(!missing(y))rgs$y <- y
   ## FIXME: this is a total hack:
-  tryCatch(.panel.superpose(x=x,y=y,subscripts=subscripts,
-                            groups=groups,type=type,
-                            panel.groups=panel.groups,...),
-           error=function(e).panel.superpose(x=x,y=y,subscripts=subscripts,
-             groups=groups,type=type,...))
+  tryCatch(do.call(".panel.superpose",c(rgs,panel.groups=panel.groups))
+           ,error=function(e)do.call(".panel.superpose",rgs))
+
   subs <-
     if(is.character(panel.groups))panel.groups else substitute(panel.groups)
   lattice.fun.name <-

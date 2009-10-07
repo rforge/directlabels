@@ -70,7 +70,7 @@ panel.model <- function(x,subscripts,col.line,...){
 print(direct.label(
          xyplot(weight~Time|Diet,bw,groups=Rat,type='l',layout=c(3,1),
                 panel=panel.superpose,panel.groups=panel.model)
-         ))
+         ,method=last.points))
 
 ## Fails: default method for scatterplot doesn't make sense here
 ##print(direct.label(xyplot,BodyWeight,weight~Time|Diet,Rat))

@@ -39,7 +39,7 @@ label.positions <- function
   for(p in c("hjust","vjust"))
     labs[,p] <- if(p %in% names(labs))as.character(labs[,p]) else 0.5
   if(!"rot"%in%names(labs))labs$rot <- 0
-  ##print(labs)
+  if(debug)print(labs)
   labs
 ### Data frame describing where direct labels should be positioned.
 }
