@@ -16,6 +16,11 @@ label.positions <- function
 ### the plot.
  method=perpendicular.lines,
 ### function used to choose position of labels.
+ extra=list(),
+### extra variables for the returned data frame. This is useful for
+### concisely specifying direct label placement parameters that are
+### not a function of the data (ie if all the labels should be rotated
+### by 30 degrees, use extra=list(rot=30)).
  ...
 ### ignored.
  ){
@@ -29,6 +34,8 @@ label.positions <- function
   labs <- try(method(d,debug))
   if(class(labs)=="try-error")
     stop("direct label placement method ",method.name,"failed")
+  for(N in names(extra))labs[[N]] <- extra[[N]]
+  ## defaults for grid parameter values:
   for(p in c("hjust","vjust"))
     labs[,p] <- if(p %in% names(labs))as.character(labs[,p]) else 0.5
   if(!"rot"%in%names(labs))labs$rot <- 0

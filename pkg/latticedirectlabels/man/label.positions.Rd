@@ -4,7 +4,7 @@
 \title{label positions}
 \description{Calculates table of positions of each label. This can be thought of as a lattice panel function. It takes the same sort of arguments but does not draw anything. Instead it is called for its return value.}
 \usage{
-label.positions(x, y, subscripts, groups, debug = FALSE, method = perpendicular.lines, ...)
+label.positions(x, y, subscripts, groups, debug = FALSE, method = perpendicular.lines, extra = list(), ...)
 }
 \arguments{
   \item{x}{x values of points to draw.}
@@ -13,6 +13,7 @@ label.positions(x, y, subscripts, groups, debug = FALSE, method = perpendicular.
   \item{groups}{vector of groups.}
   \item{debug}{logical indicating whether debug annotations should be added to the plot.}
   \item{method}{function used to choose position of labels.}
+  \item{extra}{extra variables for the returned data frame. This is useful for concisely specifying direct label placement parameters that are not a function of the data (ie if all the labels should be rotated by 30 degrees, use extra=list(rot=30)).}
   \item{\dots}{ignored.}
 }
 \details{

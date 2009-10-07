@@ -40,6 +40,11 @@ direct.label <- function
 ### groups, and debug a logical flag indicating if debug output should
 ### be shown. NULL indicates to make a logical choice based on the
 ### high-level plot function chosen.
+ extra=list(),
+### extra variables to be added to the label position data frame. This
+### is useful for concisely specifying direct label placement
+### parameters that are not a function of the data (ie if all the
+### labels should be rotated by 30 degrees, use extra=list(rot=30)).
  debug=FALSE
 ### Show debug output?
  ){
@@ -47,7 +52,7 @@ direct.label <- function
   lattice.fun.name <- paste(p$call[[1]])
   p$panel <-
     function(panel.groups=paste("panel.",lattice.fun.name,sep=""),...){
-      panel.superpose.dl(panel.groups=panel.groups,
+      panel.superpose.dl(panel.groups=panel.groups,extra=extra,
                          .panel.superpose=old.panel,
                          method=method,
                          debug=debug,
@@ -71,6 +76,11 @@ panel.superpose.dl <- function
 ### panel.superpose.
  method=NULL,
 ### Positioning Function to use for label placement.
+ extra=list(),
+### extra variables to be added to the label position data frame. This
+### is useful for concisely specifying direct label placement
+### parameters that are not a function of the data (ie if all the
+### labels should be rotated by 30 degrees, use extra=list(rot=30)).
  debug=FALSE,
 ### Show debug output?
  .panel.superpose=panel.superpose,
@@ -106,7 +116,7 @@ panel.superpose.dl <- function
                    ,debug),
            stop("No default direct label placement method for ",
                 lattice.fun.name,". Please specify method."))
-  labs <- label.positions(method=method,debug=debug,groups=groups,
+  labs <- label.positions(method=method,debug=debug,groups=groups,extra=extra,
                           subscripts=subscripts,x=x,y=y,...)
   panel.superpose(panel.groups=dl.text,labs=labs,type=type,x=x,
                   groups=groups,subscripts=subscripts,...)
