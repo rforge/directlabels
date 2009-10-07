@@ -5,7 +5,8 @@ library(lattice)
 histogram(~gcsescore,Chem97)
 histogram(~gcsescore|factor(score),Chem97)
 densityplot(~gcsescore|factor(score),Chem97,groups=gender)
-qqmath(~gcsescore|factor(score),Chem97,groups=gender,type=c("p","g")) #type g adds a grid
+direct.label(qqmath(~gcsescore|factor(score),Chem97,groups=gender,type=c("p","g"))
+             ,method=perpendicular.lines)
 qq(gender~gcsescore|factor(score),Chem97,type=c("p","g"),aspect=1)
 bwplot(factor(score)~gcsescore|gender,Chem97)
 bwplot(gcsescore~gender|factor(score),Chem97,layout=c(6,1))
@@ -29,8 +30,8 @@ dotplot(age~rate|demographic,vad,layout=c(4,1))
 dots <- dotplot(age~rate,vad,groups=demographic,type="o")
 dots
 direct.label(dots)
-direct.label(dots,
-             method=function(...)data.frame(last.points(...),rot=30))
+direct.label(dots,method=function(...)data.frame(last.points(...),rot=30))
+direct.label(dots,extra=list(rot=90,hjust=-0.1))
 
 data(Earthquake,package="nlme")
 head(Earthquake)
