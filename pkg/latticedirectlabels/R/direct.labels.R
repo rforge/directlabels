@@ -1,3 +1,5 @@
+### Functions need translation before applying positioning function.
+need.trans <- c("qqmath","densityplot")
 dl.text <- function
 ### To be used as panel.groups= argument in panel.superpose. Analyzes
 ### arguments to determine correct text color for this group, and then
@@ -87,9 +89,7 @@ panel.superpose.dl <- function
  .panel.superpose=panel.superpose,
 ### The panel function to use for drawing data points.
  type="p",
-### Plot type.
- end=0.03,
-### Rug end value in npc.
+### Plot type, used for default method dispatch.
  ...
 ### Additional arguments to panel.superpose.
  ){
@@ -109,16 +109,15 @@ panel.superpose.dl <- function
            dotplot="last.points",
            xyplot=switch(type,l="first.points","empty.grid.2"),
            densityplot="top.points",
-           rug=function(d,debug)
-             ddply(d,.(groups),function(d,debug)
-                   data.frame(x=mean(d$x),
-                              y=as.numeric(convertY(unit(end,"npc"),"native")),
-                              vjust=0)
-                   ,debug),
+           qqmath="first.points",
+           rug="rug.mean",
            stop("No default direct label placement method for ",
                 lattice.fun.name,". Please specify method."))
+  if(lattice.fun.name%in%need.trans)method <-
+    c(paste("trans.",lattice.fun.name,sep=""),method)
   labs <- label.positions(method=method,debug=debug,groups=groups,extra=extra,
                           subscripts=subscripts,x=x,y=y,...)
+  type <- type[type!="g"]
   panel.superpose(panel.groups=dl.text,labs=labs,type=type,x=x,
                   groups=groups,subscripts=subscripts,...)
 }

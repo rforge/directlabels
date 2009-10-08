@@ -1,10 +1,10 @@
-\name{last.points}
+\name{trans.qqmath}
 \Rdversion{1.1}
-\alias{last.points}
-\title{last points}
-\description{Positioning Function for last points of longitudinal data.}
+\alias{trans.qqmath}
+\title{trans qqmath}
+\description{Transformation function for 1d qqmath plots.}
 \usage{
-last.points(d, ...)
+trans.qqmath(d, ...)
 }
 \arguments{
   \item{d}{

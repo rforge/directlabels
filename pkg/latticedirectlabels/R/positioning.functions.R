@@ -22,25 +22,28 @@ label.positions <- function
 ### not a function of the data (ie if all the labels should be rotated
 ### by 30 degrees, use extra=list(rot=30)).
  ...
-### ignored.
+### passed to positioning method
  ){
   groups <- groups[subscripts]
   d <- data.frame(x,groups)
   if(!missing(y))d$y <- y
-  if(class(method)=="character"){
-    method.name <- paste(method," ",sep="")
-    method <- get(method)
-  }else method.name <- ""
-  labs <- try(method(d,debug))
-  if(class(labs)=="try-error")
-    stop("direct label placement method ",method.name,"failed")
-  for(N in names(extra))labs[[N]] <- extra[[N]]
+  ##print(match.call(exp=FALSE))
+  for(m in method){
+    if(class(m)=="character"){
+      method.name <- paste(m," ",sep="")
+      m <- get(m)
+    }else method.name <- ""
+    d <- try(m(d,debug=debug,...))
+    if(class(d)=="try-error")
+      stop("direct label placement method ",method.name,"failed")
+  }
+  for(N in names(extra))d[[N]] <- extra[[N]]
   ## defaults for grid parameter values:
   for(p in c("hjust","vjust"))
-    labs[,p] <- if(p %in% names(labs))as.character(labs[,p]) else 0.5
-  if(!"rot"%in%names(labs))labs$rot <- 0
-  if(debug)print(labs)
-  labs
+    d[,p] <- if(p %in% names(d))as.character(d[,p]) else 0.5
+  if(!"rot"%in%names(d))d$rot <- 0
+  if(debug)print(d)
+  d
 ### Data frame describing where direct labels should be positioned.
 }
 
@@ -51,9 +54,11 @@ perpendicular.lines <- function
 ### along this line.
 (d,
 ### Data frame with groups x y.
- debug=FALSE
+ debug=FALSE,
 ### If TRUE will draw points at the center of each cluster and some
 ### lines that show how the points returned were chosen.
+ ...
+### ignored.
  ){
   means <- rename(get.means(d),c(x="mx",y="my"))
   big <- merge(d,means,by="groups")
@@ -100,10 +105,12 @@ empty.grid <- function
 ### Data frame of points on the scatterplot with columns groups x y.
  debug=FALSE,
 ### Show debugging info on the plot? This is passed to loc.fun.
- loc.fun=get.means
+ loc.fun=get.means,
 ### Function that takes d and returns a data frame with 1 column for
 ### each group, giving the point we will use to look for a close point
 ### on the grid, to put the group label.
+ ...
+### ignored.
  ){
   loc <- loc.fun(d,debug)
   NREP <- 10
@@ -145,12 +152,13 @@ empty.grid.2 <- function
 ### grid method.
 (d,
 ### Data frame with columns groups x y.
- debug
+ debug,
 ### Show debugging graphics on the plot?
+ ...
+### ignored.
  ){
   empty.grid(d,debug,perpendicular.lines)
 }
-
 dl.indep <- function
 ### Makes a function you can use to specify the location of each group
 ### independently.
@@ -159,17 +167,21 @@ dl.indep <- function
 ### only a single group, and returns the direct label position.
  ){
   foo <- substitute(expr)
-  f <- function(d,debug)eval(foo)
-  function(d,debug){
-    ddply(d,.(groups),f,debug)
+  f <- function(d,...)eval(foo)
+  function(d,...){
+    ddply(d,.(groups),f,...)
   }
 ### The constructed label position function.
 }
 ### Positioning Function for the mode of a density estimate.
 top.points <- dl.indep({
+  maxy <- which.max(d$y)
+  data.frame(x=d$x[maxy],y=d$y[maxy],hjust=0.5,vjust=0)
+})
+### Transformation function for 1d densityplots.
+trans.densityplot <- dl.indep({
   dens <- density(d$x)
-  maxy <- which.max(dens$y)
-  data.frame(x=dens$x[maxy],y=dens$y[maxy],hjust=0.5,vjust=0)
+  data.frame(x=dens$x,y=dens$y)
 })
 ### Positioning Function for first points of longitudinal data.
 first.points <-
@@ -177,6 +189,25 @@ first.points <-
 ### Positioning Function for last points of longitudinal data.
 last.points <-
   dl.indep(data.frame(d[order(d$x),][nrow(d),c("x","y")],hjust=0,vjust=0.5))
+### Transformation function for 1d qqmath plots.
+trans.qqmath <- function(d,...){
+  ddply(d,.(groups),function(d){
+    r <- prepanel.default.qqmath(d$x,...)
+    data.frame(x=r$x,y=r$y)
+  })
+}
 ### Positioning Function for the mean of each cluster of points.
 get.means <-
   dl.indep(data.frame(x=mean(d$x),y=mean(d$y)))
+### Place points on top of the mean value of the rug.
+rug.mean <- function(d,...,end)
+  ddply(d,.(groups),function(d)
+        data.frame(x=mean(d$x),
+                   y=as.numeric(convertY(unit(end,"npc"),"native")),
+                   vjust=0))
+### Do first or last, whichever has points most spread out.
+maxvar.points <- function(d,...){
+  v <- ddply(d,.(x),summarise,v=var(y))
+  x <- subset(v,v==max(v))$x
+  if(x==min(d$x))first.points(d,...) else last.points(d,...)
+}

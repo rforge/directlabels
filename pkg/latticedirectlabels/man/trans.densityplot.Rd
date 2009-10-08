@@ -1,10 +1,10 @@
-\name{last.points}
+\name{trans.densityplot}
 \Rdversion{1.1}
-\alias{last.points}
-\title{last points}
-\description{Positioning Function for last points of longitudinal data.}
+\alias{trans.densityplot}
+\title{trans densityplot}
+\description{Transformation function for 1d densityplots.}
 \usage{
-last.points(d, ...)
+trans.densityplot(d, ...)
 }
 \arguments{
   \item{d}{

@@ -14,7 +14,7 @@ label.positions(x, y, subscripts, groups, debug = FALSE, method = perpendicular.
   \item{debug}{logical indicating whether debug annotations should be added to the plot.}
   \item{method}{function used to choose position of labels.}
   \item{extra}{extra variables for the returned data frame. This is useful for concisely specifying direct label placement parameters that are not a function of the data (ie if all the labels should be rotated by 30 degrees, use extra=list(rot=30)).}
-  \item{\dots}{ignored.}
+  \item{\dots}{passed to positioning method}
 }
 \details{
 }

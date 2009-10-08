@@ -4,12 +4,12 @@
 \title{get means}
 \description{Positioning Function for the mean of each cluster of points.}
 \usage{
-get.means(d, debug)
+get.means(d, ...)
 }
 \arguments{
   \item{d}{
 }
-  \item{debug}{
+  \item{\dots}{
 }
 }
 \details{

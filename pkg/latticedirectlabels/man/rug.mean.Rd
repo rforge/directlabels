@@ -1,15 +1,17 @@
-\name{last.points}
+\name{rug.mean}
 \Rdversion{1.1}
-\alias{last.points}
-\title{last points}
-\description{Positioning Function for last points of longitudinal data.}
+\alias{rug.mean}
+\title{rug mean}
+\description{Place points on top of the mean value of the rug.}
 \usage{
-last.points(d, ...)
+rug.mean(d, ..., end)
 }
 \arguments{
   \item{d}{
 }
   \item{\dots}{
+}
+  \item{end}{
 }
 }
 \details{

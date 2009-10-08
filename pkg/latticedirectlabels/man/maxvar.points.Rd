@@ -1,10 +1,10 @@
-\name{last.points}
+\name{maxvar.points}
 \Rdversion{1.1}
-\alias{last.points}
-\title{last points}
-\description{Positioning Function for last points of longitudinal data.}
+\alias{maxvar.points}
+\title{maxvar points}
+\description{Do first or last, whichever has points most spread out.}
 \usage{
-last.points(d, ...)
+maxvar.points(d, ...)
 }
 \arguments{
   \item{d}{

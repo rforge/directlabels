@@ -4,11 +4,12 @@
 \title{empty grid 2}
 \description{Use the perpendicular lines method in combination with the empty grid method.}
 \usage{
-empty.grid.2(d, debug)
+empty.grid.2(d, debug, ...)
 }
 \arguments{
   \item{d}{Data frame with columns groups x y.}
   \item{debug}{Show debugging graphics on the plot?}
+  \item{\dots}{ignored.}
 }
 \details{
 }
