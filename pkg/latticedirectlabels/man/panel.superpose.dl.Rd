@@ -4,7 +4,7 @@
 \title{panel superpose dl}
 \description{Call panel.superpose with the data and then the direct labels.}
 \usage{
-panel.superpose.dl(x, y = NULL, subscripts, groups, panel.groups, method = NULL, debug = FALSE, .panel.superpose = panel.superpose, type = "p", ...)
+panel.superpose.dl(x, y = NULL, subscripts, groups, panel.groups, method = NULL, .panel.superpose = panel.superpose, type = "p", ...)
 }
 \arguments{
   \item{x}{vector of x values.}
@@ -12,8 +12,7 @@ panel.superpose.dl(x, y = NULL, subscripts, groups, panel.groups, method = NULL,
   \item{subscripts}{subscripts of x,y,groups.}
   \item{groups}{vector of group ids.}
   \item{panel.groups}{To be parsed for default labeling method, and passed to panel.superpose.}
-  \item{method}{Positioning Function to use for label placement.}
-  \item{debug}{Show debug output?}
+  \item{method}{Direct labeling method, see direct.label for details.}
   \item{.panel.superpose}{The panel function to use for drawing data points.}
   \item{type}{Plot type, used for default method dispatch.}
   \item{\dots}{Additional arguments to panel.superpose.}

@@ -8,7 +8,7 @@ direct.label(p, method = NULL, debug = FALSE)
 }
 \arguments{
   \item{p}{The lattice plot (result of a call to a high-level lattice function).}
-  \item{method}{Method for direct labeling --- this is a function that accepts 2 arguments: d a data frame of the points to plot with columns x y groups, and debug a logical flag indicating if debug output should be shown. NULL indicates to make a logical choice based on the high-level plot function chosen.}
+  \item{method}{Method for direct labeling, specified in one of the following ways: (1) a function that takes the data and returns the positions of direct labels, (2) the name of such a function as a character string, or (3) a list of such functions or names, which will be applied in order to transform the original data into direct label positions. Named elements of this list, will be copied to the resulting label position data frame. See examples. Functions used here should be Positioning Functions, function(d,...), where d is a data frame of the points to plot, with columns x y groups. NULL indicates to make a logical choice based on the high-level plot function chosen. Default method dispatch is done in panel.superpose.dl, and processing this argument is done in label.positions.}
   \item{debug}{Show debug output?}
 }
 \details{

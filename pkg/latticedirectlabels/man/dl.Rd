@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{dl}
 \title{dl}
-\description{Shortcut for direct label lattice plots.}
+\description{Shortcut for a lattice plot with direct labels. See direct.label for a more precise description.}
 \usage{
 dl(lattice.fun, data, x, groups, method = NULL, debug = FALSE, ...)
 }
@@ -11,7 +11,7 @@ dl(lattice.fun, data, x, groups, method = NULL, debug = FALSE, ...)
   \item{data}{Data frame to use.}
   \item{x}{Lattice model formula.}
   \item{groups}{To be passed to lattice as groups= argument.}
-  \item{method}{Label placement method to be passed to direct.label.}
+  \item{method}{Direct labeling method, see direct.label for details.}
   \item{debug}{Show debugging output? to be passed to direct.label.}
   \item{\dots}{Other arguments to be passed to lattice.fun.}
 }
