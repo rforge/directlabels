@@ -57,3 +57,20 @@ plot(direct.label(
 plot(direct.label(
              densityplot(~ppp|type,loci,groups=type,n=500)
              ))
+
+
+data(Chem97,package="mlmRev")
+qqm <- qqmath(~gcsescore,Chem97,groups=gender,
+              type=c("p","g"),f.value=ppoints(100),auto.key=TRUE)
+direct.label(qqm)
+static.labels <- data.frame(x=c(-2,0),y=c(6,4),groups=c("F","M"))
+direct.label(qqm,method=function(d,...)static.labels,debug=TRUE)
+direct.label(qqm,method=static.labels,debug=TRUE)
+## Should work: static.labels overwrites values from
+## last.points. Applying last.points should change the hjust as well:
+direct.label(qqm,method=c("last.points",static.labels),debug=TRUE)
+direct.label(qqm,method=c(static.labels,"last.points"),debug=TRUE)
+direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),
+                    type=c('l','g'),f.value=ppoints(100)))
+
+direct.label(dotplot(VADeaths,type="o"),method=list("last.points",rot=30))

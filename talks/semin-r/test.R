@@ -9,6 +9,7 @@ densityplot(~gcsescore|factor(score),Chem97,groups=gender)
 direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g")))
 direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"),f.value=ppoints(100)))
 direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"),f.value=ppoints(100)),method=function(d,...)data.frame(x=c(-2,0),y=c(6,4),groups=c("M","F")))
+direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"),f.value=ppoints(100)),method=data.frame(x=c(-2,0),y=c(6,4),groups=c("M","F")))
 direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),type=c('l','g'),f.value=ppoints(100)))
 
 qq(gender~gcsescore|factor(score),Chem97,type=c("p","g"),aspect=1)

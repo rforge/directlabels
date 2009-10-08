@@ -16,32 +16,34 @@ label.positions <- function
 ### the plot.
  method=perpendicular.lines,
 ### function used to choose position of labels.
- extra=list(),
-### extra variables for the returned data frame. This is useful for
-### concisely specifying direct label placement parameters that are
-### not a function of the data (ie if all the labels should be rotated
-### by 30 degrees, use extra=list(rot=30)).
  ...
 ### passed to positioning method
  ){
+  levs <- levels(groups)
   groups <- groups[subscripts]
   d <- data.frame(x,groups)
   if(!missing(y))d$y <- y
-  ##print(match.call(exp=FALSE))
-  for(m in method){
-    if(class(m)=="character"){
-      method.name <- paste(m," ",sep="")
-      m <- get(m)
-    }else method.name <- ""
-    d <- try(m(d,debug=debug,...))
-    if(class(d)=="try-error")
-      stop("direct label placement method ",method.name,"failed")
+  if(class(method)=="function")method <- list(method)
+  for(m.num in seq_along(method)){
+    m <- method[[m.num]]
+    m.var <- names(method)[m.num]
+    if(!(is.null(m.var)||m.var==""))d[[m.var]] <- m else{
+      if(class(m)=="character"){
+        method.name <- paste(m," ",sep="")
+        m <- get(m)
+      }else method.name <- ""
+      d <- try(m(d,debug=debug,...))
+      if(class(d)=="try-error")
+        stop("direct label placement method ",method.name,"failed")
+    }
   }
-  for(N in names(extra))d[[N]] <- extra[[N]]
+  ## rearrange factors in case pos fun messed up the order:
+  d$groups <- factor(as.character(d$groups),levs)
   ## defaults for grid parameter values:
   for(p in c("hjust","vjust"))
     d[,p] <- if(p %in% names(d))as.character(d[,p]) else 0.5
   if(!"rot"%in%names(d))d$rot <- 0
+  d <- unique(d)
   if(debug)print(d)
   d
 ### Data frame describing where direct labels should be positioned.
