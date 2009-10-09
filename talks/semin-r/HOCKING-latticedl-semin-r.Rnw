@@ -2,7 +2,8 @@
 \documentclass{beamer}
 \usepackage{graphicx}
 
-\title{Visualisation des donn\'ees multivari\'ees avec lattice}
+\title{Visualisation des donn\'ees multivari\'ees avec lattice\\
+http://directlabels.r-forge.r-project.org}
 \author{Toby Dylan Hocking}
 
 \AtBeginSection[]
@@ -33,7 +34,6 @@
   }
 }
 
-\usepackage{/usr/local/lib/R/share/texmf/Sweave}
 \begin{document}
 \setkeys{Gin}{width=\textwidth}
 \frame{\titlepage}
@@ -41,39 +41,22 @@
 \section{lattice}
 
 \frame[containsverbatim]{\frametitle{Load some data}
-\begin{Schunk}
-\begin{Sinput}
-> data(Chem97, package = "mlmRev")
-> head(Chem97)
-\end{Sinput}
-\begin{Soutput}
-  lea school student score gender age gcsescore   gcsecnt
-1   1      1       1     4      F   3     6.625 0.3393157
-2   1      1       2    10      F  -3     7.625 1.3393157
-3   1      1       3    10      F  -4     7.250 0.9643157
-4   1      1       4    10      F  -2     7.500 1.2143157
-5   1      1       5     8      F  -1     6.444 0.1583157
-6   1      1       6    10      F   4     7.750 1.4643157
-\end{Soutput}
-\end{Schunk}
+<<>>=
+data(Chem97,package="mlmRev")
+head(Chem97)
+@
 }
 
 \frame[containsverbatim]{\frametitle{Simple histogram}
-\begin{Schunk}
-\begin{Sinput}
-> library(lattice)
-> plot(histogram(~gcsescore, Chem97))
-\end{Sinput}
-\end{Schunk}
-\includegraphics{HOCKING-latticedl-semin-r-002}
+<<fig=T,width=10>>=
+library(lattice)
+plot(histogram(~gcsescore,Chem97))
+@
 }
 \frame[containsverbatim]{\frametitle{Simple histogram}
-\begin{Schunk}
-\begin{Sinput}
-> plot(histogram(~gcsescore | factor(score), Chem97))
-\end{Sinput}
-\end{Schunk}
-\includegraphics{HOCKING-latticedl-semin-r-003}
+<<fig=T,width=10>>=
+plot(histogram(~gcsescore|factor(score),Chem97))
+@
 }
 \section{latticeExtra}
 

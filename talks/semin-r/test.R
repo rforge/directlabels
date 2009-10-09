@@ -1,8 +1,11 @@
+## Load a data set
 data(Chem97,package="mlmRev")
 head(Chem97)
 
+## Plot a histogram
 library(lattice)
 histogram(~gcsescore,Chem97)
+
 histogram(~gcsescore|factor(score),Chem97)
 densityplot(~gcsescore|factor(score),Chem97,groups=gender)
 ## simple one-time positioning function:
