@@ -1,10 +1,11 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-\documentclass{beamer}
+\documentclass[9pt]{beamer}
 \usepackage{graphicx}
 
 \title{Visualizing multivariate data using lattice and latticedl\\
 http://directlabels.r-forge.r-project.org}
 \author{Toby Dylan Hocking}
+\date{15 October 2009}
 
 \AtBeginSection[]
 {
@@ -53,9 +54,10 @@ library(lattice)
 plot(histogram(~gcsescore,Chem97))
 @
 }
-\frame[containsverbatim]{\frametitle{Simple histogram}
+\frame[containsverbatim]{\frametitle{Conditional histogram}
 <<fig=T,width=10>>=
-plot(histogram(~gcsescore|factor(score),Chem97))
+plot(histogram(~gcsescore|factor(score),xlab="some label",main="a big title that takes up a whole line and then some",ylab="another label",
+               Chem97))
 @
 }
 \section{latticeExtra}

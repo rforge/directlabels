@@ -1,9 +1,11 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-\documentclass{beamer}
+\documentclass[9pt]{beamer}
 \usepackage{graphicx}
 
-\title{Visualisation des donn\'ees multivari\'ees avec lattice}
+\title{Visualizing multivariate data using lattice and latticedl\\
+http://directlabels.r-forge.r-project.org}
 \author{Toby Dylan Hocking}
+\date{15 October 2009}
 
 \AtBeginSection[]
 {
@@ -33,7 +35,7 @@
   }
 }
 
-\usepackage{/usr/local/lib/R/share/texmf/Sweave}
+\usepackage{Sweave}
 \begin{document}
 \setkeys{Gin}{width=\textwidth}
 \frame{\titlepage}
@@ -62,15 +64,17 @@
 \begin{Schunk}
 \begin{Sinput}
 > library(lattice)
-> plot(histogram(~gcsescore, Chem97))
+> histogram(~gcsescore, Chem97)
 \end{Sinput}
 \end{Schunk}
 \includegraphics{HOCKING-latticedl-semin-r-002}
 }
-\frame[containsverbatim]{\frametitle{Simple histogram}
+\frame[containsverbatim]{\frametitle{Conditional histogram}
 \begin{Schunk}
 \begin{Sinput}
-> plot(histogram(~gcsescore | factor(score), Chem97))
+> histogram(~gcsescore | factor(score), xlab = "some label", 
++     main = "a big title that takes up a whole line and then some", 
++     ylab = "another label", Chem97)
 \end{Sinput}
 \end{Schunk}
 \includegraphics{HOCKING-latticedl-semin-r-003}
@@ -86,3 +90,4 @@
 
 \end{document}
 
+Sinput

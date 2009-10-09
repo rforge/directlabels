@@ -1,2 +1,2 @@
-Sweave("/home/tdhock/directlabels/talks/semin-r/HOCKING-latticedl-semin-r.Rnw",stylepath=TRUE);system("pdflatex HOCKING-latticedl-semin-r && evince HOCKING-latticedl-semin-r.pdf")
+Sweave("HOCKING-latticedl-semin-r.Rnw");system(". ~/.bashrc; python killplot.py HOCKING-latticedl-semin-r.tex && pdflatex HOCKING-latticedl-semin-r && evince HOCKING-latticedl-semin-r.pdf &")
 
