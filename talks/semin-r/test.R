@@ -2,14 +2,55 @@
 data(Chem97,package="mlmRev")
 head(Chem97)
 
-## Plot a histogram
+## Simple histogram
 library(lattice)
 histogram(~gcsescore,Chem97)
 
+## Histograms conditional on a categorical variable
 histogram(~gcsescore|factor(score),Chem97)
+
+## Conditioned plots of kernel density estimates
+densityplot(~gcsescore|factor(score),Chem97)
+
+## Conditioned and grouped density plots
 densityplot(~gcsescore|factor(score),Chem97,groups=gender)
+
+## Add a legend with the auto.key argument
+densityplot(~gcsescore|factor(score),Chem97,groups=gender,auto.key=list())
+
+## Hide the actual points with the plot.points argument
+densityplot(~gcsescore|factor(score),Chem97,groups=gender,auto.key=list(),plot.points=FALSE)
+
+## Legend layout with the columns argument
+densityplot(~gcsescore|factor(score),Chem97,groups=gender,auto.key=list(columns=2),plot.points=FALSE)
+
+## Legend positioning with the space argument
+densityplot(~gcsescore|factor(score),Chem97,groups=gender,auto.key=list(columns=2,space="bottom"),plot.points=FALSE)
+
+## Show all default settings
+show.settings()
+
+## Show settings good for printout
+show.settings(col.whitebg())
+
+## Change the settings
+rb <- simpleTheme(col=c("black","red"))
+show.settings(rb)
+
+## Change group colors with par.settings
+densityplot(~gcsescore|factor(score),Chem97,groups=gender,auto.key=list(columns=2,space="bottom"),par.settings=list(superpose.line=list(col=c("black","red"))))
+
+## Query graphical parameters
+names(trellis.par.get())
+
+## Query graphical parameters for grouped lineplots
+trellis.par.get("superpose.line")
+
+## Shorter specification using simpleTheme
+densityplot(~gcsescore|factor(score),Chem97,groups=gender,auto.key=list(columns=2,space="bottom"),par.settings=)
+
 ## simple one-time positioning function:
-direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g")))
+qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"))
 direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"),f.value=ppoints(100)))
 direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"),f.value=ppoints(100)),method=function(d,...)data.frame(x=c(-2,0),y=c(6,4),groups=c("M","F")))
 direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"),f.value=ppoints(100)),method=data.frame(x=c(-2,0),y=c(6,4),groups=c("M","F")))
@@ -29,26 +70,57 @@ xyplot(depth~factor(mag),quakes,
           xlab="Magnitude (Richter)",
           ylab="Depth (km)")
 
-VADeaths
+## Load a tabular data set
+print(VADeaths)
+
+## Convert to data frame to work with lattice
 vad <- as.data.frame.table(VADeaths)
-names(vad) <- c("age","demographic","rate")
+names(vad) <- c("age","demographic","deaths")
 head(vad)
-barchart(age~rate|demographic,vad,layout=c(4,1),origin=0)
-dotplot(age~rate|demographic,vad,layout=c(4,1))
-dots <- dotplot(age~rate,vad,groups=demographic,type="o")
+
+## Plot using bars
+barchart(age~deaths|demographic,vad)
+
+## Set the bar origin to 0 (less confusing)
+barchart(age~deaths|demographic,vad,origin=0)
+
+## Arrange the plots vertically to facilitate comparison
+barchart(age~deaths|demographic,vad,layout=c(1,4),origin=0)
+
+## Dotplots also work well for these data
+dotplot(age~deaths|demographic,vad,layout=c(1,4))
+
+## Connect the dots with the "o" type
+dotplot(age~deaths|demographic,vad,layout=c(1,4),type="o")
+
+## Use grouping instead of conditioning to facilitate comparison
+dots <- dotplot(age~deaths,vad,groups=demographic,type="o")
 dots
+
+## Add a confusing legend ... how to label better?
+update(dots,auto.key=list())
+
+## Direct label the different groups
+library(latticedl)
 direct.label(dots)
 direct.label(dots,method=function(...)data.frame(last.points(...),rot=30))
-direct.label(dots,extra=list(rot=90,hjust=-0.1))
+direct.label(dots,method=list(rot=90,hjust=-0.1))
 
+## Load some earthquake measurements
 data(Earthquake,package="nlme")
 head(Earthquake)
+
+## Scatter plot with xyplot
 xyplot(accel~distance,Earthquake)
+
+## Log scales with scales argument
 xyplot(accel~distance,Earthquake,scales=list(log=TRUE))
-xyplot(accel~distance,Earthquake,scales=list(log=TRUE),
-       type=c("p"))
-xyplot(accel~distance,Earthquake,scales=list(log=TRUE),
-       type=c("p","g"))
+
+## Type "p" is the default
+xyplot(accel~distance,Earthquake,scales=list(log=TRUE),type=c("p"))
+
+## Type
+xyplot(accel~distance,Earthquake,scales=list(log=TRUE),type=c("p","g"))
 xyplot(accel~distance,Earthquake,scales=list(log=TRUE),
        type=c("p","g","smooth"))
 
@@ -83,3 +155,9 @@ dlvad <- direct.label(
              ,method=function(...)data.frame(last.points(...),rot=30))
 library(latticeExtra)
 c(dotplot(VADeaths,type="o",auto.key=list(space="right")),dlvad) #for combining lattice plots on the same page.
+## simple one-time positioning function:
+direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g")))
+direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"),f.value=ppoints(100)))
+direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"),f.value=ppoints(100)),method=function(d,...)data.frame(x=c(-2,0),y=c(6,4),groups=c("M","F")))
+direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"),f.value=ppoints(100)),method=data.frame(x=c(-2,0),y=c(6,4),groups=c("M","F")))
+direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),type=c('l','g'),f.value=ppoints(100)))
