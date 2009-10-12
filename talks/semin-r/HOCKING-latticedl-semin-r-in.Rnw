@@ -1,0 +1,56 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+\documentclass[9pt]{beamer}
+\usepackage{graphicx}
+
+\title{Visualizing multivariate data using lattice and latticedl\\
+http://directlabels.r-forge.r-project.org}
+\author{Toby Dylan Hocking}
+\date{15 October 2009}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\newcommand{\framet}[2]{\frame{
+\begin{itemize}
+\frametitle{#1}{#2}
+\end{itemize}
+}}
+
+\newcommand{\picframe}[1]{
+  \frame[plain]{
+    \includegraphics[width=\textwidth]{#1}
+  }
+}
+
+\begin{document}
+\setkeys{Gin}{width=\textwidth}
+\frame{\titlepage}
+
+\section{lattice}
+
+LATTICE
+
+\section{latticedl}
+
+\framet{Direct labels are almost always better than legends}{
+\item Edward Tufte, professor emeritus of Statistics at Yale
+\item 1983, The Visual Display of Quantitative Information
+\includegraphics{TUFTE.jpg}}
+
+LATTICEDL
+
+\end{document}
+
