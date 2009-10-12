@@ -66,7 +66,7 @@
   \item Direct labeling: ?direct.label
   \end{itemize}
   \item Deepayan Sarkar (2008) Lattice: Multivariate Data Visualization
-    with R", Springer.
+    with R, Springer.
 }
 
 LATTICE

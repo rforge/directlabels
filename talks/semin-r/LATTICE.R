@@ -3,7 +3,10 @@ options(width=60)
 library(lattice)
 dotplot(variety ~ yield | site, data = barley, groups = year,auto.key=list(space="right"),layout=c(1,6),xlab = "Barley Yield (bushels/acre)")
 
-## And also automatically calculates scales for optimal decoding
+## Aspect ratio in scatterplots is important
+xyplot(sunspot.year~1700:1988,xlab="Year",type="l",scales=list(x=list(alternating=2)),main = "Yearly Sunspots")
+
+## Lattice also automatically calculates aspect ratio for optimal decoding
 xyplot(sunspot.year~1700:1988,xlab="Year",type="l",scales=list(x=list(alternating=2)),main = "Yearly Sunspots",aspect="xy")
 
 ## Load a data set

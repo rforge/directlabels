@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys,pdb,re
 f=sys.argv[1]
 txt=open(f).read()
