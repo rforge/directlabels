@@ -1,9 +1,10 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
 \documentclass[9pt]{beamer}
 \usepackage{graphicx}
+\usepackage{hyperref}
 
-\title{Visualizing multivariate data using lattice and latticedl\\
-http://directlabels.r-forge.r-project.org}
+\title{Visualizing multivariate data using lattice and direct labels\\
+\url{http://directlabels.r-forge.r-project.org}}
 \author{Toby Dylan Hocking}
 \date{15 October 2009}
 
@@ -23,7 +24,7 @@ http://directlabels.r-forge.r-project.org}
   \end{frame}
 }
 
-\newcommand{\framet}[2]{\frame{
+\newcommand{\framet}[2]{\frame[containsverbatim]{
 \begin{itemize}
 \frametitle{#1}{#2}
 \end{itemize}
@@ -39,16 +40,53 @@ http://directlabels.r-forge.r-project.org}
 \setkeys{Gin}{width=\textwidth}
 \frame{\titlepage}
 
-\section{lattice}
+\section{The lattice system}
+
+\framet{Brief history of lattice}{
+  \item Bill Cleveland, \emph{Visualizing Data} (1993).
+  \item Bill Cleveland, Rick Becker, Bell Labs, 1990s: trellis
+    graphics system for S: \url{http://cm.bell-labs.com/cm/ms/departments/sia/project/trellis/}
+  \item Deepayan Sarkar, 2000s: the lattice package for R.
+}
+
+\framet{References for learning lattice}{
+\item Installation and loading
+  \begin{itemize}
+  \item install.packages(c(``latticeExtra'',``latticedl''))
+  \item library(lattice)
+  \item library(latticeExtra)
+  \item library(latticedl)
+\end{itemize}
+\item Interactive R help pages
+  \begin{itemize}
+  \item Overview: ?Lattice
+  \item Customizing displays: ?xyplot
+  \item Included panel functions: ?panel.functions, ?llines
+  \item Multiple plots per page: ?plot.trellis, ?c.trellis
+  \item Direct labeling: ?direct.label
+  \end{itemize}
+  \item Deepayan Sarkar (2008) Lattice: Multivariate Data Visualization
+    with R", Springer.
+}
 
 LATTICE
 
-\section{latticedl}
+\section{Adding direct labels using the latticedl package}
 
-\framet{Direct labels are almost always better than legends}{
-\item Edward Tufte, professor emeritus of Statistics at Yale
-\item 1983, The Visual Display of Quantitative Information
-\includegraphics{TUFTE.jpg}}
+\framet{Why use direct labels instead of legends?}{
+\item Edward Tufte, professor emeritus of Statistics at Yale.
+\item The Visual Display of Quantitative Information (1983).
+\includegraphics{TUFTE.jpg}
+\item One of his points: legends make it harder to decode a statistical graphic.
+\item Use direct labels whenever possible.
+}
+
+\framet{How to plot direct labels in R?}{
+  \item Base graphics:
+    plot(x,y,col=col);text(xx,yy,labels,col=cc)
+  \item Lattice graphics: xyplot(y$\sim$x,data,panel=function(...){...})
+  \item Lattice + latticedl: direct.label(xyplot(y$\sim$x,data))
+}
 
 LATTICEDL
 

@@ -1,9 +1,16 @@
+## Lattice allows easy visualization of many variables
+options(width=60)
+library(lattice)
+dotplot(variety ~ yield | site, data = barley, groups = year,auto.key=list(space="right"),layout=c(1,6),xlab = "Barley Yield (bushels/acre)")
+
+## And also automatically calculates scales for optimal decoding
+xyplot(sunspot.year~1700:1988,xlab="Year",type="l",scales=list(x=list(alternating=2)),main = "Yearly Sunspots",aspect="xy")
+
 ## Load a data set
 data(Chem97,package="mlmRev")
 head(Chem97)
 
 ## Simple histogram
-library(lattice)
 histogram(~gcsescore,Chem97)
 
 ## Histograms conditional on a categorical variable
@@ -35,7 +42,7 @@ show.settings(standard.theme(color=FALSE))
 
 ## Change the settings
 br <- simpleTheme(col=c("black","red"))
-show.settings(rb)
+show.settings(br)
 
 ## Change group colors with par.settings
 densityplot(~gcsescore|factor(score),Chem97,groups=gender,auto.key=list(columns=2,space="bottom"),par.settings=br)
@@ -107,19 +114,16 @@ grid <- expand.grid(x=x, y=y)
 grid$z <- cos(r^2) * exp(-r/(pi^3))
 head(grid)
 
-## Plot 3 categorical variables using color
+## Plot 3 continuous variables using color
 levelplot(z~x*y,grid)
-
-## Add more levels to the color scale
-levelplot(z~x*y,grid,cuts=50)
 
 ## Use a different color scale
 my.colors <- sapply(0:100,function(l)hcl(l=l))
-levelplot(z~x*y,grid,cuts=50,col.regions=my.colors)
+levelplot(z~x*y,grid,col.regions=my.colors)
 
 ## Data in matrix form of volcano heights
 dim(volcano)
-volcano[1:5,1:5]
+print(volcano[1:5,1:5])
 
 ## Plot volcano elevations in a matrix using color
 levelplot(volcano,col.regions=my.colors)
@@ -129,8 +133,12 @@ wireframe(volcano,drape=TRUE,col.regions=my.colors)
 
 ## Combine plots using latticeExtra
 library(latticeExtra)
+both <- c(wireframe(volcano,drape=TRUE),levelplot(volcano))
+both
+
+## Globally change the plot parameters
 trellis.par.set(regions=list(col=my.colors))
-c(wireframe(volcano,drape=TRUE),levelplot(volcano))
+both
 
 ## Box and whisker plots
 bwplot(gcsescore~gender|factor(score),Chem97,layout=c(6,1))
