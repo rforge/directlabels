@@ -62,7 +62,8 @@ perpendicular.lines <- function
  ...
 ### ignored.
  ){
-  means <- rename(get.means(d),c(x="mx",y="my"))
+  means <- get.means(d)
+  names(means)[2:3] <- c("mx","my")
   big <- merge(d,means,by="groups")
   fit <- lm(my~mx,means)
   b <- coef(fit)[1]
@@ -128,7 +129,7 @@ empty.grid <- function
                   top=y+L$y$diff,
                   bottom=y-L$y$diff)
   inbox <- function(x,y,left,right,top,bottom)
-    c(data=sum(d$x%inside%c(left,right) & d$y%inside%c(bottom,top)))
+    c(data=sum(d$x>left & d$x<right & d$y>bottom & d$y<top))
   count.tab <- cbind(mdply(g2,inbox),expand.grid(i=1:NREP,j=1:NREP))
   count.mat <- matrix(count.tab$data,nrow=NREP,ncol=NREP,
                       byrow=TRUE,dimnames=list(1:NREP,1:NREP))[NREP:1,]
