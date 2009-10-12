@@ -1,44 +1,20 @@
+
 ## Easy fix for confusing legend: direct labels
 library(latticedl)
-qqm <- qqmath(~gcsescore,Chem97,groups=gender,f.value=ppoints(100),type="l")
-direct.label(qqm)
-
-## For longitudinal data we also label the first or last points
 long <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
 direct.label(long)
+
+## Even works in black and white
+direct.label(update(long,par.settings=standard.theme(color=FALSE)))
 
 ## Change label positions with the method argument
 direct.label(long,method=last.points)
 
-## Make your own positioning function
-endpoint <- function(data.points,...){
-  label.pos <- NULL
-  for(g in unique(data.points$groups)){
-    d <- subset(data.points,groups==g)
-    label.pos <- rbind(label.pos,d[which.max(d$x),])
-  };return(label.pos)}
-direct.label(long,method=endpoint)
+## Make your own positioning function using dl.indep
+direct.label(long,method=dl.indep(d[which.max(d$x),]))
 
-## Simplify the definition using dl.indep
-endpoint2 <- dl.indep({
-  d[which.max(d$x),]
-})
-direct.label(long,method=endpoint2)
-
-## Labelling method can also be specified as a list
-direct.label(long,method=list("endpoint2",hjust=0))
-
-## You can change other text parameters (see ?grid.text for full list)
-direct.label(update(dots2,xlim=c(min(vad$deaths),80)),method=list("last.points",rot=30))
-
-## You can also use fixed label positions for a specific plot
-direct.label(qqm,method=list(x=c(-2,0),y=c(6,4),groups=c("F","M")))
-
-## Works for lots of colors
-direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),type=c('l','g'),f.value=ppoints(100)))
-
-## And even in black and white
-direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),type=c('l','g'),par.settings=standard.theme(color=FALSE),f.value=ppoints(100)))
+## You can change text parameters (see ?grid.text for full list)
+direct.label(dots2,method=list("last.points",rot=30))
 
 ## Load some data on car fuel efficiency
 data(mpg,package="ggplot2")
