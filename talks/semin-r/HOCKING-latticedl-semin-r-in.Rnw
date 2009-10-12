@@ -84,13 +84,18 @@ LATTICE
 \framet{How to plot direct labels in R?}{
   \item Base graphics:
     plot(x,y,col=col);text(xx,yy,labels,col=cc)
-  \item Lattice graphics: xyplot(y$\sim$x,data,panel=function(...){...})
+  \item Lattice graphics: xyplot(y$\sim$x,data,panel=function(...)\{...\})
   \item Lattice + latticedl: direct.label(xyplot(y$\sim$x,data,groups=z))
   \item latticedl does the labeling for you, keeping track of the
     correct colors.
   \item Common plot types have default direct labeling methods.
   \item Positions of direct labels can be specified as a function of the data:\\
-  \texttt{function(d,...){foo;bar;data.frame(x=a,y=b,groups=c)}}
+  \texttt{function(d,...)\{ \\
+      # d is a data frame with columns x,y,groups of the points to be plotted\\
+      #... analyze the points and return a list of labels:\\
+      return(data.frame(x=a,y=b,groups=c))\\
+      \}
+    }
 }
 
 LATTICEDL
