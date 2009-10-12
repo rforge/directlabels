@@ -150,32 +150,56 @@ qqmath(~gcsescore,Chem97,groups=gender,auto.key=list(space="right"),f.value=ppoi
 ## Use lines instead of points ... legend?
 qqmath(~gcsescore,Chem97,groups=gender,auto.key=list(space="right"),f.value=ppoints(100),type="l")
 
+## Change legend appearance
+qqmath(~gcsescore,Chem97,groups=gender,auto.key=list(lines=TRUE,points=FALSE,space="right"),f.value=ppoints(100),type="l")
+
+## Longitudinal data
+data(BodyWeight,package="nlme")
+head(BodyWeight)
+
+## Even more confusing legend
+xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1),auto.key=list(space="right"))
+
+
+
+
+
 ## Easy fix for confusing legend: direct labels
 library(latticedl)
-direct.label(qqmath(~gcsescore,Chem97,groups=gender,f.value=ppoints(100),type="l"))
+qqm <- qqmath(~gcsescore,Chem97,groups=gender,f.value=ppoints(100),type="l")
+direct.label(qqm)
 
+## For longitudinal data we also label the first or last points
+long <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
+direct.label(long)
 
-direct.label(densityplot(~gcsescore,Chem97,groups=gender))
+## Change label positions with the method argument
+direct.label(long,method=last.points)
 
-library(lattice)
-library(latticedl)
-dlvad <- direct.label(
-             dotplot(VADeaths,type="o")
-             ,method=function(...)data.frame(last.points(...),rot=30))
-library(latticeExtra)
-c(dotplot(VADeaths,type="o",auto.key=list(space="right")),dlvad) #for combining lattice plots on the same page.
-## simple one-time positioning function:
-direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g")))
-direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"),f.value=ppoints(100)))
-direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"),f.value=ppoints(100)),method=function(d,...)data.frame(x=c(-2,0),y=c(6,4),groups=c("M","F")))
-direct.label(qqmath(~gcsescore,Chem97,groups=gender,type=c("p","g"),f.value=ppoints(100)),method=data.frame(x=c(-2,0),y=c(6,4),groups=c("M","F")))
+## Labelling method can also be specified as a list
+direct.label(dots2,method=list("last.points",rot=45))
+
+## Or as a fixed data frame for a specific plot
+direct.label(qqm,method=data.frame(x=c(-2,0),y=c(6,4),groups=c("F","M")))
+
+## Works for lots of colors
 direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),type=c('l','g'),f.value=ppoints(100)))
-## Direct label the different groups
-## Add a confusing legend ... how to label better?
-update(dots2,auto.key=list())
 
-library(latticedl)
-direct.label(dots)
-direct.label(dots,method=function(...)data.frame(last.points(...),rot=30))
-direct.label(dots,method=list(rot=90,hjust=-0.1))
+## And even in black and white
+direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),type=c('l','g'),f.value=ppoints(100),par.settings=standard.theme(color=FALSE)))
 
+## Load some data on car fuel efficiency
+data(mpg,package="ggplot2")
+head(mpg)
+
+## Plot city versus highway fuel efficiency
+xyplot(cty~hwy,mpg,aspect=1)
+
+## Jitter the data to see all the points
+xyplot(jitter(cty)~jitter(hwy),mpg,aspect=1)
+
+## Group data by number of cylinders in the engine
+direct.label(xyplot(jitter(cty)~jitter(hwy),mpg,aspect=1,groups=factor(cyl)))
+
+## Group data by car class
+direct.label(xyplot(jitter(cty)~jitter(hwy),mpg,aspect=1,groups=class))
