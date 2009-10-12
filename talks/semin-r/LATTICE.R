@@ -1,5 +1,5 @@
 ## Lattice allows easy visualization of many variables
-options(width=60)
+options(width=55)
 library(lattice)
 dotplot(variety ~ yield | site, data = barley, groups = year,auto.key=list(space="right"),layout=c(1,6),xlab = "Barley Yield (bushels/acre)")
 
@@ -55,7 +55,7 @@ br <- simpleTheme(col=c("black","red"))
 show.settings(br)
 
 ## Change group colors with par.settings
-densityplot(~gcsescore|factor(score),Chem97,groups=gender,auto.key=list(columns=2,space="bottom"),par.settings=br)
+densityplot(~gcsescore|factor(score),Chem97,plot.points=FALSE,groups=gender,auto.key=list(columns=2,space="bottom"),par.settings=br)
 
 
 
@@ -81,7 +81,7 @@ dots2 <- update(dots,type="l",xlim=c(5,80))
 dots2
 
 ## Add a confusing legend ... how can we label more intuitively?
-update(dots2,auto.key=list())
+update(dots2,auto.key=list(points=FALSE,lines=TRUE))
 
 
 
@@ -145,5 +145,5 @@ head(BodyWeight)
 xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
 
 ## Legends with more than a few items are very confusing
-xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1),auto.key=list(space="right"))
+xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1),auto.key=list(space="right",points=FALSE,lines=TRUE))
 

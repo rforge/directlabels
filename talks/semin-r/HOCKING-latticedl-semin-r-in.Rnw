@@ -85,8 +85,9 @@ LATTICE
   \item Base graphics:
     plot(x,y,col=col);text(xx,yy,labels,col=cc)
   \item Lattice graphics: xyplot(y$\sim$x,data,panel=function(...){...})
-  \item Lattice + latticedl: direct.label(xyplot(y$\sim$x,data))
-}
+  \item Lattice + latticedl: direct.label(xyplot(y$\sim$x,data,groups=z))
+  \item latticedl does the labeling for you, keeping track of the
+    correct colors.  }
 
 LATTICEDL
 
