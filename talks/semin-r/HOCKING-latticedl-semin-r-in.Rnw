@@ -87,7 +87,11 @@ LATTICE
   \item Lattice graphics: xyplot(y$\sim$x,data,panel=function(...){...})
   \item Lattice + latticedl: direct.label(xyplot(y$\sim$x,data,groups=z))
   \item latticedl does the labeling for you, keeping track of the
-    correct colors.  }
+    correct colors.
+  \item Common plot types have default direct labeling methods.
+  \item Positions of direct labels can be specified as a function of the data:\\
+  \texttt{function(d,...){foo;bar;data.frame(x=a,y=b,groups=c)}}
+}
 
 LATTICEDL
 
