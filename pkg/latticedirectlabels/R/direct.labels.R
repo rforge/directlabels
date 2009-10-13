@@ -145,19 +145,24 @@ compare.methods <- function
 ### Plot several label placement methods on the same page.
 (m,
 ### Vector of label placement function names.
-...
+ ...,
 ### Args to pass to dl
+ horiz=FALSE
  ){
   mc <- match.call()
   mc[[1]] <- quote(dl)
   mc <- mc[-2]
   newpage <- TRUE
   L <- length(m)
+  ##plots <- NULL
   for(i in seq_along(m)){
     mc$main <- m[i]
     mc$method <- m[i]
     P <- eval(mc)
-    plot(P,split=c(1,i,1,L),newpage=newpage)
+    ##plots <- if(is.null(plots))P else c(plots,P,x.same=TRUE,y.same=TRUE)
+    split <- if(horiz)c(i,1,L,1) else c(1,i,1,L)
+    plot(P,split=split,newpage=newpage)
     newpage <- FALSE
   }
+  ##plots
 }
