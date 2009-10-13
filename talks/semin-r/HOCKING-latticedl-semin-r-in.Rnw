@@ -30,12 +30,6 @@
 \end{itemize}
 }}
 
-\newcommand{\picframe}[1]{
-  \frame[plain]{
-    \includegraphics[width=\textwidth]{#1}
-  }
-}
-
 \begin{document}
 \setkeys{Gin}{width=\textwidth}
 \frame{\titlepage}
@@ -47,29 +41,19 @@
   \item Bill Cleveland, Rick Becker, Bell Labs, 1990s: trellis
     graphics system for S: \url{http://cm.bell-labs.com/cm/ms/departments/sia/project/trellis/}
   \item Deepayan Sarkar, 2000s: the lattice package for R.
-}
-
-\framet{References for learning lattice}{
-\item Installation and loading
-  \begin{itemize}
-  \item install.packages(c(``latticeExtra'',``latticedl''))
-  \item library(lattice)
-  \item library(latticeExtra)
-  \item library(latticedl)
-\end{itemize}
-\item Interactive R help pages
-  \begin{itemize}
-  \item Overview: ?Lattice
-  \item Customizing displays: ?xyplot
-  \item Included panel functions: ?panel.functions, ?llines
-  \item Multiple plots per page: ?plot.trellis, ?c.trellis
-  \item Direct labeling: ?direct.label
-  \end{itemize}
   \item Deepayan Sarkar (2008) Lattice: Multivariate Data Visualization
     with R, Springer.
 }
 
-LATTICE
+\framet{Installing the required packages}{
+\item You should use the most recent version of R (cran.r-project.org)
+\item install.packages(c(``latticeExtra'',``latticedl''))
+\item library(lattice)
+\item library(latticeExtra)
+\item library(latticedl)
+}
+
+SWEAVE(LATTICE)
 
 \section{Adding direct labels using the latticedl package}
 
@@ -81,7 +65,8 @@ LATTICE
 \item Use direct labels whenever possible.
 }
 
-\framet{How to plot direct labels in R?}{
+\frame[containsverbatim]{\frametitle{How to plot direct labels in R?}
+\begin{itemize}
   \item Base graphics:
     plot(x,y,col=col);text(xx,yy,labels,col=cc)
   \item Lattice graphics: xyplot(y$\sim$x,data,panel=function(...)\{...\})
@@ -89,16 +74,52 @@ LATTICE
   \item latticedl does the labeling for you, keeping track of the
     correct colors.
   \item Common plot types have default direct labeling methods.
-  \item Positions of direct labels can be specified as a function of the data:\\
-  \texttt{function(d,...)\{ \\
-      # d is a data frame with columns x,y,groups of the points to be plotted\\
-      #... analyze the points and return a list of labels:\\
-      return(data.frame(x=a,y=b,groups=c))\\
-      \}
-    }
+  \item Positions of direct labels can be specified as a function of the data:
+\end{itemize}
+\begin{Schunk}
+\begin{Sinput}
+function(d,...){
+  # d is a data frame with columns x,y,groups of the data points
+  #... analyze the points and return the label positions:
+  return(data.frame(x=a,y=b,groups=c))
+}
+\end{Sinput}
+\end{Schunk}
 }
 
-LATTICEDL
+SWEAVE(LATTICEDL)
+
+\framet{References for learning lattice}{
+\item Interactive R help pages
+  \begin{itemize}
+  \item Overview: ?Lattice
+  \item Customizing displays: ?xyplot
+  \item Included panel functions: ?panel.functions, ?llines
+  \item Multiple plots per page: ?plot.trellis, ?c.trellis
+  \item Direct labeling: ?direct.label
+  \end{itemize}
+\item Deepayan Sarkar (2008) Lattice: Multivariate Data Visualization
+  with R, Springer.
+}
+
+\framet{References for learning more about lattice}{
+\item First load the libraries in R
+  \begin{itemize}
+  \item library(lattice)
+  \item library(latticeExtra)
+  \item library(latticedl)
+\end{itemize}
+\item Then you can look at the interactive help pages
+  \begin{description}
+  \item[Overview] ?Lattice
+  \item[Customizing plots] ?xyplot
+  \item[Included panel functions] ?panel.functions, ?llines
+  \item[Multiple plots per page] ?plot.trellis, ?c.trellis
+  \item[Direct labeling] ?direct.label
+  \end{description}
+  \item Deepayan Sarkar (2008) Lattice: Multivariate Data Visualization
+    with R, Springer.
+}
 
 \end{document}
 
