@@ -13,7 +13,7 @@ direct.label(long,method=last.points)
 ## Make your own positioning function using dl.indep
 direct.label(long,method=dl.indep(d[which.max(d$x),]))
 
-## You can change text parameters (see ?grid.text for full list)
+## You can change text parameters (see ?grid::grid.text for full list)
 direct.label(dots2,method=list("last.points",rot=30))
 
 ## Load some data on car fuel efficiency

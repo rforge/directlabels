@@ -21,10 +21,10 @@ def parseR(f):
     text=open(f).read()
     ms=[m.groupdict() for m in slide_rex.finditer(text,re.DOTALL)]
     for d in ms:
-        d['settings']='show.settings' in d['code']
+        d['noaddplot']='show.settings' in d['code']  or 'compare' in d['code']
         d['print']='head' in d['code'] or 'print' in d['code']
-        d['addplot']=not (d['print'] or d['settings'] or 'compare' in d['code'])
-        d['fig']=d['settings'] or d['addplot']
+        d['addplot']=not (d['print'] or d['noaddplot'])
+        d['fig']=d['noaddplot'] or d['addplot']
         d['args']=re.sub('[ ."=]',"-",d['title'])
         d['args']+=",fig=T,width=10" if d['fig'] else ""
         if d['addplot']:
