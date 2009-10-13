@@ -10,7 +10,7 @@ TEMPLATE=r"""
 }
 """
 sweave_rex=re.compile(r'SWEAVE[(](?P<file>[^)]+)[)]')
-slide_rex=re.compile(r'##(?P<title>.*?)\n(?P<code>.*?)\n\n')
+slide_rex=re.compile(r'##(?P<title>.*?)\n(?P<code>.*?)\n\n',re.DOTALL)
 def parseR(f):
     """Look for slides in an R file.
 
@@ -19,7 +19,7 @@ def parseR(f):
 
     """
     text=open(f).read()
-    ms=[m.groupdict() for m in slide_rex.finditer(text,re.DOTALL)]
+    ms=[m.groupdict() for m in slide_rex.finditer(text)]
     for d in ms:
         d['noaddplot']='show.settings' in d['code']  or 'compare' in d['code']
         d['print']='head' in d['code'] or 'print' in d['code']
@@ -42,7 +42,7 @@ def make_sweave(f):
     for m in sweave_rex.finditer(latex):
         block=m.groupdict()['file']
         chunks=[TEMPLATE%d for d in parseR(block+".R")]
-        latex=sweave_rex.sub('\n'.join(chunks),latex,1)
+        latex=sweave_rex.sub('\n'.join(chunks).replace("\\","\\\\"),latex,1)
     return latex
     
 if __name__=="__main__":

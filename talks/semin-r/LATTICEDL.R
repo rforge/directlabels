@@ -5,7 +5,8 @@ long <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
 direct.label(long)
 
 ## Even works in black and white
-direct.label(update(long,par.settings=standard.theme(color=FALSE)))
+longbw <- update(long,par.settings=standard.theme(color=FALSE))
+direct.label(longbw)
 
 ## Change label positions with the method argument
 direct.label(long,method=last.points)
@@ -13,7 +14,7 @@ direct.label(long,method=last.points)
 ## Make your own positioning function using dl.indep
 direct.label(long,method=dl.indep(d[which.max(d$x),]))
 
-## You can change text parameters (see ?grid::grid.text for full list)
+## You can change text parameters (same as grid::grid.text)
 direct.label(dots2,method=list("last.points",rot=30))
 
 ## Load some data on car fuel efficiency
@@ -40,5 +41,5 @@ direct.label(xyplot(jitter(cty)~jitter(hwy),mpg,aspect=1,panel=panel.xyref,group
 direct.label(xyplot(jitter(cty)~jitter(hwy),mpg,aspect=1,panel=panel.xyref,groups=class))
 
 ## Compare direct labeling methods
-compare.methods(c("empty.grid","empty.grid.2"),xyplot,mpg,jitter(cty)~jitter(hwy),class,aspect=1,panel=panel.xyref)
+compare.methods(c("empty.grid","empty.grid.2"),xyplot,mpg,jitter(cty)~jitter(hwy),class,aspect=1,panel=panel.xyref,horiz=TRUE)
 

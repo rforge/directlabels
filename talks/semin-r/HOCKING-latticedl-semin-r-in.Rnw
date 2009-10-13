@@ -58,7 +58,7 @@ SWEAVE(LATTICE)
 \section{Adding direct labels using the latticedl package}
 
 \framet{Why use direct labels instead of legends?}{
-\item Edward Tufte, professor emeritus of Statistics at Yale.
+\item Edward Tufte, professor emeritus of statistics at Yale.
 \item The Visual Display of Quantitative Information (1983).
 \includegraphics{TUFTE.jpg}
 \item One of his points: legends make it harder to decode a statistical graphic.
@@ -67,14 +67,19 @@ SWEAVE(LATTICE)
 
 \frame[containsverbatim]{\frametitle{How to plot direct labels in R?}
 \begin{itemize}
-  \item Base graphics:
-    plot(x,y,col=col);text(xx,yy,labels,col=cc)
-  \item Lattice graphics: xyplot(y$\sim$x,data,panel=function(...)\{...\})
+  \item Do it yourself
+    \begin{itemize}
+    \item Base graphics:
+      plot(x,y,col=col);text(xx,yy,labels,col=cc)
+    \item Lattice graphics: xyplot(y$\sim$x,data,panel=function(...)\{...\})
+    \end{itemize}
   \item Lattice + latticedl: direct.label(xyplot(y$\sim$x,data,groups=z))
-  \item latticedl does the labeling for you, keeping track of the
-    correct colors.
-  \item Common plot types have default direct labeling methods.
-  \item Positions of direct labels can be specified as a function of the data:
+    \begin{itemize}
+    \item latticedl does the labeling for you, keeping track of the
+      correct colors.
+    \item Common plot types have default direct labeling methods.
+    \item Positions of direct labels can be specified as a function of the data:
+    \end{itemize}
 \end{itemize}
 \begin{Schunk}
 \begin{Sinput}
@@ -119,6 +124,7 @@ SWEAVE(LATTICEDL)
   \end{description}
   \item Deepayan Sarkar (2008) Lattice: Multivariate Data Visualization
     with R, Springer.
+  \item \url{http://directlabels.r-forge.r-project.org}
 }
 
 \end{document}
