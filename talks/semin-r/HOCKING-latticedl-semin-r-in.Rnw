@@ -67,47 +67,35 @@ SWEAVE(LATTICE)
 
 \frame[containsverbatim]{\frametitle{How to plot direct labels in R?}
 \begin{itemize}
-  \item Do it yourself
-    \begin{itemize}
-    \item Base graphics:
-      plot(x,y,col=col);text(xx,yy,labels,col=cc)
-    \item Lattice graphics: xyplot(y$\sim$x,data,panel=function(...)\{...\})
-    \end{itemize}
-  \item Lattice + latticedl: direct.label(xyplot(y$\sim$x,data,groups=z))
-    \begin{itemize}
-    \item latticedl does the labeling for you, keeping track of the
-      correct colors.
-    \item Common plot types have default direct labeling methods.
-    \item Positions of direct labels can be specified as a function of the data:
-    \end{itemize}
-\end{itemize}
+\item Lattice + latticedl: direct.label(xyplot(y$\sim$x,data,groups=z),method=f)
+\item Positions of direct labels can be specified as a function of
+      the data:\\
 \begin{Schunk}
 \begin{Sinput}
-function(d,...){
+f <- function(d,...){
   # d is a data frame with columns x,y,groups of the data points
   #... analyze the points and return the label positions:
   return(data.frame(x=a,y=b,groups=c))
 }
 \end{Sinput}
+\begin{Soutput}
+        groups    x     y hjust vjust rot
+1   Rural Male 66.0 70-74     0   0.5  30
+2 Rural Female 54.3 70-74     0   0.5  30
+3   Urban Male 71.1 70-74     0   0.5  30
+4 Urban Female 50.0 70-74     0   0.5  30
+\end{Soutput}
+\includegraphics[width=0.3\textwidth]{method}
 \end{Schunk}
+    \item latticedl does the labeling for you, keeping track of the
+      correct colors.
+    \item Common plot types have default direct labeling methods.
+\end{itemize}
 }
 
 SWEAVE(LATTICEDL)
 
-\framet{References for learning lattice}{
-\item Interactive R help pages
-  \begin{itemize}
-  \item Overview: ?Lattice
-  \item Customizing displays: ?xyplot
-  \item Included panel functions: ?panel.functions, ?llines
-  \item Multiple plots per page: ?plot.trellis, ?c.trellis
-  \item Direct labeling: ?direct.label
-  \end{itemize}
-\item Deepayan Sarkar (2008) Lattice: Multivariate Data Visualization
-  with R, Springer.
-}
-
-\framet{References for learning more about lattice}{
+\framet{References for learning more about lattice and latticedl}{
 \item First load the libraries in R
   \begin{itemize}
   \item library(lattice)

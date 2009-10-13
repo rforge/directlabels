@@ -17,6 +17,12 @@ direct.label(long,method=dl.indep(d[which.max(d$x),]))
 ## You can change text parameters (same as grid::grid.text)
 direct.label(dots2,method=list("last.points",rot=30))
 
+pdf("method.pdf",h=5,w=6)
+direct.label(xyplot(age~deaths,vad,groups=demographic,type="l",xlim=c(5,90),ylim=c(1:6)),method=list("last.points",rot=30))
+dev.off()
+system("evince method.pdf")
+
+
 ## Load some data on car fuel efficiency
 data(mpg,package="ggplot2")
 head(mpg)
