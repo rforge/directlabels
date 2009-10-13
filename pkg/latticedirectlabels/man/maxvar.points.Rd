@@ -18,7 +18,7 @@ maxvar.points(d, ...)
 }
 \references{
 }
-\author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}
+\author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 \note{
 }
 

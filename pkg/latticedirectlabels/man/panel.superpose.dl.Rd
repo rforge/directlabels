@@ -23,7 +23,7 @@ panel.superpose.dl(x, y = NULL, subscripts, groups, panel.groups, method = NULL,
 }
 \references{
 }
-\author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}
+\author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 \note{
 }
 

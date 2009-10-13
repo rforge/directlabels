@@ -14,7 +14,7 @@ dl.indep(expr)
 \value{The constructed label position function.}
 \references{
 }
-\author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}
+\author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 \note{
 }
 

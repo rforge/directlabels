@@ -16,7 +16,7 @@ perpendicular.lines(d, debug = FALSE, ...)
 \value{Data frame with groups x y, giving the point for each cluster which is the furthest out along the line drawn through its center.}
 \references{
 }
-\author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}
+\author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 \note{
 }
 

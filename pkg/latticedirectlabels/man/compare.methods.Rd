@@ -4,11 +4,12 @@
 \title{compare methods}
 \description{Plot several label placement methods on the same page.}
 \usage{
-compare.methods(m, ...)
+compare.methods(m, ..., horiz = FALSE)
 }
 \arguments{
   \item{m}{Vector of label placement function names.}
   \item{\dots}{Args to pass to dl}
+  \item{horiz}{Arrange plots horizontally or vertically?}
 }
 \details{
 }
@@ -16,7 +17,7 @@ compare.methods(m, ...)
 }
 \references{
 }
-\author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}
+\author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 \note{
 }
 

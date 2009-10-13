@@ -20,7 +20,7 @@ label.positions(x, y, subscripts, groups, debug = FALSE, method = perpendicular.
 \value{Data frame describing where direct labels should be positioned.}
 \references{
 }
-\author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}
+\author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 \note{
 }
 

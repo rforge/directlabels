@@ -148,6 +148,7 @@ compare.methods <- function
  ...,
 ### Args to pass to dl
  horiz=FALSE
+### Arrange plots horizontally or vertically?
  ){
   mc <- match.call()
   mc[[1]] <- quote(dl)

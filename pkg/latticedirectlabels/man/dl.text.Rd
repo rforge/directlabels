@@ -22,7 +22,7 @@ dl.text(labs, group.number, col.line = NULL, col.points = NULL, col = NULL, col.
 }
 \references{
 }
-\author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}
+\author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 \note{
 }
 

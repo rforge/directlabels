@@ -16,7 +16,7 @@ direct.label(p, method = NULL, debug = FALSE)
 \value{The lattice plot.}
 \references{
 }
-\author{Toby Dylan Hocking <toby.hocking@etu.upmc.fr>}
+\author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 \note{
 }
 
