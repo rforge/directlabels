@@ -1,6 +1,7 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import re #Regular Expressions
 import pdb #Python DeBugger
+import sys #for command line parsing
 TEMPLATE=r"""
 \frame[containsverbatim]{\frametitle{%(title)s}
 <<%(args)s>>=
@@ -9,13 +10,19 @@ TEMPLATE=r"""
 }
 """
 def parseR(f):
+    """Look for slides in an R file.
+
+    For each slide found, return a dictionary which can be used with
+    TEMPLATE for making valid Sweave code.
+
+    """
     text=open(f).read()
     ms=[m.groupdict() for m in 
         re.finditer(r'##(?P<title>.*?)\n(?P<code>.*?)\n\n',text,re.DOTALL)]
     for d in ms:
         d['settings']='show.settings' in d['code']
         d['print']='head' in d['code'] or 'print' in d['code']
-        d['addplot']=not d['print'] and not d['settings']
+        d['addplot']=not (d['print'] or d['settings'] or 'compare' in d['code'])
         d['fig']=d['settings'] or d['addplot']
         d['args']=re.sub('[ ."=]',"-",d['title'])
         d['args']+=",fig=T,width=10" if d['fig'] else ""
@@ -24,8 +31,19 @@ def parseR(f):
             d['code']='\n'.join(lines[:-1]+['plot('+lines[-1]+')'])
     return ms
 
-latex=open('HOCKING-latticedl-semin-r-in.Rnw').read()
-for block in "LATTICEDL","LATTICE":
-    chunks=[TEMPLATE%d for d in parseR(block+".R")]
-    latex=latex.replace(block,'\n'.join(chunks))
-print(latex)
+def make_sweave(f):
+    """Replace references to R files in f with slides.
+
+    Returns the modified text of f, which should work with Sweave.
+
+    """
+    latex=open(f).read()
+    for m in re.finditer(r'SWEAVE[(](?P<file>[^)]+)[)]',latex):
+        block=m.groupdict()['file']
+        chunks=[TEMPLATE%d for d in parseR(block+".R")]
+        latex=latex.replace(block,'\n'.join(chunks),1)
+    return latex
+    
+if __name__=="__main__":
+    print(make_sweave(sys.argv[1]))
+
