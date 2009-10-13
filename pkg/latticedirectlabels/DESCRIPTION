@@ -6,3 +6,4 @@ License: GPL-3
 Title: Lattice direct labels
 Description: Direct labeling functions that use the lattice package.
 Depends: plyr, lattice, grid
+Suggests: nlme, mlmRev, ggplot2
