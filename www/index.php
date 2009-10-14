@@ -31,7 +31,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
  -->
 
 <!-- get project title  -->
-<!-- own website starts here, the following may be changed as you like -->
+<!-- own website starts here, the following may be changed as you like
 
 <?php if ($handle=fopen('http://'.$domain.'/export/projtitl.php?group_name='.$group_name,'r')){
 $contents = '';
@@ -40,7 +40,7 @@ while (!feof($handle)) {
 }
 fclose($handle);
 echo $contents; } ?>
-
+ -->
 <!-- end of project description -->
 
 <h1>Intuitive figures using direct labels instead of legends</h1>
@@ -172,6 +172,13 @@ each group.</p>
 <p>Also note that the drawing functions are totally linked to the
 lattice graphics framework, but we can use Positioning Functions with
 other plotting frameworks, i.e. ggplot2.</p>
+
+<h2>Talks</h2>
+
+<p><a href="http://www.mnhn.fr/semin-r/">semin-r</a>, 15 oct 2009. "<a
+href="HOCKING-latticedl-semin-r.pdf">Visualizing multivariate data
+using lattice and direct labels</a>" with <a
+href="HOCKING-latticedl-semin-r.R">R code examples</a>.</p>
 
 <p>Please send email to <a
 href="http://r-forge.r-project.org/sendmessage.php?touser=1571">Toby
