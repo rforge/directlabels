@@ -171,17 +171,26 @@ direct.label(dotplot(VADeaths,type="o"),method=complicated)
 
 <p>When method is specified as a list, the arguments will be applied
 in sequence, starting from the data frame of all plotted points. In
-this example the first element is a function that adds 10 to every x
-value, thus shifting the labels to the right relative to the
-points. The second element is a call to dl.indep, which lets you
-specify an expression to apply to each group, as a function of the
-data d. In this case d[-2,] means delete the second row from each
-group. Named elements are copied to the data frame, so the third
-element, rot=c(30,180), adds a rot column to the data frame, with
-values 30 and 180 for every other row. This has the effect of rotating
-every label by 30 or 180 degrees. Text display parameters fontsize,
-fontfamily, fontface, lineheight, and cex can also be specified in
-this manner (see the help page for grid::grid.text).</p>
+this example, </p>
+
+<ol>
+
+<li>the first element is a function that adds 10 to every x value,
+thus shifting the labels to the right relative to the points.</li>
+
+<li>the second element is a call to dl.indep, which lets you specify
+an expression to apply to each group, as a function of the data d. In
+this case d[-2,] means delete the second row from each group.</li>
+
+<li>named elements are copied to the data frame, so the third element,
+rot=c(30,180), adds a rot column to the data frame, with values 30 and
+180 for every other row. This has the effect of rotating every label
+by 30 or 180 degrees. Text display parameters fontsize, fontfamily,
+fontface, lineheight, and cex can also be specified in this manner
+(see the help page for grid::grid.text).
+</li>
+
+</ol>
 
 <p>Also note that the drawing functions are totally linked to the
 lattice graphics framework, but we can potentially use Positioning
