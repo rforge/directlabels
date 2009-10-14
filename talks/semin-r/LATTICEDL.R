@@ -1,3 +1,6 @@
+library(latticedl)
+direct.label(densityplot(~gcsescore,Chem97,groups=factor(score)))
+
 
 ## Easy fix for confusing legend: direct labels
 library(latticedl)
