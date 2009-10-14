@@ -5,7 +5,7 @@
 
 \title{Visualizing multivariate data using lattice and direct labels\\
 \url{http://directlabels.r-forge.r-project.org}}
-\author{Toby Dylan Hocking}
+\author{Toby Dylan Hocking \\ toby.hocking@inria.fr}
 \date{15 October 2009}
 
 \AtBeginSection[]
@@ -46,11 +46,12 @@
 }
 
 \framet{Installing the required packages}{
-\item You should use the most recent version of R (cran.r-project.org)
-\item install.packages(c(``latticeExtra'',``latticedl''))
-\item library(lattice)
-\item library(latticeExtra)
-\item library(latticedl)
+\item I used R 2.9.2 for the following examples.
+\item lattice is preinstalled with R.
+\item \texttt{library(lattice)}
+\item \texttt{install.packages(c("latticeExtra","latticedl"))}
+\item \texttt{library(latticeExtra)}
+\item \texttt{library(latticedl)}
 }
 
 SWEAVE(LATTICE)
@@ -79,11 +80,11 @@ f <- function(d,...){
 }
 \end{Sinput}
 \begin{Soutput}
-        groups    x     y hjust vjust rot
-1   Rural Male 66.0 70-74     0   0.5  30
-2 Rural Female 54.3 70-74     0   0.5  30
-3   Urban Male 71.1 70-74     0   0.5  30
-4 Urban Female 50.0 70-74     0   0.5  30
+        groups    x y hjust vjust rot
+1   Rural Male 66.0 5     0   0.5  30
+2 Rural Female 54.3 5     0   0.5  30
+3   Urban Male 71.1 5     0   0.5  30
+4 Urban Female 50.0 5     0   0.5  30
 \end{Soutput}
 \includegraphics[width=0.3\textwidth]{method}
 \end{Schunk}
@@ -112,7 +113,9 @@ SWEAVE(LATTICEDL)
   \end{description}
   \item Deepayan Sarkar (2008) Lattice: Multivariate Data Visualization
     with R, Springer.
-  \item \url{http://directlabels.r-forge.r-project.org}
+  \item R code from the slides available on the web: \\
+    \url{http://directlabels.r-forge.r-project.org}
+  \item Email me directly: toby.hocking@inria.fr
 }
 
 \end{document}

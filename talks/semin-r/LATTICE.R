@@ -111,7 +111,7 @@ xyplot(accel~distance,Earthquake,scales=list(log=TRUE),type=c("p","g","smooth"),
 
 
 
-## Data in matrix form of volcano heights
+## Volcano elevation data in matrix form
 dim(volcano)
 print(volcano[1:5,1:5])
 
