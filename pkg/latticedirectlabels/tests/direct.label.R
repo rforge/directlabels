@@ -61,7 +61,7 @@ plot(direct.label(
 
 data(Chem97,package="mlmRev")
 qqm <- qqmath(~gcsescore,Chem97,groups=gender,
-              type=c("p","g"),f.value=ppoints(100),auto.key=TRUE)
+              type=c("p","g"),f.value=ppoints(25),auto.key=TRUE)
 direct.label(qqm)
 static.labels <- data.frame(x=c(-2,0),y=c(6,4),groups=c("F","M"))
 direct.label(qqm,method=function(d,...)static.labels,debug=TRUE)
