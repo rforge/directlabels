@@ -193,12 +193,10 @@ first.points <-
 last.points <-
   dl.indep(data.frame(d[order(d$x),][nrow(d),c("x","y")],hjust=0,vjust=0.5))
 ### Transformation function for 1d qqmath plots.
-trans.qqmath <- function(d,...){
-  ddply(d,.(groups),function(d){
-    r <- prepanel.default.qqmath(d$x,...)
-    data.frame(x=r$x,y=r$y)
-  })
-}
+trans.qqmath <- dl.indep({
+  r <- prepanel.default.qqmath(d$x,...)
+  data.frame(x=r$x,y=r$y)
+})
 ### Positioning Function for the mean of each cluster of points.
 get.means <-
   dl.indep(data.frame(x=mean(d$x),y=mean(d$y)))
