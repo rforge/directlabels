@@ -5,7 +5,7 @@
 
 \title{Visualizing multivariate data using lattice and direct labels\\
 \url{http://directlabels.r-forge.r-project.org}}
-\author{Toby Dylan Hocking \\ toby.hocking@inria.fr}
+\author{Toby Dylan Hocking \\ toby.hocking AT inria.fr}
 \date{15 October 2009}
 
 \AtBeginSection[]
@@ -115,7 +115,7 @@ SWEAVE(LATTICEDL)
     with R, Springer.
   \item R code from the slides available on the web: \\
     \url{http://directlabels.r-forge.r-project.org}
-  \item Email me directly: toby.hocking@inria.fr
+  \item Email me directly: toby.hocking AT inria.fr
 }
 
 \end{document}
