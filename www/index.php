@@ -155,7 +155,7 @@ groups</tt>. first.points simply returns the rows of the data frame
 which correspond to the first points for each group. latticedl plots a
 direct label for each row returned by the positioning method.</p>
 
-<p>Since the input and output of a Positioning Functions is the same
+<p>Since the input and output of a Positioning Function is the same
 sort of data frame, you can chain Positioning Functions together. To
 illustrate how this works, consider the following contrived
 example:</p>
