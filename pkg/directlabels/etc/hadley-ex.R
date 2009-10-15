@@ -102,4 +102,6 @@ p <- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)
 direct.label(p,list(last.points,rot=30))
 ## Doesn't work, why?
 direct.label(p,list(last.points,rot=30))+scale_colour_identity()
+## This at least should work, right?
+p+scale_colour_identity()
 
