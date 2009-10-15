@@ -146,7 +146,6 @@ p <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
 direct.label(p,method=first.points)
 direct.label(p,method=last.points)
 </pre>
-<img src="compare-long.png" alt="direct label longitudinal data" />
 
 <p>Here first.points and last.points are Positioning Functions of the
 form function(d,...){return(data.frame(x=,y=,groups=))}, where d is
@@ -155,13 +154,15 @@ groups</tt>. first.points simply returns the rows of the data frame
 which correspond to the first points for each group. latticedl plots a
 direct label for each row returned by the positioning method.</p>
 
+<img src="compare-long.png" alt="direct label longitudinal data" />
+
 <p>Since the input and output of a Positioning Function is the same
 sort of data frame, you can chain Positioning Functions together. To
 illustrate how this works, consider the following contrived
 example:</p>
 
 <pre>
-complicated <- list(function(d,...){d$x <- d$x+10;d}, ## add 10 to every x value
+complicated <- list(dl.trans(x=x+10), ## add 10 to every x value
                     dl.indep(d[-2,]), ## delete the 2nd point of every group
                     rot=c(30,180)) ## rotate by alternately 30 and 180 degrees
 direct.label(dotplot(VADeaths,type="o"),method=complicated)
