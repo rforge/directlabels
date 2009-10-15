@@ -196,19 +196,19 @@ trans.qqmath <- dl.indep({
   r <- prepanel.default.qqmath(d$x,...)
   data.frame(x=r$x,y=r$y)
 })
-### Positioning Function for first points of longitudinal data.
+### Positioning Function for the first of a group of points.
 first.points <-
   dl.indep(data.frame(d[which.max(d$x),],hjust=1,vjust=0.5))
 left.points <- first.points
-### Positioning Function for last points of longitudinal data.
+### Positioning Function for the last of a group of points.
 last.points <-
   dl.indep(data.frame(d[which.min(d$x),],hjust=0,vjust=0.5))
 right.points <- last.points
-### Positioning Function for the top of a group of points
+### Positioning Function for the top of a group of points.
 top.points <-
   dl.indep(data.frame(d[which.max(d$y),],hjust=0.5,vjust=0))
 high.points <- top.points
-### Positioning Function for the top of a group of points
+### Positioning Function for the bottom of a group of points.
 bottom.points <-
   dl.indep(data.frame(d[which.min(d$y),],hjust=0.5,vjust=1))
 low.points <- bottom.points
