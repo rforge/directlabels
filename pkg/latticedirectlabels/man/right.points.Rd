@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{right.points}
 \title{right points}
-\description{  dl.indep(data.frame(d[which.min(d$x),],hjust=0,vjust=0.5))}
+\description{  dl.indep(data.frame(d[which.max(d$x),],hjust=0,vjust=0.5))}
 \usage{
 right.points(d, ...)
 }

@@ -1,7 +1,7 @@
 \name{dl.indep}
 \Rdversion{1.1}
 \alias{dl.indep}
-\title{dl indep}
+\title{ Direct label groups independently}
 \description{Makes a function you can use to specify the location of each group independently.}
 \usage{
 dl.indep(expr)
@@ -11,7 +11,7 @@ dl.indep(expr)
 }
 \details{
 }
-\value{The constructed label position function.}
+\value{A Positioning Function.}
 \references{
 }
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
@@ -21,4 +21,10 @@ dl.indep(expr)
 
 \seealso{
 }
-\examples{}
+\examples{library(latticedl)
+complicated <- list(dl.trans(x=x+10),
+                    dl.indep(d[-2,]),
+                    rot=c(30,180))
+direct.label(
+             dotplot(VADeaths,type="o")
+             ,method=complicated)}

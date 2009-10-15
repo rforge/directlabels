@@ -1,23 +1,32 @@
 label.positions <- function
-### Calculates table of positions of each label. This can be thought
-### of as a lattice panel function. It takes the same sort of
-### arguments but does not draw anything. Instead it is called for its
-### return value.
+### Calculates table of positions of each label. It does not draw
+### anything, but is called for its return value. Normally you don't
+### have to call label.positions explicitly. Instead, it is called for
+### you by direct.label.
 (x,
 ### x values of points to draw.
  y,
 ### y values of points to draw.
  subscripts,
-### subscripts of groups to consider.
+### Subscripts of groups to consider.
  groups,
-### vector of groups.
+### Vector of groups.
  debug=FALSE,
-### logical indicating whether debug annotations should be added to
-### the plot.
- method=perpendicular.lines,
-### function used to choose position of labels.
+### Show debug output? If TRUE, the resulting table of label positions
+### will be printed.
+ method,
+### Method for direct labeling, specified in one of the following
+### ways: (1) a Positioning Function, (2) the name of a Positioning
+### Function as a character string, or (3) a list containing any
+### number of (1), (2), or additionally named values. Starting from
+### the data frame of points to plot for the panel, the elements of
+### the list are applied in sequence, and each row of the resulting
+### data frame is used to draw a direct label. See examples in
+### ?direct.label and ?positioning.functions. NULL indicates to choose
+### a Positioning Function based on the high-level plot function
+### chosen (this is done in panel.superpose.dl).
  ...
-### passed to positioning method
+### Passed to positioning method(s).
  ){
   levs <- levels(groups)
   groups <- groups[subscripts]
@@ -46,7 +55,8 @@ label.positions <- function
   d <- unique(d)
   if(debug)print(d)
   d
-### Data frame describing where direct labels should be positioned.
+### Data frame of direct label positions. Each row describes the
+### position of 1 label to be drawn later.
 }
 
 perpendicular.lines <- function
@@ -162,7 +172,7 @@ empty.grid.2 <- function
  ){
   empty.grid(d,debug,perpendicular.lines)
 }
-dl.indep <- function
+dl.indep <- function # Direct label groups independently
 ### Makes a function you can use to specify the location of each group
 ### independently.
 (expr
@@ -173,9 +183,9 @@ dl.indep <- function
   f <- function(d,...)eval(foo)
   src <- paste("dl.indep(",deparse(foo),")",sep="")
   structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
-### The constructed label position function.
+### A Positioning Function.
 }
-dl.trans <- function
+dl.trans <- function # Direct label data transform
 ### Make a function that transforms the data. This is for conveniently
 ### making a function that calls transform on the data frame, with the
 ### arguments provided. See examples.
@@ -198,11 +208,11 @@ trans.qqmath <- dl.indep({
 })
 ### Positioning Function for the first of a group of points.
 first.points <-
-  dl.indep(data.frame(d[which.max(d$x),],hjust=1,vjust=0.5))
+  dl.indep(data.frame(d[which.min(d$x),],hjust=1,vjust=0.5))
 left.points <- first.points
 ### Positioning Function for the last of a group of points.
 last.points <-
-  dl.indep(data.frame(d[which.min(d$x),],hjust=0,vjust=0.5))
+  dl.indep(data.frame(d[which.max(d$x),],hjust=0,vjust=0.5))
 right.points <- last.points
 ### Positioning Function for the top of a group of points.
 top.points <-

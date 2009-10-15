@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{left.points}
 \title{left points}
-\description{  dl.indep(data.frame(d[which.max(d$x),],hjust=1,vjust=0.5))}
+\description{  dl.indep(data.frame(d[which.min(d$x),],hjust=1,vjust=0.5))}
 \usage{
 left.points(d, ...)
 }
