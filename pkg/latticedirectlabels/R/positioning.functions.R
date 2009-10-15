@@ -171,32 +171,47 @@ dl.indep <- function
  ){
   foo <- substitute(expr)
   f <- function(d,...)eval(foo)
-  function(d,...){
-    ddply(d,.(groups),f,...)
-  }
+  src <- paste("dl.indep(",deparse(foo),")",sep="")
+  structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
 ### The constructed label position function.
 }
-### Positioning Function for the mode of a density estimate.
-top.points <- dl.indep({
-  maxy <- which.max(d$y)
-  data.frame(x=d$x[maxy],y=d$y[maxy],hjust=0.5,vjust=0)
-})
+dl.trans <- function
+### Make a function that transforms the data. This is for conveniently
+### making a function that calls transform on the data frame, with the
+### arguments provided. See examples.
+(...
+### Arguments to pass to transform.
+ ){
+  L <- as.list(match.call())[-1]
+  function(d,...)do.call("transform",c(list(d),L))
+### A Positioning Function.
+}
 ### Transformation function for 1d densityplots.
 trans.densityplot <- dl.indep({
   dens <- density(d$x)
   data.frame(x=dens$x,y=dens$y)
 })
-### Positioning Function for first points of longitudinal data.
-first.points <-
-  dl.indep(data.frame(d[order(d$x),][1,c("x","y")],hjust=1,vjust=0.5))
-### Positioning Function for last points of longitudinal data.
-last.points <-
-  dl.indep(data.frame(d[order(d$x),][nrow(d),c("x","y")],hjust=0,vjust=0.5))
 ### Transformation function for 1d qqmath plots.
 trans.qqmath <- dl.indep({
   r <- prepanel.default.qqmath(d$x,...)
   data.frame(x=r$x,y=r$y)
 })
+### Positioning Function for first points of longitudinal data.
+first.points <-
+  dl.indep(data.frame(d[which.max(d$x),],hjust=1,vjust=0.5))
+left.points <- first.points
+### Positioning Function for last points of longitudinal data.
+last.points <-
+  dl.indep(data.frame(d[which.min(d$x),],hjust=0,vjust=0.5))
+right.points <- last.points
+### Positioning Function for the top of a group of points
+top.points <-
+  dl.indep(data.frame(d[which.max(d$y),],hjust=0.5,vjust=0))
+high.points <- top.points
+### Positioning Function for the top of a group of points
+bottom.points <-
+  dl.indep(data.frame(d[which.min(d$y),],hjust=0.5,vjust=1))
+low.points <- bottom.points
 ### Positioning Function for the mean of each cluster of points.
 get.means <-
   dl.indep(data.frame(x=mean(d$x),y=mean(d$y)))

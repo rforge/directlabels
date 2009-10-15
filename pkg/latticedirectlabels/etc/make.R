@@ -67,7 +67,7 @@ dev.off()
 pdf("method.pdf");direct.label(dotplot(VADeaths,type="l",xlim=c(5,85)),method=list("last.points",rot=30));dev.off();system("evince method.pdf")
 
 pdf("method2.pdf",h=4)
-complicated <- list(function(d,...){d$x <- d$x+10;d},
+complicated <- list(dl.trans(x=x+10),
                     dl.indep(d[-2,]),
                     rot=c(30,180))
 direct.label(
