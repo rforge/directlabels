@@ -105,6 +105,45 @@ xyplot(weight~Time|Diet,bw,groups=Rat,type="l",layout=c(3,1),
 </pre>
 <img src="longitudinal-custom-panel-groups.png" />
 
+<h2>Specifying the positioning method as a list</h2>
+
+<p>Since the input and output of a Positioning Function is the same
+sort of data frame, you can chain Positioning Functions together. To
+illustrate how this works, consider the following contrived
+example:</p>
+
+<pre>
+complicated <- list(dl.trans(x=x+10), ## add 10 to every x value
+                    dl.indep(d[-2,]), ## delete the 2nd point of every group
+                    rot=c(30,180)) ## rotate by alternately 30 and 180 degrees
+direct.label(dotplot(VADeaths,type="o"),method=complicated)
+</pre>
+
+<img src="method2.png" alt="contrived direct labels" />
+
+<p>When method is specified as a list, the arguments will be applied
+in sequence, starting from the data frame of all plotted points. In
+this example, </p>
+
+<ol>
+
+<li>the first element is a function that adds 10 to every x value,
+thus shifting the labels to the right relative to the points.</li>
+
+<li>the second element is a call to dl.indep, which lets you specify
+an expression to apply to each group, as a function of the data d. In
+this case d[-2,] means delete the second row from each group.</li>
+
+<li>named elements are copied to the data frame, so the third element,
+rot=c(30,180), adds a rot column to the data frame, with values 30 and
+180 for every other row. This has the effect of rotating every label
+by 30 or 180 degrees. Text display parameters fontsize, fontfamily,
+fontface, lineheight, and cex can also be specified in this manner
+(see the help page for grid::grid.text).
+</li>
+
+</ol>
+
 <a href="index.php">Back to site index</a>
 
 </body>
