@@ -11,8 +11,15 @@ direct.label.ggplot <- function
   rename.vec <- sapply(p$mapping[c(lvar,"x","y")],deparse)
   d <- structure(p$data[,rename.vec],names=c("groups","x","y"))
   labtab <- label.positions(d$x,d$y,1:nrow(d),d$groups,debug,method)
-  dlgeom <- geom_text(aes(x=x,y=y,group=groups,colour=groups,label=groups,
-                          angle=rot,hjust=hjust,vjust=vjust),labtab)
+  dlgeom <- geom_text(position=position_directlabel(method))
   p+dlgeom
 ### The ggplot object with direct labels added.
 }
+position_directlabel <- function(method)proto(Position,{
+  adjust <- function(.,data,scales){
+    labtab <- label.positions(x=data$x,y=data$y,groups=data$colour,
+                              subscripts=1:nrow(data),method=.$.dlmethod)
+    transform(labtab,label=groups,group=groups,colour=groups,angle=rot)
+  }
+  objname <- "dl"
+},.dlmethod=method)

@@ -16,10 +16,11 @@ pp <- function(w){
 }
 pp(500)
 pp(1000)
-direct.label(p,last.points)
+pdl <- direct.label(p,last.points)
+pdl
 
 vad <- as.data.frame.table(VADeaths)
 names(vad) <- c("age","demographic","deaths")
 p2 <- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)
-direct.label(p2)
-direct.label(p2,list(last.points,rot=30))
+p3 <- direct.label(p2,list(last.points,rot=30))
+p3
