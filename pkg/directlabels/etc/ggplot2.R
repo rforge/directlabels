@@ -3,7 +3,7 @@ library(nlme)
 data(BodyWeight)
 p <- ggplot(BodyWeight, aes(Time, weight, colour = Rat)) +
   geom_line()  +
-  geom_text(aes(label = Rat), subset = .(Time == min(Time)),hjust=1) +
+  ##geom_text(aes(label = Rat), subset = .(Time == min(Time)),hjust=1) +
   facet_grid(~ Diet) +
   ##theme_bw()+
   scale_colour_identity()
@@ -16,6 +16,7 @@ pp <- function(w){
 }
 pp(500)
 pp(1000)
+direct.label(p,last.points)
 
 vad <- as.data.frame.table(VADeaths)
 names(vad) <- c("age","demographic","deaths")
