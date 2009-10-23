@@ -7,10 +7,11 @@ direct.label.ggplot <- function
  debug=FALSE
 ### Show debug output?
  ){
-  lvar <- if("group" %in% names(p$mapping))"group" else "colour"
-  rename.vec <- sapply(p$mapping[c(lvar,"x","y")],deparse)
-  d <- structure(p$data[,rename.vec],names=c("groups","x","y"))
-  labtab <- label.positions(d$x,d$y,1:nrow(d),d$groups,debug,method)
+  ##lvar <- if("group" %in% names(p$mapping))"group" else "colour"
+  varnames <- c(groups="colour",x="x")
+  if("y" %in% names(p$mapping))varnames <- c(varnames,y="y")
+  rename.vec <- sapply(p$mapping[varnames],deparse)
+  d <- structure(p$data[,rename.vec],names=names(varnames))
   dlgeom <- geom_text(position=position_dl(list(method),debug))
   ##print(dlgeom)
   p+dlgeom
@@ -24,10 +25,14 @@ PositionDl <- proto(Position,{
   }
   adjust <- function(.,data,scales){
     ##print(data)
+    ##browser()
+    if(is.null(data$colour))stop("Need colour aesthetic to direct label.")
     labtab <- label.positions(x=data$x,y=data$y,groups=data$colour,
                               subscripts=1:nrow(data),method=.$method[[1]],
                               debug=.$debug)
-    r <- transform(labtab,label=groups,group=groups,colour=groups,angle=rot)
+    r <- transform(labtab,label=groups,group=groups,
+                   colour=groups,
+                   angle=rot)
     ##print(r)
     r
   }
