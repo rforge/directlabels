@@ -32,7 +32,6 @@ label.positions <- function
   groups <- groups[subscripts]
   d <- data.frame(x,groups)
   if(!missing(y))d$y <- y
-  print(method)
   if(class(method)=="function")method <- list(method)
   for(m.num in seq_along(method)){
     m <- method[[m.num]]
