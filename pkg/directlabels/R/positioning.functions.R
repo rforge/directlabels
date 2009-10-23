@@ -28,6 +28,7 @@ label.positions <- function
  ...
 ### Passed to positioning method(s).
  ){
+  groups <- as.factor(groups)
   levs <- levels(groups)
   groups <- groups[subscripts]
   d <- data.frame(x,groups)
