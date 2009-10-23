@@ -3,13 +3,13 @@ library(ggplot2)
 
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
-direct.label(
-             qplot(ppp,data=loci,colour=type,geom="density")
-             ,method=list(trans.densityplot,top.points))
+dp <- qplot(ppp,data=loci,colour=type,geom="density")
+dp
+dp+scale_colour_identity()
+direct.label(dp,method=list(trans.densityplot,top.points))
 
 
-library(nlme)
-data(BodyWeight)
+data(BodyWeight,package="nlme")
 p <- ggplot(BodyWeight, aes(Time, weight, colour = Rat)) +
   geom_line()  +
   ##geom_text(aes(label = Rat), subset = .(Time == min(Time)),hjust=1) +
@@ -18,16 +18,20 @@ p <- ggplot(BodyWeight, aes(Time, weight, colour = Rat)) +
   scale_colour_identity()
 pdl <- direct.label(p,last.points)
 pdl
+qpdl <- qplot(Time,weight,data=BodyWeight,colour=Rat,geom="line",facets=.~Diet)
+qpdl
+qpdl+scale_colour_identity()
 direct.label(qplot(Time,weight,data=BodyWeight,colour=Rat,geom="line",facets=.~Diet),last.points)+scale_colour_identity()
 ## error, ok since no colour specified:
 direct.label(qplot(Time,weight,data=BodyWeight,group=Rat,geom="line",facets=.~Diet),last.points)+scale_colour_identity()
 
 
-
+library(ggplot2)
 vad <- as.data.frame.table(VADeaths)
 names(vad) <- c("age","demographic","deaths")
 p2 <- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)
 p2
+p2+scale_colour_identity()
 p3 <- direct.label(p2,list(last.points,rot=30),TRUE)
 p3
 p3+scale_colour_identity()## error, how do we hide the legend here?
