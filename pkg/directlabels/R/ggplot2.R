@@ -14,7 +14,7 @@ direct.label.ggplot <- function
   d <- structure(p$data[,rename.vec],names=names(varnames))
   dlgeom <- geom_text(position=position_dl(list(method),debug))
   ##print(dlgeom)
-  p+dlgeom
+  p+dlgeom+opts(legend.position="none") ## maybe eventually create a scale?
 ### The ggplot object with direct labels added.
 }
 PositionDl <- proto(Position,{

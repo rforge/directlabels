@@ -6,8 +6,11 @@ loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
 dp <- qplot(ppp,data=loci,colour=type,geom="density")
 dp
 dp+scale_colour_identity()
+pdf("densityplot-ggplot2.pdf",width=5,height=5)
 direct.label(dp,method=list(trans.densityplot,top.points))
-
+dev.off()
+system("convert densityplot-ggplot2.pdf densityplot-ggplot2.png")
+system("display densityplot-ggplot2.png")
 
 data(BodyWeight,package="nlme")
 p <- ggplot(BodyWeight, aes(Time, weight, colour = Rat)) +
@@ -31,8 +34,4 @@ vad <- as.data.frame.table(VADeaths)
 names(vad) <- c("age","demographic","deaths")
 p2 <- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)
 p2
-p2+scale_colour_identity()
-p3 <- direct.label(p2,list(last.points,rot=30),TRUE)
-p3
-p3+scale_colour_identity()## error, how do we hide the legend here?
-
+direct.label(p2,list(last.points,rot=30),TRUE)
