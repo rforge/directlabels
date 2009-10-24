@@ -126,9 +126,18 @@ direct label for each row returned by the positioning method.</p>
 
 <img src="compare-long.png" alt="direct label longitudinal data" />
 
-<p>Also note that the drawing functions are totally linked to the
-lattice graphics framework, but we can potentially use Positioning
-Functions with other plotting frameworks, i.e. ggplot2.</p>
+<p>Also note that the drawing functions in package latticedl are
+totally linked to the lattice graphics framework, but we can
+potentially use Positioning Functions with other plotting frameworks,
+i.e. ggplot2. Here is how direct labeling will work for ggplot2, using
+experimental functions in the directlabels package:</p>
+
+<pre>
+dp <- qplot(ppp,data=loci,colour=type,geom="density")
+direct.label(dp,method=list(trans.densityplot,top.points))
+</pre>
+
+<img src="densityplot-ggplot2.png" alt="densityplot in ggplot2" />
 
 <h2>Talks</h2>
 
