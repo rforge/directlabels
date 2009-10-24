@@ -11,6 +11,36 @@
 
 <body>
 
+<h2>For flexibility, 2 equivalent methods for adding direct
+labels</h2>
+
+<p>The direct.label() function above works well when you already have
+typed a lattice function call, and you want to add direct labels. This
+form is also useful since you can put the lattice plot on its own line
+if you ever want to just send that line by itself to the R
+interpreter.</p>
+
+<pre>
+direct.label(
+             densityplot(~ppp,loci,groups=type,n=500)
+             )
+</pre>
+
+<p>For direct labeling plots we always will specify the groups=
+argument. Thus to save a bit of typing the <tt>dl()</tt> shortcut function is
+provided:</p>
+
+<pre>
+dl(densityplot,loci,~ppp,type,n=500)
+</pre>
+
+<p>This will yield the same plot as above but notice that the argument
+order is different than usual: lattice.fun, data.set, lattice.formula,
+groups. You don't have to type groups= explicitly, since groups is the
+4th argument. This form also puts the lattice formula argument 3rd,
+next to the groups argument, which is intuitive since it puts together
+the arguments involving data variables.</p>
+
 <h2>Longitudinal data for body weight of 16 rats and 3 different medical treatments</h2>
 <pre>
 library(latticedl)
