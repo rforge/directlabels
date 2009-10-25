@@ -34,4 +34,9 @@ vad <- as.data.frame.table(VADeaths)
 names(vad) <- c("age","demographic","deaths")
 p2 <- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)
 p2
-direct.label(p2,list(last.points,rot=30),TRUE)
+direct.label(p2,list(last.points,rot=30),TRUE)+xlim(5,80)
+## Compare with manual addition of direct labels:
+p2+geom_text(aes(label=demographic),subset=.(age==levels(age)[nlevels(age)]),hjust=0,angle=30)+opts(legend.position="none")
+direct.label(p2,function(d,...)data.frame(subset(d,y==max(y)),hjust=0,rot=30))
+direct.label(p2,list(dl.indep(d[which.max(d$x),]),hjust=0,rot=30))
+direct.label(p2,list(last.points,rot=30))
