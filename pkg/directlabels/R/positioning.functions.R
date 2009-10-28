@@ -238,4 +238,16 @@ maxvar.points <- function(d,...){
   x <- subset(v,v==max(v))$x
   if(x==min(d$x))first.points(d,...) else last.points(d,...)
 }
-direct.label <- function(x,...)UseMethod("direct.label")
+direct.label <- function
+### Add direct labels to a plot. This is a S3 generic and there are
+### appropriate methods for "trellis" and "ggplot2" objects.
+(p,
+### The plot to which you would like to add direct labels.
+ method=NULL,
+### The direct label placement method.
+ debug=FALSE
+### Show debug output?
+ ){
+  UseMethod("direct.label")
+### The plot object, with direct labels added.
+}
