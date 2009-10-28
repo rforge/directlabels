@@ -244,7 +244,8 @@ direct.label <- function
 (p,
 ### The plot to which you would like to add direct labels.
  method=NULL,
-### The direct label placement method.
+### The direct label placement method as described in
+### ?label.positions.
  debug=FALSE
 ### Show debug output?
  ){

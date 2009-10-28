@@ -2,18 +2,18 @@
 \Rdversion{1.1}
 \alias{direct.label}
 \title{direct label}
-\description{Add direct labels to a grouped lattice plot. This works by parsing the trellis object returned by the high level plot function, and returning it with a new panel function that will plot direct labels using the specified method.}
+\description{Add direct labels to a plot. This is a S3 generic and there are appropriate methods for "trellis" and "ggplot2" objects.}
 \usage{
 direct.label(p, method = NULL, debug = FALSE)
 }
 \arguments{
-  \item{p}{The lattice plot (result of a call to a high-level lattice function).}
-  \item{method}{Method for direct labeling as described in ?label.positions.}
+  \item{p}{The plot to which you would like to add direct labels.}
+  \item{method}{The direct label placement method as described in ?label.positions.}
   \item{debug}{Show debug output?}
 }
 \details{
 }
-\value{The lattice plot.}
+\value{The plot object, with direct labels added.}
 \references{
 }
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
