@@ -3,8 +3,7 @@
 \alias{PositionDl}
 \docType{data}
 \title{PositionDl}
-\description{
-}
+\description{Position class for direct label placement.}
 \usage{PositionDl}
 \format{
   The format is:

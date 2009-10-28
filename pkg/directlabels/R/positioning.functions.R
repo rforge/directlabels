@@ -2,7 +2,7 @@ label.positions <- function
 ### Calculates table of positions of each label. It does not draw
 ### anything, but is called for its return value. Normally you don't
 ### have to call label.positions explicitly. Instead, it is called for
-### you by direct.label.
+### you by direct.label, for each panel.
 (x,
 ### x values of points to draw.
  y,
@@ -22,11 +22,9 @@ label.positions <- function
 ### the data frame of points to plot for the panel, the elements of
 ### the list are applied in sequence, and each row of the resulting
 ### data frame is used to draw a direct label. See examples in
-### ?direct.label and ?positioning.functions. NULL indicates to choose
-### a Positioning Function based on the high-level plot function
-### chosen (this is done in panel.superpose.dl).
+### ?direct.label and ?positioning.functions.
  ...
-### Passed to positioning method(s).
+### Passed to Positioning Function(s).
  ){
   groups <- as.factor(groups)
   levs <- levels(groups)
@@ -240,7 +238,7 @@ maxvar.points <- function(d,...){
 }
 direct.label <- function
 ### Add direct labels to a plot. This is a S3 generic and there are
-### appropriate methods for "trellis" and "ggplot2" objects.
+### appropriate methods for "trellis" and "ggplot" objects.
 (p,
 ### The plot to which you would like to add direct labels.
  method=NULL,

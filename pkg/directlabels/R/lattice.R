@@ -73,7 +73,9 @@ panel.superpose.dl <- function
 ### To be parsed for default labeling method, and passed to
 ### panel.superpose.
  method=NULL,
-### Method for direct labeling as described in ?label.positions.
+### Method for direct labeling as described in ?label.positions. NULL
+### indicates to choose a Positioning Function based on the
+### panel.groups function.
  .panel.superpose=panel.superpose,
 ### The panel function to use for drawing data points.
  type="p",

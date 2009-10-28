@@ -1,6 +1,4 @@
-library(latticedl)
-library(proto)
-library(ggplot2)
+library(directlabels)
 data(mpg)
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
@@ -77,4 +75,12 @@ plot(direct.label(densityplot(~gcsescore,Chem97,groups=factor(score))))
 ## This would be more effective superimposed:
 plot(direct.label(densityplot(~gcsescore|gender,Chem97,groups=factor(score),layout=c(1,2))))
 
-plot(direct.label(dotplot(VADeaths,type="o"),method=list("last.points",rot=30)))
+angled.endpoints <- list("last.points",rot=30)
+plot(direct.label(dotplot(VADeaths,type="o"),method=angled.endpoints))
+
+## Try the same plot with ggplot2
+vad <- as.data.frame.table(VADeaths)
+names(vad) <- c("age","demographic","deaths")
+p2 <- qplot(deaths,age,data=vad,
+            group=demographic,geom="line",colour=demographic)
+print(direct.label(p2,angled.endpoints)+xlim(5,80))

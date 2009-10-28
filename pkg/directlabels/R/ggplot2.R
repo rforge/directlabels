@@ -17,6 +17,7 @@ direct.label.ggplot <- function
   p+dlgeom+opts(legend.position="none") ## maybe eventually create a scale?
 ### The ggplot object with direct labels added.
 }
+### Position class for direct label placement.
 PositionDl <- proto(ggplot2::Position,{
   method <- NULL
   debug <- FALSE
