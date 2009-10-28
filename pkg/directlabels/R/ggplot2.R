@@ -17,7 +17,7 @@ direct.label.ggplot <- function
   p+dlgeom+opts(legend.position="none") ## maybe eventually create a scale?
 ### The ggplot object with direct labels added.
 }
-PositionDl <- proto(Position,{
+PositionDl <- proto(ggplot2::Position,{
   method <- NULL
   debug <- FALSE
   new <- function(., method=NULL, debug=FALSE) {
@@ -38,5 +38,6 @@ PositionDl <- proto(Position,{
   }
   objname <- "dl"
 })
+### Position for internal use with geom_text.
 position_dl <- PositionDl$build_accessor()
 
