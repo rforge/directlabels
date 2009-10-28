@@ -12,6 +12,11 @@ direct.label.ggplot <- function
   if("y" %in% names(p$mapping))varnames <- c(varnames,y="y")
   rename.vec <- sapply(p$mapping[varnames],deparse)
   d <- structure(p$data[,rename.vec],names=names(varnames))
+  if(is.null(method))method <-
+    switch(p$layers[[1]]$geom$objname,
+           density=list("trans.densityplot","top.points"),
+           line="last.points",
+           stop("No default label placement for this type of ggplot."))
   dlgeom <- geom_text(position=position_dl(list(method),debug))
   ##print(dlgeom)
   p+dlgeom+opts(legend.position="none") ## maybe eventually create a scale?
