@@ -1,4 +1,4 @@
-library(latticedl)
+library(directlabels)
 library(ggplot2)
 data(BodyWeight,package="nlme")
 print(dl(xyplot,BodyWeight,weight~Time|Diet,Rat,

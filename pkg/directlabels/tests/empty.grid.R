@@ -1,4 +1,4 @@
-library(latticedl)
+library(directlabels)
 library(proto)
 library(ggplot2)
 data(mpg)
