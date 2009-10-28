@@ -1,0 +1,100 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en   ">
+
+  <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>directlabels by hand: a case study</title>
+	<link href="estilo1.css" rel="stylesheet" type="text/css" />
+  </head>
+
+<body>
+
+<h2>Adding direct labels by hand is difficult. Instead, use the
+directlabels pacakge.</h2>
+
+<p>There are 2 major reasons why the directlabels package is so
+useful:</p>
+
+<ul>
+
+  <li>Direct labeling is difficult to do "by hand" using standard
+  base/lattice/ggplot2 plotting functions. The directlabels package
+  allows you to define your direct labels in terms of a simple
+  Positioning Function. This makes your code simpler, more readable,
+  and less repetitive.</li>
+
+  <li>The functions that you will use to direct label a plot "by hand"
+  depend on the plot package you use. The directlabels package offers
+  a unified interface for both lattice and ggplot2 plots, thus greatly
+  simplifying your code.</li>
+
+</ul>
+
+<h2>Densityplot example</h2>
+
+<table><tr>
+<td><img src="density.png" alt="lattice densityplot" /></td>
+<td><img src="densityplot-ggplot2.png" alt="densityplot in ggplot2" /></td>
+</tr>
+</table>
+
+<p>Here's how we would go about making this plot in lattice without help
+from the directlabels package:</p>
+
+<pre>
+## unlabeled lattice plot
+dp <- densityplot(~ppp,loci,groups=type,n=500)
+## we will add direct labels using this panel.groups function
+label.densityplot <- function(x,group.number,col.line,...){
+  panel.densityplot(x=x,group.number=group.number,col.line=col.line,...)
+  d <- density(x)
+  i <- which.max(d$y)
+  ltext(d$x[i],d$y[i],levels(loci$type)[group.number],adj=c(0.5,0),col=col.line)
+}
+## update the lattice plot with the new panel.groups function
+update(dp,panel=panel.superpose,panel.groups=label.densityplot)
+</pre>
+
+<p>As you can see, this is rather difficult using just plain lattice
+functions. It is also rather difficult in ggplot2:</p>
+
+<pre>
+## ggplot2 with usual legend
+dp <- qplot(ppp,data=loci,colour=type,geom="density")
+## first we need to create a data frame of direct label positions
+dens <- ddply(loci,.(type),function(l)
+              subset(data.frame(density(l$ppp)[c("x","y")]),y==max(y)))
+## add the direct labels and hide the legend
+dp+geom_text(aes(x=x,y=y,label=type,vjust=0),dens)+opts(legend.position="none")
+</pre>
+
+<p>The directlabels package greatly simplifies the code necessary for
+direct labeling. And it works the same with with both lattice and
+ggplot2, try it! Several different (but equivalent) positioning
+methods are shown, in order to give you a better feel about how the
+system works. Each of the following will create the same direct
+labeled plot above.</p>
+
+<pre>
+## The Positioning Function can be any function of d the data, or a list as shown here
+direct.label(dp,list(function(d,...)ddply(d,.(groups),subset,y==max(y)),vjust=0))
+## Using dl.indep makes it simpler to define Positioning Functions
+direct.label(dp,list(dl.indep(d[which.max(d$y),]),vjust=0))
+## The built-in top.points function is exactly what we need for this
+direct.label(dp,top.points)
+## And by default direct.label uses top.points for density plots 
+direct.label(dp)
+</pre>
+
+<p>Each of these is significantly simpler than doing it by hand using
+lattice or ggplot2. Instead of several lines of code, you can almost
+always add your direct labels using just 1 line!</p>
+
+<p>Back to <a href="index.php">directlabels home</a>.</p>
+
+
+</body>
+
+</html>

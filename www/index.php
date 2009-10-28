@@ -70,8 +70,8 @@ colored lines. Then we would be using the data for label positioning,
 which is inherently more intuitive and obvious to decode.</p>
 
 <p>"But," you say, "lattice makes it so easy to makes these legends!
-Direct labeling is a lot of tedious work! I can live with these
-confusing legends!"</p>
+<a href="motivation.html">Direct labeling is a lot of tedious
+work</a>! I can live with these confusing legends!"</p>
 
 <h2>Do not live with confusing legends any longer. Instead, use direct
 labels.</h2>
@@ -129,12 +129,13 @@ direct label for each row returned by the positioning method.</p>
 <p>Also note that the drawing functions in package latticedl are
 totally linked to the lattice graphics framework, but we can
 potentially use Positioning Functions with other plotting frameworks,
-i.e. ggplot2. Here is how direct labeling will work for ggplot2, using
+i.e. ggplot2. Here is how direct labeling works for ggplot2, using
 experimental functions in the directlabels package:</p>
 
 <pre>
+library(directlabels)
 dp <- qplot(ppp,data=loci,colour=type,geom="density")
-direct.label(dp,method=list(trans.densityplot,top.points))
+direct.label(dp)
 </pre>
 
 <img src="densityplot-ggplot2.png" alt="densityplot in ggplot2" />
