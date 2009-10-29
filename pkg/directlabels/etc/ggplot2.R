@@ -55,10 +55,24 @@ direct.label(qpdl)
 
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
+## ggplot2 plot
 dp <- qplot(ppp,data=loci,colour=type,geom="density")
-dp+geom_text(aes(y=..density..,label=type,vjust=0),stat="density")+opts(legend.position="none")
-## note that directlabels automatically fits a density estimate for
-## you (this may be bad if non-standard parameters are used)
+## ggplot2 direct labels by hand
+dens <- ddply(loci,.(type),function(l)
+              subset(data.frame(density(l$ppp)[c("x","y")]),y==max(y)))
+dp+geom_text(aes(x=x,y=y,label=type,vjust=0),dens)+opts(legend.position="none")
+## lattice plot
+dp <- densityplot(~ppp,loci,groups=type,n=500)
+## lattice plot direct labels by hand
+label.densityplot <- function(x,group.number,col.line,...){
+  panel.densityplot(x=x,group.number=group.number,col.line=col.line,...)
+  d <- density(x)
+  i <- which.max(d$y)
+  ltext(d$x[i],d$y[i],levels(loci$type)[group.number],adj=c(0.5,0),col=col.line)
+}
+update(dp,panel=panel.superpose,panel.groups=label.densityplot)
+
+## direct.label is shorter and works with both ggplot2 and lattice
 direct.label(dp,list(function(d,...)ddply(d,.(groups),subset,y==max(y)),vjust=0))
 direct.label(dp,list(dl.indep(d[which.max(d$y),]),vjust=0))
 direct.label(dp,top.points)
