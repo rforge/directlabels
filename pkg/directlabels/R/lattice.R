@@ -1,4 +1,4 @@
-### Functions which need translation before applying positioning function.
+### Functions which need translation before applying Positioning Function.
 need.trans <- c("qqmath","densityplot")
 dl.text <- function
 ### To be used as panel.groups= argument in panel.superpose. Analyzes

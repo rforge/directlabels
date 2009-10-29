@@ -1,3 +1,5 @@
+### Geoms which need translation before applying Positioning Function.
+need.trans.ggplot <- c("density")
 direct.label.ggplot <- function
 ### Direct label a ggplot2 grouped plot.
 (p,
@@ -12,11 +14,14 @@ direct.label.ggplot <- function
   if("y" %in% names(p$mapping))varnames <- c(varnames,y="y")
   rename.vec <- sapply(p$mapping[varnames],deparse)
   d <- structure(p$data[,rename.vec],names=names(varnames))
+  geom <- p$layers[[1]]$geom$objname
   if(is.null(method))method <-
-    switch(p$layers[[1]]$geom$objname,
-           density=list("trans.densityplot","top.points"),
+    switch(geom,
+           density="top.points",
            line="last.points",
            stop("No default label placement for this type of ggplot."))
+  if(geom%in%need.trans.ggplot)method <-
+    c(paste("trans.",geom,sep=""),method)
   dlgeom <- geom_text(position=position_dl(list(method),debug))
   ##print(dlgeom)
   p+dlgeom+opts(legend.position="none") ## maybe eventually create a scale?
