@@ -13,12 +13,14 @@ direct.label.ggplot <- function
   varnames <- c(groups="colour",x="x")
   if("y" %in% names(p$mapping))varnames <- c(varnames,y="y")
   rename.vec <- sapply(p$mapping[varnames],deparse)
+  rename.vec <- gsub("factor[(]([^)]+)[)]","\\1",rename.vec)
   d <- structure(p$data[,rename.vec],names=names(varnames))
   geom <- p$layers[[1]]$geom$objname
   if(is.null(method))method <-
     switch(geom,
            density="top.points",
            line="last.points",
+           point="empty.grid.2",
            stop("No default label placement for this type of ggplot."))
   if(geom%in%need.trans.ggplot)method <-
     c(paste("trans.",geom,sep=""),method)
