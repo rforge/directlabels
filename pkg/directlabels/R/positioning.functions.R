@@ -251,3 +251,29 @@ direct.label <- function
   UseMethod("direct.label")
 ### The plot object, with direct labels added.
 }
+lines2 <- function
+## Positioning Function for 2 groups of longitudinal data.
+(d,
+### The data.
+ offset=0.3,
+### Offset from 0 or 1 for the vjust values.
+ ...
+### ignored.
+ ){
+  top <- 0-offset
+  bottom <- 1+offset
+  y <- ddply(d,.(groups),function(d)mean(d$y))
+  ddply(y,.(groups),function(D){
+    i <- D$V==max(y$V)
+    f <- if(i)max else min
+    ld <- subset(d,groups==D$groups)
+    pos <- ddply(subset(ld,y==f(ld$y)),.(groups),function(x)
+          data.frame(x=max(x$x)-diff(range(x$x))/2,y=x$y[1]))
+    other <- subset(d,groups!=D$groups)
+    other.y <- other[which.min(abs(other$x-pos$x)),"y"]
+    j <- pos$y<other.y
+    data.frame(pos,vjust=if(i)
+               if(j)bottom else top#bigger mean
+               else if(j)bottom else top)#smaller mean
+  })
+}
