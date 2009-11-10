@@ -252,7 +252,13 @@ direct.label <- function
 ### The plot object, with direct labels added.
 }
 lines2 <- function
-### Positioning Function for 2 groups of longitudinal data.
+### Positioning Function for 2 groups of longitudinal data. One curve
+### is on top of the other one (on average), so we label the top one
+### at its maximal point, and the bottom one at its minimal
+### point. Vertical justification is chosen to minimize collisions
+### with the other line. This may not work so well for data with high
+### variability, but then again lineplots may not be the best for
+### these data either.
 (d,
 ### The data.
  offset=0.3,
@@ -264,16 +270,16 @@ lines2 <- function
   bottom <- 1+offset
   y <- ddply(d,.(groups),function(d)mean(d$y))
   ddply(y,.(groups),function(D){
-    i <- D$V==max(y$V)
-    f <- if(i)max else min
+    biggest.on.average <- D$V==max(y$V)
+    f <- if(biggest.on.average)max else min
     ld <- subset(d,groups==D$groups)
     pos <- ddply(subset(ld,y==f(ld$y)),.(groups),function(x)
           data.frame(x=max(x$x)-diff(range(x$x))/2,y=x$y[1]))
     other <- subset(d,groups!=D$groups)
     other.y <- other[which.min(abs(other$x-pos$x)),"y"]
-    j <- pos$y<other.y
-    data.frame(pos,vjust=if(i)
-               if(j)bottom else top#bigger mean
-               else if(j)bottom else top)#smaller mean
+    smaller.here <- pos$y<other.y
+    data.frame(pos,vjust=if(biggest.on.average)
+               if(smaller.here)bottom else top#bigger mean
+               else if(smaller.here)bottom else top)#smaller mean
   })
 }
