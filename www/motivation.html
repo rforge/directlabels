@@ -98,9 +98,63 @@ direct.label(dp,top.points)
 direct.label(dp)
 </pre>
 
-<p>Each of these is significantly simpler than doing it by hand using
-lattice or ggplot2. Instead of several lines of code, you can almost
-always add your direct labels using just 1 line!</p>
+<h2>Lineplot over several panels example</h2>
+
+<pre>
+data(BodyWeight,package="nlme")
+library(lattice)
+qpdl <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
+label.lineplot <- function(x,y,group.number,col.line,...){
+  panel.xyplot(x=x,y=y,group.number=group.number,col.line=col.line,...)
+  i <- which.max(x)
+  ltext(x[i],y[i],levels(BodyWeight$Rat)[group.number],
+        adj=c(0,0.5),col=col.line)
+}
+update(qpdl,panel=panel.superpose,panel.groups=label.lineplot)
+</pre>
+
+<p>Using lattice to plot these data with direct labels is tiresome,
+since you have to construct a custom panel.groups function.</p>
+
+<img src="longitudinal.png" alt="rat body weights with direct labels" />
+
+<p>Adding direct labels by hand in ggplot2 is somewhat simpler in this
+case:</p>
+
+<pre>
+qpdl+
+  geom_text(aes(label=Rat),subset=.(Time==min(Time)),hjust=1)+
+  opts(legend.position="none")
+</pre>
+
+<img src="rat-ggplot2.png" alt="rat body weights with direct labels
+using ggplot2" />
+
+<p>The directlabels package offers an interface that is simpler and
+uniform between lattice and ggplot2. Any of the following lines of
+code make the same direct labeled figure:</p>
+
+<pre>
+## Use a custom Positioning Function to specify direct label positions
+direct.label(qpdl,function(d,...)data.frame(subset(d,x==min(x)),hjust=1))
+## Specifying a list and using dl.indep is more concise
+direct.label(qpdl,list(dl.indep(d[which.max(d$x),]),hjust=1))
+## first.points is a Positioning Function that comes with the directlabels package
+direct.label(qpdl,first.points)
+## The default Positioning Function for lineplots is first.points
+direct.label(qpdl)
+</pre>
+
+<h2>Conclusion</h2>
+
+<p>Using the direct.label function is significantly simpler than doing
+it by hand using lattice or ggplot2. Instead of several lines of code,
+you can almost always add your direct labels using just 1 line!
+<!--
+ Consult the ?positioning.functions documentation page in R to see a
+list of available built-in Positioning Functions. 
+-->
+</p>
 
 <p>Back to <a href="index.php">directlabels home</a>.</p>
 
