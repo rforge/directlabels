@@ -19,7 +19,7 @@ direct.label.ggplot <- function
   if(is.null(method))method <-
     switch(geom,
            density="top.points",
-           line="last.points",
+           line="first.points",
            point="empty.grid.2",
            stop("No default label placement for this type of ggplot."))
   if(geom%in%need.trans.ggplot)method <-
