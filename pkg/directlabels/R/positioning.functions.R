@@ -252,7 +252,7 @@ direct.label <- function
 ### The plot object, with direct labels added.
 }
 lines2 <- function
-## Positioning Function for 2 groups of longitudinal data.
+### Positioning Function for 2 groups of longitudinal data.
 (d,
 ### The data.
  offset=0.3,
