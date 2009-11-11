@@ -93,22 +93,3 @@ plots <- list(lattice=xyplot(deaths~time,ddf,groups=sex,type="l"),
               ggplot2=qplot(time,deaths,data=ddf,colour=sex,geom="line"))
 pos.funs <- list("first.points","lines2")
 direct.label.compare(plots,pos.funs)
-## Demonstration of layout justification
-  grid.text(paste(just, collapse="-"))
-  popViewport(2)
-}
-testlay()
-testlay(c("left", "top"))
-testlay(c("right", "top"))
-testlay(c("right", "bottom"))
-testlay(c("left", "bottom"))
-testlay(c("left"))
-testlay(c("right"))
-testlay(c("bottom"))
-testlay(c("top"))
-
-
-
-
-
-
