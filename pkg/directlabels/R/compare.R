@@ -1,4 +1,4 @@
-dlcompare <- function
+dlcompare <- function # Direct label comparison plot
 ### Compare several plots and/or label placement methods. This creates
 ### a custom grid graphics display based on lattice and/or ggplot2
 ### output. This is possible because the direct.label function is
