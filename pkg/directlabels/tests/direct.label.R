@@ -84,3 +84,12 @@ names(vad) <- c("age","demographic","deaths")
 p2 <- qplot(deaths,age,data=vad,
             group=demographic,geom="line",colour=demographic)
 print(direct.label(p2,angled.endpoints)+xlim(5,80))
+
+## label 2 groups of longitudinal data:
+dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
+ddf <- melt(as.data.frame(dts),id="time")
+names(ddf) <- c("time","sex","deaths")
+for(p in list(xyplot(deaths~time,ddf,groups=sex,type="l"),
+              qplot(time,deaths,data=ddf,colour=sex,geom="line")))
+  for(method in list("first.points","lines2"))print(direct.label(p,method))
+
