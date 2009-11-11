@@ -10,7 +10,9 @@
 proto object 
  $ objname: chr "dl" 
  $ adjust :function (., data, scales)   
+  ..- attr(*, "source")= chr [1:13] "function(.,data,scales){" ... 
  $ new    :function (., method = NULL, debug = FALSE)   
+  ..- attr(*, "source")= chr [1:3] "function(., method=NULL, debug=FALSE) {" ... 
  $ debug  : logi FALSE 
  $ method : NULL 
  parent: proto object 
