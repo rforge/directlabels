@@ -93,10 +93,11 @@ panel.superpose.dl <- function
   lattice.fun.name <-
     if(is.character(subs))sub("panel.","",subs) else ""
   if(is.null(type))type <- "NULL"
+  ldefault <- if(nlevels(groups)==2)"lines2" else "first.points"
   if(is.null(method))method <- 
     switch(lattice.fun.name,
            dotplot="last.points",
-           xyplot=switch(type,l="first.points",o="first.points","empty.grid.2"),
+           xyplot=switch(type,l=ldefault,o=ldefault,"empty.grid.2"),
            densityplot="top.points",
            qqmath="first.points",
            rug="rug.mean",

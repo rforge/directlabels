@@ -16,10 +16,11 @@ direct.label.ggplot <- function
   rename.vec <- gsub("factor[(]([^)]+)[)]","\\1",rename.vec)
   d <- structure(p$data[,rename.vec],names=names(varnames))
   geom <- p$layers[[1]]$geom$objname
+  ldefault <- if(nlevels(p$data$colour)==2)"lines2" else "first.points"
   if(is.null(method))method <-
     switch(geom,
            density="top.points",
-           line="first.points",
+           line=ldefault,
            point="empty.grid.2",
            stop("No default label placement for this type of ggplot."))
   if(geom%in%need.trans.ggplot)method <-
