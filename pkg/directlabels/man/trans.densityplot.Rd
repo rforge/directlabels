@@ -1,5 +1,4 @@
 \name{trans.densityplot}
-\Rdversion{1.1}
 \alias{trans.densityplot}
 \title{trans densityplot}
 \description{Transformation function for 1d densityplots.}

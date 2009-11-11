@@ -1,5 +1,4 @@
 \name{label.positions}
-\Rdversion{1.1}
 \alias{label.positions}
 \title{label positions}
 \description{Calculates table of positions of each label. It does not draw anything, but is called for its return value. Normally you don't have to call label.positions explicitly. Instead, it is called for you by direct.label, for each panel.}

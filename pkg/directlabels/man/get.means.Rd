@@ -1,5 +1,4 @@
 \name{get.means}
-\Rdversion{1.1}
 \alias{get.means}
 \title{get means}
 \description{Positioning Function for the mean of each cluster of points.}

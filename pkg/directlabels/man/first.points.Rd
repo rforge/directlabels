@@ -1,5 +1,4 @@
 \name{first.points}
-\Rdversion{1.1}
 \alias{first.points}
 \title{first points}
 \description{Positioning Function for the first of a group of points.}

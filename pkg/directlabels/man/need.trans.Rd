@@ -1,5 +1,4 @@
 \name{need.trans}
-\Rdversion{1.1}
 \alias{need.trans}
 \docType{data}
 \title{need trans}

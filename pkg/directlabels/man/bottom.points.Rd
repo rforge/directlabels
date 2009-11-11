@@ -1,5 +1,4 @@
 \name{bottom.points}
-\Rdversion{1.1}
 \alias{bottom.points}
 \title{bottom points}
 \description{Positioning Function for the bottom of a group of points.}

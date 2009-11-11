@@ -1,5 +1,4 @@
 \name{direct.label.trellis}
-\Rdversion{1.1}
 \alias{direct.label.trellis}
 \title{direct label trellis}
 \description{Add direct labels to a grouped lattice plot. This works by parsing the trellis object returned by the high level plot function, and returning it with a new panel function that will plot direct labels using the specified method.}

@@ -1,5 +1,4 @@
 \name{dl.text}
-\Rdversion{1.1}
 \alias{dl.text}
 \title{dl text}
 \description{To be used as panel.groups= argument in panel.superpose. Analyzes arguments to determine correct text color for this group, and then draws the direct label text.}

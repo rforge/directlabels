@@ -1,5 +1,4 @@
 \name{lines2}
-\Rdversion{1.1}
 \alias{lines2}
 \title{lines2}
 \description{Positioning Function for 2 groups of longitudinal data. One curve is on top of the other one (on average), so we label the top one at its maximal point, and the bottom one at its minimal point. Vertical justification is chosen to minimize collisions with the other line. This may not work so well for data with high variability, but then again lineplots may not be the best for these data either.}

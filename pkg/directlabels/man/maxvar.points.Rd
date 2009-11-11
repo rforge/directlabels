@@ -1,5 +1,4 @@
 \name{maxvar.points}
-\Rdversion{1.1}
 \alias{maxvar.points}
 \title{maxvar points}
 \description{Do first or last, whichever has points most spread out.}

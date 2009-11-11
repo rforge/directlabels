@@ -1,5 +1,4 @@
 \name{panel.superpose.dl}
-\Rdversion{1.1}
 \alias{panel.superpose.dl}
 \title{panel superpose dl}
 \description{Call panel.superpose for the data points and then for the direct labels. This is a proper lattice panel function that behaves much like panel.superpose.}

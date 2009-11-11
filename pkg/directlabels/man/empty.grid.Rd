@@ -1,5 +1,4 @@
 \name{empty.grid}
-\Rdversion{1.1}
 \alias{empty.grid}
 \title{empty grid}
 \description{Label placement method for scatterplots that ensures labels are placed in different places. A grid is drawn over the whole plot. Each cluster is considered in sequence and assigned to the point on this grid which is closest to the point given by loc.fun().}

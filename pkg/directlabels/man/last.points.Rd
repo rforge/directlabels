@@ -1,5 +1,4 @@
 \name{last.points}
-\Rdversion{1.1}
 \alias{last.points}
 \title{last points}
 \description{Positioning Function for the last of a group of points.}

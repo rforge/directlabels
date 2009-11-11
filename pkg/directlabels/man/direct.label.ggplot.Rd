@@ -1,5 +1,4 @@
 \name{direct.label.ggplot}
-\Rdversion{1.1}
 \alias{direct.label.ggplot}
 \title{direct label ggplot}
 \description{Direct label a ggplot2 grouped plot.}

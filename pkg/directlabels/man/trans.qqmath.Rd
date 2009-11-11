@@ -1,5 +1,4 @@
 \name{trans.qqmath}
-\Rdversion{1.1}
 \alias{trans.qqmath}
 \title{trans qqmath}
 \description{Transformation function for 1d qqmath plots.}

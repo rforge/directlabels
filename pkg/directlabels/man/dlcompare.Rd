@@ -1,5 +1,4 @@
 \name{dlcompare}
-\Rdversion{1.1}
 \alias{dlcompare}
 \title{dlcompare}
 \description{Compare several plots and/or label placement methods. This creates a custom grid graphics display based on lattice and/or ggplot2 output. This is possible because the direct.label function is generic. The result will be a plot matrix with plots on the columns and positioning methods on the rows. Names from the lists will be used to annotate the plot. If label placement method list elements are not named, but are given as a character string designating a Positioning Function, we will use this name for the label.}

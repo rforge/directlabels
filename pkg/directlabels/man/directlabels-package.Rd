@@ -1,5 +1,4 @@
 \name{directlabels-package}
-\Rdversion{1.1}
 \alias{directlabels-package}
 \docType{package}
 \title{Direct labels for plots}

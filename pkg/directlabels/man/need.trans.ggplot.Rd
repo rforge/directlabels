@@ -1,5 +1,4 @@
 \name{need.trans.ggplot}
-\Rdversion{1.1}
 \alias{need.trans.ggplot}
 \docType{data}
 \title{need trans ggplot}

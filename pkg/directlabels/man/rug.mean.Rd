@@ -1,5 +1,4 @@
 \name{rug.mean}
-\Rdversion{1.1}
 \alias{rug.mean}
 \title{rug mean}
 \description{Place points on top of the mean value of the rug.}
