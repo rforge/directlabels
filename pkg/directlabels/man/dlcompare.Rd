@@ -1,6 +1,6 @@
 \name{dlcompare}
 \alias{dlcompare}
-\title{dlcompare}
+\title{ Direct label comparison plot}
 \description{Compare several plots and/or label placement methods. This creates a custom grid graphics display based on lattice and/or ggplot2 output. This is possible because the direct.label function is generic. The result will be a plot matrix with plots on the columns and positioning methods on the rows. Names from the lists will be used to annotate the plot. If label placement method list elements are not named, but are given as a character string designating a Positioning Function, we will use this name for the label.}
 \usage{
 dlcompare(plots, pos.funs)
@@ -41,5 +41,5 @@ not.named <- structure(named.funs,names=NULL)
 unlabeled.plots <- structure(plots,names=NULL)
 dlcompare(plots,mixed.funs[3])
 ## this should work with all combinations, with varying labels
-for(ml in list(pos.funs,named.funs,mixed.funs,not.named))
+for(ml in list(mixed.funs,not.named))
   for(pl in list(plots,unlabeled.plots))dlcompare(pl,ml)}

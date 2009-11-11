@@ -17,5 +17,5 @@ not.named <- structure(named.funs,names=NULL)
 unlabeled.plots <- structure(plots,names=NULL)
 dlcompare(plots,mixed.funs[3])
 ## this should work with all combinations, with varying labels
-for(ml in list(pos.funs,named.funs,mixed.funs,not.named))
+for(ml in list(mixed.funs,not.named))
   for(pl in list(plots,unlabeled.plots))dlcompare(pl,ml)
