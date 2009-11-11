@@ -91,5 +91,5 @@ ddf <- melt(as.data.frame(dts),id="time")
 names(ddf) <- c("time","sex","deaths")
 plots <- list(lattice=xyplot(deaths~time,ddf,groups=sex,type="l"),
               ggplot2=qplot(time,deaths,data=ddf,colour=sex,geom="line"))
-pos.funs <- list("first.points","lines2")
-direct.label.compare(plots,pos.funs)
+for(p in plots)print(direct.label(p)) ## should default to lines2
+
