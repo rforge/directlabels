@@ -2,16 +2,15 @@ dlcompare <- function # Direct label comparison plot
 ### Compare several plots and/or label placement methods. This creates
 ### a custom grid graphics display based on lattice and/or ggplot2
 ### output. This is possible because the direct.label function is
-### generic. The result will be a plot matrix with plots on the
-### columns and positioning methods on the rows. Names from the lists
-### will be used to annotate the plot. If label placement method list
-### elements are not named, but are given as a character string
-### designating a Positioning Function, we will use this name for the
-### label.
+### generic. Plots will be on the columns and positioning methods will
+### be on the rows.
 (plots,
-### List of ggplot2 or lattice plots.
+### List of ggplot2 or lattice plots. List names will be used to
+### annotate the plot.
  pos.funs
-### List of label placement methods to apply to each plot.
+### List of label placement methods to apply to each plot. List names,
+### or function names if specified as character strings, will be used
+### to annotate the plot.
  ){
   ## Augment positioning function list names if possible
   names(pos.funs) <- sapply(seq_along(pos.funs),function(i){

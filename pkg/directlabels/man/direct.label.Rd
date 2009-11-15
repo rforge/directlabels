@@ -1,13 +1,15 @@
 \name{direct.label}
 \alias{direct.label}
 \title{direct label}
-\description{Add direct labels to a plot. This is a S3 generic and there are appropriate methods for "trellis" and "ggplot" objects.}
+\description{Add direct labels to a plot. This is a S3 generic and there are
+appropriate methods for "trellis" and "ggplot" objects.}
 \usage{
 direct.label(p, method = NULL, debug = FALSE)
 }
 \arguments{
   \item{p}{The plot to which you would like to add direct labels.}
-  \item{method}{The direct label placement method as described in ?label.positions.}
+  \item{method}{The direct label placement method as described in
+?label.positions.}
   \item{debug}{Show debug output?}
 }
 \details{

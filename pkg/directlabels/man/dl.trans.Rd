@@ -1,7 +1,9 @@
 \name{dl.trans}
 \alias{dl.trans}
 \title{ Direct label data transform}
-\description{Make a function that transforms the data. This is for conveniently making a function that calls transform on the data frame, with the arguments provided. See examples.}
+\description{Make a function that transforms the data. This is for conveniently
+making a function that calls transform on the data frame, with the
+arguments provided. See examples.}
 \usage{
 dl.trans(...)
 }
