@@ -122,6 +122,7 @@ since you have to construct a custom panel.groups function.</p>
 case:</p>
 
 <pre>
+lp <- qplot(Time,weight,data=BodyWeight,colour=Rat,geom="line",facets=.~Diet)
 lp+
   geom_text(aes(label=Rat),subset=.(Time==min(Time)),hjust=1)+
   opts(legend.position="none")
