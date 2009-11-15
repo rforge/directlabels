@@ -69,27 +69,34 @@ fix for this problem would be putting the label right next to the
 colored lines. Then we would be using the data for label positioning,
 which is inherently more intuitive and obvious to decode.</p>
 
-<p>"But," you say, "lattice makes it so easy to makes these legends!
-<a href="motivation.html">Direct labeling is a lot of tedious
-work</a>! I can live with these confusing legends!"</p>
+<p>"But," you say, "lattice and ggplot2 make it so easy to make these
+legends!  <a href="motivation.html">Direct labeling is a lot of
+tedious work</a>! I can live with these confusing legends!"</p>
 
 <h2>Do not live with confusing legends any longer. Instead, use direct
 labels.</h2>
 
-<p>This package is an attempt to make direct labeling
-a reality in everyday statistical practice by making available a body
-of useful functions that make direct labeling of common plots easy to
-do. The first working examples are based on lattice graphics:</p>
+<p>This package is an attempt to make direct labeling a reality in
+everyday statistical practice by making available a body of useful
+functions that make direct labeling of common plots easy to do with
+high-level plotting systems such as lattice and ggplot2:</p>
 
 <pre>
-install.packages("latticedl")
-library(latticedl)
+install.packages("directlabels",repos="http://r-forge.r-project.net")
+library(directlabels)
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
-## Just add direct.label() around your lattice plot:
+## Just add direct.label() around your plot:
 direct.label(densityplot(~ppp,loci,groups=type,n=500))
+direct.label(qplot(ppp,data=loci,colour=type,geom="density"))
 </pre>
-<img src="density.png" />
+
+<table><tr>
+<td><img src="density.png" alt="lattice densityplot" /></td>
+<td><img src="densityplot-ggplot2.png" alt="densityplot in ggplot2" /></td>
+</tr>
+</table>
+
 <p>
 <a href="examples.php">More examples...</a>
 </p>
@@ -101,8 +108,9 @@ problems</h2>
 label positions, then drawing the labels. Drawing the labels will
 always be taken care of for you, using the color of the corresponding
 group. Calculating label positions is also done for you for common
-plot types. For example, with the density plot above, we placed the
-each label above the mode of the corresponding density estimate.</p>
+plot types. For example, with the density plot above, the default
+behavior is to position each label above the mode of the corresponding
+density estimate.</p>
 
 <p>If default label positions are not satisfactory, you can always
 specify your own label placement method, using the method= argument to
@@ -110,35 +118,26 @@ direct.label. For example, we can label longitudinal data either on
 the left or right of the lines:</p>
 
 <pre>
-library(latticedl)
 data(BodyWeight,package="nlme")
 p <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
-direct.label(p,method=first.points)
-direct.label(p,method=last.points)
+direct.label(p,first.points)
+direct.label(p,last.points)
 </pre>
 
 <p>Here first.points and last.points are Positioning Functions of the
 form function(d,...){return(data.frame(x=,y=,groups=))}, where d is
 all the data to plot, as a data frame with columns <tt>x y
 groups</tt>. first.points simply returns the rows of the data frame
-which correspond to the first points for each group. latticedl plots a
-direct label for each row returned by the positioning method.</p>
+which correspond to the first points for each group. We plot a direct
+label for each row returned by the Positioning Function.</p>
 
 <img src="compare-long.png" alt="direct label longitudinal data" />
 
-<p>Also note that the drawing functions in package latticedl are
-totally linked to the lattice graphics framework, but we can
-potentially use Positioning Functions with other plotting frameworks,
-i.e. ggplot2. Here is how direct labeling works for ggplot2, using
-experimental functions in the directlabels package:</p>
-
-<pre>
-library(directlabels)
-dp <- qplot(ppp,data=loci,colour=type,geom="density")
-direct.label(dp)
-</pre>
-
-<img src="densityplot-ggplot2.png" alt="densityplot in ggplot2" />
+<p>The power of the directlabels system is the fact that you can write
+your own Positioning Functions, and they can be reused for different
+plots. So once you write a Positioning Function that works, adding
+direct labels is as simple as calling direct.label, no matter if you
+are using lattice or ggplot2.</p>
 
 <h2>Talks</h2>
 
