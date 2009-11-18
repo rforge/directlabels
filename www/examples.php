@@ -87,7 +87,7 @@ Function must be specified using the method= argument:</p>
 
 <pre>
 xyplot(weight~Time|Diet,bw,groups=Rat,type="l",layout=c(3,1),
-       panel=panel.superpose.dl,panel.groups=panel.model,"first.points")
+       panel=panel.superpose.dl,panel.groups=panel.model,method="first.points")
 </pre>
 <img src="longitudinal-custom-panel-groups.png" />
 
@@ -172,7 +172,7 @@ dlcompare(scatters,list("empty.grid","empty.grid.2"))
   </ul>
   -->
 
-<a href="index.php">Back to site index</a>
+<p><a href="index.php">Back to site index</a></p>
 
 </body>
 
