@@ -108,7 +108,7 @@ label.lineplot <- function(x,y,group.number,col.line,...){
   panel.xyplot(x=x,y=y,group.number=group.number,col.line=col.line,...)
   i <- which.min(x)
   ltext(x[i],y[i],levels(BodyWeight$Rat)[group.number],
-        adj=c(0,0.5),col=col.line)
+        adj=c(1,0.5),col=col.line)
 }
 update(lp,panel=panel.superpose,panel.groups=label.lineplot)
 </pre>
