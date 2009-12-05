@@ -241,9 +241,9 @@ rug.mean <- function(d,...,end)
                    vjust=0))
 ### Do first or last, whichever has points most spread out.
 maxvar.points <- function(d,...){
-  v <- ddply(d,.(x),summarise,v=var(y))
-  x <- subset(v,v==max(v))$x
-  if(x==min(d$x))first.points(d,...) else last.points(d,...)
+  vars <- sapply(range(d$x),function(v)var(subset(d,x==v)$y))
+  FUN <- if(diff(vars)<0)first.points else last.points
+  FUN(d,...)
 }
 direct.label <- function
 ### Add direct labels to a plot. This is a S3 generic and there are
