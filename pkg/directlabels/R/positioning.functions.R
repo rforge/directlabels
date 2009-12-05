@@ -140,19 +140,24 @@ empty.grid <- function
   inbox <- function(x,y,left,right,top,bottom)
     c(data=sum(d$x>left & d$x<right & d$y>bottom & d$y<top))
   count.tab <- cbind(mdply(g2,inbox),expand.grid(i=1:NREP,j=1:NREP))
-  count.mat <- matrix(count.tab$data,nrow=NREP,ncol=NREP,
-                      byrow=TRUE,dimnames=list(1:NREP,1:NREP))[NREP:1,]
-  mode(count.mat) <- "character"
+  if(debug){
+    count.mat <- matrix(count.tab$data,nrow=NREP,ncol=NREP,
+                        byrow=TRUE,dimnames=list(1:NREP,1:NREP))[NREP:1,]
+    mode(count.mat) <- "character"
+  }
   g3 <- transform(subset(count.tab,data==0))
   res <- data.frame()
   for(v in loc$groups){
     r <- subset(loc,groups==v)
     len <- sqrt((r$x-g3$x)^2+(r$y-g3$y)^2)
     i <- which.min(len) ## the box to use for this group
-    count.mat[as.character(g3[i,"j"]),
-              as.character(g3[i,"i"])] <- paste("*",v,sep="")
+    if(debug)
+      count.mat[as.character(g3[i,"j"]),
+                as.character(g3[i,"i"])] <- paste("*",v,sep="")
     res <- rbind(res,g3[i,c("x","y")])
-    g3 <- g3[-i,]
+    therow <- g3[i,]
+    ## select new subset of boxes for next label
+    g3 <- subset(g3,!(abs(i-therow$i)<=1 & j==therow$j))
   }
   if(debug)print(count.mat)
   cbind(res,groups=loc$groups)
@@ -171,6 +176,8 @@ empty.grid.2 <- function
  ){
   empty.grid(d,debug,perpendicular.lines)
 }
+### Use empty.grid with extreme.points
+extreme.grid <- function(d,debug,...)empty.grid(d,debug,extreme.points)
 dl.indep <- function # Direct label groups independently
 ### Makes a function you can use to specify the location of each group
 ### independently.
@@ -195,6 +202,13 @@ dl.trans <- function # Direct label data transform
   function(d,...)do.call("transform",c(list(d),L))
 ### A Positioning Function.
 }
+### Jitter the label positions.
+dl.jitter <- dl.trans(x=jitter(x),y=jitter(y))
+### Label the points furthest from the origin for each group.
+extreme.points <- dl.indep({
+  d <- transform(d,d=sqrt(x^2+y^2))
+  d[which.max(d$d),]
+})
 ### Transformation function for 1d densityplots.
 trans.densityplot <- dl.indep({
   dens <- density(d$x)
