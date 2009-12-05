@@ -23,6 +23,7 @@
 ## right.points   ## same as last.points
 ## bottom.points
 ## low.points     ## same as bottom.points
+## lines2         ## for when there are only 2 colours
 
 ## Also good for density plots:
 ## top.points
@@ -33,6 +34,7 @@
 ## perpendicular.lines
 ## empty.grid
 ## empty.grid.2
+## extreme.grid
 }
 \arguments{
   \item{d}{Data frame of points to plot, with columns x y groups.}

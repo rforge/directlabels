@@ -164,20 +164,14 @@ empty.grid <- function
 ### Data frame with columns groups x y, 1 line for each group, giving
 ### the positions on the grid closest to each cluster.
 }
-empty.grid.2 <- function
-### Use the perpendicular lines method in combination with the empty
-### grid method.
-(d,
-### Data frame with columns groups x y.
- debug,
-### Show debugging graphics on the plot?
- ...
-### ignored.
- ){
-  empty.grid(d,debug,perpendicular.lines)
-}
-### Use empty.grid with extreme.points
-extreme.grid <- function(d,debug,...)empty.grid(d,debug,extreme.points)
+### Make a Positioning Function with empty.grid, that calculates label
+### position targets using f.
+empty.grid.fun <- function(f)
+  function(d,debug,...)empty.grid(d,debug,f)
+### Use empty.grid with perpendicular.lines.
+empty.grid.2 <- empty.grid.fun(perpendicular.lines)
+### Use empty.grid with extreme.points.
+extreme.grid <- empty.grid.fun(extreme.points)
 dl.indep <- function # Direct label groups independently
 ### Makes a function you can use to specify the location of each group
 ### independently.
