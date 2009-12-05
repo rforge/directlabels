@@ -93,13 +93,13 @@ panel.superpose.dl <- function
   lattice.fun.name <-
     if(is.character(subs))sub("panel.","",subs) else ""
   if(is.null(type))type <- "NULL"
-  ldefault <- if(nlevels(groups)==2)"lines2" else "first.points"
+  ldefault <- if(nlevels(groups)==2)"lines2" else "maxvar.points"
   if(is.null(method))method <- 
     switch(lattice.fun.name,
-           dotplot="last.points",
+           dotplot=ldefault,
            xyplot=switch(type,l=ldefault,o=ldefault,"empty.grid.2"),
            densityplot="top.points",
-           qqmath="first.points",
+           qqmath=ldefault,
            rug="rug.mean",
            stop("No default direct label placement method for ",
                 lattice.fun.name,". Please specify method."))

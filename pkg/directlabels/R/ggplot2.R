@@ -16,7 +16,7 @@ direct.label.ggplot <- function
   rename.vec <- gsub("factor[(]([^)]+)[)]","\\1",rename.vec)
   d <- structure(p$data[,rename.vec],names=names(varnames))
   geom <- p$layers[[1]]$geom$objname
-  ldefault <- if(nlevels(d$groups)==2)"lines2" else "first.points"
+  ldefault <- if(nlevels(d$groups)==2)"lines2" else "maxvar.points"
   if(is.null(method))method <-
     switch(geom,
            density="top.points",
