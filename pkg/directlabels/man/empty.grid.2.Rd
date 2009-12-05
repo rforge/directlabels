@@ -1,15 +1,17 @@
 \name{empty.grid.2}
 \alias{empty.grid.2}
 \title{empty grid 2}
-\description{Use the perpendicular lines method in combination with the empty
-grid method.}
+\description{Use empty.grid with perpendicular.lines.}
 \usage{
 empty.grid.2(d, debug, ...)
 }
 \arguments{
-  \item{d}{Data frame with columns groups x y.}
-  \item{debug}{Show debugging graphics on the plot?}
-  \item{\dots}{ignored.}
+  \item{d}{
+}
+  \item{debug}{
+}
+  \item{\dots}{
+}
 }
 \details{
 }

@@ -29,7 +29,8 @@ to annotate the plot.}
 
 \seealso{
 }
-\examples{dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
+\examples{library(directlabels)
+dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
 ddf <- melt(as.data.frame(dts),id="time")
 names(ddf) <- c("time","sex","deaths")
 plots <- list(lattice=
@@ -37,7 +38,6 @@ plots <- list(lattice=
               ggplot2=
               qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-10,80))
 pos.funs <- list("first.points","lines2")
-library(directlabels)
 ##pdf("compare.pdf",width=10,height=10)
 dlcompare(plots,pos.funs)
 ##dev.off();system("xpdf compare.pdf")
@@ -52,6 +52,7 @@ dlcompare(plots,mixed.funs[3])
 ## this should work with all combinations, with varying labels
 for(ml in list(mixed.funs,not.named))
   for(pl in list(plots,unlabeled.plots))dlcompare(pl,ml)
+data(BodyWeight,package="nlme")
 dlcompare(list(plots[[1]],xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))),list("first.points","lines2"))
 scatters <- list(xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1),
                  xyplot(Sepal.Length~Petal.Length,iris,groups=Species))
