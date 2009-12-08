@@ -123,9 +123,10 @@ this case d[-2,] means delete the second row from each group.</li>
 <li>named elements are copied to the data frame, so the third element,
 rot=c(30,180), adds a rot column to the data frame, with values 30 and
 180 for every other row. This has the effect of rotating every label
-by 30 or 180 degrees. Text display parameters fontsize, fontfamily,
-fontface, lineheight, and cex can also be specified in this manner
-(see the help page for grid::grid.text).
+by 30 or 180 degrees. Text display parameters alpha, fontsize,
+fontfamily, fontface, lineheight, and cex can also be specified in
+this manner (see the help pages for grid::gpar for an exhaustive
+description and directlabels::dlcompare for an example).
 </li>
 
 </ol>
