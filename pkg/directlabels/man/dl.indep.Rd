@@ -1,6 +1,6 @@
 \name{dl.indep}
 \alias{dl.indep}
-\title{ Direct label groups independently}
+\title{Direct label groups independently}
 \description{Makes a function you can use to specify the location of each group
 independently.}
 \usage{

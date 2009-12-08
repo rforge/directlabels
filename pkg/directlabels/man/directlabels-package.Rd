@@ -10,7 +10,6 @@ Author: \tab Toby Dylan Hocking\cr
 Version: \tab 1.0\cr
 License: \tab GPL-3\cr
 Title: \tab Direct labels for plots\cr
-Description: \tab Direct labeling functions meant to be used with several plotting packages, including lattice and ggplot2.\cr
 Imports: \tab proto, plyr, lattice, grid, ggplot2\cr
 Depends: \tab proto, plyr, lattice, grid, ggplot2\cr
 URL: \tab http://directlabels.r-forge.r-project.org/\cr
