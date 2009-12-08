@@ -28,7 +28,8 @@ dl.text <- function
   grid.text(g$groups,g$x,g$y,
             hjust=g$hjust,vjust=g$vjust,rot=g$rot,
             gp=gpar(col=col.text,fontsize=g$fontsize,fontfamily=g$fontfamily,
-              fontface=g$fontface,lineheight=g$lineheight,cex=g$cex),
+              fontface=g$fontface,lineheight=g$lineheight,cex=g$cex,
+              alpha=g$alpha),
             default.units="native")
 }
 direct.label.trellis <- function
