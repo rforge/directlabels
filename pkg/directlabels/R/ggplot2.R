@@ -44,9 +44,17 @@ PositionDl <- proto(ggplot2::Position,{
     labtab <- label.positions(x=data$x,y=data$y,groups=data$colour,
                               subscripts=1:nrow(data),method=.$method[[1]],
                               debug=.$debug)
-    r <- transform(labtab,label=groups,group=groups,
-                   colour=groups,
-                   angle=rot)
+    targs <- list(label="groups",
+                  group="groups",
+                  colour="groups",
+                  angle="rot",
+                  size="fontsize",
+                  ##face="fontface",
+                  ##family="fontfamily",
+                  alpha="alpha")
+    targs <- targs[targs%in%names(labtab)]
+    targs <- sapply(targs,as.name)
+    r <- do.call("transform",c(list(labtab),targs))
     ##print(r)
     r
   }
