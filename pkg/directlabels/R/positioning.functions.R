@@ -32,10 +32,13 @@ label.positions <- function
   d <- data.frame(x,groups)
   if(!missing(y))d$y <- y
   if(class(method)=="function")method <- list(method)
-  method <- unlist(method)
-  for(m.num in seq_along(method)){
-    m <- method[[m.num]]
-    m.var <- names(method)[m.num]
+  while(length(method)){
+    m <- method[[1]]
+    while(class(m)=="list"){
+      method <- c(m,method[-1])
+      m <- method[[1]]
+    }
+    m.var <- names(method)[1]
     if(!(is.null(m.var)||m.var==""))d[[m.var]] <- m else{
       if(class(m)=="character"){
         method.name <- paste(m," ",sep="")
@@ -45,6 +48,7 @@ label.positions <- function
       if(class(d)=="try-error")
         stop("direct label placement method ",method.name,"failed")
     }
+    method <- method[-1]
   }
   ## rearrange factors in case pos fun messed up the order:
   d$groups <- factor(as.character(d$groups),levs)
