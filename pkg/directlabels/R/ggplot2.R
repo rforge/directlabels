@@ -13,7 +13,7 @@ direct.label.ggplot <- function
   varnames <- c(groups="colour",x="x")
   if("y" %in% names(p$mapping))varnames <- c(varnames,y="y")
   rename.vec <- sapply(p$mapping[varnames],deparse)
-  rename.vec <- gsub("factor[(]([^)]+)[)]","\\1",rename.vec)
+  rename.vec <- gsub("[a-z]+[(]([^)]+)[)]","\\1",rename.vec)
   d <- structure(p$data[,rename.vec],names=names(varnames))
   geom <- p$layers[[1]]$geom$objname
   ldefault <- if(nlevels(d$groups)==2)"lines2" else "maxvar.points"
