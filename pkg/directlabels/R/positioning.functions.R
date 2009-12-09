@@ -32,6 +32,7 @@ label.positions <- function
   d <- data.frame(x,groups)
   if(!missing(y))d$y <- y
   if(class(method)=="function")method <- list(method)
+  browser()
   for(m.num in seq_along(method)){
     m <- method[[m.num]]
     m.var <- names(method)[m.num]
@@ -227,9 +228,27 @@ first.points <-
   dl.indep(data.frame(d[which.min(d$x),],hjust=1,vjust=0.5))
 left.points <- first.points
 ### Positioning Function for the last of a group of points.
-last.points <-
-  dl.indep(data.frame(d[which.max(d$x),],hjust=0,vjust=0.5))
+last.points <- dl.indep(data.frame(d[which.max(d$x),],hjust=0,vjust=0.5))
 right.points <- last.points
+collide.up <- function(d,...){
+  h <- as.numeric(convertHeight(stringHeight("foo"),"native"))
+  w <- as.numeric(sapply(as.character(d$groups),function(x)convertWidth(stringWidth(x),"native")))
+  d <- transform(d,top=y+h/2,bottom=y-h/2,right=x+w)[order(d$y),]
+  for(i in 2:nrow(d)){
+    dif <- d$bottom[i]-d$top[i-1]
+    if(dif<0){
+      d$bottom[i] <- d$bottom[i]-dif
+      d$top[i] <- d$top[i]-dif
+      d$y[i] <- d$y[i]-dif
+    }
+  }
+  ##debugging rect.
+  ##with(d,grid.rect(x,y,w,h,just="left",default.units="native",gp=gpar(col="grey")))
+  ##print(sapply(d,class))
+  d
+}
+last.smart <- list(last.points,collide.up)
+first.smart <- list(first.points,collide.up)
 ### Positioning Function for the top of a group of points.
 top.points <-
   dl.indep(data.frame(d[which.max(d$y),],hjust=0.5,vjust=0))
