@@ -129,7 +129,7 @@ p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
             ylab="scaled coefficients",
             sub="grey line shows coefficients chosen by cross-validation",
             xlab=expression(df(lambda)))
-pdf("figure3.8.pdf")
-direct.label(update(p,xlim=c(0,9)),list(last.smart,cex=0.75,dl.trans(x=x+0.1)))
-dev.off()
-system("xpdf figure3.8.pdf")
+##pdf("figure3.8.pdf",h=5,w=5)
+direct.label(update(p,xlim=c(0,9.25)),list(last.smart,cex=0.75,dl.trans(x=x+0.1)))
+##dev.off()
+##system("xpdf figure3.8.pdf")
