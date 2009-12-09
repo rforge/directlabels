@@ -17,7 +17,7 @@ dlcompare <- function # Direct label comparison plot
     N <- names(pos.funs)[i]
     f <- pos.funs[[i]]
     if(!is.null(N)&&N!="")N
-    else if(class(f)=="character")f
+    else if(class(f)=="character"){if(f!="legend")f else ""}
     else ""
   })
   if(sum(names(pos.funs)!="")==0)names(pos.funs) <- NULL
