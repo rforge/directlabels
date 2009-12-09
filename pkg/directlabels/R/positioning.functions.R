@@ -32,7 +32,7 @@ label.positions <- function
   d <- data.frame(x,groups)
   if(!missing(y))d$y <- y
   if(class(method)=="function")method <- list(method)
-  browser()
+  method <- unlist(method)
   for(m.num in seq_along(method)){
     m <- method[[m.num]]
     m.var <- names(method)[m.num]
