@@ -96,3 +96,7 @@ for(p in plots)print(direct.label(p)) ## should default to lines2
 ## lineplot labeling
 direct.label(xyplot(decrease ~ treatment, OrchardSprays, groups = rowpos,
                     type = "a"))
+
+## densityplot labeling
+iris2 <- melt(iris,id="Species")
+direct.label(densityplot(~value|variable,iris2,groups=Species,scales="free"))
