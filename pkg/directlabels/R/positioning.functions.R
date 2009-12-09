@@ -124,6 +124,7 @@ empty.grid <- function
  ...
 ### ignored.
  ){
+  ##browser()
   loc <- loc.fun(d,debug)
   NREP <- 10
   gl <- function(v){
@@ -137,6 +138,13 @@ empty.grid <- function
                   right=x+L$x$diff,
                   top=y+L$y$diff,
                   bottom=y-L$y$diff)
+  if(debug){
+    gridlines <- with(g2,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
+    drawlines <- function(a,b,c,d)
+      grid.segments(a,b,c,d,"native",gp=gpar(col="grey"))
+    with(gridlines,drawlines(min(x),y,max(x),y))
+    with(gridlines,drawlines(x,min(y),x,max(y)))
+  }
   inbox <- function(x,y,left,right,top,bottom)
     c(data=sum(d$x>left & d$x<right & d$y>bottom & d$y<top))
   count.tab <- cbind(mdply(g2,inbox),expand.grid(i=1:NREP,j=1:NREP))

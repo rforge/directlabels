@@ -16,7 +16,7 @@ plot(direct.label(
 trellised <- xyplot(.resid~.fitted|cyl,mpgf,groups=factor(cyl))
 plot(direct.label(trellised))
 ## Should work, but not very informative:
-plot(direct.label(trellised,method=empty.grid))
+plot(direct.label(trellised,method=empty.grid,TRUE))
 mpgf$cyl10 <- sapply(mpgf$cyl,function(i)paste(rep(i,l=10),collapse=""))
 plot(direct.label(
         xyplot(.resid~.fitted|cyl,mpgf,groups=factor(cyl10))
