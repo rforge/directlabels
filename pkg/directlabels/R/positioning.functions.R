@@ -173,6 +173,11 @@ empty.grid <- function
 ### Data frame with columns groups x y, 1 line for each group, giving
 ### the positions on the grid closest to each cluster.
 }
+empty.grid.collide <- function(d,...){
+  loc <- calc.boxes(empty.grid(d,...))
+  draw.rects(loc)
+  print(loc)
+}  
 ### Make a Positioning Function with empty.grid, that calculates label
 ### position targets using f.
 empty.grid.fun <- function(f)
@@ -205,6 +210,22 @@ dl.trans <- function # Direct label data transform
   function(d,...)do.call("transform",c(list(d),L))
 ### A Positioning Function.
 }
+dl.move <- function # Manually move a direct label
+### Sometimes there is 1 label that is placed oddly by another
+### Positioning Function. This function can be used to manually place
+### that label in a good spot.
+(groups,
+ x,
+ y
+ ){
+  function(d,...){
+    v <- sapply(groups,function(g)which(d$groups==g))
+    d[v,"x"] <- x
+    d[v,"y"] <- y
+    d
+  }
+### A Positioning Function that moves a label into a good spot.
+}
 ### Jitter the label positions.
 dl.jitter <- dl.trans(x=jitter(x),y=jitter(y))
 ### Label the points furthest from the origin for each group.
@@ -230,10 +251,14 @@ left.points <- first.points
 ### Positioning Function for the last of a group of points.
 last.points <- dl.indep(data.frame(d[which.max(d$x),],hjust=0,vjust=0.5))
 right.points <- last.points
-collide.up <- function(d,...){
+calc.boxes <- function(d){
   h <- as.numeric(convertHeight(stringHeight("foo"),"native"))
-  w <- as.numeric(sapply(as.character(d$groups),function(x)convertWidth(stringWidth(x),"native")))
-  d <- transform(d,top=y+h/2,bottom=y-h/2,right=x+w)[order(d$y),]
+  w <- as.numeric(sapply(as.character(d$groups),
+                         function(x)convertWidth(stringWidth(x),"native")))
+  transform(d,top=y+h/2,bottom=y-h/2,right=x+w,w=w,h=h)
+}
+collide.up <- function(d,...){
+  d <- calc.boxes(d)[order(d$y),]
   for(i in 2:nrow(d)){
     dif <- d$bottom[i]-d$top[i-1]
     if(dif<0){
@@ -242,13 +267,18 @@ collide.up <- function(d,...){
       d$y[i] <- d$y[i]-dif
     }
   }
-  ##debugging rect.
-  ##with(d,grid.rect(x,y,w,h,just="left",default.units="native",gp=gpar(col="grey")))
   ##print(sapply(d,class))
+  d
+}
+draw.rects <- function(d,...){
+  hjust <- vjust <- 0.5
+  with(d,grid.rect(x,y,w,h,hjust=hjust,vjust=vjust,
+                   default.units="native",gp=gpar(col="grey")))
   d
 }
 last.smart <- list(last.points,collide.up)
 first.smart <- list(first.points,collide.up)
+
 ### Positioning Function for the top of a group of points.
 top.points <-
   dl.indep(data.frame(d[which.max(d$y),],hjust=0.5,vjust=0))
@@ -287,6 +317,7 @@ direct.label <- function
  debug=FALSE
 ### Show debug output?
  ){
+  if(method=="legend")return(p)
   UseMethod("direct.label")
 ### The plot object, with direct labels added.
 }
