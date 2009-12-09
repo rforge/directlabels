@@ -93,3 +93,6 @@ plots <- list(lattice=xyplot(deaths~time,ddf,groups=sex,type="l"),
               ggplot2=qplot(time,deaths,data=ddf,colour=sex,geom="line"))
 for(p in plots)print(direct.label(p)) ## should default to lines2
 
+## lineplot labeling
+direct.label(xyplot(decrease ~ treatment, OrchardSprays, groups = rowpos,
+                    type = "a"))
