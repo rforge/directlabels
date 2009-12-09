@@ -249,7 +249,11 @@ rug.mean <- function(d,...,end)
                    vjust=0))
 ### Do first or last, whichever has points most spread out.
 maxvar.points <- function(d,...){
-  vars <- sapply(range(d$x),function(v)var(subset(d,x==v)$y))
+  myrange <- function(x){
+    if(is.factor(x))levels(x)[c(1,nlevels(x))]
+    else range(x)
+  }
+  vars <- sapply(myrange(d$x),function(v)var(subset(d,x==v)$y))
   FUN <- if(diff(vars)<0)first.points else last.points
   FUN(d,...)
 }
