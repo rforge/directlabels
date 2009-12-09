@@ -100,3 +100,36 @@ direct.label(xyplot(decrease ~ treatment, OrchardSprays, groups = rowpos,
 ## densityplot labeling
 iris2 <- melt(iris,id="Species")
 direct.label(densityplot(~value|variable,iris2,groups=Species,scales="free"))
+
+## complicated ridge regression lineplot ex. fig 3.8 from Elements of
+## Statistical Learning, Hastie et al.
+myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
+  fit <- lm.ridge(f,data,lambda=lambda)
+  X <- data[-which(names(data)==as.character(f[[2]]))]
+  Xs <- svd(scale(X)) ## my d's should come from the scaled matrix
+  dsq <- Xs$d^2
+  ## make the x axis degrees of freedom
+  df <- sapply(lambda,function(l)sum(dsq/(dsq+l)))
+  D <- data.frame(t(fit$coef),lambda,df) # scaled coefs
+  molt <- melt(D,id=c("lambda","df"))
+  ## add in the points for df=0
+  limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
+  rbind(limpts,molt)
+}
+data(prostate,package="ElemStatLearn")
+pros <- subset(prostate,train==TRUE,select=-train)
+m <- myridge(lpsa~.,pros)
+p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
+            panel=function(...){
+              panel.xyplot(...)
+              panel.abline(h=0)
+              panel.abline(v=5,col="grey")
+            },
+            main="Ridge regression shrinks least squares coefficients",
+            ylab="scaled coefficients",
+            sub="grey line shows coefficients chosen by cross-validation",
+            xlab=expression(df(lambda)))
+pdf("figure3.8.pdf")
+direct.label(update(p,xlim=c(0,9)),list(last.smart,cex=0.75,dl.trans(x=x+0.1)))
+dev.off()
+system("xpdf figure3.8.pdf")
