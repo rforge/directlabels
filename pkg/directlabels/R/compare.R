@@ -7,10 +7,12 @@ dlcompare <- function # Direct label comparison plot
 (plots,
 ### List of ggplot2 or lattice plots. List names will be used to
 ### annotate the plot.
- pos.funs
+ pos.funs,
 ### List of label placement methods to apply to each plot. List names,
 ### or function names if specified as character strings, will be used
 ### to annotate the plot.
+ rects=TRUE
+### Draw rectangles around each plot, creating a grid?
  ){
   ## Augment positioning function list names if possible
   names(pos.funs) <- sapply(seq_along(pos.funs),function(i){
@@ -47,7 +49,7 @@ dlcompare <- function # Direct label comparison plot
       }
       pushViewport(viewport(layout.pos.col=col,layout.pos.row=row+rowadd))
       print(direct.label(plots[[col]],pos.funs[[row]]),newpage=FALSE)
-      grid.rect()
+      if(rects)grid.rect()
       popViewport()
     }
   }
