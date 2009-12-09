@@ -10,4 +10,4 @@ Depends: proto, plyr, lattice, grid, ggplot2
 URL: http://directlabels.r-forge.r-project.org/
 LazyLoad: false
 LazyData: true
-Suggests: nlme, mlmRev
+Suggests: nlme, mlmRev, ElemStatLearn
