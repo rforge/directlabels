@@ -7,7 +7,7 @@ output. This is possible because the direct.label function is
 generic. Plots will be on the columns and positioning methods will
 be on the rows.}
 \usage{
-dlcompare(plots, pos.funs)
+dlcompare(plots, pos.funs, rects = TRUE)
 }
 \arguments{
   \item{plots}{List of ggplot2 or lattice plots. List names will be used to
@@ -15,6 +15,7 @@ annotate the plot.}
   \item{pos.funs}{List of label placement methods to apply to each plot. List names,
 or function names if specified as character strings, will be used
 to annotate the plot.}
+  \item{rects}{Draw rectangles around each plot, creating a grid?}
 }
 \details{
 }
@@ -69,8 +70,10 @@ for(ml in list(mixed.funs,not.named))
 ## Compare scatterplot labeling methods.
 data(BodyWeight,package="nlme")
 dlcompare(list(plots[[1]],xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))),list("first.points","lines2"))
-scatters <- list(xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1),
-                 xyplot(Sepal.Length~Petal.Length,iris,groups=Species))
-##pdf("scattercompare.pdf",width=10,height=10)
+scatters <-
+  list(xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1),
+       xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species))
+##pdf("scattercompare.pdf",width=10,height=5)
 dlcompare(scatters,list("empty.grid","empty.grid.2"))
+##dlcompare(scatters,list(empty.grid.2))
 ##dev.off();system("xpdf scattercompare.pdf")}

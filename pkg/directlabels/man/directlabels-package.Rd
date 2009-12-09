@@ -15,7 +15,7 @@ Depends: \tab proto, plyr, lattice, grid, ggplot2\cr
 URL: \tab http://directlabels.r-forge.r-project.org/\cr
 LazyLoad: \tab false\cr
 LazyData: \tab true\cr
-Suggests: \tab nlme, mlmRev\cr}
+Suggests: \tab nlme, mlmRev, ElemStatLearn\cr}
 }
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 \references{
