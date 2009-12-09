@@ -38,8 +38,9 @@ for(ml in list(mixed.funs,not.named))
 ## Compare scatterplot labeling methods.
 data(BodyWeight,package="nlme")
 dlcompare(list(plots[[1]],xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))),list("first.points","lines2"))
-scatters <- list(xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1),
-                 xyplot(Sepal.Length~Petal.Length,iris,groups=Species))
+scatters <-
+  list(xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1),
+       xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species))
 ##pdf("scattercompare.pdf",width=10,height=10)
 dlcompare(scatters,list("empty.grid","empty.grid.2"))
 ##dev.off();system("xpdf scattercompare.pdf")
