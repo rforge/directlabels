@@ -98,7 +98,7 @@ panel.superpose.dl <- function
   if(is.null(method))method <- 
     switch(lattice.fun.name,
            dotplot=ldefault,
-           xyplot=switch(type,l=ldefault,o=ldefault,"empty.grid.2"),
+           xyplot=switch(type,l=ldefault,o=ldefault,a=ldefault,"empty.grid.2"),
            densityplot="top.points",
            qqmath=ldefault,
            rug="rug.mean",
