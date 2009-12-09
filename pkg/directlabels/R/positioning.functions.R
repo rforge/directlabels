@@ -173,6 +173,8 @@ empty.grid <- function
 ### Data frame with columns groups x y, 1 line for each group, giving
 ### the positions on the grid closest to each cluster.
 }
+### Start with points from empty.grid then attempt to adjust labels so
+### that they do not collide with any points.
 empty.grid.collide <- function(d,...){
   loc <- calc.boxes(empty.grid(d,...))
   draw.rects(loc)
@@ -251,12 +253,15 @@ left.points <- first.points
 ### Positioning Function for the last of a group of points.
 last.points <- dl.indep(data.frame(d[which.max(d$x),],hjust=0,vjust=0.5))
 right.points <- last.points
+### Calculate boxes around labels, for collision detection.
 calc.boxes <- function(d){
   h <- as.numeric(convertHeight(stringHeight("foo"),"native"))
   w <- as.numeric(sapply(as.character(d$groups),
                          function(x)convertWidth(stringWidth(x),"native")))
   transform(d,top=y+h/2,bottom=y-h/2,right=x+w,w=w,h=h)
 }
+### Sequentially bump labels up, starting from the bottom, if they
+### collide with the label underneath.
 collide.up <- function(d,...){
   d <- calc.boxes(d)[order(d$y),]
   for(i in 2:nrow(d)){
@@ -270,13 +275,18 @@ collide.up <- function(d,...){
   ##print(sapply(d,class))
   d
 }
+### Positioning Function that draws boxes around label positions. Need
+### to have previously called calc.boxes. Does not edit the data
+### frame.
 draw.rects <- function(d,...){
   hjust <- vjust <- 0.5
   with(d,grid.rect(x,y,w,h,hjust=hjust,vjust=vjust,
                    default.units="native",gp=gpar(col="grey")))
   d
 }
+### Label last points but make sure labels do not collide.
 last.smart <- list(last.points,collide.up)
+### Label first points but make sure labels do not collide.
 first.smart <- list(first.points,collide.up)
 
 ### Positioning Function for the top of a group of points.
@@ -317,7 +327,7 @@ direct.label <- function
  debug=FALSE
 ### Show debug output?
  ){
-  if(method=="legend")return(p)
+  if(!is.null(method)&&class(method)=="character"&&method=="legend")return(p)
   UseMethod("direct.label")
 ### The plot object, with direct labels added.
 }
