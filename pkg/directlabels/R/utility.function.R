@@ -45,14 +45,6 @@ dl.move <- function # Manually move a direct label
 ### position targets using f.
 empty.grid.fun <- function(f)
   function(d,debug,...)empty.grid(d,debug,f)
-### Use empty.grid with perpendicular.lines.
-empty.grid.2 <- empty.grid.fun(perpendicular.lines)
-### Use empty.grid with extreme.points.
-extreme.grid <- empty.grid.fun(extreme.points)
+
 ### Jitter the label positions.
 dl.jitter <- dl.trans(x=jitter(x),y=jitter(y))
-### Label the points furthest from the origin for each group.
-extreme.points <- dl.indep({
-  d <- transform(d,d=sqrt(x^2+y^2))
-  d[which.max(d$d),]
-})

@@ -1,6 +1,7 @@
 ### Positioning Function for the mean of each cluster of points.
 get.means <-
   dl.indep(data.frame(x=mean(d$x),y=mean(d$y)))
+
 perpendicular.lines <- function
 ### Draw a line between the centers of each cluster, then draw a
 ### perpendicular line for each cluster that goes through its
@@ -50,6 +51,7 @@ perpendicular.lines <- function
 ### Data frame with groups x y, giving the point for each cluster
 ### which is the furthest out along the line drawn through its center.
 }
+
 empty.grid <- function
 ### Label placement method for scatterplots that ensures labels are
 ### placed in different places. A grid is drawn over the whole
@@ -115,6 +117,7 @@ empty.grid <- function
 ### Data frame with columns groups x y, 1 line for each group, giving
 ### the positions on the grid closest to each cluster.
 }
+
 ### Start with points from empty.grid then attempt to adjust labels so
 ### that they do not collide with any points.
 empty.grid.collide <- function(d,...){
@@ -122,3 +125,15 @@ empty.grid.collide <- function(d,...){
   draw.rects(loc)
   print(loc)
 }  
+
+### Label the points furthest from the origin for each group.
+extreme.points <- dl.indep({
+  d <- transform(d,d=sqrt(x^2+y^2))
+  d[which.max(d$d),]
+})
+
+### Use empty.grid with perpendicular.lines.
+empty.grid.2 <- empty.grid.fun(perpendicular.lines)
+
+### Use empty.grid with extreme.points.
+extreme.grid <- empty.grid.fun(extreme.points)

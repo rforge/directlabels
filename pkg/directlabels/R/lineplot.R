@@ -1,10 +1,14 @@
 ### Positioning Function for the first of a group of points.
 first.points <-
   dl.indep(data.frame(d[which.min(d$x),],hjust=1,vjust=0.5))
+
 left.points <- first.points
+
 ### Positioning Function for the last of a group of points.
 last.points <- dl.indep(data.frame(d[which.max(d$x),],hjust=0,vjust=0.5))
+
 right.points <- last.points
+
 ### Do first or last, whichever has points most spread out.
 maxvar.points <- function(d,...){
   myrange <- function(x){
@@ -15,6 +19,7 @@ maxvar.points <- function(d,...){
   FUN <- if(diff(vars)<0)first.points else last.points
   FUN(d,...)
 }
+
 ### Calculate boxes around labels, for collision detection.
 calc.boxes <- function(d){
   h <- as.numeric(convertHeight(stringHeight("foo"),"native"))
@@ -22,6 +27,7 @@ calc.boxes <- function(d){
                          function(x)convertWidth(stringWidth(x),"native")))
   transform(d,top=y+h/2,bottom=y-h/2,right=x+w,w=w,h=h)
 }
+
 ### Sequentially bump labels up, starting from the bottom, if they
 ### collide with the label underneath.
 collide.up <- function(d,...){
@@ -37,6 +43,7 @@ collide.up <- function(d,...){
   ##print(sapply(d,class))
   d
 }
+
 ### Positioning Function that draws boxes around label positions. Need
 ### to have previously called calc.boxes. Does not edit the data
 ### frame.
@@ -46,10 +53,13 @@ draw.rects <- function(d,...){
                    default.units="native",gp=gpar(col="grey")))
   d
 }
+
 ### Label last points but make sure labels do not collide.
 last.smart <- list(last.points,collide.up)
+
 ### Label first points but make sure labels do not collide.
 first.smart <- list(first.points,collide.up)
+
 lines2 <- function
 ### Positioning Function for 2 groups of longitudinal data. One curve
 ### is on top of the other one (on average), so we label the top one
