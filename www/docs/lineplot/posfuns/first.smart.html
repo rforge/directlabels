@@ -1,0 +1,123 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+	<meta http-equiv="Content-Type" content="text/html;
+	charset=UTF-8" />
+	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
+	rel="stylesheet" type="text/css" />
+	<title>directlabels documentation - first.smart</title>
+  </head>
+
+<body>
+
+<h1><a href="../../index.html">directlabels</a> - lineplot -
+Positioning Function - first.smart</h1>
+
+<p>Label first points but make sure labels do not collide.</p>
+
+<pre>
+first.smart <- list(first.points,collide.up)
+</pre>
+
+<table>
+<tr>
+  <td><img src="../../lineplot/bodyweight.first.smart.png" /></td>
+  <td><p><a href="../plots/bodyweight.html">bodyweight</a></p><pre>
+data(BodyWeight,package="nlme")
+p <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',
+       layout=c(3,1),xlim=c(-10,75))
+direct.label(p,"first.smart")
+  </pre></td>
+</tr>
+<tr>
+  <td><img src="../../lineplot/chemqqmathscore.first.smart.png" /></td>
+  <td><p><a href="../plots/chemqqmathscore.html">chemqqmathscore</a></p><pre>
+data(Chem97,package="mlmRev")
+p <- qqmath(~gcsescore|gender,Chem97,groups=factor(score),
+       type=c('l','g'),f.value=ppoints(100))
+direct.label(p,"first.smart")
+  </pre></td>
+</tr>
+<tr>
+  <td><img src="../../lineplot/chemqqmathsex.first.smart.png" /></td>
+  <td><p><a href="../plots/chemqqmathsex.html">chemqqmathsex</a></p><pre>
+data(Chem97,package="mlmRev")
+p <- qqmath(~gcsescore,Chem97,groups=gender,
+       type=c("l","g"),f.value=ppoints(100))
+direct.label(p,"first.smart")
+  </pre></td>
+</tr>
+<tr>
+  <td><img src="../../lineplot/ridge.first.smart.png" /></td>
+  <td><p><a href="../plots/ridge.html">ridge</a></p><pre>
+## complicated ridge regression lineplot ex. fig 3.8 from Elements of
+## Statistical Learning, Hastie et al.
+myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
+  require(MASS)
+  fit <- lm.ridge(f,data,lambda=lambda)
+  X <- data[-which(names(data)==as.character(f[[2]]))]
+  Xs <- svd(scale(X)) ## my d's should come from the scaled matrix
+  dsq <- Xs$d^2
+  ## make the x axis degrees of freedom
+  df <- sapply(lambda,function(l)sum(dsq/(dsq+l)))
+  D <- data.frame(t(fit$coef),lambda,df) # scaled coefs
+  molt <- melt(D,id=c("lambda","df"))
+  ## add in the points for df=0
+  limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
+  rbind(limpts,molt)
+}
+data(prostate,package="ElemStatLearn")
+pros <- subset(prostate,train==TRUE,select=-train)
+m <- myridge(lpsa~.,pros)
+p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
+       panel=function(...){
+         panel.xyplot(...)
+         panel.abline(h=0)
+         panel.abline(v=5,col="grey")
+       },
+       xlim=c(-1,9),
+       main="Ridge regression shrinks least squares coefficients",
+       ylab="scaled coefficients",
+       sub="grey line shows coefficients chosen by cross-validation",
+       xlab=expression(df(lambda)))
+direct.label(p,"first.smart")
+  </pre></td>
+</tr>
+<tr>
+  <td><img src="../../lineplot/sexdeaths.first.smart.png" /></td>
+  <td><p><a href="../plots/sexdeaths.html">sexdeaths</a></p><pre>
+dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
+ddf <- melt(as.data.frame(dts),id="time")
+names(ddf) <- c("time","sex","deaths")
+p <- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
+direct.label(p,"first.smart")
+  </pre></td>
+</tr>
+</table>
+
+<center>
+<table>
+<tr><td>Please send email
+to <a href="http://r-forge.r-project.org/sendmessage.php?touser=1571">Toby
+Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
+contribute, thanks!</td>
+</tr>
+<tr><td align="center">Documentation website generated from comments
+in R source code
+using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
+</tr>
+<tr>
+<td align="center">
+    <a href="http://validator.w3.org/check?uri=referer">validate</a>
+</td>
+</tr>
+</table>
+
+</center>
+
+</body>
+
+</html>

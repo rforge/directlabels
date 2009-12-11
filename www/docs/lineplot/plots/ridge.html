@@ -1,0 +1,125 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+	<meta http-equiv="Content-Type" content="text/html;
+	charset=UTF-8" />
+	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
+	rel="stylesheet" type="text/css" />
+	<title>directlabels documentation - ridge</title>
+  </head>
+
+<body>
+
+<h1><a href="../../index.html">directlabels</a> - lineplot - example -
+ridge</h1>
+
+<pre>
+## complicated ridge regression lineplot ex. fig 3.8 from Elements of
+## Statistical Learning, Hastie et al.
+myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
+  require(MASS)
+  fit <- lm.ridge(f,data,lambda=lambda)
+  X <- data[-which(names(data)==as.character(f[[2]]))]
+  Xs <- svd(scale(X)) ## my d's should come from the scaled matrix
+  dsq <- Xs$d^2
+  ## make the x axis degrees of freedom
+  df <- sapply(lambda,function(l)sum(dsq/(dsq+l)))
+  D <- data.frame(t(fit$coef),lambda,df) # scaled coefs
+  molt <- melt(D,id=c("lambda","df"))
+  ## add in the points for df=0
+  limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
+  rbind(limpts,molt)
+}
+data(prostate,package="ElemStatLearn")
+pros <- subset(prostate,train==TRUE,select=-train)
+m <- myridge(lpsa~.,pros)
+p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
+       panel=function(...){
+         panel.xyplot(...)
+         panel.abline(h=0)
+         panel.abline(v=5,col="grey")
+       },
+       xlim=c(-1,9),
+       main="Ridge regression shrinks least squares coefficients",
+       ylab="scaled coefficients",
+       sub="grey line shows coefficients chosen by cross-validation",
+       xlab=expression(df(lambda)))
+</pre>
+
+<table>
+<tr>
+  <td><img src="../../lineplot/ridge.first.points.png" /></td>
+  <td><p>Positioning Function for the first of a group of points.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/first.points.html">first.points</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img src="../../lineplot/ridge.first.smart.png" /></td>
+  <td><p>Label first points but make sure labels do not collide.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/first.smart.html">first.smart</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img src="../../lineplot/ridge.last.points.png" /></td>
+  <td><p>Positioning Function for the last of a group of points.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/last.points.html">last.points</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img src="../../lineplot/ridge.last.smart.png" /></td>
+  <td><p>Label last points but make sure labels do not collide.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/last.smart.html">last.smart</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img src="../../lineplot/ridge.lines2.png" /></td>
+  <td><p>Positioning Function for 2 groups of longitudinal data. One curve
+is on top of the other one (on average), so we label the top one
+at its maximal point, and the bottom one at its minimal
+point. Vertical justification is chosen to minimize collisions
+with the other line. This may not work so well for data with high
+variability, but then again lineplots may not be the best for
+these data either.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/lines2.html">lines2</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img src="../../lineplot/ridge.maxvar.points.png" /></td>
+  <td><p>Do first or last, whichever has points most spread out.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/maxvar.points.html">maxvar.points</a>")
+  </pre></td>
+</tr>
+</table>
+
+<center>
+<table>
+<tr><td>Please send email
+to <a href="http://r-forge.r-project.org/sendmessage.php?touser=1571">Toby
+Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
+contribute, thanks!</td>
+</tr>
+<tr><td align="center">Documentation website generated from comments
+in R source code
+using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
+</tr>
+<tr>
+<td align="center">
+    <a href="http://validator.w3.org/check?uri=referer">validate</a>
+</td>
+</tr>
+</table>
+
+</center>
+
+</body>
+
+</html>
