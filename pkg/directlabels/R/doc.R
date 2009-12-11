@@ -107,7 +107,12 @@ dldoc <- function # Make directlabels documentation
   write(html,"index.html")
 }
 extract.posfun <- function # Extract Positioning Function for documentation
+### Use inlinedocs to extract comments and definitions from code, then
+### for each item found add the value and its name to the list.
 (f
+### R code file, which should contain only Positioning Functions that
+### can be used with examples defined in the doc/ subdirectory with
+### the same name.
  ){
   require(inlinedocs)
   L <- extract.docs.file(f)
@@ -118,6 +123,8 @@ extract.posfun <- function # Extract Positioning Function for documentation
     L[[N]]$name <- N
   }
   L
+### List of lists, each of which describes one Positioning Function
+### defined in f.
 }
 extract.plot <- function # Extract plot and definition for documentation
 ### Given an R code file, execute it, store the definition, and save

@@ -84,6 +84,7 @@ trans.densityplot <- dl.indep({
   data.frame(x=dens$x,y=dens$y)
 })
 trans.density <- trans.densityplot
+
 ### Transformation function for 1d qqmath plots.
 trans.qqmath <- dl.indep({
   r <- prepanel.default.qqmath(d$x,...)
@@ -93,7 +94,7 @@ trans.qqmath <- dl.indep({
 ### Positioning Function for the bottom of a group of points.
 bottom.points <-
   dl.indep(data.frame(d[which.min(d$y),],hjust=0.5,vjust=1))
-low.points <- bottom.points
+
 ### Place points on top of the mean value of the rug.
 rug.mean <- function(d,...,end)
   ddply(d,.(groups),function(d)
