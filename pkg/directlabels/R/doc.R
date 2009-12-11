@@ -21,9 +21,9 @@ dldoc <- function # Make directlabels documentation
   setwd(file.path("..","..","www","docs"))
   foot <- paste(readLines("templates/foot.html"),collapse="\n")
   makehtml <- function # Make HTML documentation
-### Make plots and HTML for documentation website.
+  ## Make plots and HTML for documentation website.
   (L
-### List of positioning functions and plots to match up.
+   ## List of positioning functions and plots to match up.
    ){
     ## all paths are relative to the docs directory
     subdir <- L$type
@@ -38,12 +38,20 @@ dldoc <- function # Make directlabels documentation
     for(p in L$plots){
       cat(p$name,":",sep="")
       for(f in L$posfuns){
-        cat(" ",f$name,sep="")
         pngfile <- file.path(subdir,paste(p$name,f$name,"png",sep="."))
         pngurls[f$name,p$name] <- pngfile
-        ##      png(pngfile)
-        ##      print(direct.label(p$plot,f$fun))
-        ##      dev.off()
+        if(!file.exists(pngfile)){
+          cat(" ",f$name,sep="")
+          png(pngfile)
+          print(direct.label(p$plot,f$fun))
+          dev.off()
+        }
+        thumbfile <- file.path(subdir,paste(p$name,f$name,"thumb.png",sep="."))
+        if(!file.exists(thumbfile)){
+          cmd <- paste("convert -geometry 64x64",pngfile,thumbfile)
+          cat(" ",thumbfile,sep="")
+          system(cmd)
+        }
       }
       cat("\n")
     }
@@ -78,9 +86,17 @@ dldoc <- function # Make directlabels documentation
   res <- apply(m,1,makehtml)
   extract.links <- function(L){
     sapply(names(L),function(N)if(N=="type")L[[N]] else {
+      ##if(L$type=="utility.function")browser()
       x <- sapply(L[[N]],function(x)x$name)
-      paste(paste("<a href=\"",L$type,"/",N,"/",x,".html\">",x,"</a>",
-                  sep=""),collapse=" ")},simplify=FALSE)
+      content <- if(N=="plots")
+        paste("<img src=\"",L$type,"/",x,".",
+              L$posfuns[[1]]$name,".thumb.png","\" />",sep="")
+      else x
+      if(length(x))
+        paste(paste("<a href=\"",L$type,"/",N,"/",x,".html\">",content,"</a>",
+                    sep=""),collapse="\n<br />\n")
+      else x
+    },simplify=FALSE)
   }
   links <- apply(m,1,extract.links)
   tmp <- list(head=filltemplate(list(pagetitle="home"),"templates/head.html"),
