@@ -43,7 +43,13 @@ echo $contents; } ?>
  -->
 <!-- end of project description -->
 
-<h1>Intuitive figures using direct labels instead of legends</h1>
+<p>
+<a href="docs/index.html">Documentation</a>
+-
+<a href="motivation.html">Motivation</a>
+-
+<a href="examples.php">Examples</a>
+</p>
 
 <p>The idea is very simple. You just made a figure where you drew a
 bunch of lines or points in different colors, according to some
@@ -120,13 +126,14 @@ the left or right of the lines:</p>
 <pre>
 data(BodyWeight,package="nlme")
 p <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
-direct.label(p,first.points)
-direct.label(p,last.points)
+direct.label(p,<a href="docs/lineplot/posfuns/first.points.html">first.points</a>)
+direct.label(p,<a href="docs/lineplot/posfuns/last.points.html">last.points</a>)
 </pre>
 
-<p>Here first.points and last.points are Positioning Functions of the
-form function(d,...){return(data.frame(x=,y=,groups=))}, where d is
-all the data to plot, as a data frame with columns <tt>x y
+<p>Here first.points and last.points are <a
+href="docs/index.html">Positioning Functions</a> of the form
+function(d,...){return(data.frame(x=,y=,groups=))}, where d is all the
+data to plot, as a data frame with columns <tt>x y
 groups</tt>. first.points simply returns the rows of the data frame
 which correspond to the first points for each group. We plot a direct
 label for each row returned by the Positioning Function.</p>
