@@ -17,8 +17,78 @@ dldoc <- function # Make directlabels documentation
   names(posfuns) <- docdirs
   plots <- lapply(plotfiles,lapply,extract.plot)
   m <- cbind(plots,posfuns,type=names(plots))
-  html <- apply(m,1,makehtml)
-  m
+  
+  setwd(file.path("..","..","www","docs"))
+  foot <- paste(readLines("templates/foot.html"),collapse="\n")
+  makehtml <- function # Make HTML documentation
+### Make plots and HTML for documentation website.
+  (L
+### List of positioning functions and plots to match up.
+   ){
+    ## all paths are relative to the docs directory
+    subdir <- L$type
+    pngurls <- matrix("",nrow=length(L$posfuns),ncol=length(L$plots),
+                      dimnames=list(names(L$posfuns),
+                        sapply(L$plots,function(x)x$name)))
+    ## first make plots
+    datanames <- names(L)[sapply(L,class)=="list"]
+    tomake <- file.path(subdir,c("",datanames))
+    for(d in tomake)
+      if(!file.exists(d))dir.create(d,recursive=TRUE)
+    for(p in L$plots){
+      cat(p$name,":",sep="")
+      for(f in L$posfuns){
+        cat(" ",f$name,sep="")
+        pngfile <- file.path(subdir,paste(p$name,f$name,"png",sep="."))
+        pngurls[f$name,p$name] <- pngfile
+        ##      png(pngfile)
+        ##      print(direct.label(p$plot,f$fun))
+        ##      dev.off()
+      }
+      cat("\n")
+    }
+    ## now make html for plot examples
+    makepage <- function(item,items,row,main){
+      tmp <- lapply(items,function(f){
+        pngurl <- if("fun"%in%names(f))pngurls[f$name,item$name]
+        else pngurls[item$name,f$name]
+        c(f,pngurl=file.path("..","..",pngurl),
+          parname=item$name,
+          url=file.path("..",row,paste(f$name,".html",sep="")))
+      })
+      rowfile <- paste("templates/",row,"-row.html",sep="")
+      rowhtml <- sapply(tmp,filltemplate,rowfile)
+      item$table <- paste(rowhtml,collapse="\n")
+      item$type <- L$type
+      item$pagetitle <- item$name
+      item$head <- filltemplate(item,"templates/head.html")
+      item$foot <- foot
+      html <- filltemplate(item,paste("templates/",main,".html",sep=""))
+      write(html,file.path(subdir,main,paste(item$name,".html",sep="")))
+      item
+    }
+    res <- list()
+    for(i in seq_along(datanames)){
+      this <- datanames[i]
+      that <- datanames[-i]
+      res[[this]] <- lapply(L[[this]],makepage,L[[that]],that,this)
+    }
+    res
+  }
+  res <- apply(m,1,makehtml)
+  extract.links <- function(L){
+    sapply(names(L),function(N)if(N=="type")L[[N]] else {
+      x <- sapply(L[[N]],function(x)x$name)
+      paste(paste("<a href=\"",L$type,"/",N,"/",x,".html\">",x,"</a>",
+                  sep=""),collapse=" ")},simplify=FALSE)
+  }
+  links <- apply(m,1,extract.links)
+  tmp <- list(head=filltemplate(list(pagetitle="home"),"templates/head.html"),
+              foot=foot)
+  rows <- lapply(links,filltemplate,"templates/index-row.html")
+  tmp$table <- paste(rows,collapse="\n")
+  html <- filltemplate(tmp,"templates/index.html")
+  write(html,"index.html")
 }
 extract.posfun <- function # Extract Positioning Function for documentation
 (f
@@ -49,62 +119,6 @@ extract.plot <- function # Extract plot and definition for documentation
   list(code=paste(code,collapse="\n"),
        plot=e$p,
        name=sub(".R$","",basename(f)))
-}
-makehtml <- function # Make HTML docs
-### Make plots and HTML for documentation website.
-(L
-### List of positioning functions and plots to match up.
- ){
-  ## all paths are relative to the docs directory
-  odir <- setwd(file.path("..","..","www","docs"))
-  on.exit(setwd(odir))
-  subdir <- L$type
-  pngurls <- matrix("",nrow=length(L$posfuns),ncol=length(L$plots),
-                 dimnames=list(names(L$posfuns),
-                   sapply(L$plots,function(x)x$name)))
-  ## first make plots
-  datanames <- names(L)[sapply(L,class)=="list"]
-  tomake <- file.path(subdir,c("",datanames))
-  for(d in tomake)
-    if(!file.exists(d))dir.create(d,recursive=TRUE)
-  for(p in L$plots){
-    cat(p$name,":",sep="")
-    for(f in L$posfuns){
-      cat(" ",f$name,sep="")
-       pngfile <- file.path(subdir,paste(p$name,f$name,"png",sep="."))
-       pngurls[f$name,p$name] <- pngfile
-##      png(pngfile)
-##      print(direct.label(p$plot,f$fun))
-##      dev.off()
-    }
-    cat("\n")
-  }
-  foot <- paste(readLines("templates/foot.html"),collapse="\n")
-  ## now make html for plot examples
-  makepage <- function(item,items,row,main){
-    tmp <- lapply(items,function(f){
-      pngurl <- if("fun"%in%names(f))pngurls[f$name,item$name]
-      else pngurls[item$name,f$name]
-      c(f,pngurl=file.path("..","..",pngurl),
-        parname=item$name,
-        url=file.path("..",row,paste(f$name,".html",sep="")))
-    })
-    ##if(item$name=="top.points")browser()
-    rowfile <- paste("templates/",row,"-row.html",sep="")
-    rowhtml <- sapply(tmp,filltemplate,rowfile)
-    item$table <- paste(rowhtml,collapse="\n")
-    item$type <- L$type
-    item$pagetitle <- item$name
-    item$head <- filltemplate(item,"templates/head.html")
-    item$foot <- foot
-    html <- filltemplate(item,paste("templates/",main,".html",sep=""))
-    write(html,file.path(subdir,main,paste(item$name,".html",sep="")))
-  }
-  for(i in seq_along(datanames)){
-    this <- datanames[i]
-    that <- datanames[-i]
-    lapply(L[[this]],makepage,L[[that]],that,this)
-  }
 }
 filltemplate <- function
 ### Fill in occurances of OBJ$item in the file template with the value
