@@ -62,8 +62,7 @@ plot(direct.label(
 
 
 ## dotplot:
-angled.endpoints <- list("last.points",rot=30)
-plot(direct.label(dotplot(VADeaths,type="o"),method=angled.endpoints))
+plot(direct.label(dotplot(VADeaths,type="o"),angled.endpoints))
 ## Try the same plot with ggplot2
 vad <- as.data.frame.table(VADeaths)
 names(vad) <- c("age","demographic","deaths")

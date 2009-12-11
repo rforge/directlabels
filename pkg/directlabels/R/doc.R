@@ -11,7 +11,7 @@ dldoc <- function # Make directlabels documentation
   on.exit(setwd(odir))
   docdir <- file.path("tests","doc")
   docdirs <- dir(docdir)
-  plotfiles <- sapply(docdirs,function(d)dir(file.path(docdir,d),full=TRUE))
+  plotfiles <- sapply(docdirs,function(d)Sys.glob(file.path(docdir,d,"*.R")))
   Rfiles <- paste(file.path("R",docdirs),".R",sep="")
   posfuns <- lapply(Rfiles,extract.posfun)
   names(posfuns) <- docdirs
