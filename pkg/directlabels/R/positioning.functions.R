@@ -47,19 +47,26 @@ label.positions <- function
   d <- data.frame(x,groups)
   if(!missing(y))d$y <- y
   if(class(method)=="function")method <- list(method)
-  while(length(method)){
-    m <- method[[1]]
-    while(class(m)=="list"){
-      method <- c(m,method[-1])
-      m <- method[[1]]
-    }
+  isconst <- function(){
     m.var <- names(method)[1]
-    if(!(is.null(m.var)||m.var==""))d[[m.var]] <- m else{
-      if(class(m)=="character"){
-        method.name <- paste(m," ",sep="")
-        m <- get(m)
-      }else method.name <- ""
-      d <- try(m(d,debug=debug,...))
+    !(is.null(m.var)||m.var=="")
+  }
+  islist <- function()class(method[[1]])=="list"
+  isref <- function()(!isconst())&class(method[[1]])=="character"
+  while(length(method)){
+    method.name <- ""
+    ## Resolve any PF names or nested lists
+    while(islist()||isref()){
+      if(islist()){
+        method <- c(method[[1]],method[-1])
+        method.name <- ""
+      }else{ #must be character -> get the fun
+        method.name <- paste(method[[1]]," ",sep="")
+        method <- c(get(method[[1]]),method[-1])
+      }
+    }
+    if(isconst())d[[names(method)[1]]] <- method[[1]] else{
+      d <- try(method[[1]](d,debug=debug,...))
       if(class(d)=="try-error")
         stop("direct label placement method ",method.name,"failed")
     }
