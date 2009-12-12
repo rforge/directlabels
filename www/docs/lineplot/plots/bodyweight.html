@@ -18,41 +18,41 @@ bodyweight</h1>
 
 <pre>
 data(BodyWeight,package="nlme")
-p <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',
+p &lt;- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',
        layout=c(3,1),xlim=c(-10,75))
 </pre>
 
 <table>
 <tr>
-  <td><img src="../../lineplot/bodyweight.first.points.png" /></td>
+  <td><img alt="first.points" src="../../lineplot/bodyweight.first.points.png" /></td>
   <td><p>Positioning Function for the first of a group of points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/first.points.html">first.points</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/bodyweight.first.smart.png" /></td>
+  <td><img alt="first.smart" src="../../lineplot/bodyweight.first.smart.png" /></td>
   <td><p>Label first points but make sure labels do not collide.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/first.smart.html">first.smart</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/bodyweight.last.points.png" /></td>
+  <td><img alt="last.points" src="../../lineplot/bodyweight.last.points.png" /></td>
   <td><p>Positioning Function for the last of a group of points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/last.points.html">last.points</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/bodyweight.last.smart.png" /></td>
+  <td><img alt="last.smart" src="../../lineplot/bodyweight.last.smart.png" /></td>
   <td><p>Label last points but make sure labels do not collide.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/last.smart.html">last.smart</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/bodyweight.lines2.png" /></td>
+  <td><img alt="lines2" src="../../lineplot/bodyweight.lines2.png" /></td>
   <td><p>Positioning Function for 2 groups of longitudinal data. One curve
 is on top of the other one (on average), so we label the top one
 at its maximal point, and the bottom one at its minimal
@@ -65,7 +65,7 @@ direct.label(p,"<a href="../posfuns/lines2.html">lines2</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/bodyweight.maxvar.points.png" /></td>
+  <td><img alt="maxvar.points" src="../../lineplot/bodyweight.maxvar.points.png" /></td>
   <td><p>Do first or last, whichever has points most spread out.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/maxvar.points.html">maxvar.points</a>")

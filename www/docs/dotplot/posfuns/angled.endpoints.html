@@ -24,11 +24,11 @@ angled.endpoints <- list("last.points",rot=30)
 
 <table>
 <tr>
-  <td><img src="../../dotplot/vadeaths.angled.endpoints.png" /></td>
+  <td><img alt="vadeaths" src="../../dotplot/vadeaths.angled.endpoints.png" /></td>
   <td><p><a href="../plots/vadeaths.html">vadeaths</a></p><pre>
-vad <- as.data.frame.table(VADeaths)
-names(vad) <- c("age","demographic","deaths")
-p <- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)+
+vad &lt;- as.data.frame.table(VADeaths)
+names(vad) &lt;- c("age","demographic","deaths")
+p &lt;- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)+
   xlim(8,80)
 direct.label(p,"angled.endpoints")
   </pre></td>

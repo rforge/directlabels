@@ -18,13 +18,13 @@ mpg</h1>
 
 <pre>
 data(mpg,package="ggplot2")
-p <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
+p &lt;- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
       main="Fuel efficiency depends on car size")
 </pre>
 
 <table>
 <tr>
-  <td><img src="../../scatterplot/mpg.empty.grid.png" /></td>
+  <td><img alt="empty.grid" src="../../scatterplot/mpg.empty.grid.png" /></td>
   <td><p>Label placement method for scatterplots that ensures labels are
 placed in different places. A grid is drawn over the whole
 plot. Each cluster is considered in sequence and assigned to the
@@ -35,14 +35,14 @@ direct.label(p,"<a href="../posfuns/empty.grid.html">empty.grid</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../scatterplot/mpg.empty.grid.2.png" /></td>
+  <td><img alt="empty.grid.2" src="../../scatterplot/mpg.empty.grid.2.png" /></td>
   <td><p>Use empty.grid with perpendicular.lines.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/empty.grid.2.html">empty.grid.2</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../scatterplot/mpg.empty.grid.collide.png" /></td>
+  <td><img alt="empty.grid.collide" src="../../scatterplot/mpg.empty.grid.collide.png" /></td>
   <td><p>Start with points from empty.grid then attempt to adjust labels so
 that they do not collide with any points.</p>
     <pre>
@@ -50,28 +50,28 @@ direct.label(p,"<a href="../posfuns/empty.grid.collide.html">empty.grid.collide<
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../scatterplot/mpg.extreme.grid.png" /></td>
+  <td><img alt="extreme.grid" src="../../scatterplot/mpg.extreme.grid.png" /></td>
   <td><p>Use empty.grid with extreme.points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/extreme.grid.html">extreme.grid</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../scatterplot/mpg.extreme.points.png" /></td>
+  <td><img alt="extreme.points" src="../../scatterplot/mpg.extreme.points.png" /></td>
   <td><p>Label the points furthest from the origin for each group.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/extreme.points.html">extreme.points</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../scatterplot/mpg.get.means.png" /></td>
+  <td><img alt="get.means" src="../../scatterplot/mpg.get.means.png" /></td>
   <td><p>Positioning Function for the mean of each cluster of points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/get.means.html">get.means</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../scatterplot/mpg.perpendicular.lines.png" /></td>
+  <td><img alt="perpendicular.lines" src="../../scatterplot/mpg.perpendicular.lines.png" /></td>
   <td><p>Draw a line between the centers of each cluster, then draw a
 perpendicular line for each cluster that goes through its
 center. For each cluster, return the point the lies furthest out

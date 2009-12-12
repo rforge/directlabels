@@ -24,20 +24,20 @@ extreme.grid <- empty.grid.fun(extreme.points)
 
 <table>
 <tr>
-  <td><img src="../../scatterplot/cylinders.extreme.grid.png" /></td>
+  <td><img alt="cylinders" src="../../scatterplot/cylinders.extreme.grid.png" /></td>
   <td><p><a href="../plots/cylinders.html">cylinders</a></p><pre>
 data(mpg,package="ggplot2")
-m <- lm(cty~displ,data=mpg)
-mpgf <- fortify(m,mpg)
-p <- mpg.scatter <- xyplot(.resid~.fitted,mpgf,groups=factor(cyl))
+m &lt;- lm(cty~displ,data=mpg)
+mpgf &lt;- fortify(m,mpg)
+p &lt;- xyplot(.resid~.fitted,mpgf,groups=factor(cyl))
 direct.label(p,"extreme.grid")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../scatterplot/mpg.extreme.grid.png" /></td>
+  <td><img alt="mpg" src="../../scatterplot/mpg.extreme.grid.png" /></td>
   <td><p><a href="../plots/mpg.html">mpg</a></p><pre>
 data(mpg,package="ggplot2")
-p <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
+p &lt;- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
       main="Fuel efficiency depends on car size")
 direct.label(p,"extreme.grid")
   </pre></td>

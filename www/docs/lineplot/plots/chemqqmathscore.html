@@ -18,41 +18,41 @@ chemqqmathscore</h1>
 
 <pre>
 data(Chem97,package="mlmRev")
-p <- qqmath(~gcsescore|gender,Chem97,groups=factor(score),
+p &lt;- qqmath(~gcsescore|gender,Chem97,groups=factor(score),
        type=c('l','g'),f.value=ppoints(100))
 </pre>
 
 <table>
 <tr>
-  <td><img src="../../lineplot/chemqqmathscore.first.points.png" /></td>
+  <td><img alt="first.points" src="../../lineplot/chemqqmathscore.first.points.png" /></td>
   <td><p>Positioning Function for the first of a group of points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/first.points.html">first.points</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/chemqqmathscore.first.smart.png" /></td>
+  <td><img alt="first.smart" src="../../lineplot/chemqqmathscore.first.smart.png" /></td>
   <td><p>Label first points but make sure labels do not collide.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/first.smart.html">first.smart</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/chemqqmathscore.last.points.png" /></td>
+  <td><img alt="last.points" src="../../lineplot/chemqqmathscore.last.points.png" /></td>
   <td><p>Positioning Function for the last of a group of points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/last.points.html">last.points</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/chemqqmathscore.last.smart.png" /></td>
+  <td><img alt="last.smart" src="../../lineplot/chemqqmathscore.last.smart.png" /></td>
   <td><p>Label last points but make sure labels do not collide.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/last.smart.html">last.smart</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/chemqqmathscore.lines2.png" /></td>
+  <td><img alt="lines2" src="../../lineplot/chemqqmathscore.lines2.png" /></td>
   <td><p>Positioning Function for 2 groups of longitudinal data. One curve
 is on top of the other one (on average), so we label the top one
 at its maximal point, and the bottom one at its minimal
@@ -65,7 +65,7 @@ direct.label(p,"<a href="../posfuns/lines2.html">lines2</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/chemqqmathscore.maxvar.points.png" /></td>
+  <td><img alt="maxvar.points" src="../../lineplot/chemqqmathscore.maxvar.points.png" /></td>
   <td><p>Do first or last, whichever has points most spread out.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/maxvar.points.html">maxvar.points</a>")

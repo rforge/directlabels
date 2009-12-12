@@ -18,14 +18,14 @@ chemscore</h1>
 
 <pre>
 data(Chem97,package="mlmRev")
-p <- densityplot(~gcsescore|gender,Chem97,
+p &lt;- densityplot(~gcsescore|gender,Chem97,
             groups=factor(score),layout=c(1,2),
             n=500,plot.points=FALSE)
 </pre>
 
 <table>
 <tr>
-  <td><img src="../../densityplot/chemscore.top.points.png" /></td>
+  <td><img alt="top.points" src="../../densityplot/chemscore.top.points.png" /></td>
   <td><p>Positioning Function for the top of a group of points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/top.points.html">top.points</a>")

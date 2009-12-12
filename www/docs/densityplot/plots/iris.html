@@ -17,13 +17,13 @@
 iris</h1>
 
 <pre>
-iris2 <- melt(iris,id="Species")
-p <- densityplot(~value|variable,iris2,groups=Species,scales="free")
+iris2 &lt;- melt(iris,id="Species")
+p &lt;- densityplot(~value|variable,iris2,groups=Species,scales="free")
 </pre>
 
 <table>
 <tr>
-  <td><img src="../../densityplot/iris.top.points.png" /></td>
+  <td><img alt="top.points" src="../../densityplot/iris.top.points.png" /></td>
   <td><p>Positioning Function for the top of a group of points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/top.points.html">top.points</a>")

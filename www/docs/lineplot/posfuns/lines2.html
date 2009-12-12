@@ -61,55 +61,55 @@ lines2 <- function
 
 <table>
 <tr>
-  <td><img src="../../lineplot/bodyweight.lines2.png" /></td>
+  <td><img alt="bodyweight" src="../../lineplot/bodyweight.lines2.png" /></td>
   <td><p><a href="../plots/bodyweight.html">bodyweight</a></p><pre>
 data(BodyWeight,package="nlme")
-p <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',
+p &lt;- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',
        layout=c(3,1),xlim=c(-10,75))
 direct.label(p,"lines2")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/chemqqmathscore.lines2.png" /></td>
+  <td><img alt="chemqqmathscore" src="../../lineplot/chemqqmathscore.lines2.png" /></td>
   <td><p><a href="../plots/chemqqmathscore.html">chemqqmathscore</a></p><pre>
 data(Chem97,package="mlmRev")
-p <- qqmath(~gcsescore|gender,Chem97,groups=factor(score),
+p &lt;- qqmath(~gcsescore|gender,Chem97,groups=factor(score),
        type=c('l','g'),f.value=ppoints(100))
 direct.label(p,"lines2")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/chemqqmathsex.lines2.png" /></td>
+  <td><img alt="chemqqmathsex" src="../../lineplot/chemqqmathsex.lines2.png" /></td>
   <td><p><a href="../plots/chemqqmathsex.html">chemqqmathsex</a></p><pre>
 data(Chem97,package="mlmRev")
-p <- qqmath(~gcsescore,Chem97,groups=gender,
+p &lt;- qqmath(~gcsescore,Chem97,groups=gender,
        type=c("l","g"),f.value=ppoints(100))
 direct.label(p,"lines2")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/ridge.lines2.png" /></td>
+  <td><img alt="ridge" src="../../lineplot/ridge.lines2.png" /></td>
   <td><p><a href="../plots/ridge.html">ridge</a></p><pre>
 ## complicated ridge regression lineplot ex. fig 3.8 from Elements of
 ## Statistical Learning, Hastie et al.
-myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
+myridge &lt;- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
   require(MASS)
-  fit <- lm.ridge(f,data,lambda=lambda)
-  X <- data[-which(names(data)==as.character(f[[2]]))]
-  Xs <- svd(scale(X)) ## my d's should come from the scaled matrix
-  dsq <- Xs$d^2
+  fit &lt;- lm.ridge(f,data,lambda=lambda)
+  X &lt;- data[-which(names(data)==as.character(f[[2]]))]
+  Xs &lt;- svd(scale(X)) ## my d's should come from the scaled matrix
+  dsq &lt;- Xs$d^2
   ## make the x axis degrees of freedom
-  df <- sapply(lambda,function(l)sum(dsq/(dsq+l)))
-  D <- data.frame(t(fit$coef),lambda,df) # scaled coefs
-  molt <- melt(D,id=c("lambda","df"))
+  df &lt;- sapply(lambda,function(l)sum(dsq/(dsq+l)))
+  D &lt;- data.frame(t(fit$coef),lambda,df) # scaled coefs
+  molt &lt;- melt(D,id=c("lambda","df"))
   ## add in the points for df=0
-  limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
+  limpts &lt;- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
   rbind(limpts,molt)
 }
 data(prostate,package="ElemStatLearn")
-pros <- subset(prostate,train==TRUE,select=-train)
-m <- myridge(lpsa~.,pros)
-p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
+pros &lt;- subset(prostate,train==TRUE,select=-train)
+m &lt;- myridge(lpsa~.,pros)
+p &lt;- xyplot(value~df,m,groups=variable,type="o",pch="+",
        panel=function(...){
          panel.xyplot(...)
          panel.abline(h=0)
@@ -124,12 +124,12 @@ direct.label(p,"lines2")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/sexdeaths.lines2.png" /></td>
+  <td><img alt="sexdeaths" src="../../lineplot/sexdeaths.lines2.png" /></td>
   <td><p><a href="../plots/sexdeaths.html">sexdeaths</a></p><pre>
-dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
-ddf <- melt(as.data.frame(dts),id="time")
-names(ddf) <- c("time","sex","deaths")
-p <- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
+dts &lt;- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
+ddf &lt;- melt(as.data.frame(dts),id="time")
+names(ddf) &lt;- c("time","sex","deaths")
+p &lt;- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
 direct.label(p,"lines2")
   </pre></td>
 </tr>

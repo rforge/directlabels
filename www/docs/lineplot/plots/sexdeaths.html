@@ -17,43 +17,43 @@
 sexdeaths</h1>
 
 <pre>
-dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
-ddf <- melt(as.data.frame(dts),id="time")
-names(ddf) <- c("time","sex","deaths")
-p <- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
+dts &lt;- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
+ddf &lt;- melt(as.data.frame(dts),id="time")
+names(ddf) &lt;- c("time","sex","deaths")
+p &lt;- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
 </pre>
 
 <table>
 <tr>
-  <td><img src="../../lineplot/sexdeaths.first.points.png" /></td>
+  <td><img alt="first.points" src="../../lineplot/sexdeaths.first.points.png" /></td>
   <td><p>Positioning Function for the first of a group of points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/first.points.html">first.points</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/sexdeaths.first.smart.png" /></td>
+  <td><img alt="first.smart" src="../../lineplot/sexdeaths.first.smart.png" /></td>
   <td><p>Label first points but make sure labels do not collide.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/first.smart.html">first.smart</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/sexdeaths.last.points.png" /></td>
+  <td><img alt="last.points" src="../../lineplot/sexdeaths.last.points.png" /></td>
   <td><p>Positioning Function for the last of a group of points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/last.points.html">last.points</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/sexdeaths.last.smart.png" /></td>
+  <td><img alt="last.smart" src="../../lineplot/sexdeaths.last.smart.png" /></td>
   <td><p>Label last points but make sure labels do not collide.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/last.smart.html">last.smart</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/sexdeaths.lines2.png" /></td>
+  <td><img alt="lines2" src="../../lineplot/sexdeaths.lines2.png" /></td>
   <td><p>Positioning Function for 2 groups of longitudinal data. One curve
 is on top of the other one (on average), so we label the top one
 at its maximal point, and the bottom one at its minimal
@@ -66,7 +66,7 @@ direct.label(p,"<a href="../posfuns/lines2.html">lines2</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/sexdeaths.maxvar.points.png" /></td>
+  <td><img alt="maxvar.points" src="../../lineplot/sexdeaths.maxvar.points.png" /></td>
   <td><p>Do first or last, whichever has points most spread out.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/maxvar.points.html">maxvar.points</a>")

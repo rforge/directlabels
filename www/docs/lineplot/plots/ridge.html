@@ -19,24 +19,24 @@ ridge</h1>
 <pre>
 ## complicated ridge regression lineplot ex. fig 3.8 from Elements of
 ## Statistical Learning, Hastie et al.
-myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
+myridge &lt;- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
   require(MASS)
-  fit <- lm.ridge(f,data,lambda=lambda)
-  X <- data[-which(names(data)==as.character(f[[2]]))]
-  Xs <- svd(scale(X)) ## my d's should come from the scaled matrix
-  dsq <- Xs$d^2
+  fit &lt;- lm.ridge(f,data,lambda=lambda)
+  X &lt;- data[-which(names(data)==as.character(f[[2]]))]
+  Xs &lt;- svd(scale(X)) ## my d's should come from the scaled matrix
+  dsq &lt;- Xs$d^2
   ## make the x axis degrees of freedom
-  df <- sapply(lambda,function(l)sum(dsq/(dsq+l)))
-  D <- data.frame(t(fit$coef),lambda,df) # scaled coefs
-  molt <- melt(D,id=c("lambda","df"))
+  df &lt;- sapply(lambda,function(l)sum(dsq/(dsq+l)))
+  D &lt;- data.frame(t(fit$coef),lambda,df) # scaled coefs
+  molt &lt;- melt(D,id=c("lambda","df"))
   ## add in the points for df=0
-  limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
+  limpts &lt;- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
   rbind(limpts,molt)
 }
 data(prostate,package="ElemStatLearn")
-pros <- subset(prostate,train==TRUE,select=-train)
-m <- myridge(lpsa~.,pros)
-p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
+pros &lt;- subset(prostate,train==TRUE,select=-train)
+m &lt;- myridge(lpsa~.,pros)
+p &lt;- xyplot(value~df,m,groups=variable,type="o",pch="+",
        panel=function(...){
          panel.xyplot(...)
          panel.abline(h=0)
@@ -51,35 +51,35 @@ p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
 
 <table>
 <tr>
-  <td><img src="../../lineplot/ridge.first.points.png" /></td>
+  <td><img alt="first.points" src="../../lineplot/ridge.first.points.png" /></td>
   <td><p>Positioning Function for the first of a group of points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/first.points.html">first.points</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/ridge.first.smart.png" /></td>
+  <td><img alt="first.smart" src="../../lineplot/ridge.first.smart.png" /></td>
   <td><p>Label first points but make sure labels do not collide.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/first.smart.html">first.smart</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/ridge.last.points.png" /></td>
+  <td><img alt="last.points" src="../../lineplot/ridge.last.points.png" /></td>
   <td><p>Positioning Function for the last of a group of points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/last.points.html">last.points</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/ridge.last.smart.png" /></td>
+  <td><img alt="last.smart" src="../../lineplot/ridge.last.smart.png" /></td>
   <td><p>Label last points but make sure labels do not collide.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/last.smart.html">last.smart</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/ridge.lines2.png" /></td>
+  <td><img alt="lines2" src="../../lineplot/ridge.lines2.png" /></td>
   <td><p>Positioning Function for 2 groups of longitudinal data. One curve
 is on top of the other one (on average), so we label the top one
 at its maximal point, and the bottom one at its minimal
@@ -92,7 +92,7 @@ direct.label(p,"<a href="../posfuns/lines2.html">lines2</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img src="../../lineplot/ridge.maxvar.points.png" /></td>
+  <td><img alt="maxvar.points" src="../../lineplot/ridge.maxvar.points.png" /></td>
   <td><p>Do first or last, whichever has points most spread out.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/maxvar.points.html">maxvar.points</a>")

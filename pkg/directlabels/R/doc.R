@@ -88,10 +88,11 @@ dldoc <- function # Make directlabels documentation
     sapply(names(L),function(N)if(N=="type")L[[N]] else {
       ##if(L$type=="utility.function")browser()
       x <- sapply(L[[N]],function(x)x$name)
-      content <- if(N=="plots")
-        paste("<img src=\"",L$type,"/",x,".",
-              L$posfuns[[1]]$name,".thumb.png","\" />",sep="")
-      else x
+      content <- if(N=="plots"){
+        ann <- paste(x,L$posfuns[[1]]$name,sep=".")
+        paste('<img alt="',ann,'" src="',L$type,
+              "/",ann,".thumb.png",'" />',sep="")
+      } else x
       if(length(x))
         paste(paste("<a href=\"",L$type,"/",N,"/",x,".html\">",content,"</a>",
                     sep=""),collapse="\n<br />\n")
@@ -115,6 +116,7 @@ extract.posfun <- function # Extract Positioning Function for documentation
 ### the same name.
  ){
   require(inlinedocs)
+  require(directlabels)
   L <- extract.docs.file(f)
   e <- new.env()
   sys.source(f,e)
@@ -139,6 +141,10 @@ extract.plot <- function # Extract plot and definition for documentation
   writeLines(code,tf <- tempfile())
   e <- new.env()
   sys.source(tf,e)
+  ## for standards compliance we should escape <>&
+  code <- gsub("[<]","&lt;",code)
+  code <- gsub("[&]","&amp;",code)
+  code <- gsub("[>]","&gt;",code)
   list(code=paste(code,collapse="\n"),
        plot=e$p,
        name=sub(".R$","",basename(f)))
