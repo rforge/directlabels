@@ -94,16 +94,8 @@ panel.superpose.dl <- function
   lattice.fun.name <-
     if(is.character(subs))sub("panel.","",subs) else ""
   if(is.null(type))type <- "NULL"
-  ldefault <- if(nlevels(groups)==2)"lines2" else "maxvar.points"
-  if(is.null(method))method <- 
-    switch(lattice.fun.name,
-           dotplot=ldefault,
-           xyplot=switch(type,l=ldefault,o=ldefault,a=ldefault,"empty.grid.2"),
-           densityplot="top.points",
-           qqmath=ldefault,
-           rug="rug.mean",
-           stop("No default direct label placement method for ",
-                lattice.fun.name,". Please specify method."))
+  if(is.null(method))method <- defaultpf.lattice()
+  ## maybe eventually allow need.trans to be specified in options()??
   if(lattice.fun.name%in%need.trans)method <-
     c(paste("trans.",lattice.fun.name,sep=""),method)
   labs <- label.positions(method=method,groups=groups,
@@ -111,4 +103,22 @@ panel.superpose.dl <- function
   type <- type[type!="g"] ## printing the grid twice looks bad.
   panel.superpose(panel.groups=dl.text,labs=labs,type=type,x=x,
                   groups=groups,subscripts=subscripts,...)
+}
+defaultpf.lattice <- function
+### If no Positioning Function specified, choose a default using this
+### function.
+(){
+  e <- parent.frame()
+  myget <- function(v)get(v,e)
+  ldefault <- if(nlevels(myget("groups"))==2)"lines2" else "maxvar.points"
+  ## maybe eventually scan options("directlabels.default.lattice") for
+  ## a list that specifies a manual override to these defaults
+  switch(myget("lattice.fun.name"),
+         dotplot=ldefault,
+         xyplot=switch(myget("type"),p="empty.grid.2",ldefault),
+         densityplot="top.points",
+         qqmath=ldefault,
+         rug="rug.mean",
+         stop("No default direct label placement method for ",
+              lattice.fun.name,". Please specify method."))
 }
