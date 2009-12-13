@@ -19,8 +19,8 @@ Positioning Function - extreme.points</h1>
 <p>Label the points furthest from the origin for each group.</p>
 
 <pre>
-extreme.points <- dl.indep({
-  d <- transform(d,d=sqrt(x^2+y^2))
+extreme.points &lt;- dl.indep({
+  d &lt;- transform(d,d=sqrt(x^2+y^2))
   d[which.max(d$d),]
 })
 </pre>

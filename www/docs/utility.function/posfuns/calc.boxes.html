@@ -19,9 +19,9 @@ Positioning Function - calc.boxes</h1>
 <p>Calculate boxes around labels, for collision detection.</p>
 
 <pre>
-calc.boxes <- function(d){
-  h <- as.numeric(convertHeight(stringHeight("foo"),"native"))
-  w <- as.numeric(sapply(as.character(d$groups),
+calc.boxes &lt;- function(d){
+  h &lt;- as.numeric(convertHeight(stringHeight("foo"),"native"))
+  w &lt;- as.numeric(sapply(as.character(d$groups),
                          function(x)convertWidth(stringWidth(x),"native")))
   transform(d,top=y+h/2,bottom=y-h/2,right=x+w,w=w,h=h)
 }

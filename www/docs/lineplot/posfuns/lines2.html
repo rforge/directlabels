@@ -25,7 +25,7 @@ variability, but then again lineplots may not be the best for
 these data either.</p>
 
 <pre>
-lines2 <- function
+lines2 &lt;- function
 ### Positioning Function for 2 groups of longitudinal data. One curve
 ### is on top of the other one (on average), so we label the top one
 ### at its maximal point, and the bottom one at its minimal
@@ -40,18 +40,18 @@ lines2 <- function
  ...
 ### ignored.
  ){
-  top <- 0-offset
-  bottom <- 1+offset
-  y <- ddply(d,.(groups),function(d)mean(d$y))
+  top &lt;- 0-offset
+  bottom &lt;- 1+offset
+  y &lt;- ddply(d,.(groups),function(d)mean(d$y))
   ddply(y,.(groups),function(D){
-    biggest.on.average <- D$V==max(y$V)
-    f <- if(biggest.on.average)max else min
-    ld <- subset(d,groups==D$groups)
-    pos <- ddply(subset(ld,y==f(ld$y)),.(groups),function(x)
+    biggest.on.average &lt;- D$V==max(y$V)
+    f &lt;- if(biggest.on.average)max else min
+    ld &lt;- subset(d,groups==D$groups)
+    pos &lt;- ddply(subset(ld,y==f(ld$y)),.(groups),function(x)
           data.frame(x=max(x$x)-diff(range(x$x))/2,y=x$y[1]))
-    other <- subset(d,groups!=D$groups)
-    other.y <- other[which.min(abs(other$x-pos$x)),"y"]
-    smaller.here <- pos$y<other.y
+    other &lt;- subset(d,groups!=D$groups)
+    other.y &lt;- other[which.min(abs(other$x-pos$x)),"y"]
+    smaller.here &lt;- pos$y&lt;other.y
     data.frame(pos,vjust=if(biggest.on.average)
                if(smaller.here)bottom else top#bigger mean
                else if(smaller.here)bottom else top)#smaller mean

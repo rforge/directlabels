@@ -123,6 +123,7 @@ extract.posfun <- function # Extract Positioning Function for documentation
   for(N in names(L)){
     L[[N]]$fun <- e[[N]]
     L[[N]]$name <- N
+    L[[N]]$definition <- rhtmlescape(L[[N]]$definition)
   }
   L
 ### List of lists, each of which describes one Positioning Function
@@ -141,14 +142,22 @@ extract.plot <- function # Extract plot and definition for documentation
   writeLines(code,tf <- tempfile())
   e <- new.env()
   sys.source(tf,e)
-  ## for standards compliance we should escape <>&
-  code <- gsub("[<]","&lt;",code)
-  code <- gsub("[&]","&amp;",code)
-  code <- gsub("[>]","&gt;",code)
+  code <- rhtmlescape(code)
   list(code=paste(code,collapse="\n"),
        plot=e$p,
        name=sub(".R$","",basename(f)))
 }
+rhtmlescape <- function
+### for standards compliance we should escape <>&
+(code
+### R code to be displayed on a HTML page between pre tags.
+ ){
+  code <- gsub("[&]","&amp;",code)
+  code <- gsub("[<]","&lt;",code)
+  code <- gsub("[>]","&gt;",code)
+### Standards compliant HTML to display.
+}
+
 filltemplate <- function
 ### Fill in occurances of OBJ$item in the file template with the value
 ### in R of L$item.

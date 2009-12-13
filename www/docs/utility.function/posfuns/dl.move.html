@@ -21,7 +21,7 @@ Positioning Function. This function can be used to manually place
 that label in a good spot.</p>
 
 <pre>
-dl.move <- function # Manually move a direct label
+dl.move &lt;- function # Manually move a direct label
 ### Sometimes there is 1 label that is placed oddly by another
 ### Positioning Function. This function can be used to manually place
 ### that label in a good spot.
@@ -30,9 +30,9 @@ dl.move <- function # Manually move a direct label
  y
  ){
   function(d,...){
-    v <- sapply(groups,function(g)which(d$groups==g))
-    d[v,"x"] <- x
-    d[v,"y"] <- y
+    v &lt;- sapply(groups,function(g)which(d$groups==g))
+    d[v,"x"] &lt;- x
+    d[v,"y"] &lt;- y
     d
   }
 ### A Positioning Function that moves a label into a good spot.

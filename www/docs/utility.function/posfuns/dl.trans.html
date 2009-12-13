@@ -21,14 +21,14 @@ making a function that calls transform on the data frame, with the
 arguments provided. See examples.</p>
 
 <pre>
-dl.trans <- function # Direct label data transform
+dl.trans &lt;- function # Direct label data transform
 ### Make a function that transforms the data. This is for conveniently
 ### making a function that calls transform on the data frame, with the
 ### arguments provided. See examples.
 (...
 ### Arguments to pass to transform.
  ){
-  L <- as.list(match.call())[-1]
+  L &lt;- as.list(match.call())[-1]
   function(d,...)do.call("transform",c(list(d),L))
 ### A Positioning Function.
 }

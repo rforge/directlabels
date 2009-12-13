@@ -23,7 +23,7 @@ point on this grid which is closest to the point given by
 loc.fun().</p>
 
 <pre>
-empty.grid <- function
+empty.grid &lt;- function
 ### Label placement method for scatterplots that ensures labels are
 ### placed in different places. A grid is drawn over the whole
 ### plot. Each cluster is considered in sequence and assigned to the
@@ -41,47 +41,47 @@ empty.grid <- function
 ### ignored.
  ){
   ##browser()
-  loc <- loc.fun(d,debug)
-  NREP <- 10
-  gl <- function(v){
-    s <- seq(from=min(d[,v]),to=max(d[,v]),l=NREP)
+  loc &lt;- loc.fun(d,debug)
+  NREP &lt;- 10
+  gl &lt;- function(v){
+    s &lt;- seq(from=min(d[,v]),to=max(d[,v]),l=NREP)
     list(centers=s,diff=(s[2]-s[1])/2)
   }
-  L <- sapply(c("x","y"),gl,simplify=FALSE)
-  g <- expand.grid(x=L$x$centers,y=L$y$centers)
-  g2 <- transform(g,
+  L &lt;- sapply(c("x","y"),gl,simplify=FALSE)
+  g &lt;- expand.grid(x=L$x$centers,y=L$y$centers)
+  g2 &lt;- transform(g,
                   left=x-L$x$diff,
                   right=x+L$x$diff,
                   top=y+L$y$diff,
                   bottom=y-L$y$diff)
   if(debug){
-    gridlines <- with(g2,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
-    drawlines <- function(a,b,c,d)
+    gridlines &lt;- with(g2,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
+    drawlines &lt;- function(a,b,c,d)
       grid.segments(a,b,c,d,"native",gp=gpar(col="grey"))
     with(gridlines,drawlines(min(x),y,max(x),y))
     with(gridlines,drawlines(x,min(y),x,max(y)))
   }
-  inbox <- function(x,y,left,right,top,bottom)
-    c(data=sum(d$x>left & d$x<right & d$y>bottom & d$y<top))
-  count.tab <- cbind(mdply(g2,inbox),expand.grid(i=1:NREP,j=1:NREP))
+  inbox &lt;- function(x,y,left,right,top,bottom)
+    c(data=sum(d$x&gt;left &amp; d$x&lt;right &amp; d$y&gt;bottom &amp; d$y&lt;top))
+  count.tab &lt;- cbind(mdply(g2,inbox),expand.grid(i=1:NREP,j=1:NREP))
   if(debug){
-    count.mat <- matrix(count.tab$data,nrow=NREP,ncol=NREP,
+    count.mat &lt;- matrix(count.tab$data,nrow=NREP,ncol=NREP,
                         byrow=TRUE,dimnames=list(1:NREP,1:NREP))[NREP:1,]
-    mode(count.mat) <- "character"
+    mode(count.mat) &lt;- "character"
   }
-  g3 <- transform(subset(count.tab,data==0))
-  res <- data.frame()
+  g3 &lt;- transform(subset(count.tab,data==0))
+  res &lt;- data.frame()
   for(v in loc$groups){
-    r <- subset(loc,groups==v)
-    len <- sqrt((r$x-g3$x)^2+(r$y-g3$y)^2)
-    i <- which.min(len) ## the box to use for this group
+    r &lt;- subset(loc,groups==v)
+    len &lt;- sqrt((r$x-g3$x)^2+(r$y-g3$y)^2)
+    i &lt;- which.min(len) ## the box to use for this group
     if(debug)
       count.mat[as.character(g3[i,"j"]),
-                as.character(g3[i,"i"])] <- paste("*",v,sep="")
-    res <- rbind(res,g3[i,c("x","y")])
-    therow <- g3[i,]
+                as.character(g3[i,"i"])] &lt;- paste("*",v,sep="")
+    res &lt;- rbind(res,g3[i,c("x","y")])
+    therow &lt;- g3[i,]
     ## select new subset of boxes for next label
-    g3 <- subset(g3,!(abs(i-therow$i)<=1 & j==therow$j))
+    g3 &lt;- subset(g3,!(abs(i-therow$i)&lt;=1 &amp; j==therow$j))
   }
   if(debug)print(count.mat)
   cbind(res,groups=loc$groups)
