@@ -57,16 +57,18 @@ dldoc <- function # Make directlabels documentation
     }
     ## now make html for plot examples
     makepage <- function(item,items,row,main){
-      tmp <- lapply(items,function(f){
-        pngurl <- if("fun"%in%names(f))pngurls[f$name,item$name]
-        else pngurls[item$name,f$name]
-        c(f,pngurl=file.path("..","..",pngurl),
-          parname=item$name,
-          url=file.path("..",row,paste(f$name,".html",sep="")))
-      })
-      rowfile <- paste("templates/",row,"-row.html",sep="")
-      rowhtml <- sapply(tmp,filltemplate,rowfile)
-      item$table <- paste(rowhtml,collapse="\n")
+      if(length(items)){
+        tmp <- lapply(items,function(f){
+          pngurl <- if("fun"%in%names(f))pngurls[f$name,item$name]
+          else pngurls[item$name,f$name]
+          c(f,pngurl=file.path("..","..",pngurl),
+            parname=item$name,
+            url=file.path("..",row,paste(f$name,".html",sep="")))
+        })
+        rowfile <- paste("templates/",row,"-row.html",sep="")
+        rowhtml <- sapply(tmp,filltemplate,rowfile)
+        item$table <- paste(c("<table>",rowhtml,"</table>"),collapse="\n")
+      }
       item$type <- L$type
       item$pagetitle <- item$name
       item$head <- filltemplate(item,"templates/head.html")
