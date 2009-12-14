@@ -44,11 +44,12 @@ echo $contents; } ?>
 <!-- end of project description -->
 
 <p>
-<a href="docs/index.html">Documentation</a>
+directlabels:
+<a href="docs/index.html">Positioning Function examples database</a>
 -
 <a href="motivation.html">Motivation</a>
 -
-<a href="examples.php">Examples</a>
+<a href="examples.php">Advanced examples</a>
 </p>
 
 <p>The idea is very simple. You just made a figure where you drew a
@@ -64,7 +65,7 @@ confusing example that motivates the use of direct labeling:
 
 <pre>
 library(lattice)
-loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
+loci &lt;- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
 densityplot(~ppp,loci,groups=type,auto.key=list(space="top",columns=3))
 </pre>
@@ -90,7 +91,7 @@ high-level plotting systems such as lattice and ggplot2:</p>
 <pre>
 install.packages("directlabels",repos="http://r-forge.r-project.org")
 library(directlabels)
-loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
+loci &lt;- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
 ## Just add direct.label() around your plot:
 direct.label(densityplot(~ppp,loci,groups=type,n=500))
@@ -125,7 +126,7 @@ the left or right of the lines:</p>
 
 <pre>
 data(BodyWeight,package="nlme")
-p <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
+p &lt;- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
 direct.label(p,<a href="docs/lineplot/posfuns/first.points.html">first.points</a>)
 direct.label(p,<a href="docs/lineplot/posfuns/last.points.html">last.points</a>)
 </pre>
@@ -153,12 +154,27 @@ href="HOCKING-latticedl-semin-r.pdf">Visualizing multivariate data
 using lattice and direct labels</a>" with <a
 href="HOCKING-latticedl-semin-r.R">R code examples</a>.</p>
 
-<p>Please send email to <a
-href="http://r-forge.r-project.org/sendmessage.php?touser=1571">Toby
-Dylan Hocking</a> if you are using this package or have ideas to
-contribute, thanks!</p>
 
 <p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
+
+<center>
+<table>
+<tr>
+
+<td>Please send email to <a
+href="http://r-forge.r-project.org/sendmessage.php?touser=1571">Toby
+Dylan Hocking</a> if you are using directlabels or have ideas to
+contribute, thanks!</td>
+
+</tr>
+<tr>
+<td align="center">
+    <a href="http://validator.w3.org/check?uri=referer">validate</a>
+</td>
+</tr>
+</table>
+
+</center>
 
 </body>
 </html>
