@@ -131,6 +131,10 @@ dldoc <- function # Make directlabels documentation
   tmp$table <- paste(rows,collapse="\n")
   html <- filltemplate(tmp,"templates/index.html")
   write(html,"index.html")
+
+  m
+### Matrix of lists describing example plots and matching builtin
+### Positioning Functions.
 }
 extract.posfun <- function # Extract Positioning Function for documentation
 ### Use inlinedocs to extract comments and definitions from code, then
