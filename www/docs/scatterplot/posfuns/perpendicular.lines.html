@@ -35,7 +35,7 @@ perpendicular.lines &lt;- function
  ...
 ### ignored.
  ){
-  means &lt;- get.means(d)
+  means &lt;- <a href="../../scatterplot/posfuns/get.means.html">get.means</a>(d)
   names(means)[2:3] &lt;- c("mx","my")
   big &lt;- merge(d,means,by="groups")
   fit &lt;- lm(my~mx,means)

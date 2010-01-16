@@ -19,7 +19,7 @@ Positioning Function - extreme.points</h1>
 <p>Label the points furthest from the origin for each group.</p>
 
 <pre>
-extreme.points &lt;- dl.indep({
+extreme.points &lt;- <a href="../../utility.function/posfuns/dl.indep.html">dl.indep</a>({
   d &lt;- transform(d,d=sqrt(x^2+y^2))
   d[which.max(d$d),]
 })

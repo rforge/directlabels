@@ -21,7 +21,7 @@ collide with the label underneath.</p>
 
 <pre>
 collide.up &lt;- function(d,...){
-  d &lt;- calc.boxes(d)[order(d$y),]
+  d &lt;- <a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>(d)[order(d$y),]
   for(i in 2:nrow(d)){
     dif &lt;- d$bottom[i]-d$top[i-1]
     if(dif&lt;0){
