@@ -16,8 +16,31 @@ dldoc <- function # Make directlabels documentation
   posfuns <- lapply(Rfiles,extract.posfun)
   names(posfuns) <- docdirs
   plots <- lapply(plotfiles,lapply,extract.plot)
+
+  ## add crosslinks between positioning functions
+  repfuns <- apply(cbind(lapply(posfuns,names),names(posfuns)),1,function(L){
+    REP <- paste('<a href="../../',L[[2]],
+                 '/posfuns/\\1.html">\\1</a>',sep='')
+    function(def,ignore){
+      items <- L[[1]][L[[1]]!=ignore]
+      if(length(items)){
+        FIND <- paste("(",paste(items,collapse="|"),")",sep="")
+        gsub(FIND,REP,def)
+      }else def
+    }
+  })
+  repall <- function(def,ignore){
+    for(f in repfuns)def <- f(def,ignore)
+    def
+  }
+  posfuns <- lapply(posfuns,function(L)lapply(L,function(LL){
+    LL$definition <- repall(LL$definition,LL$name)
+    LL
+  }))
+
+  ## matrix of all extracted data to process
   m <- cbind(plots,posfuns,type=names(plots))
-  
+
   setwd(file.path("..","..","www","docs"))
   foot <- paste(readLines("templates/foot.html"),collapse="\n")
   makehtml <- function # Make HTML documentation
