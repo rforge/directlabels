@@ -27,7 +27,7 @@ direct.label.ggplot <- function
     c(paste("trans.",geom,sep=""),method)
   dlgeom <- geom_text(position=position_dl(list(method),debug))
   ##print(dlgeom)
-  p+dlgeom+opts(legend.position="none") ## maybe eventually create a scale?
+  p+dlgeom+scale_colour_discrete(legend=FALSE)
 ### The ggplot object with direct labels added.
 }
 ### Position class for direct label placement.
