@@ -4,8 +4,8 @@
 \usepackage{hyperref}
 \usepackage{graphicx}
 
-\title{The directlabels package:\\ a framework for direct
-  labeling plots in R}
+\title{The directlabels package:\\ easily add direct
+  labels to R plots}
 
 \author{Toby Dylan Hocking\\
   toby.hocking@inria.fr\\
@@ -17,9 +17,9 @@
 \maketitle
 
 Recent years have seen the development of sophisticated plotting
-systems for multivariate data in R. In particular, the flexibility of
-the lattice and ggplot2 systems allows for automatic legend generation
-for plots labeled using different colors according to a categorical
+systems for multivariate data in R. In particular, the power of the
+lattice and ggplot2 systems allows for automatic legend generation for
+plots labeled using different colors according to a categorical
 variable. This approach of using legends to decode color schemes is
 generally easy to implement but often makes for statistical graphics
 that are difficult or impossible to decode if there are too many
@@ -51,10 +51,11 @@ different plot types, and a system of intelligent defaults so that
 often you don't even need to specify the Positioning Function.
 
 The package was implemented using S3 methods to provide a unified
-interface for labeling lattice and ggplot2 plots. This elegantly
-separates the tasks of label position calculation and label drawing,
-thus resulting in a system that allows maximum customizability, code
-re-use, and user-friendlyness.
+interface for labeling lattice and ggplot2 plots, and could be
+extended to work with other plotting systems in R. This results in an
+elegant separation of the tasks of label position calculation and
+label drawing, thus resulting in a system that allows maximum
+customizability, code re-use, and user-friendlyness.
 
 Development was started by Toby Dylan Hocking on 17 July 2009 while he
 was working toward his master's degree by doing a research internship
@@ -69,7 +70,7 @@ The package is currently hosted on R-Forge and can be installed
 using the following R code:
 
 \begin{verbatim}
-install.packages(c("ggplot2","ElemStatLearn","mlmRev"))
+install.packages(c("ggplot2","ElemStatLearn","mlmRev"))#dependencies+examples
 install.packages("directlabels",repos="http://r-forge.r-project.org")
 \end{verbatim}
 
