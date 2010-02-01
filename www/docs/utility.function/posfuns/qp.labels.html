@@ -8,23 +8,29 @@
 	charset=UTF-8" />
 	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
 	rel="stylesheet" type="text/css" />
-	<title>directlabels documentation - calc.boxes</title>
+	<title>directlabels documentation - qp.labels</title>
   </head>
 
 <body>
 
 <h1><a href="../../index.html">directlabels</a> - utility.function -
-Positioning Function - calc.boxes</h1>
+Positioning Function - qp.labels</h1>
 
-<p>Calculate boxes around labels, for collision detection.</p>
+<p>Use a QP solver to find the best places to put the points on a
+line, subject to the constraint that they should not overlap
+(assumes they all have the same height/width).</p>
 
 <pre>
-calc.boxes &lt;- function(d,...){
-  h &lt;- as.numeric(convertHeight(stringHeight("foo"),"native"))
-  w &lt;- as.numeric(sapply(as.character(d$groups),
-                         function(x)convertWidth(stringWidth(x),"native")))
-  transform(d,top=y+h/2,bottom=y-h/2,right=x+w,w=w,h=h)
-}
+qp.labels &lt;- function(var,spacer)list(<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>,function(d,...){
+  require(quadprog)
+  d &lt;- d[order(d[,var],decreasing=TRUE),]
+  n &lt;- nrow(d)
+  D &lt;- diag(rep(1,n))
+  A &lt;- diag(rep(1,n))[,-n]-rbind(0,diag(rep(1,n-1)))
+  sol &lt;- solve.QP(D,d[,var],A,d[,spacer][-1])
+  d[,var] &lt;- sol$solution
+  d
+})
 </pre>
 
 

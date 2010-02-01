@@ -8,22 +8,30 @@
 	charset=UTF-8" />
 	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
 	rel="stylesheet" type="text/css" />
-	<title>directlabels documentation - calc.boxes</title>
+	<title>directlabels documentation - bumpup</title>
   </head>
 
 <body>
 
 <h1><a href="../../index.html">directlabels</a> - utility.function -
-Positioning Function - calc.boxes</h1>
+Positioning Function - bumpup</h1>
 
-<p>Calculate boxes around labels, for collision detection.</p>
+<p>Sequentially bump labels up, starting from the bottom, if they
+collide with the label underneath.</p>
 
 <pre>
-calc.boxes &lt;- function(d,...){
-  h &lt;- as.numeric(convertHeight(stringHeight("foo"),"native"))
-  w &lt;- as.numeric(sapply(as.character(d$groups),
-                         function(x)convertWidth(stringWidth(x),"native")))
-  transform(d,top=y+h/2,bottom=y-h/2,right=x+w,w=w,h=h)
+bumpup &lt;- function(d,...){
+  d &lt;- <a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>(d)[order(d$y),]
+  for(i in 2:nrow(d)){
+    dif &lt;- d$bottom[i]-d$top[i-1]
+    if(dif&lt;0){
+      d$bottom[i] &lt;- d$bottom[i]-dif
+      d$top[i] &lt;- d$top[i]-dif
+      d$y[i] &lt;- d$y[i]-dif
+    }
+  }
+  ##print(sapply(d,class))
+  d
 }
 </pre>
 
