@@ -50,7 +50,7 @@ empty.grid.fun <- function(f)
 dl.jitter <- dl.trans(x=jitter(x),y=jitter(y))
 
 ### Calculate boxes around labels, for collision detection.
-calc.boxes <- function(d){
+calc.boxes <- function(d,...){
   h <- as.numeric(convertHeight(stringHeight("foo"),"native"))
   w <- as.numeric(sapply(as.character(d$groups),
                          function(x)convertWidth(stringWidth(x),"native")))
@@ -69,7 +69,7 @@ draw.rects <- function(d,...){
 
 ### Sequentially bump labels up, starting from the bottom, if they
 ### collide with the label underneath.
-collide.up <- function(d,...){
+bumpup <- function(d,...){
   d <- calc.boxes(d)[order(d$y),]
   for(i in 2:nrow(d)){
     dif <- d$bottom[i]-d$top[i-1]
@@ -83,3 +83,16 @@ collide.up <- function(d,...){
   d
 }
 
+### Use a QP solver to find the best places to put the points on a
+### line, subject to the constraint that they should not overlap
+### (assumes they all have the same height/width).
+qp.labels <- function(var,spacer)list(calc.boxes,function(d,...){
+  require(quadprog)
+  d <- d[order(d[,var],decreasing=TRUE),]
+  n <- nrow(d)
+  D <- diag(rep(1,n))
+  A <- diag(rep(1,n))[,-n]-rbind(0,diag(rep(1,n-1)))
+  sol <- solve.QP(D,d[,var],A,d[,spacer][-1])
+  d[,var] <- sol$solution
+  d
+})

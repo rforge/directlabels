@@ -16,11 +16,17 @@ maxvar.points <- function(d,...){
   FUN(d,...)
 }
 
-### Label last points but make sure labels do not collide.
-last.smart <- list(last.points,collide.up)
+### Label last points, bumping labels up if they collide.
+last.bumpup <- list(last.points,bumpup)
 
-### Label first points but make sure labels do not collide.
-first.smart <- list(first.points,collide.up)
+### Label first points, bumping labels up if they collide.
+first.bumpup <- list(first.points,bumpup)
+
+### Label last points from QP solver that ensures labels do not collide.
+last.qp <- list(last.points,qp.labels("y","h"))
+
+### Label first points from QP solver that ensures labels do not collide.
+first.qp <- list(first.points,qp.labels("y","h"))
 
 lines2 <- function
 ### Positioning Function for 2 groups of longitudinal data. One curve
