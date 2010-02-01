@@ -41,6 +41,32 @@ dldoc <- function # Make directlabels documentation
   ## matrix of all extracted data to process
   m <- cbind(plots,posfuns,type=names(plots))
 
+  makerd <- function # Make Rd positioning function description
+  (L
+   ## List of posfuns and plots to match up
+   ){
+    
+    plotcodes <-
+      paste("{\n",sapply(L$plots,function(x)x$code),"\n}",sep="",collapse=",\n")
+    forloop <- paste("\nfor(p in list(",plotcodes,"))",sep="")
+    dlines <-
+      paste(paste('print(direct.label(p,"',
+                  names(L$posfuns),'"))',sep=""),collapse="\n  ")
+    paste(forloop,"{\n  ",dlines,"\n}\n",sep="")
+  }
+  rd <- apply(m[-nrow(m),],1,makerd)
+  pf.file <- file.path("man","positioning.functions.Rd")
+  pflines <- readLines(pf.file)
+  exline <- grep("\\\\examples[{]",pflines)[1]
+  newrd <- paste(paste(pflines[1:exline],collapse="\n"),
+                 paste(rd,collapse="\n"),"\n}",sep="")
+  write(newrd,pf.file)
+
+  ## escape plot definitions for html
+  for(i in 1:nrow(m))if(length(m[i,]$plots))for(j in seq_along(m[i,]$plots)){
+    m[i,]$plots[[j]]$code <- rhtmlescape(m[i,]$plots[[j]]$code)
+  }
+
   setwd(file.path("..","..","www","docs"))
   foot <- paste(readLines("templates/foot.html"),collapse="\n")
   makehtml <- function # Make HTML documentation
@@ -171,7 +197,7 @@ extract.plot <- function # Extract plot and definition for documentation
   writeLines(code,tf <- tempfile())
   e <- new.env()
   sys.source(tf,e)
-  code <- rhtmlescape(code)
+  ##code <- rhtmlescape(code)
   list(code=paste(code,collapse="\n"),
        plot=e$p,
        name=sub(".R$","",basename(f)))
@@ -204,3 +230,4 @@ filltemplate <- function
   }
   txt
 }
+

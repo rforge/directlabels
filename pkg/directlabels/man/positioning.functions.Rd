@@ -15,40 +15,119 @@
   built-in Positioning Functions are discussed below, but you can also
   create your own, either from scratch or by using dl.indep and
   dl.trans.}
-\usage{
-## Longitudinal data:
-## first.points
-## left.points    ## same as first.points
-## last.points
-## right.points   ## same as last.points
-## bottom.points
-## low.points     ## same as bottom.points
-## lines2         ## for when there are only 2 colours
-
-## Also good for density plots:
-## top.points
-## high.points    ## same as top.points
-
-## Scatter plots:
-## get.means
-## perpendicular.lines
-## empty.grid
-## empty.grid.2
-## extreme.grid
-}
-\arguments{
-  \item{d}{Data frame of points to plot, with columns x y groups.}
-  \item{...}{Ignored.}
-}
-\details{
-}
-\value{Data frame of label positions.}
-\references{
-}
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
+\examples{
+for(p in list({
+data(Chem97,package="mlmRev")
+p <- densityplot(~gcsescore|gender,Chem97,
+            groups=factor(score),layout=c(1,2),
+            n=500,plot.points=FALSE)
+},
+{
+iris2 <- melt(iris,id="Species")
+p <- densityplot(~value|variable,iris2,groups=Species,scales="free")
+},
+{
+loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
+                   type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
+p <- qplot(ppp,data=loci,colour=type,geom="density")
+})){
+  print(direct.label(p,"top.points"))
 }
 
 
-\seealso{
+for(p in list({
+vad <- as.data.frame.table(VADeaths)
+names(vad) <- c("age","demographic","deaths")
+p <- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)+
+  xlim(8,80)
+})){
+  print(direct.label(p,"angled.endpoints"))
+}
+
+
+for(p in list({
+data(BodyWeight,package="nlme")
+p <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',
+       layout=c(3,1),xlim=c(-10,75))
+},
+{
+data(Chem97,package="mlmRev")
+p <- qqmath(~gcsescore|gender,Chem97,groups=factor(score),
+       type=c('l','g'),f.value=ppoints(100))
+},
+{
+data(Chem97,package="mlmRev")
+p <- qqmath(~gcsescore,Chem97,groups=gender,
+       type=c("l","g"),f.value=ppoints(100))
+},
+{
+## complicated ridge regression lineplot ex. fig 3.8 from Elements of
+## Statistical Learning, Hastie et al.
+myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
+  require(MASS)
+  fit <- lm.ridge(f,data,lambda=lambda)
+  X <- data[-which(names(data)==as.character(f[[2]]))]
+  Xs <- svd(scale(X)) ## my d's should come from the scaled matrix
+  dsq <- Xs$d^2
+  ## make the x axis degrees of freedom
+  df <- sapply(lambda,function(l)sum(dsq/(dsq+l)))
+  D <- data.frame(t(fit$coef),lambda,df) # scaled coefs
+  molt <- melt(D,id=c("lambda","df"))
+  ## add in the points for df=0
+  limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
+  rbind(limpts,molt)
+}
+data(prostate,package="ElemStatLearn")
+pros <- subset(prostate,train==TRUE,select=-train)
+m <- myridge(lpsa~.,pros)
+p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
+       panel=function(...){
+         panel.xyplot(...)
+         panel.abline(h=0)
+         panel.abline(v=5,col="grey")
+       },
+       xlim=c(-1,9),
+       main="Ridge regression shrinks least squares coefficients",
+       ylab="scaled coefficients",
+       sub="grey line shows coefficients chosen by cross-validation",
+       xlab=expression(df(lambda)))
+},
+{
+dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
+ddf <- melt(as.data.frame(dts),id="time")
+names(ddf) <- c("time","sex","deaths")
+p <- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
+})){
+  print(direct.label(p,"first.bumpup"))
+  print(direct.label(p,"first.points"))
+  print(direct.label(p,"first.qp"))
+  print(direct.label(p,"last.bumpup"))
+  print(direct.label(p,"last.points"))
+  print(direct.label(p,"last.qp"))
+  print(direct.label(p,"lines2"))
+  print(direct.label(p,"maxvar.points"))
+}
+
+
+for(p in list({
+data(mpg,package="ggplot2")
+m <- lm(cty~displ,data=mpg)
+mpgf <- fortify(m,mpg)
+p <- xyplot(.resid~.fitted,mpgf,groups=factor(cyl))
+},
+{
+data(mpg,package="ggplot2")
+p <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
+      main="Fuel efficiency depends on car size")
+})){
+  print(direct.label(p,"empty.grid"))
+  print(direct.label(p,"empty.grid.2"))
+  print(direct.label(p,"empty.grid.collide"))
+  print(direct.label(p,"extreme.grid"))
+  print(direct.label(p,"extreme.points"))
+  print(direct.label(p,"get.means"))
+  print(direct.label(p,"perpendicular.lines"))
+}
+
 }
