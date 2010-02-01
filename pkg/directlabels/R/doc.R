@@ -192,7 +192,7 @@ filltemplate <- function
 ### in R of L$item.
 (L,template){
   txt <- paste(readLines(template),collapse="\n")
-  L <- L[sapply(L,class)=="character"]
+  L <- L[sapply(L,class)=="character"&sapply(L,length)>0]
   locs <- gregexpr("OBJ[$]([a-z]+)\\b",txt)[[1]]
   keywords <- sapply(seq_along(locs),function(i)
                      substr(txt,locs[i]+4,locs[i]+
