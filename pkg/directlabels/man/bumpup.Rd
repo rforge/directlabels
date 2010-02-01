@@ -1,10 +1,10 @@
-\name{collide.up}
-\alias{collide.up}
-\title{collide up}
+\name{bumpup}
+\alias{bumpup}
+\title{bumpup}
 \description{Sequentially bump labels up, starting from the bottom, if they
 collide with the label underneath.}
 \usage{
-collide.up(d, ...)
+bumpup(d, ...)
 }
 \arguments{
   \item{d}{

@@ -3,10 +3,12 @@
 \title{calc boxes}
 \description{Calculate boxes around labels, for collision detection.}
 \usage{
-calc.boxes(d)
+calc.boxes(d, ...)
 }
 \arguments{
   \item{d}{
+}
+  \item{\dots}{
 }
 }
 \details{

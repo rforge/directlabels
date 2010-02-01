@@ -61,19 +61,46 @@ named.funs <- list(first.points=first.points,lines2=lines2)
 mixed.funs <- list("first.points",lines2=lines2,last.points)
 not.named <- structure(named.funs,names=NULL)
 unlabeled.plots <- structure(plots,names=NULL)
+dlcompare(plots,mixed.funs)
 dlcompare(plots,mixed.funs[3])
 
-## this should work with all combinations, with varying labels
-for(ml in list(mixed.funs,not.named))
-  for(pl in list(plots,unlabeled.plots))dlcompare(pl,ml)
+data(BodyWeight,package="nlme")
+ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
+## lines2 works well only when there are 2 groups
+dlcompare(list(plots[[1]],ratplot),list("first.points","lines2"))
 
 ## Compare scatterplot labeling methods.
-data(BodyWeight,package="nlme")
-dlcompare(list(plots[[1]],xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))),list("first.points","lines2"))
 scatters <-
   list(xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1),
        xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species))
 ##pdf("scattercompare.pdf",width=10,height=5)
 dlcompare(scatters,list("empty.grid","empty.grid.2"))
 ##dlcompare(scatters,list(empty.grid.2))
-##dev.off();system("xpdf scattercompare.pdf")}
+##dev.off();system("xpdf scattercompare.pdf")
+
+myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
+  require(MASS)
+  fit <- lm.ridge(f,data,lambda=lambda)
+  X <- data[-which(names(data)==as.character(f[[2]]))]
+  Xs <- svd(scale(X)) ## my d's should come from the scaled matrix
+  dsq <- Xs$d^2
+  ## make the x axis degrees of freedom
+  df <- sapply(lambda,function(l)sum(dsq/(dsq+l)))
+  D <- data.frame(t(fit$coef),lambda,df) # scaled coefs
+  molt <- melt(D,id=c("lambda","df"))
+  ## add in the points for df=0
+  limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
+  rbind(limpts,molt)
+}
+data(prostate,package="ElemStatLearn")
+pros <- subset(prostate,train==TRUE,select=-train)
+m <- myridge(lpsa~.,pros)
+p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
+            panel=function(...){
+              panel.xyplot(...)
+              panel.abline(h=0)
+            },
+            xlim=c(0,9),
+            ylab="scaled coefficients",
+            xlab=expression(df(lambda)))
+dlcompare(list(p,ratplot),list("last.bumpup","last.qp"))}

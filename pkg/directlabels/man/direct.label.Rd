@@ -46,15 +46,6 @@ mpgs2 <- update(mpg.scatter,
                 main="foobar2")
 plot(direct.label(mpgs2))
 
-## Should plot but show direct label placement error in each panel:
-## default method includes perpendicular line calculation, which makes
-## no sense for only 1 group per panel
-trellised <- xyplot(.resid~.fitted|cyl,mpgf,groups=factor(cyl))
-plot(direct.label(trellised))
-## should work, but not very informative:
-plot(direct.label(trellised,method=empty.grid,TRUE))
-
-
 data(Chem97,package="mlmRev")
 qqm <- qqmath(~gcsescore,Chem97,groups=gender,
               type=c("p","g"),f.value=ppoints(25),auto.key=TRUE)
@@ -81,11 +72,6 @@ loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
 plot(direct.label(
              densityplot(~ppp,loci,groups=type,n=500)
              ))
-## Not very informative but it should work:
-plot(direct.label(
-             densityplot(~ppp|type,loci,groups=type,n=500)
-             ))
-
 
 ## dotplot:
 plot(direct.label(dotplot(VADeaths,type="o"),angled.endpoints))
@@ -102,17 +88,21 @@ ddf <- melt(as.data.frame(dts),id="time")
 names(ddf) <- c("time","sex","deaths")
 plots <- list(lattice=xyplot(deaths~time,ddf,groups=sex,type="l"),
               ggplot2=qplot(time,deaths,data=ddf,colour=sex,geom="line"))
+oask <- devAskNewPage(TRUE)
 for(p in plots)print(direct.label(p)) ## should default to lines2
+devAskNewPage(oask)
 
 ## lineplot labeling
 sprayplot <- xyplot(decrease~treatment,OrchardSprays,groups=rowpos,type="a")
 direct.label(sprayplot) ## should be last.points
-direct.label(sprayplot,last.smart) ## better
+direct.label(sprayplot,last.bumpup) ## better
+direct.label(sprayplot,last.qp) ## better
 data(BodyWeight,package="nlme")
 ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
-print(direct.label(ratplot))
+print(direct.label(ratplot))#default is maxvar.points
 print(direct.label(ratplot,last.points))
-print(direct.label(ratplot,last.smart)) ## not so good actually
+print(direct.label(ratplot,last.bumpup)) ## not so good actually
+print(direct.label(ratplot,last.qp)) ## not so good actually
 ## Say we want to use a simple linear model to explain rat body weight:
 fit <- lm(weight~Time+Diet+Rat,BodyWeight)
 bw <- fortify(fit,BodyWeight)
@@ -158,6 +148,8 @@ p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
             xlab=expression(df(lambda)))
 ##pdf("figure3.8.pdf",h=5,w=5)
 direct.label(update(p,xlim=c(0,9.25)),
-             list(last.smart,cex=0.75,dl.trans(x=x+0.1)))
+             list(last.qp,cex=0.75,dl.trans(x=x+0.1)))
 ##dev.off()
-##system("xpdf figure3.8.pdf")}
+##system("xpdf figure3.8.pdf")
+
+}
