@@ -1,0 +1,61 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+	<meta http-equiv="Content-Type" content="text/html;
+	charset=UTF-8" />
+	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
+	rel="stylesheet" type="text/css" />
+	<title>directlabels documentation - first.points</title>
+  </head>
+
+<body>
+
+<h1><a href="../../index.html">directlabels</a> - contourplot -
+Positioning Function - first.points</h1>
+
+<p></p>
+
+<pre>
+first.points &lt;- first.points
+</pre>
+
+<table>
+<tr>
+  <td><img alt="volcano" src="../../contourplot/volcano.first.points.png" /></td>
+  <td><p><a href="../plots/volcano.html">volcano</a></p><pre>
+## contour plot
+volcano3d &lt;- melt(volcano)
+names(volcano3d) &lt;- c("x", "y", "z")
+v &lt;- ggplot(volcano3d, aes(x, y, z = z))
+p &lt;- v + stat_contour(aes(colour = ..level..))
+direct.label(p,"first.points")
+  </pre></td>
+</tr>
+</table>
+
+<center>
+<table>
+<tr><td>Please send email
+to <a href="http://r-forge.r-project.org/sendmessage.php?touser=1571">Toby
+Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
+contribute, thanks!</td>
+</tr>
+<tr><td align="center">Documentation website generated from comments
+in R source code
+using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
+</tr>
+<tr>
+<td align="center">
+    <a href="http://validator.w3.org/check?uri=referer">validate</a>
+</td>
+</tr>
+</table>
+
+</center>
+
+</body>
+
+</html>
