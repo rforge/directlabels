@@ -14,21 +14,15 @@ direct.label <- function
 ### The plot object, with direct labels added.
 }
 label.positions <- function
-### Calculates table of positions of each label. It does not draw
-### anything, but is called for its return value. Normally you don't
-### have to call label.positions explicitly. Instead, it is called for
-### you by direct.label, for each panel.
-(x,
-### x values of points to draw.
- y,
-### y values of points to draw.
- subscripts,
-### Subscripts of groups to consider.
- groups,
-### Vector of groups.
- debug=FALSE,
-### Show debug output? If TRUE, the resulting table of label positions
-### will be printed.
+### Calculates table of positions of each label based on input data
+### for each panel and Positioning Functions. This is meant for
+### internal use inside a direct.label method. This function contains
+### all the logic for parsing the method= argument and sequentially
+### applying the Positioning Functions to the input data to obtain the
+### label positions.
+(d,
+### Data frame to which we will sequentially apply the Positioning
+### Functions.
  method,
 ### Method for direct labeling, specified in one of the following
 ### ways: (1) a Positioning Function, (2) the name of a Positioning
@@ -38,14 +32,19 @@ label.positions <- function
 ### the list are applied in sequence, and each row of the resulting
 ### data frame is used to draw a direct label. See examples in
 ### ?direct.label and ?positioning.functions.
+ debug=FALSE,
+### Show debug output? If TRUE, the resulting table of label positions
+### will be printed.
  ...
 ### Passed to Positioning Function(s).
  ){
-  groups <- as.factor(groups)
-  levs <- levels(groups)
-  groups <- groups[subscripts]
-  d <- data.frame(x,groups)
-  if(!missing(y))d$y <- y
+  ## make sure input data is in good format
+  d <- transform(d,
+                 x=as.numeric(x),
+                 groups=as.factor(groups))
+  if("y"%in%names(d))d <- transform(d,y=as.numeric(y))
+  ##save original levels for later in case PFs mess them up.
+  levs <- levels(d$groups)
   if(class(method)=="function")method <- list(method)
   isconst <- function(){
     m.var <- names(method)[1]

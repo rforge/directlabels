@@ -10,29 +10,30 @@ direct.label.ggplot <- function
 ### Show debug output?
  ){
   ##lvar <- if("group" %in% names(p$mapping))"group" else "colour"
-  if(missing(method)){
-    varnames <- c(groups="colour",x="x")
-    if("y" %in% names(p$mapping))varnames <- c(varnames,y="y")
-    rename.vec <- sapply(p$mapping[varnames],deparse)
-    rename.vec <- gsub("[a-z]+[(]([^)]+)[)]","\\1",rename.vec)
-    d <- structure(p$data[,rename.vec],names=names(varnames))
-    geom <- p$layers[[1]]$geom$objname
-    ldefault <- if(nlevels(d$groups)==2)"lines2" else "maxvar.points"
-    if(is.null(method))method <-
-      switch(geom,
-             density="top.points",
-             line=ldefault,
-             point="empty.grid.2",
-             stop("No default label placement for this type of ggplot."))
-    if(geom%in%need.trans.ggplot)method <-
-      c(paste("trans.",geom,sep=""),method)
-  }
+  geom <- p$layers[[1]]$geom$objname
+  if(is.null(method))method <-
+    switch(geom,
+           density="top.points",
+           line={
+             varnames <- c(groups="colour",x="x")
+             if("y" %in% names(p$mapping))varnames <- c(varnames,y="y")
+             rename.vec <- sapply(p$mapping[varnames],deparse)
+             rename.vec <- gsub("[a-z]+[(]([^)]+)[)]","\\1",rename.vec)
+             d <- structure(p$data[,rename.vec],names=names(varnames))
+             if(nlevels(d$groups)==2)"lines2" else "maxvar.points"
+           },
+           point="empty.grid.2",
+           path="bottom.points",
+           stop("No default label placement for this type of ggplot."))
+  if(geom%in%need.trans.ggplot)method <-
+    c(paste("trans.",geom,sep=""),method)
   ##print(p$layers[[1]]$mapping)
   dlgeom <- geom_text(position=position_dl(list(method),debug,p),
                       stat=p$layers[[1]]$stat)
   ##browser()
   ##print(dlgeom)
-  p+dlgeom+scale_colour_discrete(legend=FALSE)
+  SCALE <- if(geom=="path")scale_colour_continuous else scale_colour_discrete
+  p+dlgeom+SCALE(legend=FALSE)
 ### The ggplot object with direct labels added.
 }
 ### Position class for direct label placement.
@@ -53,25 +54,26 @@ PositionDl <- proto(ggplot2::Position,{
         data$colour <- data[,colvar]
       }else stop("Need colour aesthetic to direct label.")
     }
-    labtab <- label.positions(x=data$x,y=data$y,groups=factor(data$colour),
-                              subscripts=1:nrow(data),method=.$method[[1]],
-                              debug=.$debug)
-    targs <- list(label="groups",
-                  group="groups",
-                  colour="groups",
+    d <- transform(data,groups=if("piece"%in%names(data))piece else colour)
+    labtab <- label.positions(d,.$method[[1]],.$debug)
+    targs <- list(label=if("colour"%in%names(labtab))"colour" else "groups",
                   angle="rot",
                   size="fontsize",
                   ##face="fontface",
                   ##family="fontfamily",
                   alpha="alpha")
+    possibly.missing <- c("colour","group")
+    toadd <- possibly.missing[(!possibly.missing%in%names(labtab))]
+    targs[toadd] <- "groups"
     targs <- targs[targs%in%names(labtab)]
     targs <- sapply(targs,as.name)
     r <- do.call("transform",c(list(labtab),targs))
-    missing.cols <- c("colour",names(data)[!names(data)%in%names(r)])
-    missing.data <- unique(data[,missing.cols])
-    r <- merge(missing.data,r)
+    if(is.numeric(data$colour)&&!is.numeric(r$colour))
+      r$colour <- as.numeric(as.character(r$colour))
+    print(head(r))
     ##browser()
-    ##print(head(r))
+    ##Positive control:
+    ##data.frame(head(data),label="foo")
     r
   }
   objname <- "dl"

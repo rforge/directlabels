@@ -35,10 +35,11 @@ plot(direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),
                     type=c('l','g'),f.value=ppoints(100))))
 
 ## densityplot labeling
-plot(direct.label(densityplot(~gcsescore,Chem97,groups=factor(score))))
+plot(direct.label(densityplot(~gcsescore,Chem97,groups=factor(score),
+                  plot.points=FALSE,n=500)))
 ## Try with several panels:
-plot(direct.label(densityplot(~gcsescore|gender,Chem97,
-                              groups=factor(score),layout=c(1,2))))
+plot(direct.label(densityplot(~gcsescore|gender,Chem97,plot.points=FALSE,
+                              groups=factor(score),layout=c(1,2),n=500)))
 iris2 <- melt(iris,id="Species")
 direct.label(densityplot(~value|variable,iris2,groups=Species,scales="free"))
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
@@ -55,6 +56,14 @@ names(vad) <- c("age","demographic","deaths")
 p2 <- qplot(deaths,age,data=vad,
             group=demographic,geom="line",colour=demographic)
 print(direct.label(p2,angled.endpoints)+xlim(5,80))
+
+## contour plot
+volcano3d <- melt(volcano)
+names(volcano3d) <- c("x", "y", "z")
+v <- ggplot(volcano3d, aes(x, y, z = z))
+v2 <- v + stat_contour(aes(colour = ..level..))
+direct.label(v2)
+direct.label(v2,"top.points")
 
 ## label 2 groups of longitudinal data:
 dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))

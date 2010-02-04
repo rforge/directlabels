@@ -23,6 +23,7 @@ dl.text <- function
  ){
   ##debugging output:
   ##print(cbind(col,col.line,col.points,col.symbol,type))
+  ##browser()
   col.text <- switch(type,p=col.symbol,l=col.line,col.line)
   g <- labs[levels(as.factor(labs$groups))[group.number]==labs$groups,]
   grid.text(g$groups,g$x,g$y,
@@ -98,11 +99,14 @@ panel.superpose.dl <- function
   ## maybe eventually allow need.trans to be specified in options()??
   if(lattice.fun.name%in%need.trans)method <-
     c(paste("trans.",lattice.fun.name,sep=""),method)
-  labs <- label.positions(method=method,groups=groups,
-                          subscripts=subscripts,x=x,y=y,...)
+  groups <- as.factor(groups)
+  groups <- groups[subscripts]
+  d <- data.frame(x,groups)
+  if(!missing(y))d$y <- y
+  labs <- label.positions(d,method,...)
   type <- type[type!="g"] ## printing the grid twice looks bad.
   panel.superpose(panel.groups=dl.text,labs=labs,type=type,x=x,
-                  groups=groups,subscripts=subscripts,...)
+                  groups=groups,subscripts=seq_along(groups),...)
 }
 defaultpf.lattice <- function
 ### If no Positioning Function specified, choose a default using this
