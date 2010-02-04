@@ -13,4 +13,4 @@ LazyData: true
 Suggests: nlme, mlmRev, ElemStatLearn, inlinedocs, quadprog
 Collate: utility.function.R compare.R dotplot.R lineplot.R 
 	 densityplot.R  ggplot2.R  positioning.functions.R 
-	 doc.R lattice.R scatterplot.R
+	 doc.R lattice.R scatterplot.R contourplot.R
