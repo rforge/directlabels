@@ -18,6 +18,18 @@
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 \examples{
 for(p in list({
+## contour plot
+volcano3d <- melt(volcano)
+names(volcano3d) <- c("x", "y", "z")
+v <- ggplot(volcano3d, aes(x, y, z = z))
+p <- v + stat_contour(aes(colour = ..level..))
+})){
+  print(direct.label(p,"bottom.points"))
+  print(direct.label(p,"top.points"))
+}
+
+
+for(p in list({
 data(Chem97,package="mlmRev")
 p <- densityplot(~gcsescore|gender,Chem97,
             groups=factor(score),layout=c(1,2),
