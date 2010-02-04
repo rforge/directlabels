@@ -67,6 +67,9 @@ PositionDl <- proto(ggplot2::Position,{
     targs <- targs[targs%in%names(labtab)]
     targs <- sapply(targs,as.name)
     r <- do.call("transform",c(list(labtab),targs))
+    missing.cols <- c("colour",names(data)[!names(data)%in%names(r)])
+    missing.data <- unique(data[,missing.cols])
+    r <- merge(missing.data,r)
     ##browser()
     ##print(head(r))
     r
