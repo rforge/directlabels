@@ -70,7 +70,7 @@ PositionDl <- proto(ggplot2::Position,{
     r <- do.call("transform",c(list(labtab),targs))
     if(is.numeric(data$colour)&&!is.numeric(r$colour))
       r$colour <- as.numeric(as.character(r$colour))
-    print(head(r))
+    ##print(head(r))
     ##browser()
     ##Positive control:
     ##data.frame(head(data),label="foo")
