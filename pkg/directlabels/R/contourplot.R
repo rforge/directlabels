@@ -1,3 +1,4 @@
+### Positioning Function for the top of a group of points.
 top.points <- top.points
 
 ### Positioning Function for the bottom of a group of points.

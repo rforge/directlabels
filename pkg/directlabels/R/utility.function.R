@@ -51,19 +51,40 @@ dl.jitter <- dl.trans(x=jitter(x),y=jitter(y))
 
 ### Calculate boxes around labels, for collision detection.
 calc.boxes <- function(d,...){
-  h <- as.numeric(convertHeight(stringHeight("foo"),"native"))
-  w <- as.numeric(sapply(as.character(d$groups),
-                         function(x)convertWidth(stringWidth(x),"native")))
-  transform(d,top=y+h/2,bottom=y-h/2,right=x+w,w=w,h=h)
+  vp <- current.viewport()
+  convert <- function(worh){
+    conv <- get(paste("convert",worh,sep=""))
+    stri <- get(paste("string",worh,sep=""))
+    with(d,sapply(seq_along(groups),function(i){
+      if("cex"%in%names(d))vp$gp <- gpar(cex=cex[i])
+      pushViewport(vp)
+      w <- conv(stri(as.character(groups[i])),"native")
+      popViewport()
+      w
+    }))
+  }
+  w <- convert("Width")
+  h <- convert("Height")
+  hjust <- vjust <- 0.5 ##defaults in case unassigned in d
+  d <- transform(d,
+                 top=y+(1-vjust)*h,bottom=y-vjust*h,
+                 right=x+(1-hjust)*w,left=x-hjust*w,
+                 h=h,w=w)
 }
 
 ### Positioning Function that draws boxes around label positions. Need
 ### to have previously called calc.boxes. Does not edit the data
 ### frame.
 draw.rects <- function(d,...){
-  hjust <- vjust <- 0.5
-  with(d,grid.rect(x,y,w,h,hjust=hjust,vjust=vjust,
-                   default.units="native",gp=gpar(col="grey")))
+  ##browser()
+  ## easy way
+  ##with(d,grid.rect(x,y,w,h,hjust=hjust,vjust=vjust,
+  ##                 default.units="native",gp=gpar(col="grey")))
+  d_ply(d,.(groups),function(D){
+    with(D,grid.lines(c(left,left,right,right,left),
+                      c(bottom,top,top,bottom,bottom),
+                      "native",gp=gpar(col="grey")))
+  })
   d
 }
 
@@ -85,7 +106,7 @@ bumpup <- function(d,...){
 
 ### Use a QP solver to find the best places to put the points on a
 ### line, subject to the constraint that they should not overlap
-### (assumes they all have the same height/width).
+### (assumes they all have the same height/width -- NEED TO FIX).
 qp.labels <- function(var,spacer)list(calc.boxes,function(d,...){
   require(quadprog)
   d <- d[order(d[,var],decreasing=TRUE),]

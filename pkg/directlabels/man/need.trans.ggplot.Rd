@@ -6,7 +6,7 @@
 \usage{need.trans.ggplot}
 \format{
   The format is:
- chr "density"
+ NULL
 }
 \details{
 }

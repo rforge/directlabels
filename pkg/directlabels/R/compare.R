@@ -11,44 +11,55 @@ dlcompare <- function # Direct label comparison plot
 ### List of label placement methods to apply to each plot. List names,
 ### or function names if specified as character strings, will be used
 ### to annotate the plot.
- rects=TRUE
+ rects=TRUE,
 ### Draw rectangles around each plot, creating a grid?
+ row.items="plots"
+### If "plots" then put plots on the rows and method on the
+### columns. Otherwise, do the opposite.
  ){
   ## Augment positioning function list names if possible
   names(pos.funs) <- sapply(seq_along(pos.funs),function(i){
     N <- names(pos.funs)[i]
     f <- pos.funs[[i]]
     if(!is.null(N)&&N!="")N
-    else if(class(f)=="character"){if(f!="legend")f else ""}
+    else if(class(f)=="character")f
     else ""
   })
   if(sum(names(pos.funs)!="")==0)names(pos.funs) <- NULL
   grid.newpage()
-  rowadd <- if(is.null(names(plots)))0 else 1
-  widths <- rep("null",l=length(plots))
-  if(!is.null(names(pos.funs)))widths <- c(widths,"cm")
-  heights <- rep("null",l=length(pos.funs))
+
+  standard <- row.items=="plots"
+  row.items <- if(standard)plots else pos.funs
+  col.items <- if(standard)pos.funs else plots
+  
+  rowadd <- if(is.null(names(col.items)))0 else 1
+  widths <- rep("null",l=length(col.items))
+  if(!is.null(names(row.items)))widths <- c(widths,"cm")
+  heights <- rep("null",l=length(row.items))
   if(rowadd)heights <- c("cm",heights)
   the.layout <-
     grid.layout(length(heights),length(widths),
                 widths=unit(1,widths),
                 heights=unit(1,heights))
   pushViewport(viewport(layout=the.layout))
-  for(col in seq_along(plots)){
-    if(!is.null(names(plots))){
+
+  for(col in seq_along(col.items)){
+    if(!is.null(names(col.items))){
       pushViewport(viewport(layout.pos.col=col,layout.pos.row=1))
-      grid.text(names(plots)[col])
+      grid.text(names(col.items)[col])
       popViewport()
     }
-    for(row in seq_along(pos.funs)){
-      if(col==1&&!is.null(names(pos.funs))){
-        pushViewport(viewport(layout.pos.col=length(plots)+1,
+    for(row in seq_along(row.items)){
+      if(col==1&&!is.null(names(row.items))){
+        pushViewport(viewport(layout.pos.col=length(col.items)+1,
                               layout.pos.row=row+rowadd))
-        grid.text(names(pos.funs)[row],rot=-90)
+        grid.text(names(row.items)[row],rot=-90)
         popViewport()
       }
       pushViewport(viewport(layout.pos.col=col,layout.pos.row=row+rowadd))
-      print(direct.label(plots[[col]],pos.funs[[row]]),newpage=FALSE)
+      p <- if(standard)direct.label(row.items[[row]],col.items[[col]])
+      else direct.label(col.items[[col]],row.items[[row]])
+      print(p,newpage=FALSE)
       if(rects)grid.rect()
       popViewport()
     }

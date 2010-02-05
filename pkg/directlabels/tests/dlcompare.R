@@ -10,6 +10,7 @@ pos.funs <- list("first.points","lines2")
 ##pdf("compare.pdf",width=10,height=10)
 dlcompare(plots,pos.funs)
 dlcompare(plots,pos.funs,rects=FALSE) ## hide the grid
+dlcompare(plots,pos.funs,rects=FALSE,row.items="posfuns") ## exchange axes
 ##dev.off();system("xpdf compare.pdf")
 
 ## Try some more exotic labeling options.
@@ -78,4 +79,8 @@ dlcompare(list(p,ratplot),list("last.bumpup","last.qp"))
 ## direct labels are way less confusing here
 p2 <- qplot(df,value,data=m,group=variable,colour=variable,
             geom=c("line","point"))+geom_hline(yintercept=0)+xlim(0,9)
-dlcompare(list(p,p2),list("last.qp","legend"))
+pfuns <- list("legend","direct labels"=
+              list(cex=2,last.qp,dl.trans(x=x+0.1)))
+dlcompare(list(p,p2),pfuns)
+dlcompare(list(p),pfuns,rects=FALSE)
+dlcompare(list(p),list(pfuns[2],list(cex=c(0.5,1,2,4),last.bumpup,dl.trans(x=x+0.1),calc.boxes,draw.rects)),row.items="posfuns")
