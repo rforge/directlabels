@@ -20,10 +20,25 @@ Positioning Function - calc.boxes</h1>
 
 <pre>
 calc.boxes &lt;- function(d,...){
-  h &lt;- as.numeric(convertHeight(stringHeight("foo"),"native"))
-  w &lt;- as.numeric(sapply(as.character(d$groups),
-                         function(x)convertWidth(stringWidth(x),"native")))
-  transform(d,top=y+h/2,bottom=y-h/2,right=x+w,w=w,h=h)
+  vp &lt;- current.viewport()
+  convert &lt;- function(worh){
+    conv &lt;- get(paste("convert",worh,sep=""))
+    stri &lt;- get(paste("string",worh,sep=""))
+    with(d,sapply(seq_along(groups),function(i){
+      if("cex"%in%names(d))vp$gp &lt;- gpar(cex=cex[i])
+      pushViewport(vp)
+      w &lt;- conv(stri(as.character(groups[i])),"native")
+      popViewport()
+      w
+    }))
+  }
+  w &lt;- convert("Width")
+  h &lt;- convert("Height")
+  hjust &lt;- vjust &lt;- 0.5 ##defaults in case unassigned in d
+  d &lt;- transform(d,
+                 top=y+(1-vjust)*h,bottom=y-vjust*h,
+                 right=x+(1-hjust)*w,left=x-hjust*w,
+                 h=h,w=w)
 }
 </pre>
 
