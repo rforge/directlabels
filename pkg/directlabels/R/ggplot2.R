@@ -1,3 +1,13 @@
+uselegend.ggplot <- function
+### Show the ggplot2 legend, for comparison.
+(p,
+### The ggplot object.
+ ...
+### Ignored.
+ ){
+  p
+}
+
 ### Geoms which need translation before applying Positioning Function.
 need.trans.ggplot <- c("density")
 direct.label.ggplot <- function

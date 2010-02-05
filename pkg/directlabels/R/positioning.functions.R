@@ -9,8 +9,9 @@ direct.label <- function
  debug=FALSE
 ### Show debug output?
  ){
-  if(!is.null(method)&&class(method)=="character"&&method=="legend")return(p)
-  UseMethod("direct.label")
+  if(!is.null(method)&&class(method)=="character"&&method=="legend")
+    UseMethod("uselegend")
+  else UseMethod("direct.label")
 ### The plot object, with direct labels added.
 }
 label.positions <- function

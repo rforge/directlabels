@@ -1,3 +1,14 @@
+uselegend.trellis <- function
+### Add a legend to a trellis plot, for comparison.
+(p,
+### The trellis object.
+ ...
+### Ignored.
+ ){
+  if(is.null(p$legend))update(p,auto.key=TRUE)
+  else p
+}
+ 
 ### Functions which need translation before applying Positioning Function.
 need.trans <- c("qqmath","densityplot")
 dl.text <- function
@@ -56,6 +67,7 @@ direct.label.trellis <- function
                          debug=debug,
                          ...)
   }
+  p$legend <- NULL
   p
 ### The lattice plot.
 }

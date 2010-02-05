@@ -9,6 +9,7 @@ plots <- list(lattice=
 pos.funs <- list("first.points","lines2")
 ##pdf("compare.pdf",width=10,height=10)
 dlcompare(plots,pos.funs)
+dlcompare(plots,pos.funs,rects=FALSE) ## hide the grid
 ##dev.off();system("xpdf compare.pdf")
 
 ## Try some more exotic labeling options.
@@ -69,6 +70,12 @@ p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
               panel.abline(h=0)
             },
             xlim=c(0,9),
+            auto.key=list(space="right",lines=TRUE,points=FALSE),
             ylab="scaled coefficients",
             xlab=expression(df(lambda)))
 dlcompare(list(p,ratplot),list("last.bumpup","last.qp"))
+
+## direct labels are way less confusing here
+p2 <- qplot(df,value,data=m,group=variable,colour=variable,
+            geom=c("line","point"))+geom_hline(yintercept=0)+xlim(0,9)
+dlcompare(list(p,p2),list("last.qp","legend"))
