@@ -9,7 +9,7 @@ uselegend.ggplot <- function
 }
 
 ### Geoms which need translation before applying Positioning Function.
-need.trans.ggplot <- c("density")
+need.trans.ggplot <- c()
 direct.label.ggplot <- function
 ### Direct label a ggplot2 grouped plot.
 (p,

@@ -44,9 +44,8 @@ iris2 <- melt(iris,id="Species")
 direct.label(densityplot(~value|variable,iris2,groups=Species,scales="free"))
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
-plot(direct.label(
-             densityplot(~ppp,loci,groups=type,n=500)
-             ))
+plot(direct.label(densityplot(~ppp,loci,groups=type,n=500)))
+print(direct.label(qplot(ppp,data=loci,colour=type,geom="density"),top.points))
 
 ## dotplot:
 plot(direct.label(dotplot(VADeaths,type="o"),angled.endpoints))
