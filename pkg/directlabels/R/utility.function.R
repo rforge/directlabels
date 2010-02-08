@@ -110,10 +110,13 @@ bumpup <- function(d,...){
 qp.labels <- function(var,spacer)list(calc.boxes,function(d,...){
   require(quadprog)
   d <- d[order(d[,var],decreasing=TRUE),]
+  ## sorts data so that m_1 is on top, m_n on bottom.
   n <- nrow(d)
   D <- diag(rep(1,n))
   A <- diag(rep(1,n))[,-n]-rbind(0,diag(rep(1,n-1)))
-  sol <- solve.QP(D,d[,var],A,d[,spacer][-1])
+  h <- d[,spacer]
+  b0 <- (h[-n]+h[-1])/2
+  sol <- solve.QP(D,d[,var],A,b0)
   d[,var] <- sol$solution
   d
 })

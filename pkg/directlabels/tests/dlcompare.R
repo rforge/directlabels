@@ -83,4 +83,4 @@ pfuns <- list("legend","direct labels"=
               list(cex=2,last.qp,dl.trans(x=x+0.1)))
 dlcompare(list(p,p2),pfuns)
 dlcompare(list(p),pfuns,rects=FALSE)
-dlcompare(list(p),list(pfuns[2],list(cex=c(0.5,1,2,4),last.bumpup,dl.trans(x=x+0.1),calc.boxes,draw.rects)),row.items="posfuns")
+dlcompare(list(p),list(pfuns[2],list(cex=c(0.5,1,2,4),last.qp,dl.trans(x=x+0.1),calc.boxes,draw.rects)),row.items="posfuns")
