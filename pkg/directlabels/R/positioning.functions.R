@@ -105,4 +105,5 @@ rug.mean <- function(d,...,end)
                    y=as.numeric(convertY(unit(end,"npc"),"native")),
                    vjust=0))
 
-
+### Label points at the top, making sure they don't collide.
+top.qp <- list(top.points,qp.labels("x","w"))
