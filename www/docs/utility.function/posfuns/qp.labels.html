@@ -17,17 +17,19 @@
 Positioning Function - qp.labels</h1>
 
 <p>Use a QP solver to find the best places to put the points on a
-line, subject to the constraint that they should not overlap
-(assumes they all have the same height/width -- NEED TO FIX).</p>
+line, subject to the constraint that they should not overlap</p>
 
 <pre>
 qp.labels &lt;- function(var,spacer)list(<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>,function(d,...){
   require(quadprog)
   d &lt;- d[order(d[,var],decreasing=TRUE),]
+  ## sorts data so that m_1 is on top, m_n on bottom.
   n &lt;- nrow(d)
   D &lt;- diag(rep(1,n))
   A &lt;- diag(rep(1,n))[,-n]-rbind(0,diag(rep(1,n-1)))
-  sol &lt;- solve.QP(D,d[,var],A,d[,spacer][-1])
+  h &lt;- d[,spacer]
+  b0 &lt;- (h[-n]+h[-1])/2
+  sol &lt;- solve.QP(D,d[,var],A,b0)
   d[,var] &lt;- sol$solution
   d
 })

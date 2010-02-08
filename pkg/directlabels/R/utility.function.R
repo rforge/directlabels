@@ -106,7 +106,6 @@ bumpup <- function(d,...){
 
 ### Use a QP solver to find the best places to put the points on a
 ### line, subject to the constraint that they should not overlap
-### (assumes they all have the same height/width -- NEED TO FIX).
 qp.labels <- function(var,spacer)list(calc.boxes,function(d,...){
   require(quadprog)
   d <- d[order(d[,var],decreasing=TRUE),]
