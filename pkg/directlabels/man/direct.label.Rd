@@ -75,6 +75,8 @@ print(direct.label(qplot(ppp,data=loci,colour=type,geom="density"),top.points))
 
 ## dotplot:
 plot(direct.label(dotplot(VADeaths,type="o"),angled.endpoints))
+plot(direct.label(dotplot(VADeaths,type="o"),
+                  list(cex=0.7,dl.trans(y=y+0.1),top.qp)))
 ## Try the same plot with ggplot2
 vad <- as.data.frame.table(VADeaths)
 names(vad) <- c("age","demographic","deaths")

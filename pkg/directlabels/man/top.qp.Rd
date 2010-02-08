@@ -1,14 +1,14 @@
-\name{first.qp}
-\alias{first.qp}
+\name{top.qp}
+\alias{top.qp}
 \docType{data}
-\title{first qp}
-\description{Label first points from QP solver that ensures labels do not collide.}
-\usage{first.qp}
+\title{top qp}
+\description{Label points at the top, making sure they don't collide.}
+\usage{top.qp}
 \format{
   The format is:
 List of 2
  $ :function (d, ...)  
-  ..- attr(*, "source")= chr "dl.indep(data.frame(d[which.min(d$x), ], hjust = 1, vjust = 0.5))"
+  ..- attr(*, "source")= chr "dl.indep(data.frame(d[which.max(d$y), ], hjust = 0.5, vjust = 0))"
  $ :List of 2
   ..$ :function (d, ...)  
   .. ..- attr(*, "source")= chr [1:21] "function(d,...)" ...
