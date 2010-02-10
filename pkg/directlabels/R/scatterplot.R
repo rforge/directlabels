@@ -1,6 +1,6 @@
 ### Positioning Function for the mean of each cluster of points.
 get.means <-
-  dl.indep(data.frame(x=mean(d$x),y=mean(d$y)))
+  dl.indep(unique(transform(d,x=mean(x),y=mean(y))))
 
 perpendicular.lines <- function
 ### Draw a line between the centers of each cluster, then draw a
@@ -15,8 +15,7 @@ perpendicular.lines <- function
  ...
 ### ignored.
  ){
-  means <- get.means(d)
-  names(means)[2:3] <- c("mx","my")
+  means <- rename(get.means(d),list(x="mx",y="my",groups="groups"))
   big <- merge(d,means,by="groups")
   fit <- lm(my~mx,means)
   b <- coef(fit)[1]
@@ -137,3 +136,43 @@ empty.grid.2 <- empty.grid.fun(perpendicular.lines)
 
 ### Use empty.grid with extreme.points.
 extreme.grid <- empty.grid.fun(extreme.points)
+
+follow.points <- function
+### Scatterplot positioning function that draws a line between each
+### center and every point, then follows the line out far enough to
+### give a box that will not collide with it. Out of all the boxes
+### constructed in this way that do not contain any points, take the
+### one which has the smallest distance to the center. FIXME: does not
+### work with ggplot2 since the ggplot2 backend doesn't yet have
+### support of actually knowing how big the text bounding box is.
+(d,debug=FALSE,...){
+  allm <- enlarge.box(calc.boxes(get.means(d)))
+  if(debug)draw.rects(allm)
+  labtab <- data.frame()
+  for(g in levels(d$groups)){
+    x <- d
+    m <- subset(allm,groups==g)
+    x$a <- x$y - m$y
+    x$b <- x$x - m$x
+    x$h <- sqrt(x$a^2+x$b^2) ## hypotenuse of triangle, not box height!
+    x$x <- x$x + m$w/2 * x$b/x$h *1.01 ## b/h = cos(theta)
+    x$y <- x$y + m$h/2 * x$a/x$h *1.01 ## a/h = sin(theta)
+    x$dist <- (x$x-m$x)^2+(x$y-m$y)^2
+    x <- transform(x,
+                   left=x-m$w/2,right=x+m$w/2,
+                   top=y+m$h/2,bottom=y-m$h/2)
+    x$points <- sapply(1:nrow(x),function(i)inside(d,x[i,]))
+    ## consider only subset of boxes that contain no points
+    x <- subset(x,points==0)
+    ## take the box with the minimal distance
+    x <- subset(x,dist==min(dist))[1,]
+    labtab <- rbind(labtab,transform(x,x=x,y=y,groups=g))
+    ## add the box's 4 points to the list of points
+    newpoints <- d[1:4,]
+    newpoints$x <- c(x$left,x$right,x$right,x$left)
+    newpoints$groups <- g
+    newpoints$y <- c(x$top,x$top,x$bottom,x$bottom)
+    d <- rbind(d,newpoints)
+  }
+  labtab
+}

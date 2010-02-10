@@ -65,13 +65,23 @@ calc.boxes <- function(d,...){
   }
   w <- convert("Width")
   h <- convert("Height")
-  hjust <- vjust <- 0.5 ##defaults in case unassigned in d
-  d <- transform(d,
-                 top=y+(1-vjust)*h,bottom=y-vjust*h,
-                 right=x+(1-hjust)*w,left=x-hjust*w,
-                 h=h,w=w)
+  calc.borders(transform(d,w=w,h=h))
 }
 
+calc.borders <- function
+### Calculate bounding box based on newly calculated width and height.
+(d,
+### Data frame of point labels, with new widths and heights in the w
+### and h columns.
+ ...
+### ignored.
+ ){
+  hjust <- vjust <- 0.5 ##defaults in case unassigned in d
+  transform(d,
+            top=y+(1-vjust)*h,bottom=y-vjust*h,
+            right=x+(1-hjust)*w,left=x-hjust*w,
+            h=h,w=w)
+}
 ### Positioning Function that draws boxes around label positions. Need
 ### to have previously called calc.boxes. Does not edit the data
 ### frame.
@@ -119,3 +129,22 @@ qp.labels <- function(var,spacer)list(calc.boxes,function(d,...){
   d[,var] <- sol$solution
   d
 })
+
+### Make text bounding box larger by some amount.
+enlarge.box <- function(d,...){
+  if(!"h"%in%names(d))stop("need to have already calculated height and width.")
+  h <- unit(d$h,"native")
+  d$h <- d$h*2
+  d$w <- d$w+as.numeric(convertWidth(convertHeight(h,"inches"),"native"))
+  calc.borders(d)
+}
+
+inside <- function
+### Calculate how many points fall in a box.
+(p,
+### data frame of points with columns x and y and many rows.
+ box
+### data frame of 1 row with columns left right top bottom.
+ ){
+  sum(p$x>box$left & p$x<box$right & p$y<box$top & p$y>box$bottom)
+}

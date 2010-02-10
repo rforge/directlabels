@@ -8,33 +8,30 @@
 	charset=UTF-8" />
 	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
 	rel="stylesheet" type="text/css" />
-	<title>directlabels documentation - calc.boxes</title>
+	<title>directlabels documentation - calc.borders</title>
   </head>
 
 <body>
 
 <h1><a href="../../index.html">directlabels</a> - utility.function -
-Positioning Function - calc.boxes</h1>
+Positioning Function - calc.borders</h1>
 
-<p>Calculate boxes around labels, for collision detection.</p>
+<p>Calculate bounding box based on newly calculated width and height.</p>
 
 <pre>
-calc.boxes &lt;- function(d,...){
-  vp &lt;- current.viewport()
-  convert &lt;- function(worh){
-    conv &lt;- get(paste("convert",worh,sep=""))
-    stri &lt;- get(paste("string",worh,sep=""))
-    with(d,sapply(seq_along(groups),function(i){
-      if("cex"%in%names(d))vp$gp &lt;- gpar(cex=cex[i])
-      pushViewport(vp)
-      w &lt;- conv(stri(as.character(groups[i])),"native")
-      popViewport()
-      w
-    }))
-  }
-  w &lt;- convert("Width")
-  h &lt;- convert("Height")
-  <a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>(transform(d,w=w,h=h))
+calc.borders &lt;- function
+### Calculate bounding box based on newly calculated width and height.
+(d,
+### Data frame of point labels, with new widths and heights in the w
+### and h columns.
+ ...
+### ignored.
+ ){
+  hjust &lt;- vjust &lt;- 0.5 ##defaults in case unassigned in d
+  transform(d,
+            top=y+(1-vjust)*h,bottom=y-vjust*h,
+            right=x+(1-hjust)*w,left=x-hjust*w,
+            h=h,w=w)
 }
 </pre>
 
