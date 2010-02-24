@@ -42,14 +42,6 @@ direct.label(p,"<a href="../posfuns/empty.grid.2.html">empty.grid.2</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="empty.grid.collide" src="../../scatterplot/mpg.empty.grid.collide.png" /></td>
-  <td><p>Start with points from empty.grid then attempt to adjust labels so
-that they do not collide with any points.</p>
-    <pre>
-direct.label(p,"<a href="../posfuns/empty.grid.collide.html">empty.grid.collide</a>")
-  </pre></td>
-</tr>
-<tr>
   <td><img alt="extreme.grid" src="../../scatterplot/mpg.extreme.grid.png" /></td>
   <td><p>Use empty.grid with extreme.points.</p>
     <pre>
@@ -91,6 +83,15 @@ center. For each cluster, return the point the lies furthest out
 along this line.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/perpendicular.lines.html">perpendicular.lines</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="smart.grid" src="../../scatterplot/mpg.smart.grid.png" /></td>
+  <td><p>Use bounding box information with a small empty.grid. TODO: does
+not work with ggplot2 since the backend does not support bounding
+box calculation.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/smart.grid.html">smart.grid</a>")
   </pre></td>
 </tr>
 </table>

@@ -16,17 +16,19 @@
 <h1><a href="../../index.html">directlabels</a> - utility.function -
 Positioning Function - inside</h1>
 
-<p>Calculate how many points fall in a box.</p>
+<p>Calculate for each box how many points are inside.</p>
 
 <pre>
 inside &lt;- function
-### Calculate how many points fall in a box.
-(p,
-### data frame of points with columns x and y and many rows.
- box
-### data frame of 1 row with columns left right top bottom.
+### Calculate for each box how many points are inside.
+(boxes,
+### Data frame of box descriptions, each row is 1 box, need columns
+### left right top bottom.
+ points
+### Data frame of points, each row is 1 point, need columns x y.
  ){
-  sum(p$x&gt;box$left &amp; p$x&lt;box$right &amp; p$y&lt;box$top &amp; p$y&gt;box$bottom)
+  sapply(1:nrow(boxes),function(i)<a href="../../utility.function/posfuns/in1box.html">in1box</a>(points,boxes[i,]))
+### Vector of point counts for each box.
 }
 </pre>
 

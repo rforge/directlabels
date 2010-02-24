@@ -1,0 +1,119 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+	<meta http-equiv="Content-Type" content="text/html;
+	charset=UTF-8" />
+	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
+	rel="stylesheet" type="text/css" />
+	<title>directlabels documentation - iris</title>
+  </head>
+
+<body>
+
+<h1><a href="../../index.html">directlabels</a> - scatterplot - example -
+iris</h1>
+
+<pre>
+p &lt;- xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species)
+</pre>
+
+<table>
+<tr>
+  <td><img alt="empty.grid" src="../../scatterplot/iris.empty.grid.png" /></td>
+  <td><p>Label placement method for scatterplots that ensures labels are
+placed in different places. A grid is drawn over the whole
+plot. Each cluster is considered in sequence and assigned to the
+point on this grid which is closest to the point given by
+loc.fun().</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/empty.grid.html">empty.grid</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="empty.grid.2" src="../../scatterplot/iris.empty.grid.2.png" /></td>
+  <td><p>Use empty.grid with perpendicular.lines.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/empty.grid.2.html">empty.grid.2</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="extreme.grid" src="../../scatterplot/iris.extreme.grid.png" /></td>
+  <td><p>Use empty.grid with extreme.points.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/extreme.grid.html">extreme.grid</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="extreme.points" src="../../scatterplot/iris.extreme.points.png" /></td>
+  <td><p>Label the points furthest from the origin for each group.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/extreme.points.html">extreme.points</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="follow.points" src="../../scatterplot/iris.follow.points.png" /></td>
+  <td><p>Scatterplot positioning function that draws a line between each
+center and every point, then follows the line out far enough to
+give a box that will not collide with it. Out of all the boxes
+constructed in this way that do not contain any points, take the
+one which has the smallest distance to the center. FIXME: does not
+work with ggplot2 since the ggplot2 backend doesn't yet have
+support of actually knowing how big the text bounding box is.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/follow.points.html">follow.points</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="get.means" src="../../scatterplot/iris.get.means.png" /></td>
+  <td><p>Positioning Function for the mean of each cluster of points.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/get.means.html">get.means</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="perpendicular.lines" src="../../scatterplot/iris.perpendicular.lines.png" /></td>
+  <td><p>Draw a line between the centers of each cluster, then draw a
+perpendicular line for each cluster that goes through its
+center. For each cluster, return the point the lies furthest out
+along this line.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/perpendicular.lines.html">perpendicular.lines</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="smart.grid" src="../../scatterplot/iris.smart.grid.png" /></td>
+  <td><p>Use bounding box information with a small empty.grid. TODO: does
+not work with ggplot2 since the backend does not support bounding
+box calculation.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/smart.grid.html">smart.grid</a>")
+  </pre></td>
+</tr>
+</table>
+
+<center>
+<table>
+<tr><td>Please send email
+to <a href="http://r-forge.r-project.org/sendmessage.php?touser=1571">Toby
+Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
+contribute, thanks!</td>
+</tr>
+<tr><td align="center">Documentation website generated from comments
+in R source code
+using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
+</tr>
+<tr>
+<td align="center">
+    <a href="http://validator.w3.org/check?uri=referer">validate</a>
+</td>
+</tr>
+</table>
+
+</center>
+
+</body>
+
+</html>
