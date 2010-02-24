@@ -36,8 +36,6 @@ perpendicular.lines <- function
   ##dd <- ddply(means,.(groups),summarise,x=x+sdx*seq(0,-2,l=5)[-1])
   ##dd$y <- mdply(dd,function(groups,x)f(groups)(x))$x
   if(debug){
-    ## First find the mean of each cluster
-    grid.points(means$mx,means$my,default.units="native")
     ## myline draws a line over the range of the data for a given fun F
     myline <- function(F)
       grid.lines(range(d$x),F(range(d$x)),default.units="native")
@@ -83,6 +81,7 @@ empty.grid <- function
                   top=y+L$y$diff,
                   bottom=y-L$y$diff)
   if(debug){
+    with(loc,grid.points(x,y,default.units="native"))
     gridlines <- with(g2,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
     drawlines <- function(a,b,c,d)
       grid.segments(a,b,c,d,"native",gp=gpar(col="grey"))
