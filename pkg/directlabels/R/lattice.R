@@ -131,7 +131,7 @@ defaultpf.lattice <- function
   ## a list that specifies a manual override to these defaults
   switch(myget("lattice.fun.name"),
          dotplot=ldefault,
-         xyplot=switch(myget("type"),p="empty.grid.2",ldefault),
+         xyplot=switch(myget("type"),p="smart.grid",ldefault),
          densityplot="top.points",
          qqmath=ldefault,
          rug="rug.mean",
