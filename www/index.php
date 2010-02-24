@@ -43,14 +43,7 @@ echo $contents; } ?>
  -->
 <!-- end of project description -->
 
-<p>
-directlabels:
-<a href="docs/index.html">Positioning Function examples database</a>
--
-<a href="motivation.html">Motivation</a>
--
-<a href="examples.php">Advanced examples</a>
-</p>
+<h1>Easily add direct labels to plots using the directlabels package</h1>
 
 <table>
 <tr>
@@ -67,24 +60,19 @@ direct.label(xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Specie
 <p>This package is an attempt to make direct labeling a reality in
 everyday statistical practice by making available a body of useful
 functions that make direct labeling of common plots easy to do with
-high-level plotting systems such as lattice and ggplot2:</p>
-
-<pre>
-loci &lt;- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
-                   type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
-## Just add direct.label() around your plot:
-direct.label(densityplot(~ppp,loci,groups=type,n=500))
-direct.label(qplot(ppp,data=loci,colour=type,geom="density"))
-</pre>
-
-<table><tr>
-<td><img src="density.png" alt="lattice densityplot" /></td>
-<td><img src="densityplot-ggplot2.png" alt="densityplot in ggplot2" /></td>
-</tr>
-</table>
+high-level plotting systems such as lattice and ggplot2. The main
+function that the package provides is <tt>direct.label(p)</tt>, which
+takes a lattice or ggplot2 plot <tt>p</tt> and adds direct labels.</p>
 
 <p>
-<a href="examples.php">More examples...</a>
+directlabels website navigation:
+<ul>
+<li><a href="docs/index.html">Positioning Function examples database</a></li>
+<li><a href="motivation.html">When are direct labels better than
+legends? Why not just add direct labels by hand?</a></li>
+<li><a href="examples.php">Several advanced examples</a></li>
+<li>Smart label Positioning Functions that avoid label collisions</li>
+</ul>
 </p>
 
 <h2>An extensible framework for thinking about direct labeling

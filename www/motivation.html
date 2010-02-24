@@ -33,14 +33,32 @@ densityplot(~ppp,loci,groups=type,auto.key=list(space="top",columns=3))
 </pre>
 <img src="confusing.png" />
 
-<p>Look closely. Is the curve for BAL on the left or right? An easy
-fix for this problem would be putting the label right next to the
-colored lines. Then we would be using the data for label positioning,
-which is inherently more intuitive and obvious to decode.</p>
+<p>Look closely. Is the curve for BAL on the left or right? One way to
+fix this possible decoding problem would be by putting the label right
+next to the colored lines. Then we would be using the data for label
+positioning, which is inherently more intuitive and obvious to
+decode.</p>
 
 <p>"But," you say, "lattice and ggplot2 make it so easy to make these
-legends!  Direct labeling is a lot of
-tedious work! I can live with these confusing legends!"</p>
+legends!  Direct labeling is a lot of tedious work! I can live with
+these confusing legends!"</p>
+
+<p><b>Don't live with these confusing legends any more!</b> To add
+direct labels, just put <tt>direct.label()</tt> around your plot:</a>
+
+<pre>
+direct.label(densityplot(~ppp,loci,groups=type,n=500))
+direct.label(qplot(ppp,data=loci,colour=type,geom="density"))
+</pre>
+
+<table><tr>
+<td><img src="density.png" alt="lattice densityplot" /></td>
+<td><img src="densityplot-ggplot2.png" alt="densityplot in ggplot2" /></td>
+</tr>
+</table>
+
+<p>It couldn't be easier, and the clarity of the results are often
+dramatic.</p>
 
 <h2>Adding direct labels by hand is difficult. Instead, use the
 directlabels package.</h2>
