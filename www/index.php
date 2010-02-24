@@ -56,6 +56,7 @@ directlabels:
 <tr>
   <td><img src="iris-scatter.png" alt="direct labeled iris data" /></td>
   <td><pre>
+install.packages(c("ggplot2","ElemStatLearn","mlmRev"))
 install.packages("directlabels",repos="http://r-forge.r-project.org")
 library(directlabels)
 direct.label(xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species))
