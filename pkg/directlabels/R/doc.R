@@ -98,7 +98,7 @@ dldoc <- function # Make directlabels documentation
         thumbfile <- file.path(subdir,paste(p$name,f$name,"thumb.png",sep="."))
         if(!file.exists(thumbfile)){
           cmd <- paste("convert -geometry 64x64",pngfile,thumbfile)
-          cat(" ",thumbfile,sep="")
+          cat("*")
           system(cmd)
         }
       }
@@ -137,7 +137,7 @@ dldoc <- function # Make directlabels documentation
   res <- apply(m,1,makehtml)
   extract.links <- function(L){
     sapply(names(L),function(N)if(N=="type")L[[N]] else {
-      ##if(L$type=="utility.function")browser()
+      coll <- if(N=="posfuns")"<br />" else ""
       x <- sapply(L[[N]],function(x)x$name)
       content <- if(N=="plots"){
         ann <- paste(x,L$posfuns[[1]]$name,sep=".")
@@ -146,7 +146,7 @@ dldoc <- function # Make directlabels documentation
       } else x
       if(length(x))
         paste(paste("<a href=\"",L$type,"/",N,"/",x,".html\">",content,"</a>",
-                    sep=""),collapse="\n<br />\n")
+                    sep=""),collapse=paste("\n",coll,"\n",sep=""))
       else x
     },simplify=FALSE)
   }
