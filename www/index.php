@@ -52,36 +52,16 @@ directlabels:
 <a href="examples.php">Advanced examples</a>
 </p>
 
-<p>The idea is very simple. You just made a figure where you drew a
-bunch of lines or points in different colors, according to some
-categorical variable. Now when you look at the figure, how do you
-figure out which color corresponds to which value of that
-variable?</p>
-
-<p>In most statistical packages the answer to this question is given
-by a <b>legend or key</b> that you have to decode. Legends can be at
-best, hard to decode, or at worst, downright confusing. Here is a very
-confusing example that motivates the use of direct labeling:
-
-<pre>
-library(lattice)
-loci &lt;- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
-                   type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
-densityplot(~ppp,loci,groups=type,auto.key=list(space="top",columns=3))
-</pre>
-<img src="confusing.png" />
-
-<p>Look closely. Is the curve for BAL on the left or right? An easy
-fix for this problem would be putting the label right next to the
-colored lines. Then we would be using the data for label positioning,
-which is inherently more intuitive and obvious to decode.</p>
-
-<p>"But," you say, "lattice and ggplot2 make it so easy to make these
-legends!  <a href="motivation.html">Direct labeling is a lot of
-tedious work</a>! I can live with these confusing legends!"</p>
-
-<h2>Do not live with confusing legends any longer. Instead, use direct
-labels.</h2>
+<table>
+<tr>
+  <td><img src="iris-scatter.png" alt="direct labeled iris data" /></td>
+  <td><pre>
+install.packages("directlabels",repos="http://r-forge.r-project.org")
+library(directlabels)
+direct.label(xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species))
+    </pre></td>
+  </tr>
+</table>
 
 <p>This package is an attempt to make direct labeling a reality in
 everyday statistical practice by making available a body of useful
@@ -89,8 +69,6 @@ functions that make direct labeling of common plots easy to do with
 high-level plotting systems such as lattice and ggplot2:</p>
 
 <pre>
-install.packages("directlabels",repos="http://r-forge.r-project.org")
-library(directlabels)
 loci &lt;- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
 ## Just add direct.label() around your plot:
