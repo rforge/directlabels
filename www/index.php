@@ -126,7 +126,7 @@ the left or right of the lines:</p>
 
 <pre>
 data(BodyWeight,package="nlme")
-p &lt;- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
+p <- qplot(Time,weight,data=BodyWeight,colour=Rat,geom="line",facets=.~Diet)
 direct.label(p,<a href="docs/lineplot/posfuns/first.points.html">first.points</a>)
 direct.label(p,<a href="docs/lineplot/posfuns/last.points.html">last.points</a>)
 </pre>
@@ -139,7 +139,7 @@ groups</tt>. first.points simply returns the rows of the data frame
 which correspond to the first points for each group. We plot a direct
 label for each row returned by the Positioning Function.</p>
 
-<img src="compare-long.png" alt="direct label longitudinal data" />
+<img src="rat-ggplot2-firstlast.png" alt="rat data plotted in ggplot2" />
 
 <p>The power of the directlabels system is the fact that you can write
 your own Positioning Functions, and they can be reused for different
