@@ -30,6 +30,8 @@ direct.label(qpdl,first.points)
 direct.label(qpdl)
 ggsave("rat-ggplot2.png",dpi=60);system("display rat-ggplot2.png")
 
+f="../www/rat-ggplot2-firstlast.png";w=1.5;png(f,h=450*w,w=450*w,res=50,pointsize=16);dlcompare(list(p),list("first.points","last.points"),FALSE,"");dev.off();system(paste("display",f))
+
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
 ## ggplot2 plot
