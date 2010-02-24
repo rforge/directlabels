@@ -68,6 +68,9 @@ calc.boxes <- function(d,...){
   calc.borders(transform(d,w=w,h=h))
 }
 
+### Calculate big boxes around the means of each cluster.
+big.boxes <- function(d,...)enlarge.box(calc.boxes(get.means(d)))
+
 calc.borders <- function
 ### Calculate bounding box based on newly calculated width and height.
 (d,
@@ -139,7 +142,7 @@ enlarge.box <- function(d,...){
   calc.borders(d)
 }
 
-inside <- function
+in1box <- function
 ### Calculate how many points fall in a box.
 (p,
 ### data frame of points with columns x and y and many rows.
@@ -147,4 +150,16 @@ inside <- function
 ### data frame of 1 row with columns left right top bottom.
  ){
   sum(p$x>box$left & p$x<box$right & p$y<box$top & p$y>box$bottom)
+}
+
+inside <- function
+### Calculate for each box how many points are inside.
+(boxes,
+### Data frame of box descriptions, each row is 1 box, need columns
+### left right top bottom.
+ points
+### Data frame of points, each row is 1 point, need columns x y.
+ ){
+  sapply(1:nrow(boxes),function(i)in1box(points,boxes[i,]))
+### Vector of point counts for each box.
 }

@@ -66,69 +66,63 @@ empty.grid <- function
  ...
 ### ignored.
  ){
-  ##browser()
   loc <- loc.fun(d,debug)
   NREP <- 10
   gl <- function(v){
     s <- seq(from=min(d[,v]),to=max(d[,v]),l=NREP)
-    list(centers=s,diff=(s[2]-s[1])/2)
+    list(centers=s,diff=(s[2]-s[1]))
   }
   L <- sapply(c("x","y"),gl,simplify=FALSE)
-  g <- expand.grid(x=L$x$centers,y=L$y$centers)
-  g2 <- transform(g,
-                  left=x-L$x$diff,
-                  right=x+L$x$diff,
-                  top=y+L$y$diff,
-                  bottom=y-L$y$diff)
-  if(debug){
-    with(loc,grid.points(x,y,default.units="native"))
-    gridlines <- with(g2,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
+  g <- calc.borders(expand.grid(x=L$x$centers,y=L$y$centers,
+                                w=L$x$diff,h=L$y$diff))
+  if(debug)with(loc,grid.points(x,y,default.units="native"))
+  draw <- function(g){
+    gridlines <- with(g,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
     drawlines <- function(a,b,c,d)
       grid.segments(a,b,c,d,"native",gp=gpar(col="grey"))
     with(gridlines,drawlines(min(x),y,max(x),y))
     with(gridlines,drawlines(x,min(y),x,max(y)))
   }
-  inbox <- function(x,y,left,right,top,bottom)
-    c(data=sum(d$x>left & d$x<right & d$y>bottom & d$y<top))
-  count.tab <- cbind(mdply(g2,inbox),expand.grid(i=1:NREP,j=1:NREP))
-  if(debug){
-    count.mat <- matrix(count.tab$data,nrow=NREP,ncol=NREP,
-                        byrow=TRUE,dimnames=list(1:NREP,1:NREP))[NREP:1,]
-    mode(count.mat) <- "character"
-  }
-  g3 <- transform(subset(count.tab,data==0))
   res <- data.frame()
   for(v in loc$groups){
     r <- subset(loc,groups==v)
-    len <- sqrt((r$x-g3$x)^2+(r$y-g3$y)^2)
-    i <- which.min(len) ## the box to use for this group
-    if(debug)
-      count.mat[as.character(g3[i,"j"]),
-                as.character(g3[i,"i"])] <- paste("*",v,sep="")
-    res <- rbind(res,g3[i,c("x","y")])
-    therow <- g3[i,]
-    ## select new subset of boxes for next label
-    g3 <- subset(g3,!(abs(i-therow$i)<=1 & j==therow$j))
+    boxes <- if("left"%in%names(loc)){
+      hgrid <- function(x,w){
+        hboxes <- ceiling(diff(range(d[,x]))/r[,w])
+        (-1:(hboxes+1))*r[,w]+min(d[,x])
+      }
+      calc.borders(expand.grid(x=hgrid("x","w"),y=hgrid("y","h"),w=r$w,h=r$h))
+    }else g
+    if(debug)draw(boxes)
+    boxes <- cbind(boxes,data=inside(boxes,d))
+    no.points <- transform(subset(boxes,data==0),
+                           len=(r$x-x)^2+(r$y-y)^2)
+    best <- subset(no.points,len==min(len))[1,]
+    res <- rbind(res,cbind(best,groups=v))
+    ## add points to cloud
+    newpts <- with(best,data.frame(x=c(left,left,right,right,x,x,x,left,right),
+                                   y=c(bottom,top,top,bottom,top,bottom,y,y,y)))
+    newpts <- data.frame(newpts,
+                         subset(d,select=-c(x,y))[1,,drop=FALSE],
+                         row.names=NULL)
+    d <- rbind(d,newpts[,names(d)])
   }
-  if(debug)print(count.mat)
-  cbind(res,groups=loc$groups)
+  if(debug)with(d,grid.points(x,y))
+  res
 ### Data frame with columns groups x y, 1 line for each group, giving
 ### the positions on the grid closest to each cluster.
 }
-
-### Start with points from empty.grid then attempt to adjust labels so
-### that they do not collide with any points.
-empty.grid.collide <- function(d,...){
-  loc <- calc.boxes(empty.grid(d,...))
-  draw.rects(loc)
-  print(loc)
-}  
 
 ### Label the points furthest from the origin for each group.
 extreme.points <- dl.indep({
   d <- transform(d,d=sqrt(x^2+y^2))
   d[which.max(d$d),]
 })
+
+### Use bounding box information with a small empty.grid. TODO: does
+### not work with ggplot2 since the backend does not support bounding
+### box calculation.
+smart.grid <- empty.grid.fun(big.boxes)
 
 ### Use empty.grid with perpendicular.lines.
 empty.grid.2 <- empty.grid.fun(perpendicular.lines)
@@ -145,7 +139,7 @@ follow.points <- function
 ### work with ggplot2 since the ggplot2 backend doesn't yet have
 ### support of actually knowing how big the text bounding box is.
 (d,debug=FALSE,...){
-  allm <- enlarge.box(calc.boxes(get.means(d)))
+  allm <- big.boxes(d)
   if(debug)draw.rects(allm)
   labtab <- data.frame()
   for(g in levels(d$groups)){
@@ -160,7 +154,7 @@ follow.points <- function
     x <- transform(x,
                    left=x-m$w/2,right=x+m$w/2,
                    top=y+m$h/2,bottom=y-m$h/2)
-    x$points <- sapply(1:nrow(x),function(i)inside(d,x[i,]))
+    x$points <- inside(x,d)
     ## consider only subset of boxes that contain no points
     x <- subset(x,points==0)
     ## take the box with the minimal distance
