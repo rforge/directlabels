@@ -1,18 +1,18 @@
 \name{inside}
 \alias{inside}
 \title{inside}
-\description{Calculate how many points fall in a box.}
+\description{Calculate for each box how many points are inside.}
 \usage{
-inside(p, box)
+inside(boxes, points)
 }
 \arguments{
-  \item{p}{data frame of points with columns x and y and many rows.}
-  \item{box}{data frame of 1 row with columns left right top bottom.}
+  \item{boxes}{Data frame of box descriptions, each row is 1 box, need columns
+left right top bottom.}
+  \item{points}{Data frame of points, each row is 1 point, need columns x y.}
 }
 \details{
 }
-\value{
-}
+\value{Vector of point counts for each box.}
 \references{
 }
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}

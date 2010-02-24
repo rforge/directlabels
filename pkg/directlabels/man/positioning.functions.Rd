@@ -129,18 +129,26 @@ mpgf <- fortify(m,mpg)
 p <- xyplot(.resid~.fitted,mpgf,groups=factor(cyl))
 },
 {
+p <- xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species)
+},
+{
+data(mpg,package="ggplot2")
+p <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,
+       main="Fuel efficiency depends on car size")
+},
+{
 data(mpg,package="ggplot2")
 p <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
       main="Fuel efficiency depends on car size")
 })){
   print(direct.label(p,"empty.grid"))
   print(direct.label(p,"empty.grid.2"))
-  print(direct.label(p,"empty.grid.collide"))
   print(direct.label(p,"extreme.grid"))
   print(direct.label(p,"extreme.points"))
   print(direct.label(p,"follow.points"))
   print(direct.label(p,"get.means"))
   print(direct.label(p,"perpendicular.lines"))
+  print(direct.label(p,"smart.grid"))
 }
 
 }
