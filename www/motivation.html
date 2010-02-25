@@ -47,6 +47,7 @@ these confusing legends!"</p>
 direct labels, just put <tt>direct.label()</tt> around your plot:</a>
 
 <pre>
+library(directlabels)
 direct.label(densityplot(~ppp,loci,groups=type,n=500))
 direct.label(qplot(ppp,data=loci,colour=type,geom="density"))
 </pre>
@@ -57,7 +58,7 @@ direct.label(qplot(ppp,data=loci,colour=type,geom="density"))
 </tr>
 </table>
 
-<p>It couldn't be easier, and the clarity of the results are often
+<p>It couldn't be easier, and the clarity of the results is often
 dramatic.</p>
 
 <h2>Adding direct labels by hand is difficult. Instead, use the
