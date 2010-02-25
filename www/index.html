@@ -2,46 +2,18 @@
 <!-- This is the project specific website template -->
 <!-- It can be changed as liked or replaced by other content -->
 
-<?php
-
-$domain=ereg_replace('[^\.]*\.(.*)$','\1',$_SERVER['HTTP_HOST']);
-$group_name=ereg_replace('([^\.]*)\..*$','\1',$_SERVER['HTTP_HOST']);
-$themeroot='http://r-forge.r-project.org/themes/rforge/';
-
-echo '<?xml version="1.0" encoding="UTF-8"?>';
-?>
 <!DOCTYPE html
 	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en   ">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title><?php echo $group_name; ?></title>
+	<title>directlabels</title>
 	<link href="estilo1.css" rel="stylesheet" type="text/css" />
   </head>
 
 <body class="normal">
-
-<!-- R-Forge Logo
-<table border="0" width="100%" cellspacing="0" cellpadding="0">
-<tr><td>
-<a href="/"><img src="<?php echo $themeroot; ?>/images/logo.png" border="0" alt="R-Forge Logo" /> </a> </td> </tr>
-</table>
- -->
-
-<!-- get project title  -->
-<!-- own website starts here, the following may be changed as you like
-
-<?php if ($handle=fopen('http://'.$domain.'/export/projtitl.php?group_name='.$group_name,'r')){
-$contents = '';
-while (!feof($handle)) {
-	$contents .= fread($handle, 8192);
-}
-fclose($handle);
-echo $contents; } ?>
- -->
-<!-- end of project description -->
 
 <h1>Easily add direct labels to plots using the directlabels package</h1>
 
@@ -70,7 +42,7 @@ directlabels website navigation:
 <li><a href="docs/index.html">Positioning Function examples database</a></li>
 <li><a href="motivation.html">When are direct labels better than
 legends? Why not just add direct labels by hand?</a></li>
-<li><a href="examples.php">Several advanced examples</a></li>
+<li><a href="examples.html">Several advanced examples</a></li>
 <li>Smart label Positioning Functions that avoid label collisions</li>
 </ul>
 </p>
@@ -93,7 +65,7 @@ the left or right of the lines:</p>
 
 <pre>
 data(BodyWeight,package="nlme")
-p <- qplot(Time,weight,data=BodyWeight,colour=Rat,geom="line",facets=.~Diet)
+p &lt;- qplot(Time,weight,data=BodyWeight,colour=Rat,geom="line",facets=.~Diet)
 direct.label(p,<a href="docs/lineplot/posfuns/first.points.html">first.points</a>)
 direct.label(p,<a href="docs/lineplot/posfuns/last.points.html">last.points</a>)
 </pre>
@@ -122,7 +94,9 @@ using lattice and direct labels</a>" with <a
 href="HOCKING-latticedl-semin-r.R">R code examples</a>.</p>
 
 
-<p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
+<p>Return to
+the <a href="http://r-forge.r-project.org/projects/directlabels/"><strong>project
+summary page</strong></a>. </p>
 
 <center>
 <table>
