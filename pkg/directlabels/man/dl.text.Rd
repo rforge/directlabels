@@ -17,17 +17,12 @@ dl.text(labs, group.number, col.line = NULL, col.points = NULL, col = NULL, col.
   \item{type}{plot type}
   \item{\dots}{ignored}
 }
-\details{
-}
-\value{
-}
-\references{
-}
+
+
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

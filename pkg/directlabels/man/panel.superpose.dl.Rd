@@ -21,19 +21,14 @@ panel.groups function.}
   \item{type}{Plot type, used for default method dispatch.}
   \item{\dots}{Additional arguments to panel.superpose.}
 }
-\details{
-}
-\value{
-}
-\references{
-}
+
+
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
+
+
 \examples{loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
 library(directlabels)

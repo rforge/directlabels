@@ -10,17 +10,12 @@ empty.grid.fun(f)
   \item{f}{
 }
 }
-\details{
-}
-\value{
-}
-\references{
-}
+
+
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

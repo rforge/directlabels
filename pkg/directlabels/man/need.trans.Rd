@@ -8,10 +8,7 @@
   The format is:
  chr [1:2] "qqmath" "densityplot"
 }
-\details{
-}
-\source{
-}
-\references{
-}
-\examples{}
+
+
+
+

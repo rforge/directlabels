@@ -15,18 +15,14 @@ dl.move(groups, x, y)
   \item{y}{
 }
 }
-\details{
-}
+
 \value{A Positioning Function that moves a label into a good spot.}
-\references{
-}
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
+
+
 \examples{library(directlabels)
 data(mpg,package="ggplot2")
 scatter <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)

@@ -13,17 +13,12 @@ empty.grid.2(d, debug, ...)
   \item{\dots}{
 }
 }
-\details{
-}
-\value{
-}
-\references{
-}
+
+
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

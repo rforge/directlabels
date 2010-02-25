@@ -15,17 +15,12 @@ position_dl(method = NULL, debug = FALSE, orig = NULL, ...)
   \item{\dots}{
 }
 }
-\details{
-}
-\value{
-}
-\references{
-}
+
+
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

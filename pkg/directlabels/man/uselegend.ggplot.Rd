@@ -9,17 +9,12 @@ uselegend.ggplot(p, ...)
   \item{p}{The ggplot object.}
   \item{\dots}{Ignored.}
 }
-\details{
-}
-\value{
-}
-\references{
-}
+
+
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

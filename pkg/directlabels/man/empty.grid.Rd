@@ -17,17 +17,13 @@ each group, giving the point we will use to look for a close point
 on the grid, to put the group label.}
   \item{\dots}{ignored.}
 }
-\details{
-}
+
 \value{Data frame with columns groups x y, 1 line for each group, giving
 the positions on the grid closest to each cluster.}
-\references{
-}
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

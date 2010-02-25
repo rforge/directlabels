@@ -21,9 +21,7 @@ densityplot.R  ggplot2.R  positioning.functions.R
 doc.R lattice.R scatterplot.R contourplot.R\cr}
 }
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\references{
-}
+
 \keyword{ package }
-\seealso{
-}
-\examples{}
+
+

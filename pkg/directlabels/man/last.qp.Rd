@@ -15,10 +15,7 @@ List of 2
   ..$ :function (d, ...)  
   .. ..- attr(*, "source")= chr [1:13] "function(d,...)" ...
 }
-\details{
-}
-\source{
-}
-\references{
-}
-\examples{}
+
+
+
+

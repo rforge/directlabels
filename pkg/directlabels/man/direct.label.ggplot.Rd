@@ -10,16 +10,12 @@ direct.label.ggplot(p, method = NULL, debug = FALSE)
   \item{method}{Method for direct labeling as described in ?label.positions.}
   \item{debug}{Show debug output?}
 }
-\details{
-}
+
 \value{The ggplot object with direct labels added.}
-\references{
-}
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

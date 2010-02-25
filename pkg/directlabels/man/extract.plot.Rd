@@ -9,17 +9,12 @@ extract.plot(f)
 \arguments{
   \item{f}{R code file with plot example.}
 }
-\details{
-}
-\value{
-}
-\references{
-}
+
+
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

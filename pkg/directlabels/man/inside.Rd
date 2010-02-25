@@ -10,16 +10,12 @@ inside(boxes, points)
 left right top bottom.}
   \item{points}{Data frame of points, each row is 1 point, need columns x y.}
 }
-\details{
-}
+
 \value{Vector of point counts for each box.}
-\references{
-}
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

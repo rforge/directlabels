@@ -10,18 +10,14 @@ dl.trans(...)
 \arguments{
   \item{\dots}{Arguments to pass to transform.}
 }
-\details{
-}
+
 \value{A Positioning Function.}
-\references{
-}
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
+
+
 \examples{library(directlabels)
 complicated <- list(dl.trans(x=x+10),
                     dl.indep(d[-2,]),

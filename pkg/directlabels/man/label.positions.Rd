@@ -25,17 +25,13 @@ data frame is used to draw a direct label. See examples in
 will be printed.}
   \item{\dots}{Passed to Positioning Function(s).}
 }
-\details{
-}
+
 \value{Data frame of direct label positions. Each row describes the
 position of 1 label to be drawn later.}
-\references{
-}
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

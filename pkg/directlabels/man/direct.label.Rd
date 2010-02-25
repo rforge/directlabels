@@ -12,18 +12,14 @@ direct.label(p, method = NULL, debug = FALSE)
 ?label.positions.}
   \item{debug}{Show debug output?}
 }
-\details{
-}
+
 \value{The plot object, with direct labels added.}
-\references{
-}
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
+
+
 \examples{library(directlabels)
 
 data(mpg,package="ggplot2")

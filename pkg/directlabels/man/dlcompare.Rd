@@ -19,19 +19,14 @@ to annotate the plot.}
   \item{row.items}{If "plots" then put plots on the rows and method on the
 columns. Otherwise, do the opposite.}
 }
-\details{
-}
-\value{
-}
-\references{
-}
+
+
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
+
+
 \examples{library(directlabels)
 dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
 ddf <- melt(as.data.frame(dts),id="time")

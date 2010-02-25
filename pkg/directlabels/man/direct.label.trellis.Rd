@@ -14,16 +14,12 @@ function).}
   \item{method}{Method for direct labeling as described in ?label.positions.}
   \item{debug}{Show debug output?}
 }
-\details{
-}
+
 \value{The lattice plot.}
-\references{
-}
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

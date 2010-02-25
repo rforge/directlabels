@@ -16,17 +16,12 @@ lines2(d, offset = 0.3, ...)
   \item{offset}{Offset from 0 or 1 for the vjust values.}
   \item{\dots}{ignored.}
 }
-\details{
-}
-\value{
-}
-\references{
-}
+
+
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

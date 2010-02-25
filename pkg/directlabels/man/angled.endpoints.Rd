@@ -10,10 +10,7 @@ List of 2
  $    : chr "last.points"
  $ rot: num 30
 }
-\details{
-}
-\source{
-}
-\references{
-}
-\examples{}
+
+
+
+

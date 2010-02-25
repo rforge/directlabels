@@ -8,10 +8,7 @@
   The format is:
  NULL
 }
-\details{
-}
-\source{
-}
-\references{
-}
-\examples{}
+
+
+
+

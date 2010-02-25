@@ -9,17 +9,12 @@ in1box(p, box)
   \item{p}{data frame of points with columns x and y and many rows.}
   \item{box}{data frame of 1 row with columns left right top bottom.}
 }
-\details{
-}
-\value{
-}
-\references{
-}
+
+
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+

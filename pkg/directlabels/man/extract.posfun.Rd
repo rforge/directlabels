@@ -11,17 +11,13 @@ extract.posfun(f)
 can be used with examples defined in the doc/ subdirectory with
 the same name.}
 }
-\details{
-}
+
 \value{List of lists, each of which describes one Positioning Function
 defined in f.}
-\references{
-}
+
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
-\note{
-}
 
 
-\seealso{
-}
-\examples{}
+
+
+
