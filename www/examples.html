@@ -11,6 +11,16 @@
 				   
 <body>
 
+<h2>Labeling black and white plots for printout</h2>
+
+<pre>
+trellis.par.set(standard.theme(color=FALSE))
+p &lt;- xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species)
+direct.label(p)
+</pre>
+
+<img src="scatter-bw.png" alt="direct labeled black and white scatterplot" />
+
 <h2>Custom panel and panel.groups functions for the rat body weight data</h2>
 
 <p>If you want to use a custom display in lattice panels, you need to
