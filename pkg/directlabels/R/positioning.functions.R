@@ -87,7 +87,7 @@ label.positions <- function
 
 ### Transformation function for 1d densityplots.
 trans.densityplot <- dl.indep({
-  dens <- density(d$x)
+  dens <- density(d$x,na.rm=TRUE)
   data.frame(x=dens$x,y=dens$y)
 })
 trans.density <- trans.densityplot
