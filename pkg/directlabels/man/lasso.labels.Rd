@@ -10,8 +10,8 @@ List of 7
  $ rot: num 60
  $    :function (d, ...)  
   ..- attr(*, "source")= chr [1:6] "dl.indep()" ...
- $    :function (d, ...)  
-  ..- attr(*, "source")= chr [1:17] "function(d,...)" ...
+ $    :function (d, debug = FALSE, ...)  
+  ..- attr(*, "source")= chr [1:18] "function(d,debug=FALSE,...)" ...
  $    :function (d, ...)  
   ..- attr(*, "source")= chr "function(d,...)do.call(\"transform\",c(list(d),L))"
  $    :function (d, ...)  

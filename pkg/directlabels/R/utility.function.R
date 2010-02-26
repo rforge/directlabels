@@ -69,7 +69,7 @@ empty.grid.fun <- function(f)
 dl.jitter <- dl.trans(x=jitter(x),y=jitter(y))
 
 ### Calculate boxes around labels, for collision detection.
-calc.boxes <- function(d,...){
+calc.boxes <- function(d,debug=FALSE,...){
   vp <- current.viewport()
   convert <- function(worh){
     conv <- get(paste("convert",worh,sep=""))
@@ -77,6 +77,7 @@ calc.boxes <- function(d,...){
     with(d,sapply(seq_along(groups),function(i){
       if("cex"%in%names(d))vp$gp <- gpar(cex=cex[i])
       pushViewport(vp)
+      if(debug)grid.rect()
       w <- conv(stri(as.character(groups[i])),"native")
       popViewport()
       w

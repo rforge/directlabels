@@ -73,7 +73,7 @@ p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
               panel.xyplot(...)
               panel.abline(h=0)
             },
-            xlim=c(0,9),
+            xlim=c(0,10),
             auto.key=list(space="right",lines=TRUE,points=FALSE),
             ylab="scaled coefficients",
             xlab=expression(df(lambda)))
@@ -86,6 +86,8 @@ pfuns <- list("legend","direct labels"=
               list(cex=2,last.qp,dl.trans(x=x+0.1)),
               list(cex=c(0.5,1,2,4),last.qp,dl.trans(x=x+0.1),
                    calc.boxes,draw.rects))
-dlcompare(list(p,p2),pfuns[1:2])
-dlcompare(list(p),pfuns[1:2],rects=FALSE)
-dlcompare(list(p),pfuns[2:3],row.items="posfuns")
+dlcompare(list(p),pfuns,rects=FALSE,row.items="posfuns")
+## Interesting --- qp.last almost works here, but actually we are
+## getting the bounding boxes in the wrong viewport -> wrong size.
+dlcompare(list(p,p2),pfuns[1:2],rects=FALSE,debug=TRUE)
+

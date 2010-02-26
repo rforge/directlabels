@@ -19,7 +19,7 @@ Positioning Function - calc.boxes</h1>
 <p>Calculate boxes around labels, for collision detection.</p>
 
 <pre>
-calc.boxes &lt;- function(d,...){
+calc.boxes &lt;- function(d,debug=FALSE,...){
   vp &lt;- current.viewport()
   convert &lt;- function(worh){
     conv &lt;- get(paste("convert",worh,sep=""))
@@ -27,6 +27,7 @@ calc.boxes &lt;- function(d,...){
     with(d,sapply(seq_along(groups),function(i){
       if("cex"%in%names(d))vp$gp &lt;- gpar(cex=cex[i])
       pushViewport(vp)
+      if(debug)grid.rect()
       w &lt;- conv(stri(as.character(groups[i])),"native")
       popViewport()
       w
