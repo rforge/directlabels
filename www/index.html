@@ -55,9 +55,9 @@ problems</h2>
 label positions, then drawing the labels. Drawing the labels will
 always be taken care of for you, using the color of the corresponding
 group. Calculating label positions is also done for you for common
-plot types. For example, with the density plot above, the default
-behavior is to position each label above the mode of the corresponding
-density estimate.</p>
+plot types. For example, with the scatterplot above, the default
+behavior is to position each label close to the mean of the
+corresponding point cloud.</p>
 
 <p>If default label positions are not satisfactory, you can always
 specify your own label placement method, using the method= argument to
@@ -71,13 +71,14 @@ direct.label(p,<a href="docs/lineplot/posfuns/first.points.html">first.points</a
 direct.label(p,<a href="docs/lineplot/posfuns/last.points.html">last.points</a>)
 </pre>
 
-<p>Here first.points and last.points are <a
-href="docs/index.html">Positioning Functions</a> of the form
+<p>Here first.points and last.points
+are <a href="docs/index.html">Positioning Functions</a> of the form
 function(d,...){return(data.frame(x=,y=,groups=))}, where d is all the
 data to plot, as a data frame with columns <tt>x y
 groups</tt>. first.points simply returns the rows of the data frame
-which correspond to the first points for each group. We plot a direct
-label for each row returned by the Positioning Function.</p>
+which correspond to the first points for each group. The directlabels
+package plots a direct label for each row returned by the Positioning
+Function.</p>
 
 <img src="rat-ggplot2-firstlast.png" alt="rat data plotted in ggplot2" />
 
