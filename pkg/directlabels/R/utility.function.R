@@ -7,6 +7,7 @@ dl.combine <- function # Combine output of several methods
   FUNS <- lapply(L,eval)
   function(d,...){
     dfs <- lapply(FUNS,eval.list,d)
+    res <- data.frame()
     for(df in dfs){
       if(nrow(res))res <- merge(df,res,all=TRUE)
       else res <- df
