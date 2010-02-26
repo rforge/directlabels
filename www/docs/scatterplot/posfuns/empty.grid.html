@@ -42,13 +42,21 @@ empty.grid &lt;- function
  ){
   loc &lt;- loc.fun(d,debug)
   NREP &lt;- 10
+  gridpts &lt;- d
   gl &lt;- function(v){
-    s &lt;- seq(from=min(d[,v]),to=max(d[,v]),l=NREP)
-    list(centers=s,diff=(s[2]-s[1]))
+    s &lt;- seq(min(gridpts[,v]),max(gridpts[,v]),l=NREP)
+    if(expand){
+      dif &lt;- s[2]-s[1]
+      s &lt;- seq(min(gridpts[,v])-expand*dif,
+               max(gridpts[,v])+expand*dif,
+               l=NREP+2*expand)
+    }
+    list(centers=s,diff=s[2]-s[1])
   }
-  L &lt;- sapply(c("x","y"),gl,simplify=FALSE)
-  g &lt;- <a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>(expand.grid(x=L$x$centers,y=L$y$centers,
-                                w=L$x$diff,h=L$y$diff))
+  hgrid &lt;- function(x,w){
+    hboxes &lt;- floor(diff(range(gridpts[,x]))/r[,w])
+    (-expand:(hboxes+expand-1))*r[,w]+min(gridpts[,x])+r[,w]/2
+  }
   if(debug)with(loc,grid.points(x,y,default.units="native"))
   draw &lt;- function(g){
     gridlines &lt;- with(g,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
@@ -60,17 +68,22 @@ empty.grid &lt;- function
   res &lt;- data.frame()
   for(v in loc$groups){
     r &lt;- subset(loc,groups==v)
-    boxes &lt;- if("left"%in%names(loc)){
-      hgrid &lt;- function(x,w){
-        hboxes &lt;- ceiling(diff(range(d[,x]))/r[,w])
-        (-1:(hboxes+1))*r[,w]+min(d[,x])
+    no.points &lt;- data.frame()
+    expand &lt;- 0
+    while(nrow(no.points)==0){
+      boxes &lt;- if("left"%in%names(loc)){
+        <a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>(expand.grid(x=hgrid("x","w"),y=hgrid("y","h"),w=r$w,h=r$h))
+      }else{
+        L &lt;- sapply(c("x","y"),gl,simplify=FALSE)
+        <a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>(expand.grid(x=L$x$centers,y=L$y$centers,
+                                 w=L$x$diff,h=L$y$diff))
       }
-      <a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>(expand.grid(x=hgrid("x","w"),y=hgrid("y","h"),w=r$w,h=r$h))
-    }else g
+      boxes &lt;- cbind(boxes,data=<a href="../../utility.function/posfuns/inside.html">inside</a>(boxes,d))
+      no.points &lt;- transform(subset(boxes,data==0))
+      expand &lt;- expand+1 ## look further out if we can't find any labels <a href="../../utility.function/posfuns/inside.html">inside</a>
+    }
     if(debug)draw(boxes)
-    boxes &lt;- cbind(boxes,data=<a href="../../utility.function/posfuns/inside.html">inside</a>(boxes,d))
-    no.points &lt;- transform(subset(boxes,data==0),
-                           len=(r$x-x)^2+(r$y-y)^2)
+    no.points &lt;- transform(no.points,len=(r$x-x)^2+(r$y-y)^2)
     best &lt;- subset(no.points,len==min(len))[1,]
     res &lt;- rbind(res,cbind(best,groups=v))
     ## add points to cloud

@@ -44,7 +44,7 @@ scatters <-
   list(xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1),
        xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species))
 ##pdf("scattercompare.pdf",width=10,height=5)
-dlcompare(scatters,list("empty.grid","empty.grid.2"))
+dlcompare(scatters,list("empty.grid","smart.grid"))
 ##dlcompare(scatters,list(empty.grid.2))
 ##dev.off();system("xpdf scattercompare.pdf")
 

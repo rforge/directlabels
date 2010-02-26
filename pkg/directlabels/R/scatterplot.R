@@ -68,13 +68,21 @@ empty.grid <- function
  ){
   loc <- loc.fun(d,debug)
   NREP <- 10
+  gridpts <- d
   gl <- function(v){
-    s <- seq(from=min(d[,v]),to=max(d[,v]),l=NREP)
-    list(centers=s,diff=(s[2]-s[1]))
+    s <- seq(min(gridpts[,v]),max(gridpts[,v]),l=NREP)
+    if(expand){
+      dif <- s[2]-s[1]
+      s <- seq(min(gridpts[,v])-expand*dif,
+               max(gridpts[,v])+expand*dif,
+               l=NREP+2*expand)
+    }
+    list(centers=s,diff=s[2]-s[1])
   }
-  L <- sapply(c("x","y"),gl,simplify=FALSE)
-  g <- calc.borders(expand.grid(x=L$x$centers,y=L$y$centers,
-                                w=L$x$diff,h=L$y$diff))
+  hgrid <- function(x,w){
+    hboxes <- floor(diff(range(gridpts[,x]))/r[,w])
+    (-expand:(hboxes+expand-1))*r[,w]+min(gridpts[,x])+r[,w]/2
+  }
   if(debug)with(loc,grid.points(x,y,default.units="native"))
   draw <- function(g){
     gridlines <- with(g,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
@@ -86,17 +94,22 @@ empty.grid <- function
   res <- data.frame()
   for(v in loc$groups){
     r <- subset(loc,groups==v)
-    boxes <- if("left"%in%names(loc)){
-      hgrid <- function(x,w){
-        hboxes <- ceiling(diff(range(d[,x]))/r[,w])
-        (-1:(hboxes+1))*r[,w]+min(d[,x])
+    no.points <- data.frame()
+    expand <- 0
+    while(nrow(no.points)==0){
+      boxes <- if("left"%in%names(loc)){
+        calc.borders(expand.grid(x=hgrid("x","w"),y=hgrid("y","h"),w=r$w,h=r$h))
+      }else{
+        L <- sapply(c("x","y"),gl,simplify=FALSE)
+        calc.borders(expand.grid(x=L$x$centers,y=L$y$centers,
+                                 w=L$x$diff,h=L$y$diff))
       }
-      calc.borders(expand.grid(x=hgrid("x","w"),y=hgrid("y","h"),w=r$w,h=r$h))
-    }else g
+      boxes <- cbind(boxes,data=inside(boxes,d))
+      no.points <- transform(subset(boxes,data==0))
+      expand <- expand+1 ## look further out if we can't find any labels inside
+    }
     if(debug)draw(boxes)
-    boxes <- cbind(boxes,data=inside(boxes,d))
-    no.points <- transform(subset(boxes,data==0),
-                           len=(r$x-x)^2+(r$y-y)^2)
+    no.points <- transform(no.points,len=(r$x-x)^2+(r$y-y)^2)
     best <- subset(no.points,len==min(len))[1,]
     res <- rbind(res,cbind(best,groups=v))
     ## add points to cloud

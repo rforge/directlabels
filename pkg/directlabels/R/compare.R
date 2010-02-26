@@ -13,9 +13,11 @@ dlcompare <- function # Direct label comparison plot
 ### to annotate the plot.
  rects=TRUE,
 ### Draw rectangles around each plot, creating a grid?
- row.items="plots"
+ row.items="plots",
 ### If "plots" then put plots on the rows and method on the
 ### columns. Otherwise, do the opposite.
+ debug=FALSE
+### Show debug output?
  ){
   ## Augment positioning function list names if possible
   names(pos.funs) <- sapply(seq_along(pos.funs),function(i){
@@ -57,8 +59,9 @@ dlcompare <- function # Direct label comparison plot
         popViewport()
       }
       pushViewport(viewport(layout.pos.col=col,layout.pos.row=row+rowadd))
-      p <- if(standard)direct.label(row.items[[row]],col.items[[col]])
-      else direct.label(col.items[[col]],row.items[[row]])
+      p <- if(standard)
+        direct.label(row.items[[row]],col.items[[col]],debug=debug)
+      else direct.label(col.items[[col]],row.items[[row]],debug=debug)
       print(p,newpage=FALSE)
       if(rects)grid.rect()
       popViewport()

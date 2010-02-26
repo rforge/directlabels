@@ -11,9 +11,7 @@ List of 2
   ..- attr(*, "source")= chr "dl.indep(data.frame(d[which.max(d$x), ], hjust = 0, vjust = 0.5))"
  $ :List of 2
   ..$ :function (d, ...)  
-  .. ..- attr(*, "source")= chr [1:17] "function(d,...)" ...
   ..$ :function (d, ...)  
-  .. ..- attr(*, "source")= chr [1:13] "function(d,...)" ...
 }
 
 
