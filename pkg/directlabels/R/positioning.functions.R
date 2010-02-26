@@ -46,7 +46,37 @@ label.positions <- function
   if("y"%in%names(d))d <- transform(d,y=as.numeric(y))
   ##save original levels for later in case PFs mess them up.
   levs <- levels(d$groups)
-  if(class(method)=="function")method <- list(method)
+  d <- eval.list(method,d,debug,...)
+  ## rearrange factors in case pos fun messed up the order:
+  d$groups <- factor(as.character(d$groups),levs)
+  ## defaults for grid parameter values:
+  for(p in c("hjust","vjust")){
+    d[,p] <- if(p %in% names(d))as.character(d[,p]) else NA
+    d[is.na(d[,p]),p] <- 0.5
+  }
+  if(!"rot"%in%names(d))d$rot <- NA
+  d$rot[is.na(d$rot)] <- 0
+  d <- unique(d)
+  if(debug)print(d)
+  d
+### Data frame of direct label positions. Each row describes the
+### position of 1 label to be drawn later.
+}
+
+eval.list <- function ## Evaluate Positioning Function list
+### Run all the Positioning Functions on a given data set. This is
+### useful since it is often much less verbose to define Positioning
+### Methods in list form instead of function form.
+(method,
+### Positioning Function list.
+ d,
+### Data frame.
+ debug=FALSE,
+### Show debugging output?
+ ...
+### Passed to Positioning Functions.
+ ){
+  if(!is.list(method))method <- list(method)
   isconst <- function(){
     m.var <- names(method)[1]
     !(is.null(m.var)||m.var=="")
@@ -72,18 +102,11 @@ label.positions <- function
     }
     method <- method[-1]
   }
-  ## rearrange factors in case pos fun messed up the order:
-  d$groups <- factor(as.character(d$groups),levs)
-  ## defaults for grid parameter values:
-  for(p in c("hjust","vjust"))
-    d[,p] <- if(p %in% names(d))as.character(d[,p]) else 0.5
-  if(!"rot"%in%names(d))d$rot <- 0
-  d <- unique(d)
-  if(debug)print(d)
   d
-### Data frame of direct label positions. Each row describes the
-### position of 1 label to be drawn later.
+### The final data frame returned after applying all of the items in
+### the Positioning Function list.
 }
+
 
 ### Transformation function for 1d densityplots.
 trans.densityplot <- dl.indep({
@@ -106,4 +129,21 @@ rug.mean <- function(d,...,end)
                    vjust=0))
 
 ### Label points at the top, making sure they don't collide.
-top.qp <- list(top.points,qp.labels("x","w"))
+top.qp <- list(top.points,calc.boxes,qp.labels("x","w"))
+
+### Label points at the zero before the first nonzero y value.
+lasso.labels <-
+  list(rot=60,
+       dl.indep({
+         d <- d[order(d$x),]
+         i <- which(d$y!=0)[1]
+         hjust <- as.integer(d[i,"y"]>0)
+         data.frame(d[i-1,],hjust,vjust=hjust)
+       }),
+       calc.boxes,
+       ## calculate how wide the tilted box is
+       dl.trans(h.inches=convertHeight(unit(h,"native"),"inches",TRUE)),
+       dl.trans(hyp.inches=h.inches/sin(2*pi*rot/360)),
+       dl.trans(hyp=convertWidth(unit(hyp.inches,"inches"),"native",TRUE)),
+       ## avoid collisions between tilted boxes
+       qp.labels("x","hyp"))

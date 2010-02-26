@@ -11,6 +11,26 @@
 				   
 <body>
 
+<h2>Labeling several positions</h2>
+
+<p>What if it makes sense to put a group label at more than one place
+for increased clarity? Then all you have to do is construct a
+Positioning Function that returns several rows for each group.</p>
+
+<p>A special case: if you want to combine the output from several
+existing Positioning Functions, there is a shortcut function that can
+help! <a href="docs/utility.function/posfuns/dl.combine.html">dl.combine</a>
+is included in the directlabels package, and it works like this:</p>
+
+<pre>
+library(directlabels)
+data(BodyWeight,package="nlme")
+P &lt;- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
+direct.label(P,dl.combine(first.points,last.qp))
+</pre>
+
+<p>See also: <tt>example(dl.combine)</tt></p>
+
 <h2>Labeling black and white plots for printout</h2>
 
 <pre>
@@ -109,8 +129,8 @@ illustrate how this works, consider the following contrived
 example:</p>
 
 <pre>
-complicated &lt;- list(dl.trans(x=x+10), ## add 10 to every x value
-                    dl.indep(d[-2,]), ## delete the 2nd point of every group
+complicated &lt;- list(<a href="http://directlabels.r-forge.r-project.org/docs/utility.function/posfuns/dl.trans.html">dl.trans</a>(x=x+10), ## add 10 to every x value
+                    <a href="http://directlabels.r-forge.r-project.org/docs/utility.function/posfuns/dl.indep.html">dl.indep</a>(d[-2,]), ## delete the 2nd point of every group
                     rot=c(30,180)) ## rotate by alternately 30 and 180 degrees
 direct.label(dotplot(VADeaths,type="o"),complicated)
 </pre>

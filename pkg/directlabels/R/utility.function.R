@@ -1,3 +1,22 @@
+dl.combine <- function # Combine output of several methods
+### Apply several Positioning methods to the original data frame.
+(...
+### Several Positioning Functions.
+ ){
+  L <- as.list(match.call())[-1]
+  FUNS <- lapply(L,eval)
+  function(d,...){
+    dfs <- lapply(FUNS,eval.list,d)
+    for(df in dfs){
+      if(nrow(res))res <- merge(df,res,all=TRUE)
+      else res <- df
+    }
+    res
+  }
+### A Positioning Function that returns the combined data frame after
+### applying each specified Positioning Function.
+}
+
 dl.indep <- function # Direct label groups independently
 ### Makes a function you can use to specify the location of each group
 ### independently.
@@ -119,7 +138,8 @@ bumpup <- function(d,...){
 
 ### Use a QP solver to find the best places to put the points on a
 ### line, subject to the constraint that they should not overlap
-qp.labels <- function(var,spacer)list(calc.boxes,function(d,...){
+qp.labels <- function(var,spacer)function(d,...){
+  if(!spacer%in%names(d))stop("need to have calculated ",spacer)
   require(quadprog)
   d <- d[order(d[,var],decreasing=TRUE),]
   ## sorts data so that m_1 is on top, m_n on bottom.
@@ -131,7 +151,7 @@ qp.labels <- function(var,spacer)list(calc.boxes,function(d,...){
   sol <- solve.QP(D,d[,var],A,b0)
   d[,var] <- sol$solution
   d
-})
+}
 
 ### Make text bounding box larger by some amount.
 enlarge.box <- function(d,...){

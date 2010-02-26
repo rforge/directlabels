@@ -23,10 +23,10 @@ last.bumpup <- list(last.points,bumpup)
 first.bumpup <- list(first.points,bumpup)
 
 ### Label last points from QP solver that ensures labels do not collide.
-last.qp <- list(last.points,qp.labels("y","h"))
+last.qp <- list(last.points,calc.boxes,qp.labels("y","h"))
 
 ### Label first points from QP solver that ensures labels do not collide.
-first.qp <- list(first.points,qp.labels("y","h"))
+first.qp <- list(first.points,calc.boxes,qp.labels("y","h"))
 
 lines2 <- function
 ### Positioning Function for 2 groups of longitudinal data. One curve

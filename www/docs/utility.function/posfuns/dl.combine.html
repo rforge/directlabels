@@ -8,31 +8,35 @@
 	charset=UTF-8" />
 	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
 	rel="stylesheet" type="text/css" />
-	<title>directlabels documentation - qp.labels</title>
+	<title>directlabels documentation - dl.combine</title>
   </head>
 
 <body>
 
 <h1><a href="../../index.html">directlabels</a> - utility.function -
-Positioning Function - qp.labels</h1>
+Positioning Function - dl.combine</h1>
 
-<p>Use a QP solver to find the best places to put the points on a
-line, subject to the constraint that they should not overlap</p>
+<p>Apply several Positioning methods to the original data frame.</p>
 
 <pre>
-qp.labels &lt;- function(var,spacer)function(d,...){
-  if(!spacer%in%names(d))stop("need to have calculated ",spacer)
-  require(quadprog)
-  d &lt;- d[order(d[,var],decreasing=TRUE),]
-  ## sorts data so that m_1 is on top, m_n on bottom.
-  n &lt;- nrow(d)
-  D &lt;- diag(rep(1,n))
-  A &lt;- diag(rep(1,n))[,-n]-rbind(0,diag(rep(1,n-1)))
-  h &lt;- d[,spacer]
-  b0 &lt;- (h[-n]+h[-1])/2
-  sol &lt;- solve.QP(D,d[,var],A,b0)
-  d[,var] &lt;- sol$solution
-  d
+dl.combine &lt;- function # Combine output of several methods
+### Apply several Positioning methods to the original data frame.
+(...
+### Several Positioning Functions.
+ ){
+  L &lt;- as.list(match.call())[-1]
+  FUNS &lt;- lapply(L,eval)
+  function(d,...){
+    dfs &lt;- lapply(FUNS,eval.list,d)
+    res &lt;- data.frame()
+    for(df in dfs){
+      if(nrow(res))res &lt;- merge(df,res,all=TRUE)
+      else res &lt;- df
+    }
+    res
+  }
+### A Positioning Function that returns the combined data frame after
+### applying each specified Positioning Function.
 }
 </pre>
 

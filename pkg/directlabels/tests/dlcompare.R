@@ -42,10 +42,13 @@ dlcompare(list(plots[[1]],ratplot),list("first.points","lines2"))
 ## Compare scatterplot labeling methods.
 scatters <-
   list(xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1),
-       xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species))
+       xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species),
+       qplot(jitter(Petal.Length),jitter(Sepal.Length),
+             data=iris,colour=Species))
 ##pdf("scattercompare.pdf",width=10,height=5)
-dlcompare(scatters,list("empty.grid","smart.grid"))
-##dlcompare(scatters,list(empty.grid.2))
+s.methods <- list("empty.grid","smart.grid")
+dlcompare(scatters[1:2],s.methods)
+dlcompare(scatters[2:3],s.methods)
 ##dev.off();system("xpdf scattercompare.pdf")
 
 myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
@@ -80,7 +83,9 @@ dlcompare(list(p,ratplot),list("last.bumpup","last.qp"))
 p2 <- qplot(df,value,data=m,group=variable,colour=variable,
             geom=c("line","point"))+geom_hline(yintercept=0)+xlim(0,9)
 pfuns <- list("legend","direct labels"=
-              list(cex=2,last.qp,dl.trans(x=x+0.1)))
-dlcompare(list(p,p2),pfuns)
-dlcompare(list(p),pfuns,rects=FALSE)
-dlcompare(list(p),list(pfuns[2],list(cex=c(0.5,1,2,4),last.qp,dl.trans(x=x+0.1),calc.boxes,draw.rects)),row.items="posfuns")
+              list(cex=2,last.qp,dl.trans(x=x+0.1)),
+              list(cex=c(0.5,1,2,4),last.qp,dl.trans(x=x+0.1),
+                   calc.boxes,draw.rects))
+dlcompare(list(p,p2),pfuns[1:2])
+dlcompare(list(p),pfuns[1:2],rects=FALSE)
+dlcompare(list(p),pfuns[2:3],row.items="posfuns")
