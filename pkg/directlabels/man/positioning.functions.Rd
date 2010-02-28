@@ -18,11 +18,34 @@
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 \examples{
 for(p in list({
-## contour plot
+## Example from help(contourplot)
+require(stats)
+attach(environmental)
+ozo.m <- loess((ozone^(1/3)) ~ wind * temperature * radiation,
+               parametric = c("radiation", "wind"), span = 1, degree = 2)
+w.marginal <- seq(min(wind), max(wind), length.out = 50)
+t.marginal <- seq(min(temperature), max(temperature), length.out = 50)
+r.marginal <- seq(min(radiation), max(radiation), length.out = 4)
+wtr.marginal <- list(wind = w.marginal, temperature = t.marginal,
+                     radiation = r.marginal)
+grid <- expand.grid(wtr.marginal)
+grid[, "fit"] <- c(predict(ozo.m, grid))
+contourplot(fit ~ wind * temperature | factor(radiation), data = grid,
+            cuts = 10, region = TRUE,
+            xlab = "Wind Speed (mph)",
+            ylab = "Temperature (F)",
+            main = "Cube Root Ozone (cube root ppb)")
+p <- ggplot(grid,aes(wind,temperature,z=fit))+
+  stat_contour(aes(colour=..level..))+
+  facet_wrap(~radiation)
+
+},
+{
+## example from help(stat_contour)
 volcano3d <- melt(volcano)
 names(volcano3d) <- c("x", "y", "z")
-v <- ggplot(volcano3d, aes(x, y, z = z))
-p <- v + stat_contour(aes(colour = ..level..))
+p <- ggplot(volcano3d, aes(x, y, z = z))+
+  stat_contour(aes(colour = ..level..))
 })){
   print(direct.label(p,"bottom.points"))
   print(direct.label(p,"top.points"))
@@ -49,6 +72,9 @@ p <- qplot(ppp,data=loci,colour=type,geom="density")
 
 
 for(p in list({
+p <- dotplot(VADeaths,xlim=c(8,85),type="o")
+},
+{
 vad <- as.data.frame.table(VADeaths)
 names(vad) <- c("age","demographic","deaths")
 p <- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)+
@@ -126,7 +152,13 @@ for(p in list({
 data(mpg,package="ggplot2")
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
-p <- xyplot(.resid~.fitted,mpgf,groups=factor(cyl))
+p <- xyplot(jitter(.resid)~jitter(.fitted)|manufacturer,mpgf,groups=class)
+},
+{
+data(mpg,package="ggplot2")
+m <- lm(cty~displ,data=mpg)
+mpgf <- fortify(m,mpg)
+p <- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
 },
 {
 p <- xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species)

@@ -8,24 +8,24 @@
 	charset=UTF-8" />
 	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
 	rel="stylesheet" type="text/css" />
-	<title>directlabels documentation - cylinders</title>
+	<title>directlabels documentation - class-manufacturer</title>
   </head>
 
 <body>
 
 <h1><a href="../../index.html">directlabels</a> - scatterplot - example -
-cylinders</h1>
+class-manufacturer</h1>
 
 <pre>
 data(mpg,package="ggplot2")
 m &lt;- lm(cty~displ,data=mpg)
 mpgf &lt;- fortify(m,mpg)
-p &lt;- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
+p &lt;- xyplot(jitter(.resid)~jitter(.fitted)|manufacturer,mpgf,groups=class)
 </pre>
 
 <table>
 <tr>
-  <td><img alt="empty.grid" src="../../scatterplot/cylinders.empty.grid.png" /></td>
+  <td><img alt="empty.grid" src="../../scatterplot/class-manufacturer.empty.grid.png" /></td>
   <td><p>Label placement method for scatterplots that ensures labels are
 placed in different places. A grid is drawn over the whole
 plot. Each cluster is considered in sequence and assigned to the
@@ -36,28 +36,28 @@ direct.label(p,"<a href="../posfuns/empty.grid.html">empty.grid</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="empty.grid.2" src="../../scatterplot/cylinders.empty.grid.2.png" /></td>
+  <td><img alt="empty.grid.2" src="../../scatterplot/class-manufacturer.empty.grid.2.png" /></td>
   <td><p>Use empty.grid with perpendicular.lines.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/empty.grid.2.html">empty.grid.2</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="extreme.grid" src="../../scatterplot/cylinders.extreme.grid.png" /></td>
+  <td><img alt="extreme.grid" src="../../scatterplot/class-manufacturer.extreme.grid.png" /></td>
   <td><p>Use empty.grid with extreme.points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/extreme.grid.html">extreme.grid</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="extreme.points" src="../../scatterplot/cylinders.extreme.points.png" /></td>
+  <td><img alt="extreme.points" src="../../scatterplot/class-manufacturer.extreme.points.png" /></td>
   <td><p>Label the points furthest from the origin for each group.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/extreme.points.html">extreme.points</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="follow.points" src="../../scatterplot/cylinders.follow.points.png" /></td>
+  <td><img alt="follow.points" src="../../scatterplot/class-manufacturer.follow.points.png" /></td>
   <td><p>Scatterplot positioning function that draws a line between each
 center and every point, then follows the line out far enough to
 give a box that will not collide with it. Out of all the boxes
@@ -70,14 +70,14 @@ direct.label(p,"<a href="../posfuns/follow.points.html">follow.points</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="get.means" src="../../scatterplot/cylinders.get.means.png" /></td>
+  <td><img alt="get.means" src="../../scatterplot/class-manufacturer.get.means.png" /></td>
   <td><p>Positioning Function for the mean of each cluster of points.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/get.means.html">get.means</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="perpendicular.lines" src="../../scatterplot/cylinders.perpendicular.lines.png" /></td>
+  <td><img alt="perpendicular.lines" src="../../scatterplot/class-manufacturer.perpendicular.lines.png" /></td>
   <td><p>Draw a line between the centers of each cluster, then draw a
 perpendicular line for each cluster that goes through its
 center. For each cluster, return the point the lies furthest out
@@ -87,7 +87,7 @@ direct.label(p,"<a href="../posfuns/perpendicular.lines.html">perpendicular.line
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="smart.grid" src="../../scatterplot/cylinders.smart.grid.png" /></td>
+  <td><img alt="smart.grid" src="../../scatterplot/class-manufacturer.smart.grid.png" /></td>
   <td><p>Use bounding box information with a small empty.grid. TODO: does
 not work with ggplot2 since the backend does not support bounding
 box calculation.</p>

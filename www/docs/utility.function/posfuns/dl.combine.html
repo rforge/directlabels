@@ -28,6 +28,7 @@ dl.combine &lt;- function # Combine output of several methods
   FUNS &lt;- lapply(L,eval)
   function(d,...){
     dfs &lt;- lapply(FUNS,eval.list,d)
+    res &lt;- data.frame()
     for(df in dfs){
       if(nrow(res))res &lt;- merge(df,res,all=TRUE)
       else res &lt;- df

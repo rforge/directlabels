@@ -72,12 +72,22 @@ perpendicular.lines &lt;- function
 
 <table>
 <tr>
+  <td><img alt="class-manufacturer" src="../../scatterplot/class-manufacturer.perpendicular.lines.png" /></td>
+  <td><p><a href="../plots/class-manufacturer.html">class-manufacturer</a></p><pre>
+data(mpg,package="ggplot2")
+m &lt;- lm(cty~displ,data=mpg)
+mpgf &lt;- fortify(m,mpg)
+p &lt;- xyplot(jitter(.resid)~jitter(.fitted)|manufacturer,mpgf,groups=class)
+direct.label(p,"perpendicular.lines")
+  </pre></td>
+</tr>
+<tr>
   <td><img alt="cylinders" src="../../scatterplot/cylinders.perpendicular.lines.png" /></td>
   <td><p><a href="../plots/cylinders.html">cylinders</a></p><pre>
 data(mpg,package="ggplot2")
 m &lt;- lm(cty~displ,data=mpg)
 mpgf &lt;- fortify(m,mpg)
-p &lt;- xyplot(.resid~.fitted,mpgf,groups=factor(cyl))
+p &lt;- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
 direct.label(p,"perpendicular.lines")
   </pre></td>
 </tr>

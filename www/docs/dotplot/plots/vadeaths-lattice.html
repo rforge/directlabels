@@ -8,35 +8,24 @@
 	charset=UTF-8" />
 	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
 	rel="stylesheet" type="text/css" />
-	<title>directlabels documentation - volcano</title>
+	<title>directlabels documentation - vadeaths-lattice</title>
   </head>
 
 <body>
 
-<h1><a href="../../index.html">directlabels</a> - contourplot - example -
-volcano</h1>
+<h1><a href="../../index.html">directlabels</a> - dotplot - example -
+vadeaths-lattice</h1>
 
 <pre>
-## example from help(stat_contour)
-volcano3d &lt;- melt(volcano)
-names(volcano3d) &lt;- c("x", "y", "z")
-p &lt;- ggplot(volcano3d, aes(x, y, z = z))+
-  stat_contour(aes(colour = ..level..))
+p &lt;- dotplot(VADeaths,xlim=c(8,85),type="o")
 </pre>
 
 <table>
 <tr>
-  <td><img alt="bottom.points" src="../../contourplot/volcano.bottom.points.png" /></td>
-  <td><p>Positioning Function for the bottom of a group of points.</p>
+  <td><img alt="angled.endpoints" src="../../dotplot/vadeaths-lattice.angled.endpoints.png" /></td>
+  <td><p>Useful for labeling lines that all end at the top.</p>
     <pre>
-direct.label(p,"<a href="../posfuns/bottom.points.html">bottom.points</a>")
-  </pre></td>
-</tr>
-<tr>
-  <td><img alt="top.points" src="../../contourplot/volcano.top.points.png" /></td>
-  <td><p>Positioning Function for the top of a group of points.</p>
-    <pre>
-direct.label(p,"<a href="../posfuns/top.points.html">top.points</a>")
+direct.label(p,"<a href="../posfuns/angled.endpoints.html">angled.endpoints</a>")
   </pre></td>
 </tr>
 </table>

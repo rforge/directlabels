@@ -24,13 +24,40 @@ top.points &lt;- top.points
 
 <table>
 <tr>
+  <td><img alt="envrionmental" src="../../contourplot/envrionmental.top.points.png" /></td>
+  <td><p><a href="../plots/envrionmental.html">envrionmental</a></p><pre>
+## Example from help(contourplot)
+require(stats)
+attach(environmental)
+ozo.m &lt;- loess((ozone^(1/3)) ~ wind * temperature * radiation,
+               parametric = c("radiation", "wind"), span = 1, degree = 2)
+w.marginal &lt;- seq(min(wind), max(wind), length.out = 50)
+t.marginal &lt;- seq(min(temperature), max(temperature), length.out = 50)
+r.marginal &lt;- seq(min(radiation), max(radiation), length.out = 4)
+wtr.marginal &lt;- list(wind = w.marginal, temperature = t.marginal,
+                     radiation = r.marginal)
+grid &lt;- expand.grid(wtr.marginal)
+grid[, "fit"] &lt;- c(predict(ozo.m, grid))
+contourplot(fit ~ wind * temperature | factor(radiation), data = grid,
+            cuts = 10, region = TRUE,
+            xlab = "Wind Speed (mph)",
+            ylab = "Temperature (F)",
+            main = "Cube Root Ozone (cube root ppb)")
+p &lt;- ggplot(grid,aes(wind,temperature,z=fit))+
+  stat_contour(aes(colour=..level..))+
+  facet_wrap(~radiation)
+
+direct.label(p,"top.points")
+  </pre></td>
+</tr>
+<tr>
   <td><img alt="volcano" src="../../contourplot/volcano.top.points.png" /></td>
   <td><p><a href="../plots/volcano.html">volcano</a></p><pre>
-## contour plot
+## example from help(stat_contour)
 volcano3d &lt;- melt(volcano)
 names(volcano3d) &lt;- c("x", "y", "z")
-v &lt;- ggplot(volcano3d, aes(x, y, z = z))
-p &lt;- v + stat_contour(aes(colour = ..level..))
+p &lt;- ggplot(volcano3d, aes(x, y, z = z))+
+  stat_contour(aes(colour = ..level..))
 direct.label(p,"top.points")
   </pre></td>
 </tr>

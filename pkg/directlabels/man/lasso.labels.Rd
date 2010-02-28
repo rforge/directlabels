@@ -11,15 +11,10 @@ List of 7
  $    :function (d, ...)  
   ..- attr(*, "source")= chr [1:6] "dl.indep()" ...
  $    :function (d, debug = FALSE, ...)  
-  ..- attr(*, "source")= chr [1:18] "function(d,debug=FALSE,...)" ...
  $    :function (d, ...)  
-  ..- attr(*, "source")= chr "function(d,...)do.call(\"transform\",c(list(d),L))"
  $    :function (d, ...)  
-  ..- attr(*, "source")= chr "function(d,...)do.call(\"transform\",c(list(d),L))"
  $    :function (d, ...)  
-  ..- attr(*, "source")= chr "function(d,...)do.call(\"transform\",c(list(d),L))"
  $    :function (d, ...)  
-  ..- attr(*, "source")= chr [1:14] "function(d,...)" ...
 }
 
 
