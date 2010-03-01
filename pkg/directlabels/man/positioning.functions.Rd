@@ -30,15 +30,11 @@ wtr.marginal <- list(wind = w.marginal, temperature = t.marginal,
                      radiation = r.marginal)
 grid <- expand.grid(wtr.marginal)
 grid[, "fit"] <- c(predict(ozo.m, grid))
-contourplot(fit ~ wind * temperature | factor(radiation), data = grid,
-            cuts = 10, region = TRUE,
-            xlab = "Wind Speed (mph)",
-            ylab = "Temperature (F)",
-            main = "Cube Root Ozone (cube root ppb)")
-ggplot(grid,aes(wind,temperature,z=fit))+
+detach(environmental)
+p <- ggplot(grid,aes(wind,temperature,z=fit))+
   stat_contour(aes(colour=..level..))+
   facet_wrap(~radiation)
-p <- detach(environmental)
+
 },
 {
 ## example from help(stat_contour)
