@@ -78,7 +78,7 @@ calc.boxes <- function(d,debug=FALSE,...){
     with(d,sapply(seq_along(groups),function(i){
       if("cex"%in%names(d))vp$gp <- gpar(cex=cex[i])
       pushViewport(vp)
-      if(debug)grid.rect()
+      if(debug)grid.rect() ##highlight current viewport
       w <- conv(stri(as.character(groups[i])),"native")
       popViewport()
       w
