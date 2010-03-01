@@ -63,7 +63,7 @@ label.positions <- function
 ### position of 1 label to be drawn later.
 }
 
-eval.list <- function ## Evaluate Positioning Function list
+eval.list <- function # Evaluate Positioning Function list
 ### Run all the Positioning Functions on a given data set. This is
 ### useful since it is often much less verbose to define Positioning
 ### Methods in list form instead of function form, ex lasso.labels.
@@ -143,3 +143,17 @@ lasso.labels <-
        dl.trans(hyp=convertWidth(unit(hyp.inches,"inches"),"native",TRUE)),
        ## avoid collisions between tilted boxes
        qp.labels("x","hyp"))
+
+default.picker <- function
+### Look at options() for a user-defined default Positioning Function
+### picker, and use that (or the hard-coded default picker), with the
+### calling environment to figure out a good default.
+(f
+### Object class to look for (trellis or ggplot).
+ ){
+  varname <- paste("defaultpf.",f,sep="")
+  p <- getOption(paste("directlabels.",varname,sep=""))
+  if(is.null(p))p <- get(varname)
+  do.call(p,as.list(parent.frame()))
+}
+

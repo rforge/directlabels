@@ -21,20 +21,7 @@ direct.label.ggplot <- function
  ){
   ##lvar <- if("group" %in% names(p$mapping))"group" else "colour"
   geom <- p$layers[[1]]$geom$objname
-  if(is.null(method))method <-
-    switch(geom,
-           density="top.points",
-           line={
-             varnames <- c(groups="colour",x="x")
-             if("y" %in% names(p$mapping))varnames <- c(varnames,y="y")
-             rename.vec <- sapply(p$mapping[varnames],deparse)
-             rename.vec <- gsub("[a-z]+[(]([^)]+)[)]","\\1",rename.vec)
-             d <- structure(p$data[,rename.vec],names=names(varnames))
-             if(nlevels(d$groups)==2)"lines2" else "maxvar.points"
-           },
-           point="empty.grid.2",
-           path="bottom.points",
-           stop("No default label placement for this type of ggplot."))
+  if(is.null(method))method <- default.picker("ggplot")
   if(geom%in%need.trans.ggplot)method <-
     c(paste("trans.",geom,sep=""),method)
   ##print(p$layers[[1]]$mapping)
@@ -45,6 +32,25 @@ direct.label.ggplot <- function
   p+dlgeom+SCALE(legend=FALSE)
 ### The ggplot object with direct labels added.
 }
+
+defaultpf.ggplot <- function
+### Default method selection method for ggplot2 plots.
+(geom,p,...){
+  switch(geom,
+         density="top.points",
+         line={
+           varnames <- c(groups="colour",x="x")
+           if("y" %in% names(p$mapping))varnames <- c(varnames,y="y")
+           rename.vec <- sapply(p$mapping[varnames],deparse)
+           rename.vec <- gsub("[a-z]+[(]([^)]+)[)]","\\1",rename.vec)
+           d <- structure(p$data[,rename.vec],names=names(varnames))
+           if(nlevels(d$groups)==2)"lines2" else "maxvar.points"
+         },
+         point="empty.grid.2",
+         path="bottom.points",
+         stop("No default label placement for this type of ggplot."))
+}
+
 ### Position class for direct label placement.
 PositionDl <- proto(ggplot2::Position,{
   method <- NULL

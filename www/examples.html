@@ -11,6 +11,45 @@
 				   
 <body>
 
+<h2>Customizable defaults for Positioning Functions</h2>
+
+<p>Normally sensible default label positions are chosen for you
+automatically when you call <tt>direct.label(p)</tt> with a
+plot <tt>p</tt>. But what if you don't like the defaults? Well, for
+individual plots you can always specify a particular Positioning
+Function <tt>f</tt> by using the second
+argument: <tt>direct.label(p,f)</tt>.</p>
+
+<p>But if you consitently think that the default choice is bad, and
+you would like to redefine it once and for all? Well, you can define a
+custom function that chooses the default direct label positions, in
+the following manner. Put the following code in your ~/.Rprofile, and
+edit it to reflect your desired defaults for lattice and/or ggplot2
+plots:</p>
+
+<pre>
+options(
+directlabels.defaultpf.trellis=function(lattice.fun.name,groups,type,...){
+  ldefault &lt;- if(nlevels(groups)==2)"lines2" else "maxvar.points"
+  switch(lattice.fun.name,
+         dotplot=ldefault,
+         xyplot=switch(type,p="smart.grid",ldefault),
+         densityplot="top.points",
+         qqmath=ldefault,
+         rug="rug.mean",
+         stop("No default direct label placement method for '",
+              lattice.fun.name,"'.\nPlease specify method."))
+},
+directlabels.defaultpf.ggplot=function(geom,...){
+  switch(geom,
+    density="top.points",
+    line="maxvar.points",
+    point="empty.grid.2",
+    path="bottom.points",
+    stop("No default label placement for this type of ggplot."))
+})
+</pre>
+
 <h2>Labeling several positions</h2>
 
 <p>What if it makes sense to put a group label at more than one place

@@ -106,11 +106,7 @@ panel.superpose.dl <- function
   lattice.fun.name <-
     if(is.character(subs))sub("panel.","",subs) else ""
   if(is.null(type))type <- "NULL"
-  if(is.null(method)){
-    picker <- getOption("directlabels.defaultpf.lattice")
-    if(is.null(picker))picker <- defaultpf.lattice
-    method <- do.call(picker,as.list(environment()))
-  }
+  if(is.null(method))method <- default.picker("trellis")
   ## maybe eventually allow need.trans to be specified in options()??
   if(lattice.fun.name%in%need.trans)method <-
     c(paste("trans.",lattice.fun.name,sep=""),method)
@@ -123,7 +119,8 @@ panel.superpose.dl <- function
   panel.superpose(panel.groups=dl.text,labs=labs,type=type,x=x,
                   groups=groups,subscripts=seq_along(groups),...)
 }
-defaultpf.lattice <- function
+
+defaultpf.trellis <- function
 ### If no Positioning Function specified, choose a default using this
 ### function. The idea is that this is called with all the variables
 ### in the environment of panel.superpose.dl, and this can be
@@ -131,8 +128,6 @@ defaultpf.lattice <- function
 ### option to a function like this.
 (lattice.fun.name,groups,type,...){
   ldefault <- if(nlevels(groups)==2)"lines2" else "maxvar.points"
-  ## maybe eventually scan options("directlabels.default.lattice") for
-  ## a list that specifies a manual override to these defaults
   switch(lattice.fun.name,
          dotplot=ldefault,
          xyplot=switch(type,p="smart.grid",ldefault),

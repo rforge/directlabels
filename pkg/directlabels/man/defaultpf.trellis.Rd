@@ -1,13 +1,13 @@
-\name{defaultpf.lattice}
-\alias{defaultpf.lattice}
-\title{defaultpf lattice}
+\name{defaultpf.trellis}
+\alias{defaultpf.trellis}
+\title{defaultpf trellis}
 \description{If no Positioning Function specified, choose a default using this
 function. The idea is that this is called with all the variables
 in the environment of panel.superpose.dl, and this can be
 user-customizable by setting the directlabels.defaultpf.lattice
 option to a function like this.}
 \usage{
-defaultpf.lattice(lattice.fun.name, groups, type, ...)
+defaultpf.trellis(lattice.fun.name, groups, type, ...)
 }
 \arguments{
   \item{lattice.fun.name}{

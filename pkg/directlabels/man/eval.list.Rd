@@ -1,6 +1,6 @@
 \name{eval.list}
 \alias{eval.list}
-\title{# Evaluate Positioning Function list}
+\title{Evaluate Positioning Function list}
 \description{Run all the Positioning Functions on a given data set. This is
 useful since it is often much less verbose to define Positioning
 Methods in list form instead of function form, ex lasso.labels.}
