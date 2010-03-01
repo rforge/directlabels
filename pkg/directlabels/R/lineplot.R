@@ -12,7 +12,7 @@ maxvar.points <- function(d,...){
     else range(x)
   }
   vars <- sapply(myrange(d$x),function(v)var(subset(d,x==v)$y))
-  FUN <- if(diff(vars)<0)first.points else last.points
+  FUN <- if(diff(vars)<0)first.qp else last.qp
   FUN(d,...)
 }
 
