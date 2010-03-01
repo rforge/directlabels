@@ -4,18 +4,7 @@
 \title{PositionDl}
 \description{Position class for direct label placement.}
 \usage{PositionDl}
-\format{
-  The format is:
-proto object 
- $ objname: chr "dl" 
- $ adjust :function (., data, scales)   
- $ new    :function (., method = NULL, debug = FALSE, orig = NULL)   
- $ orig   : NULL 
- $ debug  : logi FALSE 
- $ method : NULL 
- parent: proto object 
- .. parent: proto object 
-}
+
 
 
 

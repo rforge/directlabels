@@ -4,10 +4,7 @@
 \title{need trans}
 \description{Functions which need translation before applying Positioning Function.}
 \usage{need.trans}
-\format{
-  The format is:
- chr [1:2] "qqmath" "densityplot"
-}
+
 
 
 
