@@ -22,8 +22,7 @@ frame.</p>
 
 <pre>
 draw.rects &lt;- function(d,...){
-  ##browser()
-  ## easy way
+  ## easy way -- not correct, doesn't use calc'ed borders
   ##with(d,grid.rect(x,y,w,h,hjust=hjust,vjust=vjust,
   ##                 default.units="native",gp=gpar(col="grey")))
   d_ply(d,.(groups),function(D){

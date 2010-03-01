@@ -40,7 +40,6 @@ direct.label.ggplot <- function
   ##print(p$layers[[1]]$mapping)
   dlgeom <- geom_text(position=position_dl(list(method),debug,p),
                       stat=p$layers[[1]]$stat)
-  ##browser()
   ##print(dlgeom)
   SCALE <- if(geom=="path")scale_colour_continuous else scale_colour_discrete
   p+dlgeom+SCALE(legend=FALSE)
@@ -56,7 +55,6 @@ PositionDl <- proto(ggplot2::Position,{
   }
   adjust <- function(.,data,scales){
     ##print(head(data))
-    ##browser()
     if(is.null(data$colour)){
       colvar <- .$orig$layers[[1]]$mapping$colour
       if(!is.null(colvar)){
@@ -81,7 +79,6 @@ PositionDl <- proto(ggplot2::Position,{
     if(is.numeric(data$colour)&&!is.numeric(r$colour))
       r$colour <- as.numeric(as.character(r$colour))
     ##print(head(r))
-    ##browser()
     ##Positive control:
     ##data.frame(head(data),label="foo")
     r

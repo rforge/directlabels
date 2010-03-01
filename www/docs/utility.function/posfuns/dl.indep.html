@@ -29,7 +29,7 @@ dl.indep &lt;- function # Direct label groups independently
  ){
   foo &lt;- substitute(expr)
   f &lt;- function(d,...)eval(foo)
-  src &lt;- paste("dl.indep(",deparse(foo),")",sep="")
+  src &lt;- paste("dl.indep(",paste(deparse(foo),collapse="n"),")",sep="")
   structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
 ### A Positioning Function.
 }

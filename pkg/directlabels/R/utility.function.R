@@ -27,7 +27,7 @@ dl.indep <- function # Direct label groups independently
  ){
   foo <- substitute(expr)
   f <- function(d,...)eval(foo)
-  src <- paste("dl.indep(",deparse(foo),")",sep="")
+  src <- paste("dl.indep(",paste(deparse(foo),collapse="\n"),")",sep="")
   structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
 ### A Positioning Function.
 }
@@ -110,8 +110,7 @@ calc.borders <- function
 ### to have previously called calc.boxes. Does not edit the data
 ### frame.
 draw.rects <- function(d,...){
-  ##browser()
-  ## easy way
+  ## easy way -- not correct, doesn't use calc'ed borders
   ##with(d,grid.rect(x,y,w,h,hjust=hjust,vjust=vjust,
   ##                 default.units="native",gp=gpar(col="grey")))
   d_ply(d,.(groups),function(D){

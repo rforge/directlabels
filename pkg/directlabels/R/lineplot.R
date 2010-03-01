@@ -13,7 +13,7 @@ maxvar.points <- function(d,...){
   }
   vars <- sapply(myrange(d$x),function(v)var(subset(d,x==v)$y))
   FUN <- if(diff(vars)<0)first.qp else last.qp
-  FUN(d,...)
+  eval.list(FUN,d,...)
 }
 
 ### Label last points, bumping labels up if they collide.

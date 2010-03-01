@@ -34,7 +34,6 @@ dl.text <- function
  ){
   ##debugging output:
   ##print(cbind(col,col.line,col.points,col.symbol,type))
-  ##browser()
   col.text <- switch(type,p=col.symbol,l=col.line,col.line)
   g <- labs[levels(as.factor(labs$groups))[group.number]==labs$groups,]
   grid.text(g$groups,g$x,g$y,
@@ -64,11 +63,10 @@ direct.label.trellis <- function
       panel.superpose.dl(panel.groups=panel.groups,
                          .panel.superpose=old.panel,
                          method=method,
-                         debug=debug,
                          ...)
   }
   p$legend <- NULL
-  p
+  update(p,debug=debug)
 ### The lattice plot.
 }
 panel.superpose.dl <- function
@@ -102,12 +100,17 @@ panel.superpose.dl <- function
   ## FIXME: this is a total hack:
   tryCatch(do.call(".panel.superpose",c(rgs,panel.groups=panel.groups))
            ,error=function(e)do.call(".panel.superpose",rgs))
+  if(missing(panel.groups))panel.groups <- "panel.xyplot" #lattice default
   subs <-
     if(is.character(panel.groups))panel.groups else substitute(panel.groups)
   lattice.fun.name <-
     if(is.character(subs))sub("panel.","",subs) else ""
   if(is.null(type))type <- "NULL"
-  if(is.null(method))method <- defaultpf.lattice()
+  if(is.null(method)){
+    picker <- getOption("directlabels.defaultpf.lattice")
+    if(is.null(picker))picker <- defaultpf.lattice
+    method <- do.call(picker,as.list(environment()))
+  }
   ## maybe eventually allow need.trans to be specified in options()??
   if(lattice.fun.name%in%need.trans)method <-
     c(paste("trans.",lattice.fun.name,sep=""),method)
@@ -122,19 +125,20 @@ panel.superpose.dl <- function
 }
 defaultpf.lattice <- function
 ### If no Positioning Function specified, choose a default using this
-### function.
-(){
-  e <- parent.frame()
-  myget <- function(v)get(v,e)
-  ldefault <- if(nlevels(myget("groups"))==2)"lines2" else "maxvar.points"
+### function. The idea is that this is called with all the variables
+### in the environment of panel.superpose.dl, and this can be
+### user-customizable by setting the directlabels.defaultpf.lattice
+### option to a function like this.
+(lattice.fun.name,groups,type,...){
+  ldefault <- if(nlevels(groups)==2)"lines2" else "maxvar.points"
   ## maybe eventually scan options("directlabels.default.lattice") for
   ## a list that specifies a manual override to these defaults
-  switch(myget("lattice.fun.name"),
+  switch(lattice.fun.name,
          dotplot=ldefault,
-         xyplot=switch(myget("type"),p="smart.grid",ldefault),
+         xyplot=switch(type,p="smart.grid",ldefault),
          densityplot="top.points",
          qqmath=ldefault,
          rug="rug.mean",
-         stop("No default direct label placement method for ",
-              lattice.fun.name,". Please specify method."))
+         stop("No default direct label placement method for '",
+              lattice.fun.name,"'.\nPlease specify method."))
 }

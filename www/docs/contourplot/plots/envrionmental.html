@@ -34,10 +34,10 @@ contourplot(fit ~ wind * temperature | factor(radiation), data = grid,
             xlab = "Wind Speed (mph)",
             ylab = "Temperature (F)",
             main = "Cube Root Ozone (cube root ppb)")
-p &lt;- ggplot(grid,aes(wind,temperature,z=fit))+
+ggplot(grid,aes(wind,temperature,z=fit))+
   stat_contour(aes(colour=..level..))+
   facet_wrap(~radiation)
-
+p &lt;- detach(environmental)
 </pre>
 
 <table>

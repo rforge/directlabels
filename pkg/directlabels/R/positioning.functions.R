@@ -66,7 +66,7 @@ label.positions <- function
 eval.list <- function ## Evaluate Positioning Function list
 ### Run all the Positioning Functions on a given data set. This is
 ### useful since it is often much less verbose to define Positioning
-### Methods in list form instead of function form.
+### Methods in list form instead of function form, ex lasso.labels.
 (method,
 ### Positioning Function list.
  d,
@@ -84,22 +84,18 @@ eval.list <- function ## Evaluate Positioning Function list
   islist <- function()class(method[[1]])=="list"
   isref <- function()(!isconst())&class(method[[1]])=="character"
   while(length(method)){
-    method.name <- ""
     ## Resolve any PF names or nested lists
     while(islist()||isref()){
       if(islist()){
         method <- c(method[[1]],method[-1])
-        method.name <- ""
-      }else{ #must be character -> get the fun
-        method.name <- paste(method[[1]]," ",sep="")
-        method <- c(get(method[[1]]),method[-1])
+      }else{ #must be character -> get the fun(s)
+        method <- c(lapply(method[[1]],get),method[-1])
       }
     }
-    if(isconst())d[[names(method)[1]]] <- method[[1]] else{
-      d <- try(method[[1]](d,debug=debug,...))
-      if(class(d)=="try-error")
-        stop("direct label placement method ",method.name,"failed")
-    }
+    if(isconst())
+      d[[names(method)[1]]] <- method[[1]]
+    else
+      d <- method[[1]](d,debug=debug,...)
     method <- method[-1]
   }
   d

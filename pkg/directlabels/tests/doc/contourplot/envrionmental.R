@@ -18,4 +18,4 @@ contourplot(fit ~ wind * temperature | factor(radiation), data = grid,
 ggplot(grid,aes(wind,temperature,z=fit))+
   stat_contour(aes(colour=..level..))+
   facet_wrap(~radiation)
-
+detach(environmental)
