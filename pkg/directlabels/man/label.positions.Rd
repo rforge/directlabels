@@ -3,24 +3,19 @@
 \title{label positions}
 \description{Calculates table of positions of each label based on input data
 for each panel and Positioning Functions. This is meant for
-internal use inside a direct.label method. This function contains
-all the logic for parsing the method= argument and sequentially
-applying the Positioning Functions to the input data to obtain the
-label positions.}
+internal use inside a direct.label method, and is a wrapper around
+eval.list which makes sure the inputs are good and the outputs are
+plottable. eval.list is more efficient and should be used in the
+context of other Positioning Methods (i.e. dl.combine) and
+label.positions should be used when you actually when to plot the
+result (i.e. in lattice+ggplot2 backends).}
 \usage{
 label.positions(d, method, debug = FALSE, ...)
 }
 \arguments{
   \item{d}{Data frame to which we will sequentially apply the Positioning
 Functions.}
-  \item{method}{Method for direct labeling, specified in one of the following
-ways: (1) a Positioning Function, (2) the name of a Positioning
-Function as a character string, or (3) a list containing any
-number of (1), (2), or additionally named values. Starting from
-the data frame of points to plot for the panel, the elements of
-the list are applied in sequence, and each row of the resulting
-data frame is used to draw a direct label. See examples in
-?direct.label and ?positioning.functions.}
+  \item{method}{Method for direct labeling, described in ?eval.list.}
   \item{debug}{Show debug output? If TRUE, the resulting table of label positions
 will be printed.}
   \item{\dots}{Passed to Positioning Function(s).}

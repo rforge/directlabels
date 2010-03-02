@@ -17,22 +17,17 @@ direct.label <- function
 label.positions <- function
 ### Calculates table of positions of each label based on input data
 ### for each panel and Positioning Functions. This is meant for
-### internal use inside a direct.label method. This function contains
-### all the logic for parsing the method= argument and sequentially
-### applying the Positioning Functions to the input data to obtain the
-### label positions.
+### internal use inside a direct.label method, and is a wrapper around
+### eval.list which makes sure the inputs are good and the outputs are
+### plottable. eval.list is more efficient and should be used in the
+### context of other Positioning Methods (i.e. dl.combine) and
+### label.positions should be used when you actually when to plot the
+### result (i.e. in lattice+ggplot2 backends).
 (d,
 ### Data frame to which we will sequentially apply the Positioning
 ### Functions.
  method,
-### Method for direct labeling, specified in one of the following
-### ways: (1) a Positioning Function, (2) the name of a Positioning
-### Function as a character string, or (3) a list containing any
-### number of (1), (2), or additionally named values. Starting from
-### the data frame of points to plot for the panel, the elements of
-### the list are applied in sequence, and each row of the resulting
-### data frame is used to draw a direct label. See examples in
-### ?direct.label and ?positioning.functions.
+### Method for direct labeling, described in ?eval.list.
  debug=FALSE,
 ### Show debug output? If TRUE, the resulting table of label positions
 ### will be printed.
@@ -63,16 +58,24 @@ label.positions <- function
 ### position of 1 label to be drawn later.
 }
 
-eval.list <- function # Evaluate Positioning Function list
-### Run all the Positioning Functions on a given data set. This is
-### useful since it is often much less verbose to define Positioning
-### Methods in list form instead of function form, ex lasso.labels.
+eval.list <- function # Evaluate Positioning Method list
+### Run all the Positioning Functions on a given data set. This
+### function contains all the logic for parsing the method= argument
+### and sequentially applying the Positioning Functions to the input
+### data to obtain the label positions. This is useful since it is
+### often much less verbose to define Positioning Methods in list form
+### instead of function form, ex lasso.labels.
 (method,
-### Positioning Function list.
+### Direct labeling Positioning Method, specified in one of the
+### following ways: (1) a Positioning Function, (2) the name of a
+### Positioning Function as a character string, or (3) a list
+### containing any number of (1), (2), or additionally named
+### values. Starting from the data frame of points to plot for the
+### panel, the elements of the list are applied in sequence, and each
+### row of the resulting data frame is used to draw a direct
+### label. See examples in ?direct.label and ?positioning.functions.
  d,
-### Data frame.
- debug=FALSE,
-### Show debugging output?
+### Data frame to which we apply the Positioning Methods.
  ...
 ### Passed to Positioning Functions.
  ){
@@ -81,8 +84,8 @@ eval.list <- function # Evaluate Positioning Function list
     m.var <- names(method)[1]
     !(is.null(m.var)||m.var=="")
   }
-  islist <- function()class(method[[1]])=="list"
-  isref <- function()(!isconst())&class(method[[1]])=="character"
+  islist <- function()is.list(method[[1]])
+  isref <- function()(!isconst())&&is.character(method[[1]])
   while(length(method)){
     ## Resolve any PF names or nested lists
     while(islist()||isref()){
@@ -95,7 +98,7 @@ eval.list <- function # Evaluate Positioning Function list
     if(isconst())
       d[[names(method)[1]]] <- method[[1]]
     else
-      d <- method[[1]](d,debug=debug,...)
+      d <- method[[1]](d,...)
     method <- method[-1]
   }
   d
