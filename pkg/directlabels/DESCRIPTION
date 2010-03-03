@@ -10,7 +10,7 @@ Depends: proto, plyr, lattice, grid, ggplot2 (>= 0.8.5)
 URL: http://directlabels.r-forge.r-project.org/
 LazyLoad: false
 LazyData: true
-Suggests: nlme, mlmRev, ElemStatLearn, inlinedocs, quadprog
+Suggests: nlme, mlmRev, ElemStatLearn, inlinedocs, quadprog, lars
 Collate: utility.function.R compare.R dotplot.R lineplot.R 
 	 densityplot.R  ggplot2.R  positioning.functions.R 
 	 doc.R lattice.R scatterplot.R contourplot.R
