@@ -26,35 +26,38 @@ data(mpg,package="ggplot2")
 ## direct label simple ggplot2 scatterplot
 scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
                  main="Fuel efficiency depends on car size")
-slab <- direct.label(scatter,list(extreme.grid,dl.move("suv",15,15)))
-print(slab)
+print(direct.label(scatter,list(extreme.grid,dl.move("suv",15,15))))
 
-## scatterplot in lattice:
+## scatterplot in lattice
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
 mpg.scatter <- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
 plot(direct.label(mpg.scatter))
-## debug=TRUE shows more output:
+
+## debug=TRUE shows more output on the plot, and a data table of the
+## direct labels
 plot(direct.label(mpg.scatter,debug=TRUE))
-## try custom panel functions and title:
+
+## bigger text works better here
+plot(direct.label(mpg.scatter,list(cex=1.5,smart.grid)))
+
+## try custom panel function and title
 mpgs2 <- update(mpg.scatter,
-                panel=function(...){panel.abline(1);panel.xyplot(...)},
+                panel=function(...){
+                  panel.abline(0,col="grey");panel.xyplot(...)},
                 main="foobar2")
 plot(direct.label(mpgs2))
 
 data(Chem97,package="mlmRev")
-qqm <- qqmath(~gcsescore,Chem97,groups=gender,
-              type=c("p","g"),f.value=ppoints(25),auto.key=TRUE)
-plot(direct.label(qqm))
+qqm <- qqmath(~gcsescore,Chem97,groups=gender,f.value=ppoints(25),auto.key=TRUE)
+plot(direct.label(qqm,,TRUE))
+## default for points is different for default for lines
+plot(direct.label(update(qqm,type=c("l","g"))))
+## you can hard-core label positions if you really want to:
 static.labels <- data.frame(x=c(-2,0),y=c(6,4),groups=c("F","M"))
-plot(direct.label(qqm,method=function(d,...)static.labels,debug=TRUE))
 plot(direct.label(qqm,method=static.labels,debug=TRUE))
-## Should work: static.labels overwrites values from
-## last.points. Applying last.points should change the hjust as well:
-plot(direct.label(qqm,method=c("last.points",static.labels),debug=TRUE))
-plot(direct.label(qqm,method=c(static.labels,"last.points"),debug=TRUE))
 plot(direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),
-                    type=c('l','g'),f.value=ppoints(100))))
+                         type=c('l','g'),f.value=ppoints(100))))
 
 ## densityplot labeling
 plot(direct.label(densityplot(~gcsescore,Chem97,groups=factor(score),
@@ -100,14 +103,11 @@ devAskNewPage(oask)
 
 ## lineplot labeling
 sprayplot <- xyplot(decrease~treatment,OrchardSprays,groups=rowpos,type="a")
-direct.label(sprayplot) ## should be last.points
-direct.label(sprayplot,last.bumpup) ## better
-direct.label(sprayplot,last.qp) ## better
+direct.label(sprayplot)
 data(BodyWeight,package="nlme")
 ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
 print(direct.label(ratplot))#default is maxvar.points
-print(direct.label(ratplot,last.points))
-print(direct.label(ratplot,last.bumpup)) ## not so good actually
+print(direct.label(ratplot,last.points))#squished together
 print(direct.label(ratplot,last.qp)) ## not so good actually
 ## Say we want to use a simple linear model to explain rat body weight:
 fit <- lm(weight~Time+Diet+Rat,BodyWeight)
