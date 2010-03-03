@@ -98,12 +98,12 @@ empty.grid <- function
     expand <- 0
     while(nrow(no.points)==0){
       boxes <- if("left"%in%names(loc)){
-        calc.borders(expand.grid(x=hgrid("x","w"),y=hgrid("y","h"),w=r$w,h=r$h))
+        list(x=hgrid("x","w"),y=hgrid("y","h"),w=r$w,h=r$h)
       }else{
         L <- sapply(c("x","y"),gl,simplify=FALSE)
-        calc.borders(expand.grid(x=L$x$centers,y=L$y$centers,
-                                 w=L$x$diff,h=L$y$diff))
+        list(x=L$x$centers,y=L$y$centers,w=L$x$diff,h=L$y$diff)
       }
+      boxes <- calc.borders(do.call(expand.grid,boxes))
       boxes <- cbind(boxes,data=inside(boxes,d))
       no.points <- transform(subset(boxes,data==0))
       expand <- expand+1 ## look further out if we can't find any labels inside
@@ -111,7 +111,7 @@ empty.grid <- function
     if(debug)draw(boxes)
     no.points <- transform(no.points,len=(r$x-x)^2+(r$y-y)^2)
     best <- subset(no.points,len==min(len))[1,]
-    res <- rbind(res,cbind(best,groups=v))
+    res <- rbind(res,transform(r,x=best$x,y=best$y))
     ## add points to cloud
     newpts <- with(best,data.frame(x=c(left,left,right,right,x,x,x,left,right),
                                    y=c(bottom,top,top,bottom,top,bottom,y,y,y)))
