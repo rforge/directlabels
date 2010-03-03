@@ -41,7 +41,7 @@ label.positions <- function
   if("y"%in%names(d))d <- transform(d,y=as.numeric(y))
   ##save original levels for later in case PFs mess them up.
   levs <- levels(d$groups)
-  d <- eval.list(method,d,debug,...)
+  d <- eval.list(method,d,debug=debug,...)
   ## rearrange factors in case pos fun messed up the order:
   d$groups <- factor(as.character(d$groups),levs)
   ## defaults for grid parameter values:
@@ -114,11 +114,28 @@ trans.densityplot <- dl.indep({
 })
 trans.density <- trans.densityplot
 
-### Transformation function for 1d qqmath plots.
-trans.qqmath <- dl.indep({
-  r <- prepanel.default.qqmath(d$x,...)
-  data.frame(x=r$x,y=r$y)
-})
+### Transformation function for 1d qqmath plots. This is a copy-paste
+### from panel.qqmath. (total hack)
+trans.qqmath <- function(d,distribution,f.value,qtype=7,...){
+  ddply(d,.(groups),function(d){
+    x <- as.numeric(d$x)
+    distribution <- if (is.function(distribution)) 
+      distribution
+    else if (is.character(distribution)) 
+      get(distribution)
+    else eval(distribution)
+    nobs <- sum(!is.na(x))
+    if (is.null(f.value)) 
+      data.frame(x = distribution(ppoints(nobs)), y = sort(x))
+    else data.frame(x = distribution(
+                      if (is.numeric(f.value))f.value
+                      else f.value(nobs)),
+                    y = quantile(x,
+                      if (is.numeric(f.value))f.value
+                      else f.value(nobs),
+                      names = FALSE, type = qtype, na.rm = TRUE))
+  })
+}
 
 ### Place points on top of the mean value of the rug.
 rug.mean <- function(d,...,end)
