@@ -127,12 +127,15 @@ defaultpf.trellis <- function
 ### user-customizable by setting the directlabels.defaultpf.lattice
 ### option to a function like this.
 (lattice.fun.name,groups,type,...){
-  ldefault <- if(nlevels(groups)==2)"lines2" else "maxvar.points"
+  ldefault <- function()if(nlevels(groups)==2)"lines2" else "maxvar.points"
+  lattice.fun.name <-
+    switch(lattice.fun.name,
+           qqmath="xyplot",
+           lattice.fun.name)
   switch(lattice.fun.name,
-         dotplot=ldefault,
-         xyplot=switch(type,p="smart.grid",ldefault),
+         dotplot=ldefault(),
+         xyplot=if("p"%in%type)"smart.grid" else ldefault(),
          densityplot="top.points",
-         qqmath=ldefault,
          rug="rug.mean",
          stop("No default direct label placement method for '",
               lattice.fun.name,"'.\nPlease specify method."))
