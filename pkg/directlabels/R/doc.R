@@ -24,8 +24,8 @@ dldoc <- function # Make directlabels documentation
     function(def,ignore){
       items <- L[[1]][L[[1]]!=ignore]
       if(length(items)){
-        FIND <- paste("(",paste(items,collapse="|"),")",sep="")
-        gsub(FIND,REP,def)
+        FIND <- paste("\\b(",paste(items,collapse="|"),")\\b(?![.])",sep="")
+        gsub(FIND,REP,def,perl=TRUE)
       }else def
     }
   })
@@ -180,6 +180,9 @@ extract.posfun <- function # Extract Positioning Function for documentation
     L[[N]]$name <- N
     L[[N]]$definition <- rhtmlescape(L[[N]]$definition)
   }
+  ## sort by big names first, since doc system find/replace gives bugs
+  ## otherwise if one function's name is a substring of another's!
+  ##L <- L[order(nchar(names(L)),decreasing=TRUE)]
   L
 ### List of lists, each of which describes one Positioning Function
 ### defined in f.

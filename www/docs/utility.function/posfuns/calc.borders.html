@@ -33,20 +33,6 @@ calc.borders &lt;- function
             right=x+(1-hjust)*w,left=x-hjust*w,
             h=h,w=w)
 }
-### Positioning Function that draws boxes around label positions. Need
-### to have previously called <a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>. Does not edit the data
-### frame.
-<a href="../../utility.function/posfuns/draw.rects.html">draw.rects</a> &lt;- function(d,...){
-  ## easy way -- not correct, doesn't use calc'ed borders
-  ##with(d,grid.rect(x,y,w,h,hjust=hjust,vjust=vjust,
-  ##                 default.units="native",gp=gpar(col="grey")))
-  d_ply(d,.(groups),function(D){
-    with(D,grid.lines(c(left,left,right,right,left),
-                      c(bottom,top,top,bottom,bottom),
-                      "native",gp=gpar(col="grey")))
-  })
-  d
-}
 </pre>
 
 

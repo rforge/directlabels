@@ -106,6 +106,7 @@ calc.borders <- function
             right=x+(1-hjust)*w,left=x-hjust*w,
             h=h,w=w)
 }
+
 ### Positioning Function that draws boxes around label positions. Need
 ### to have previously called calc.boxes. Does not edit the data
 ### frame.
