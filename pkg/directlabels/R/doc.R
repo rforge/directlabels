@@ -24,7 +24,9 @@ dldoc <- function # Make directlabels documentation
     function(def,ignore){
       items <- L[[1]][L[[1]]!=ignore]
       if(length(items)){
-        FIND <- paste("\\b(",paste(items,collapse="|"),")\\b(?![.])",sep="")
+        ## at the end: [.<] means do not find tags twice, when some
+        ## function names are subsets of others
+        FIND <- paste("\\b(",paste(items,collapse="|"),")\\b(?![.<])",sep="")
         gsub(FIND,REP,def,perl=TRUE)
       }else def
     }

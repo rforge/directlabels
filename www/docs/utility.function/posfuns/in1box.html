@@ -19,15 +19,7 @@ Positioning Function - in1box</h1>
 <p>Calculate how many points fall in a box.</p>
 
 <pre>
-in1box &lt;- function
-### Calculate how many points fall in a box.
-(p,
-### data frame of points with columns x and y and many rows.
- box
-### data frame of 1 row with columns left right top bottom.
- ){
-  sum(p$x&gt;box$left &amp; p$x&lt;box$right &amp; p$y&lt;box$top &amp; p$y&gt;box$bottom)
-}
+in1box &lt;- function(p,box)sum(<a href="../../utility.function/posfuns/in1which.html">in1which</a>(p,box))
 </pre>
 
 

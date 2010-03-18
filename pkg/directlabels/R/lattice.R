@@ -135,7 +135,7 @@ defaultpf.trellis <- function
   switch(lattice.fun.name,
          dotplot=ldefault(),
          xyplot=if("p"%in%type)"smart.grid" else ldefault(),
-         densityplot="top.points",
+         densityplot="top.bumptwice",
          rug="rug.mean",
          stop("No default direct label placement method for '",
               lattice.fun.name,"'.\nPlease specify method."))

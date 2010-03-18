@@ -6,8 +6,10 @@
 in1box(p, box)
 }
 \arguments{
-  \item{p}{data frame of points with columns x and y and many rows.}
-  \item{box}{data frame of 1 row with columns left right top bottom.}
+  \item{p}{
+}
+  \item{box}{
+}
 }
 
 

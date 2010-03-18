@@ -128,7 +128,9 @@ bumpup <- function(d,...){
   d <- calc.boxes(d)[order(d$y),]
   for(i in 2:nrow(d)){
     dif <- d$bottom[i]-d$top[i-1]
-    if(dif<0){
+    bpts <- with(d[i,],data.frame(y=bottom,x=c(left,right)))
+    n.in <- in1box(bpts,d[i-1,])
+    if(dif<0&&n.in>0){
       d$bottom[i] <- d$bottom[i]-dif
       d$top[i] <- d$top[i]-dif
       d$y[i] <- d$y[i]-dif
@@ -164,15 +166,18 @@ enlarge.box <- function(d,...){
   calc.borders(d)
 }
 
-in1box <- function
-### Calculate how many points fall in a box.
+in1which <- function
+### Calculate which points fall in a box.
 (p,
 ### data frame of points with columns x and y and many rows.
  box
 ### data frame of 1 row with columns left right top bottom.
  ){
-  sum(p$x>box$left & p$x<box$right & p$y<box$top & p$y>box$bottom)
+  p$x>box$left & p$x<box$right & p$y<box$top & p$y>box$bottom
 }
+
+### Calculate how many points fall in a box.
+in1box <- function(p,box)sum(in1which(p,box))
 
 inside <- function
 ### Calculate for each box how many points are inside.

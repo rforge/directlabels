@@ -23,6 +23,21 @@ p &lt;- densityplot(~value|variable,iris2,groups=Species,scales="free")
 
 <table>
 <tr>
+  <td><img alt="top.bumptwice" src="../../densityplot/iris.top.bumptwice.png" /></td>
+  <td><p>Label the tops, bump labels up to avoid other labels, then to the
+side to avoid collisions with points.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/top.bumptwice.html">top.bumptwice</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="top.bumpup" src="../../densityplot/iris.top.bumpup.png" /></td>
+  <td><p>Label the tops, but bump labels up to avoid collisions.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/top.bumpup.html">top.bumpup</a>")
+  </pre></td>
+</tr>
+<tr>
   <td><img alt="top.points" src="../../densityplot/iris.top.points.png" /></td>
   <td><p>Positioning Function for the top of a group of points.</p>
     <pre>
