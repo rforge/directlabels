@@ -24,8 +24,7 @@ dl.combine &lt;- function # Combine output of several methods
 (...
 ### Several Positioning Functions.
  ){
-  L &lt;- as.list(match.call())[-1]
-  FUNS &lt;- lapply(L,eval)
+  FUNS &lt;- list(...)
   function(d,...){
     dfs &lt;- lapply(FUNS,eval.list,d)
     res &lt;- data.frame()

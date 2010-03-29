@@ -3,8 +3,7 @@ dl.combine <- function # Combine output of several methods
 (...
 ### Several Positioning Functions.
  ){
-  L <- as.list(match.call())[-1]
-  FUNS <- lapply(L,eval)
+  FUNS <- list(...)
   function(d,...){
     dfs <- lapply(FUNS,eval.list,d)
     res <- data.frame()
