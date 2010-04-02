@@ -177,3 +177,18 @@ default.picker <- function
   do.call(p,as.list(parent.frame()))
 }
 
+### Put the labels just outside the closest point in the union of the
+### group convex hulls. NEED TO find the point closest to the exterior
+### of the data.
+group.chull <- function(d,...){
+  bpts <- dl.indep(d[with(d,chull(x,y)),])(d)
+}
+
+### Calculate a 2d density estimate then follow the gradient to a
+### point outside the convex hull.
+density.gradient <- function(d,...){
+  require(ks)
+  est <- drvkde(with(d,cbind(x,y)),1:2,1,se=FALSE)
+  ##print(dens)
+  d
+}

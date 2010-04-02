@@ -19,7 +19,7 @@ dlcompare <- function # Direct label comparison plot
  debug=FALSE
 ### Show debug output?
  ){
-  ## Augment positioning function list names if possible
+  ## Augment positioning method list names if possible
   names(pos.funs) <- sapply(seq_along(pos.funs),function(i){
     N <- names(pos.funs)[i]
     f <- pos.funs[[i]]
