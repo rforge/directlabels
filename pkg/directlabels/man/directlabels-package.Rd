@@ -15,7 +15,7 @@ Depends: \tab proto, plyr, lattice, grid, ggplot2 (>= 0.8.5)\cr
 URL: \tab http://directlabels.r-forge.r-project.org/\cr
 LazyLoad: \tab false\cr
 LazyData: \tab true\cr
-Suggests: \tab nlme, mlmRev, ElemStatLearn, inlinedocs, quadprog, lars\cr
+Suggests: \tab nlme, mlmRev, ElemStatLearn, inlinedocs, quadprog, lars, ks\cr
 Collate: \tab utility.function.R compare.R dotplot.R lineplot.R
 densityplot.R  ggplot2.R  positioning.functions.R
 doc.R lattice.R scatterplot.R contourplot.R\cr}
