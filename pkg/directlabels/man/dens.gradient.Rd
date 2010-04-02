@@ -1,10 +1,10 @@
-\name{density.gradient}
-\alias{density.gradient}
-\title{density gradient}
+\name{dens.gradient}
+\alias{dens.gradient}
+\title{dens gradient}
 \description{Calculate a 2d density estimate then follow the gradient to a
 point outside the convex hull.}
 \usage{
-density.gradient(d, ...)
+dens.gradient(d, ...)
 }
 \arguments{
   \item{d}{

@@ -186,7 +186,7 @@ group.chull <- function(d,...){
 
 ### Calculate a 2d density estimate then follow the gradient to a
 ### point outside the convex hull.
-density.gradient <- function(d,...){
+dens.gradient <- function(d,...){
   require(ks)
   est <- drvkde(with(d,cbind(x,y)),1:2,1,se=FALSE)
   ##print(dens)
