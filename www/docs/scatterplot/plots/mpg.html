@@ -49,13 +49,6 @@ direct.label(p,"<a href="../posfuns/extreme.grid.html">extreme.grid</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="extreme.points" src="../../scatterplot/mpg.extreme.points.png" /></td>
-  <td><p>Label the points furthest from the origin for each group.</p>
-    <pre>
-direct.label(p,"<a href="../posfuns/extreme.points.html">extreme.points</a>")
-  </pre></td>
-</tr>
-<tr>
   <td><img alt="follow.points" src="../../scatterplot/mpg.follow.points.png" /></td>
   <td><p>Draws a line between each center and every point, then follows the
 line out far enough to give a box outside the cloud. Out of all
@@ -68,27 +61,12 @@ direct.label(p,"<a href="../posfuns/follow.points.html">follow.points</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="get.means" src="../../scatterplot/mpg.get.means.png" /></td>
-  <td><p>Positioning Function for the mean of each cluster of points.</p>
-    <pre>
-direct.label(p,"<a href="../posfuns/get.means.html">get.means</a>")
-  </pre></td>
-</tr>
-<tr>
-  <td><img alt="perpendicular.lines" src="../../scatterplot/mpg.perpendicular.lines.png" /></td>
-  <td><p>Draw a line between the centers of each cluster, then draw a
-perpendicular line for each cluster that goes through its
-center. For each cluster, return the point the lies furthest out
-along this line.</p>
-    <pre>
-direct.label(p,"<a href="../posfuns/perpendicular.lines.html">perpendicular.lines</a>")
-  </pre></td>
-</tr>
-<tr>
   <td><img alt="smart.grid" src="../../scatterplot/mpg.smart.grid.png" /></td>
-  <td><p>Use bounding box information with a small empty.grid. TODO: does
-not work with ggplot2 since the backend does not support bounding
-box calculation.</p>
+  <td><p>Use bounding box information with a small empty.grid to find the a
+non-colliding label that is close to a point on the convex hull,
+which is close to the visual center of the data. TODO: does not
+work with ggplot2 since the backend does not support bounding box
+calculation.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/smart.grid.html">smart.grid</a>")
   </pre></td>

@@ -89,7 +89,15 @@ calc.boxes <- function(d,debug=FALSE,...){
 }
 
 ### Calculate big boxes around the means of each cluster.
-big.boxes <- function(d,...)enlarge.box(calc.boxes(get.means(d)))
+big.boxes <- function(d,...)enlarge.box(calc.boxes(visualcenter(d)))
+
+### Point in the middle of the min and max for each group.
+visualcenter <-
+  dl.indep(summarise(d,x=diff(range(x))/2+min(x),y=diff(range(y))/2+min(y)))
+
+### Positioning Function for the mean of each cluster of points.
+get.means <-
+  dl.indep(unique(transform(d,x=mean(x),y=mean(y))))
 
 calc.borders <- function
 ### Calculate bounding box based on newly calculated width and height.
@@ -189,3 +197,97 @@ inside <- function
   sapply(1:nrow(boxes),function(i)in1box(points,boxes[i,]))
 ### Vector of point counts for each box.
 }
+
+perpendicular.lines <- function
+### Draw a line between the centers of each cluster, then draw a
+### perpendicular line for each cluster that goes through its
+### center. For each cluster, return the point the lies furthest out
+### along this line.
+(d,
+### Data frame with groups x y.
+ debug=FALSE,
+### If TRUE will draw points at the center of each cluster and some
+### lines that show how the points returned were chosen.
+ ...
+### ignored.
+ ){
+  means <- rename(get.means(d),list(x="mx",y="my",groups="groups"))
+  big <- merge(d,means,by="groups")
+  fit <- lm(my~mx,means)
+  b <- coef(fit)[1]
+  m <- coef(fit)[2]
+  big2 <- transform(big,x1=(mx+x+(my-y)*m)/2)
+  big3 <- transform(big2,y1=m*(x1-x)+y)
+  big4 <- transform(big3,
+                    d=sqrt((x-x1)^2+(y-y1)^2),
+                    dm=sqrt((x-mx)^2+(y-my)^2))
+  big5 <- transform(big4,ratio=d/dm)
+  winners <- ddply(big5,.(groups),subset,
+                   subset=seq_along(ratio)==which.min(ratio))
+  ## gives back a function of a line that goes through the designated center
+  f <- function(v)function(x){
+    r <- means[means$groups==v,]
+    -1/m*(x-r$mx)+r$my
+  }
+  ##dd <- ddply(means,.(groups),summarise,x=x+sdx*seq(0,-2,l=5)[-1])
+  ##dd$y <- mdply(dd,function(groups,x)f(groups)(x))$x
+  if(debug){
+    ## myline draws a line over the range of the data for a given fun F
+    myline <- function(F)
+      grid.lines(range(d$x),F(range(d$x)),default.units="native")
+    ## Then draw a line between these means
+    myline(function(x)m*x+b)
+    ## Then draw perpendiculars that go through each center
+    for(v in means$groups)myline(f(v))
+  }
+  winners[,c("x","y","groups")]
+### Data frame with groups x y, giving the point for each cluster
+### which is the furthest out along the line drawn through its center.
+}
+
+### Label the points furthest from the origin for each group.
+extreme.points <- dl.indep({
+  d <- transform(d,d=sqrt(x^2+y^2))
+  d[which.max(d$d),]
+})
+
+### Calculate closest point on the convex hull and put it outside that
+### point.
+closest.on.chull <- function(d,debug=FALSE,center.fun=big.boxes,...){
+  centers <- center.fun(d,debug=debug,...)
+  bpts <- d[with(d,chull(x,y)),]
+  hull.segments <- transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
+                             x1=bpts$x[i1],
+                             y1=bpts$y[i1],
+                             x2=bpts$x[i2],
+                             y2=bpts$y[i2])
+  if(debug){
+    with(centers,lpoints(x,y,pch="+"))
+    with(hull.segments,lsegments(x1,y1,x2,y2))
+  }
+  closepts <- ddply(centers,.(groups),function(m){
+    ## m is 1 row, a center of a point cloud, we need to find the
+    ## distance to the closest point on each segment of the convex
+    ## hull.
+    these <- within(hull.segments,{
+      s <- (y2-y1)/(x2-x1)
+      ## the closest point on the line formed by expanding this line
+      ## segment (this expression is calculated by finding the minimum
+      ## of the distance function).
+      xstar <- (m$x + m$y*s + x1*s^2 - s*y1)/(s^2+1)
+      minval <- apply(cbind(x1,x2),1,min)
+      maxval <- apply(cbind(x1,x2),1,max)
+      ## xopt is the closest point on the line segment
+      xopt <- ifelse(xstar<minval,minval,ifelse(xstar>maxval,maxval,xstar))
+      yopt <- s*(xopt-x1)+y1
+      ## distance to each point on line segment from the center
+      d <- (m$x-xopt)^2+(m$y-yopt)^2
+    })
+    i <- which.min(these$d)
+    h <- with(these[i,],data.frame(x=xopt,y=yopt))
+    if(debug)with(h,lsegments(m$x,m$y,h$x,h$y))
+    h
+  })
+  big.boxes(closepts)
+}
+

@@ -1,0 +1,85 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+	<meta http-equiv="Content-Type" content="text/html;
+	charset=UTF-8" />
+	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
+	rel="stylesheet" type="text/css" />
+	<title>directlabels documentation - closest.on.chull</title>
+  </head>
+
+<body>
+
+<h1><a href="../../index.html">directlabels</a> - utility.function -
+Positioning Function - closest.on.chull</h1>
+
+<p>Calculate closest point on the convex hull and put it outside that
+point.</p>
+
+<pre>
+closest.on.chull &lt;- function(d,debug=FALSE,center.fun=<a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>,...){
+  centers &lt;- center.fun(d,debug=debug,...)
+  bpts &lt;- d[with(d,chull(x,y)),]
+  hull.segments &lt;- transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
+                             x1=bpts$x[i1],
+                             y1=bpts$y[i1],
+                             x2=bpts$x[i2],
+                             y2=bpts$y[i2])
+  if(debug){
+    with(centers,lpoints(x,y,pch="+"))
+    with(hull.segments,lsegments(x1,y1,x2,y2))
+  }
+  closepts &lt;- ddply(centers,.(groups),function(m){
+    ## m is 1 row, a center of a point cloud, we need to find the
+    ## distance to the closest point on each segment of the convex
+    ## hull.
+    these &lt;- within(hull.segments,{
+      s &lt;- (y2-y1)/(x2-x1)
+      ## the closest point on the line formed by expanding this line
+      ## segment (this expression is calculated by finding the minimum
+      ## of the distance function).
+      xstar &lt;- (m$x + m$y*s + x1*s^2 - s*y1)/(s^2+1)
+      minval &lt;- apply(cbind(x1,x2),1,min)
+      maxval &lt;- apply(cbind(x1,x2),1,max)
+      ## xopt is the closest point on the line segment
+      xopt &lt;- ifelse(xstar&lt;minval,minval,ifelse(xstar&gt;maxval,maxval,xstar))
+      yopt &lt;- s*(xopt-x1)+y1
+      ## distance to each point on line segment from the center
+      d &lt;- (m$x-xopt)^2+(m$y-yopt)^2
+    })
+    i &lt;- which.min(these$d)
+    h &lt;- with(these[i,],data.frame(x=xopt,y=yopt))
+    if(debug)with(h,lsegments(m$x,m$y,h$x,h$y))
+    h
+  })
+  <a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>(closepts)
+}
+</pre>
+
+
+
+<center>
+<table>
+<tr><td>Please contact <a href="http://cbio.ensmp.fr/~thocking/">Toby
+Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
+contribute, thanks!</td>
+</tr>
+<tr><td align="center">Documentation website generated from comments
+in R source code
+using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
+</tr>
+<tr>
+<td align="center">
+    <a href="http://validator.w3.org/check?uri=referer">validate</a>
+</td>
+</tr>
+</table>
+
+</center>
+
+</body>
+
+</html>

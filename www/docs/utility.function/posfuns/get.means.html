@@ -8,18 +8,19 @@
 	charset=UTF-8" />
 	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
 	rel="stylesheet" type="text/css" />
-	<title>directlabels documentation - big.boxes</title>
+	<title>directlabels documentation - get.means</title>
   </head>
 
 <body>
 
 <h1><a href="../../index.html">directlabels</a> - utility.function -
-Positioning Function - big.boxes</h1>
+Positioning Function - get.means</h1>
 
-<p>Calculate big boxes around the means of each cluster.</p>
+<p>Positioning Function for the mean of each cluster of points.</p>
 
 <pre>
-big.boxes &lt;- function(d,...)<a href="../../utility.function/posfuns/enlarge.box.html">enlarge.box</a>(<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>(<a href="../../utility.function/posfuns/visualcenter.html">visualcenter</a>(d)))
+get.means &lt;-
+  <a href="../../utility.function/posfuns/dl.indep.html">dl.indep</a>(unique(transform(d,x=mean(x),y=mean(y))))
 </pre>
 
 

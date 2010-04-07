@@ -174,10 +174,7 @@ p <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
   print(direct.label(p,"empty.grid"))
   print(direct.label(p,"empty.grid.2"))
   print(direct.label(p,"extreme.grid"))
-  print(direct.label(p,"extreme.points"))
   print(direct.label(p,"follow.points"))
-  print(direct.label(p,"get.means"))
-  print(direct.label(p,"perpendicular.lines"))
   print(direct.label(p,"smart.grid"))
 }
 

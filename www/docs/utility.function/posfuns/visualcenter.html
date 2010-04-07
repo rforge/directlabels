@@ -8,18 +8,19 @@
 	charset=UTF-8" />
 	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
 	rel="stylesheet" type="text/css" />
-	<title>directlabels documentation - big.boxes</title>
+	<title>directlabels documentation - visualcenter</title>
   </head>
 
 <body>
 
 <h1><a href="../../index.html">directlabels</a> - utility.function -
-Positioning Function - big.boxes</h1>
+Positioning Function - visualcenter</h1>
 
-<p>Calculate big boxes around the means of each cluster.</p>
+<p>Point in the middle of the min and max for each group.</p>
 
 <pre>
-big.boxes &lt;- function(d,...)<a href="../../utility.function/posfuns/enlarge.box.html">enlarge.box</a>(<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>(<a href="../../utility.function/posfuns/visualcenter.html">visualcenter</a>(d)))
+visualcenter &lt;-
+  <a href="../../utility.function/posfuns/dl.indep.html">dl.indep</a>(summarise(d,x=diff(range(x))/2+min(x),y=diff(range(y))/2+min(y)))
 </pre>
 
 

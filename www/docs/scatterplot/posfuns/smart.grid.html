@@ -16,9 +16,11 @@
 <h1><a href="../../index.html">directlabels</a> - scatterplot -
 Positioning Function - smart.grid</h1>
 
-<p>Use bounding box information with a small empty.grid. TODO: does
-not work with ggplot2 since the backend does not support bounding
-box calculation.</p>
+<p>Use bounding box information with a small empty.grid to find the a
+non-colliding label that is close to a point on the convex hull,
+which is close to the visual center of the data. TODO: does not
+work with ggplot2 since the backend does not support bounding box
+calculation.</p>
 
 <pre>
 smart.grid &lt;- <a href="../../utility.function/posfuns/empty.grid.fun.html">empty.grid.fun</a>(<a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>)
