@@ -1,10 +1,10 @@
-\name{all.chull}
-\alias{all.chull}
-\title{all chull}
+\name{closest.on.chull}
+\alias{closest.on.chull}
+\title{closest on chull}
 \description{Calculate closest point on the convex hull and put it outside that
 point.}
 \usage{
-all.chull(d, debug = FALSE, ...)
+closest.on.chull(d, debug = FALSE, ...)
 }
 \arguments{
   \item{d}{

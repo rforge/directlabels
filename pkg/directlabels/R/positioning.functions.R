@@ -206,11 +206,12 @@ closest.on.chull <- function(d,debug=FALSE,...){
     these <- within(hull.segments,{
       s <- (y2-y1)/(x2-x1)
       ## the closest point on the line formed by expanding this line
-      ## segment
+      ## segment (this expression is calculated by finding the minimum
+      ## of the distance function).
       xstar <- (m$x + m$y*s + x1*s^2 - s*y1)/(s^2+1)
       minval <- apply(cbind(x1,x2),1,min)
       maxval <- apply(cbind(x1,x2),1,max)
-      ## xopt is on the line segment
+      ## xopt is the closest point on the line segment
       xopt <- ifelse(xstar<minval,minval,ifelse(xstar>maxval,maxval,xstar))
       yopt <- s*(xopt-x1)+y1
       ## distance to each point on line segment from the center
