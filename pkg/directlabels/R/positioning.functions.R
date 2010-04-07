@@ -187,7 +187,7 @@ group.chull <- function(d,...){
 
 ### Calculate closest point on the convex hull and put it outside that
 ### point.
-all.chull <- function(d,debug=FALSE,...){
+closest.on.chull <- function(d,debug=FALSE,...){
   centers <- get.means(d)
   bpts <- d[with(d,chull(x,y)),]
   hull.segments <- transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
