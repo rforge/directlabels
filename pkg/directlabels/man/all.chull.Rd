@@ -1,0 +1,25 @@
+\name{all.chull}
+\alias{all.chull}
+\title{all chull}
+\description{Calculate closest point on the convex hull and put it outside that
+point.}
+\usage{
+all.chull(d, debug = FALSE, ...)
+}
+\arguments{
+  \item{d}{
+}
+  \item{debug}{
+}
+  \item{\dots}{
+}
+}
+
+
+
+\author{Toby Dylan Hocking <toby.hocking@inria.fr>}
+
+
+
+
+

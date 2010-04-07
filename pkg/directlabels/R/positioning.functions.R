@@ -181,7 +181,44 @@ default.picker <- function
 ### group convex hulls. NEED TO find the point closest to the exterior
 ### of the data.
 group.chull <- function(d,...){
+  browser()
   bpts <- dl.indep(d[with(d,chull(x,y)),])(d)
+}
+
+### Calculate closest point on the convex hull and put it outside that
+### point.
+all.chull <- function(d,debug=FALSE,...){
+  centers <- get.means(d)
+  bpts <- d[with(d,chull(x,y)),]
+  hull.segments <- transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
+                             x1=bpts$x[i1],
+                             y1=bpts$y[i1],
+                             x2=bpts$x[i2],
+                             y2=bpts$y[i2])
+  if(debug){
+    with(centers,lpoints(x,y,pch="+"))
+    with(hull.segments,lsegments(x1,y1,x2,y2))
+  }
+  closepts <- ddply(centers,.(groups),function(m){
+    ## m is 1 row, a center of a point cloud, we need to find the
+    ## distance to the closest point on each segment of the convex
+    ## hull.
+    these <- within(hull.segments,{
+      s <- (y2-y1)/(x2-x1)
+      ## the closest point on the line formed by expanding this line
+      ## segment
+      xstar <- (m$x + m$y*s + x1*s^2 - s*y1)/(s^2+1)
+      minval <- apply(cbind(x1,x2),1,min)
+      maxval <- apply(cbind(x1,x2),1,max)
+      ## xopt is on the line segment
+      xopt <- ifelse(xstar<minval,minval,ifelse(xstar>maxval,maxval,xstar))
+      yopt <- s*(xopt-x1)+y1
+      ## distance to each point on line segment from the center
+      d <- (m$x-xopt)^2+(m$y-yopt)^2
+    })
+    i <- which.min(these$d)
+    with(these[i,],data.frame(x=xopt,y=yopt))
+  })
 }
 
 ### Calculate a 2d density estimate then follow the gradient to a
