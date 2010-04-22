@@ -8,50 +8,51 @@
 	charset=UTF-8" />
 	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
 	rel="stylesheet" type="text/css" />
-	<title>directlabels documentation - last.qp</title>
+	<title>directlabels documentation - maxvar.qp</title>
   </head>
 
 <body>
 
 <h1><a href="../../index.html">directlabels</a> - lineplot -
-Positioning Function - last.qp</h1>
+Positioning Function - maxvar.qp</h1>
 
-<p>Label last points from QP solver that ensures labels do not collide.</p>
+<p>Label first or last points, whichever are more spread out, and use
+a QP solver to make sure the labels do not collide.</p>
 
 <pre>
-last.qp &lt;- <a href="../../utility.function/posfuns/vertical.qp.html">vertical.qp</a>(<a href="../../lineplot/posfuns/last.points.html">last.points</a>)
+maxvar.qp &lt;- <a href="../../utility.function/posfuns/vertical.qp.html">vertical.qp</a>(<a href="../../lineplot/posfuns/maxvar.points.html">maxvar.points</a>)
 </pre>
 
 <table>
 <tr>
-  <td><img alt="bodyweight" src="../../lineplot/bodyweight.last.qp.png" /></td>
+  <td><img alt="bodyweight" src="../../lineplot/bodyweight.maxvar.qp.png" /></td>
   <td><p><a href="../plots/bodyweight.html">bodyweight</a></p><pre>
 data(BodyWeight,package="nlme")
 p &lt;- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',
        layout=c(3,1),xlim=c(-10,75))
-direct.label(p,"last.qp")
+direct.label(p,"maxvar.qp")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="chemqqmathscore" src="../../lineplot/chemqqmathscore.last.qp.png" /></td>
+  <td><img alt="chemqqmathscore" src="../../lineplot/chemqqmathscore.maxvar.qp.png" /></td>
   <td><p><a href="../plots/chemqqmathscore.html">chemqqmathscore</a></p><pre>
 data(Chem97,package="mlmRev")
 p &lt;- qqmath(~gcsescore|gender,Chem97,groups=factor(score),
        type=c('l','g'),f.value=ppoints(100))
-direct.label(p,"last.qp")
+direct.label(p,"maxvar.qp")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="chemqqmathsex" src="../../lineplot/chemqqmathsex.last.qp.png" /></td>
+  <td><img alt="chemqqmathsex" src="../../lineplot/chemqqmathsex.maxvar.qp.png" /></td>
   <td><p><a href="../plots/chemqqmathsex.html">chemqqmathsex</a></p><pre>
 data(Chem97,package="mlmRev")
 p &lt;- qqmath(~gcsescore,Chem97,groups=gender,
        type=c("l","g"),f.value=ppoints(100))
-direct.label(p,"last.qp")
+direct.label(p,"maxvar.qp")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="ridge" src="../../lineplot/ridge.last.qp.png" /></td>
+  <td><img alt="ridge" src="../../lineplot/ridge.maxvar.qp.png" /></td>
   <td><p><a href="../plots/ridge.html">ridge</a></p><pre>
 ## complicated ridge regression lineplot ex. fig 3.8 from Elements of
 ## Statistical Learning, Hastie et al.
@@ -83,17 +84,17 @@ p &lt;- xyplot(value~df,m,groups=variable,type="o",pch="+",
        ylab="scaled coefficients",
        sub="grey line shows coefficients chosen by cross-validation",
        xlab=expression(df(lambda)))
-direct.label(p,"last.qp")
+direct.label(p,"maxvar.qp")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="sexdeaths" src="../../lineplot/sexdeaths.last.qp.png" /></td>
+  <td><img alt="sexdeaths" src="../../lineplot/sexdeaths.maxvar.qp.png" /></td>
   <td><p><a href="../plots/sexdeaths.html">sexdeaths</a></p><pre>
 dts &lt;- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
 ddf &lt;- melt(as.data.frame(dts),id="time")
 names(ddf) &lt;- c("time","sex","deaths")
 p &lt;- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
-direct.label(p,"last.qp")
+direct.label(p,"maxvar.qp")
   </pre></td>
 </tr>
 </table>

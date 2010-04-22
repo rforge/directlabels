@@ -291,3 +291,7 @@ closest.on.chull <- function(d,debug=FALSE,center.fun=big.boxes,...){
   big.boxes(closepts)
 }
 
+### Make a Positioning Method from a set of points on a vertical line
+### that will be spaced out using qp.labels
+vertical.qp <- function(M)list(M,calc.boxes,qp.labels("y","h"))
+

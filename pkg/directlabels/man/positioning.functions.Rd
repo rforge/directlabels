@@ -143,6 +143,7 @@ p <- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
   print(direct.label(p,"last.qp"))
   print(direct.label(p,"lines2"))
   print(direct.label(p,"maxvar.points"))
+  print(direct.label(p,"maxvar.qp"))
 }
 
 

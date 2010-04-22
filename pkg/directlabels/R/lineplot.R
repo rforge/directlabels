@@ -12,7 +12,7 @@ maxvar.points <- function(d,...){
     else range(x)
   }
   vars <- sapply(myrange(d$x),function(v)var(subset(d,x==v)$y))
-  FUN <- if(diff(vars)<0)first.qp else last.qp
+  FUN <- if(diff(vars)<0)first.points else last.points
   eval.list(FUN,d,...)
 }
 
@@ -23,10 +23,14 @@ last.bumpup <- list(last.points,bumpup)
 first.bumpup <- list(first.points,bumpup)
 
 ### Label last points from QP solver that ensures labels do not collide.
-last.qp <- list(last.points,calc.boxes,qp.labels("y","h"))
+last.qp <- vertical.qp(last.points)
 
 ### Label first points from QP solver that ensures labels do not collide.
-first.qp <- list(first.points,calc.boxes,qp.labels("y","h"))
+first.qp <- vertical.qp(first.points)
+
+### Label first or last points, whichever are more spread out, and use
+### a QP solver to make sure the labels do not collide.
+maxvar.qp <- vertical.qp(maxvar.points)
 
 lines2 <- function
 ### Positioning Function for 2 groups of longitudinal data. One curve

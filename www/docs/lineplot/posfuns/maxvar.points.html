@@ -25,7 +25,7 @@ maxvar.points &lt;- function(d,...){
     else range(x)
   }
   vars &lt;- sapply(myrange(d$x),function(v)var(subset(d,x==v)$y))
-  FUN &lt;- if(diff(vars)&lt;0)<a href="../../lineplot/posfuns/first.qp.html">first.qp</a> else <a href="../../lineplot/posfuns/last.qp.html">last.qp</a>
+  FUN &lt;- if(diff(vars)&lt;0)<a href="../../lineplot/posfuns/first.points.html">first.points</a> else <a href="../../lineplot/posfuns/last.points.html">last.points</a>
   eval.list(FUN,d,...)
 }
 </pre>
