@@ -24,8 +24,10 @@ maxvar.points &lt;- function(d,...){
     if(is.factor(x))levels(x)[c(1,nlevels(x))]
     else range(x)
   }
-  vars &lt;- sapply(myrange(d$x),function(v)var(subset(d,x==v)$y))
-  FUN &lt;- if(diff(vars)&lt;0)<a href="../../lineplot/posfuns/first.points.html">first.points</a> else <a href="../../lineplot/posfuns/last.points.html">last.points</a>
+  vars &lt;- sapply(myrange(d$x),function(v)var(subset(d,x==v)$y,na.rm=TRUE))
+  FUN &lt;- if(is.na(vars[1]))<a href="../../lineplot/posfuns/last.points.html">last.points</a>
+  else if(is.na(vars[2]))<a href="../../lineplot/posfuns/first.points.html">first.points</a>
+  else if(diff(vars)&lt;0)<a href="../../lineplot/posfuns/first.points.html">first.points</a> else <a href="../../lineplot/posfuns/last.points.html">last.points</a>
   eval.list(FUN,d,...)
 }
 </pre>

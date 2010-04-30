@@ -1,7 +1,7 @@
 \name{first.points}
 \alias{first.points}
 \title{first points}
-\description{Positioning Function for the first of a group of points.}
+\description{Positioning Method for the first of a group of points.}
 \usage{
 first.points(d, ...)
 }

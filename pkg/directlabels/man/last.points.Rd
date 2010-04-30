@@ -1,7 +1,7 @@
 \name{last.points}
 \alias{last.points}
 \title{last points}
-\description{Positioning Function for the last of a group of points.}
+\description{Positioning Method for the last of a group of points.}
 \usage{
 last.points(d, ...)
 }

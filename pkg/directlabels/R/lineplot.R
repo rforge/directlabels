@@ -1,9 +1,8 @@
-### Positioning Function for the first of a group of points.
-first.points <-
-  dl.indep(data.frame(d[which.min(d$x),],hjust=1,vjust=0.5))
+### Positioning Method for the first of a group of points.
+first.points <- label.endpoints(which.min,1)
 
-### Positioning Function for the last of a group of points.
-last.points <- dl.indep(data.frame(d[which.max(d$x),],hjust=0,vjust=0.5))
+### Positioning Method for the last of a group of points.
+last.points <- label.endpoints(which.max,0)
 
 ### Do first or last, whichever has points most spread out.
 maxvar.points <- function(d,...){
@@ -11,8 +10,10 @@ maxvar.points <- function(d,...){
     if(is.factor(x))levels(x)[c(1,nlevels(x))]
     else range(x)
   }
-  vars <- sapply(myrange(d$x),function(v)var(subset(d,x==v)$y))
-  FUN <- if(diff(vars)<0)first.points else last.points
+  vars <- sapply(myrange(d$x),function(v)var(subset(d,x==v)$y,na.rm=TRUE))
+  FUN <- if(is.na(vars[1]))last.points
+  else if(is.na(vars[2]))first.points
+  else if(diff(vars)<0)first.points else last.points
   eval.list(FUN,d,...)
 }
 

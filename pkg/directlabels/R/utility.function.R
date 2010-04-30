@@ -1,3 +1,19 @@
+label.endpoints <- function
+### Make a Positioning Method that labels a certain x value.
+(FUN,
+### FUN(d$x) should return an index of which point to label. for
+### example you can use which.min or which.max.
+ hjust
+### hjust of the labels.
+ ){
+  function(d,...)ddply(d,.(groups),function(d,...){
+    i <- FUN(d$x)
+    if(length(i))data.frame(d[i,],hjust,vjust=0.5)
+    else data.frame()
+  })
+### A Positioning Method like first.points or last.points.
+}
+
 dl.combine <- function # Combine output of several methods
 ### Apply several Positioning methods to the original data frame.
 (...

@@ -34,6 +34,7 @@ label.positions <- function
  ...
 ### Passed to Positioning Function(s).
  ){
+  if(nrow(d)==0)return(d)## empty data frames can cause many bugs
   ## make sure input data is in good format
   d <- transform(d,
                  x=as.numeric(x),
@@ -42,6 +43,7 @@ label.positions <- function
   ##save original levels for later in case PFs mess them up.
   levs <- levels(d$groups)
   d <- eval.list(method,d,debug=debug,...)
+  if(nrow(d)==0)return(d)## empty data frames can cause many bugs
   ## rearrange factors in case pos fun messed up the order:
   d$groups <- factor(as.character(d$groups),levs)
   ## defaults for grid parameter values:
