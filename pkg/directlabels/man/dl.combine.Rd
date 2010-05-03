@@ -17,8 +17,7 @@ applying each specified Positioning Function.}
 
 
 
-\examples{library(directlabels)
-
+\examples{
 ## Simple example: label the start and endpoints
 data(BodyWeight,package="nlme")
 ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
@@ -29,13 +28,13 @@ rp2 <- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
 print(direct.label(direct.label(rp2,last.points),first.points))
 
 mylars <- function
-### Least angle regression algorithm for calculating lasso solutions.
+## Least angle regression algorithm for calculating lasso solutions.
 (x,
-### Matrix of predictor variables.
+ ## Matrix of predictor variables.
  y,
-### Vector of responses.
+ ## Vector of responses.
  epsilon=1e-6
-### If correlation < epsilon, we are done.
+ ## If correlation < epsilon, we are done.
  ){
   xscale <- scale(x) # need to work with standardized variables
   b <- rep(0,ncol(x))# coef vector starts at 0
@@ -111,4 +110,5 @@ plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
 data(diabetes,package="lars")
 dres <- with(diabetes,mylars(x,y))
 P <- xyplot(coef~arclength,dres,groups=variable,type="l")
-plot(direct.label(P,dl.combine(lasso.labels,last.qp)))}
+plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
+}

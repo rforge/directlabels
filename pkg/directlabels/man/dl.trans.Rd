@@ -18,8 +18,9 @@ dl.trans(...)
 
 
 
-\examples{library(directlabels)
+\examples{
 complicated <- list(dl.trans(x=x+10),
                     dl.indep(d[-2,]),
                     rot=c(30,180))
-direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)}
+direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
+}

@@ -22,16 +22,16 @@ panel.groups function.}
   \item{\dots}{Additional arguments to panel.superpose.}
 }
 
-
+\value{Nothing.}
 
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 
 
 
 
-\examples{loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
+\examples{
+loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
-library(directlabels)
 ## 3 equivalent ways to make the same plot:
 print(direct.label( ## most user-friendly
                    densityplot(~ppp,loci,groups=type,n=500)
@@ -46,7 +46,7 @@ print(direct.label( ## exactly the same as above but with specific panel fns
 print(densityplot(~ppp,loci,groups=type,n=500,
                   panel=panel.superpose.dl,panel.groups="panel.densityplot"))
 
-### Exploring custom panel and panel.groups functions
+## Exploring custom panel and panel.groups functions
 library(ggplot2)
 data(BodyWeight,package="nlme")
 ## Say we want to use a simple linear model to explain rat body weight:
@@ -75,7 +75,7 @@ print(ratxy(panel=function(...)
             panel.superpose.dl(panel.groups=panel.xyplot,...),
             method=first.points))
 
-### Custom panel.groups functions:
+## Custom panel.groups functions:
 ## This panel.groups function will display the model fits:
 panel.model <- function(x,subscripts,col.line,...){
   panel.xyplot(x=x,subscripts=subscripts,col.line=col.line,...)

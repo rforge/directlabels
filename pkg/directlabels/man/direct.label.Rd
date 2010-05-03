@@ -20,8 +20,7 @@ direct.label(p, method = NULL, debug = FALSE)
 
 
 
-\examples{library(directlabels)
-
+\examples{
 data(mpg,package="ggplot2")
 ## direct label simple ggplot2 scatterplot
 scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
@@ -61,7 +60,7 @@ plot(direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),
 
 ## densityplot labeling
 plot(direct.label(densityplot(~gcsescore,Chem97,groups=factor(score),
-                  plot.points=FALSE,n=500)))
+                              plot.points=FALSE,n=500)))
 ## Try with several panels:
 plot(direct.label(densityplot(~gcsescore|gender,Chem97,plot.points=FALSE,
                               groups=factor(score),layout=c(1,2),n=500)))
@@ -152,10 +151,6 @@ p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
             ylab="scaled coefficients",
             sub="grey line shows coefficients chosen by cross-validation",
             xlab=expression(df(lambda)))
-##pdf("figure3.8.pdf",h=5,w=5)
 print(direct.label(update(p,xlim=c(0,9.25)),
                    list(last.qp,cex=0.75,dl.trans(x=x+0.1))))
-##dev.off()
-##system("xpdf figure3.8.pdf")
-
 }

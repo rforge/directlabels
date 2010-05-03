@@ -20,7 +20,7 @@ dl.combine <- function # Combine output of several methods
 ### Several Positioning Functions.
  ){
   FUNS <- list(...)
-  function(d,...){
+  pf <- function(d,...){
     dfs <- lapply(FUNS,eval.list,d)
     res <- data.frame()
     for(df in dfs){
@@ -29,8 +29,102 @@ dl.combine <- function # Combine output of several methods
     }
     res
   }
+  return(pf)
 ### A Positioning Function that returns the combined data frame after
 ### applying each specified Positioning Function.
+  ## Simple example: label the start and endpoints
+  data(BodyWeight,package="nlme")
+  ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
+  plot(direct.label(ratplot,dl.combine(first.points,last.points)))
+  ## can also do this by repeatedly calling direct.label (ugly)
+  plot(direct.label(direct.label(ratplot,last.points),first.points))
+  rp2 <- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
+  print(direct.label(direct.label(rp2,last.points),first.points))
+
+  mylars <- function
+  ## Least angle regression algorithm for calculating lasso solutions.
+  (x,
+   ## Matrix of predictor variables.
+   y,
+   ## Vector of responses.
+   epsilon=1e-6
+   ## If correlation < epsilon, we are done.
+   ){
+    xscale <- scale(x) # need to work with standardized variables
+    b <- rep(0,ncol(x))# coef vector starts at 0
+    names(b) <- colnames(x)
+    ycor <- apply(xscale,2,function(xj)sum(xj*y))
+    j <- which.max(ycor) # variables in active set, starts with most correlated
+    alpha.total <- 0
+    out <- data.frame()
+    
+    while(1){## lar loop
+      xak <- xscale[,j] # current variables
+      r <- y-xscale%*%b # current residual
+      ## direction of parameter evolution
+      delta <- solve(t(xak)%*%xak)%*%t(xak)%*%r
+      ## Current correlations (actually dot product)
+      intercept <- apply(xscale,2,function(xk)sum(r*xk))
+      ## current rate of change of correlations
+      z <- xak%*%delta
+      slope <- apply(xscale,2,function(xk)-sum(z*xk))
+      ## store current values of parameters and correlation
+      out <- rbind(out,data.frame(variable=colnames(x),
+                                  coef=b,
+                                  corr=abs(intercept),
+                                  alpha=alpha.total,
+                                  arclength=sum(abs(b)),
+                                  coef.unscaled=b/attr(xscale,"scaled:scale")))
+
+      if(sum(abs(intercept)) < epsilon)#corr==0 so we are done
+        return(transform(out,s=arclength/max(arclength)))
+      
+      ## If there are more variables we can enter into the regression,
+      ## then see which one will cross the highest correlation line
+      ## first, and record the alpha value of where the lines cross.
+      d <- data.frame(slope,intercept)
+      d[d$intercept<0,] <- d[d$intercept<0,]*-1
+      d0 <- data.frame(d[j[1],])# highest correlation line
+      d2 <- data.frame(rbind(d,-d),variable=names(slope))#reflected lines
+      ## Calculation of alpha for where lines cross for each variable
+      d2$alpha <- (d0$intercept-d2$intercept)/(d2$slope-d0$slope)
+      subd <- d2[(!d2$variable%in%colnames(x)[j])&d2$alpha>epsilon,]
+      subd <- subd[which.min(subd$alpha),]
+      nextvar <- subd$variable
+      alpha <- if(nrow(subd))subd$alpha else 1
+      
+      ## If one of the coefficients would hit 0 at a smaller alpha
+      ## value, take it out of the regression and continue.
+      hit0 <- xor(b[j]>0,delta>0)&b[j]!=0
+      alpha0 <- -b[j][hit0]/delta[hit0]
+      takeout <- length(alpha0)&&min(alpha0) < alpha
+      if(takeout){
+        i <- which.min(alpha0)
+        alpha <- alpha0[i]
+      }
+      
+      b[j] <- b[j]+alpha*delta ## evolve parameters
+      alpha.total <- alpha.total+alpha
+      ## add or remove a variable from the active set
+      j <- if(takeout)j[j!=which(names(i)==colnames(x))]
+      else c(j,which(nextvar==colnames(x)))
+    }
+  }
+
+  ## Calculate lasso path
+  data(prostate,package="ElemStatLearn")
+  pros <- subset(prostate,select=-train,train==TRUE)
+  ycol <- which(names(pros)=="lpsa")
+  x <- as.matrix(pros[-ycol])
+  y <- unlist(pros[ycol])
+  res <- mylars(x,y)
+  P <- xyplot(coef~arclength,res,groups=variable,type="l")
+  plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
+
+  data(diabetes,package="lars")
+  dres <- with(diabetes,mylars(x,y))
+  P <- xyplot(coef~arclength,dres,groups=variable,type="l")
+  plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
 }
 
 dl.indep <- function # Direct label groups independently
@@ -43,8 +137,13 @@ dl.indep <- function # Direct label groups independently
   foo <- substitute(expr)
   f <- function(d,...)eval(foo)
   src <- paste("dl.indep(",paste(deparse(foo),collapse="\n"),")",sep="")
-  structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
+  pf <- structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
+  return(pf)
 ### A Positioning Function.
+  complicated <- list(dl.trans(x=x+10),
+                      dl.indep(d[-2,]),
+                      rot=c(30,180))
+  direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
 }
 
 dl.trans <- function # Direct label data transform
@@ -55,8 +154,13 @@ dl.trans <- function # Direct label data transform
 ### Arguments to pass to transform.
  ){
   L <- as.list(match.call())[-1]
-  function(d,...)do.call("transform",c(list(d),L))
+  pf <- function(d,...)do.call("transform",c(list(d),L))
+  return(pf)
 ### A Positioning Function.
+  complicated <- list(dl.trans(x=x+10),
+                      dl.indep(d[-2,]),
+                      rot=c(30,180))
+  direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
 }
 
 dl.move <- function # Manually move a direct label
@@ -67,13 +171,19 @@ dl.move <- function # Manually move a direct label
  x,
  y
  ){
-  function(d,...){
+  pf <- function(d,...){
     v <- sapply(groups,function(g)which(d$groups==g))
     d[v,"x"] <- x
     d[v,"y"] <- y
     d
   }
+  return(pf)
 ### A Positioning Function that moves a label into a good spot.
+  data(mpg,package="ggplot2")
+  scatter <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
+  dlcompare(list(scatter),
+            list("extreme.grid",
+                 `+dl.move`=list(extreme.grid,dl.move("suv",15,15))))
 }
 
 ### Make a Positioning Function with empty.grid, that calculates label
