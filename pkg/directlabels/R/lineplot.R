@@ -8,7 +8,7 @@ last.points <- label.endpoints(which.max,0)
 maxvar.points <- function(d,...){
   myrange <- function(x){
     if(is.factor(x))levels(x)[c(1,nlevels(x))]
-    else range(x)
+    else range(x,na.rm=TRUE)
   }
   vars <- sapply(myrange(d$x),function(v)var(subset(d,x==v)$y,na.rm=TRUE))
   FUN <- if(is.na(vars[1]))last.points
