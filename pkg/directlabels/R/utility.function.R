@@ -261,7 +261,7 @@ bumpup <- function(d,...){
   d <- calc.boxes(d)[order(d$y),]
   for(i in 2:nrow(d)){
     dif <- d$bottom[i]-d$top[i-1]
-    bpts <- with(d[i,],data.frame(y=bottom,x=c(left,right)))
+    bpts <- with(d[i,],data.frame(y=bottom,x=c(left,x,right)))
     n.in <- in1box(bpts,d[i-1,])
     if(dif<0&&n.in>0){
       d$bottom[i] <- d$bottom[i]-dif
