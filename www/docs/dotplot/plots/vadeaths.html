@@ -19,6 +19,7 @@ vadeaths</h1>
 <pre>
 vad &lt;- as.data.frame.table(VADeaths)
 names(vad) &lt;- c("age","demographic","deaths")
+library(ggplot2)
 p &lt;- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)+
   xlim(8,80)
 </pre>

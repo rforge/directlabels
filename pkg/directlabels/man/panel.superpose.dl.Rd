@@ -33,6 +33,7 @@ panel.groups function.}
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
 ## 3 equivalent ways to make the same plot:
+library(lattice)
 print(direct.label( ## most user-friendly
                    densityplot(~ppp,loci,groups=type,n=500)
                    ))

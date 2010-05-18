@@ -17,6 +17,7 @@ myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
 data(prostate,package="ElemStatLearn")
 pros <- subset(prostate,train==TRUE,select=-train)
 m <- myridge(lpsa~.,pros)
+library(lattice)
 xyplot(value~df,m,groups=variable,type="o",pch="+",
        panel=function(...){
          panel.xyplot(...)

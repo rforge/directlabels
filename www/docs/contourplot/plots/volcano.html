@@ -20,6 +20,7 @@ volcano</h1>
 ## example from help(stat_contour)
 volcano3d &lt;- melt(volcano)
 names(volcano3d) &lt;- c("x", "y", "z")
+library(ggplot2)
 p &lt;- ggplot(volcano3d, aes(x, y, z = z))+
   stat_contour(aes(colour = ..level..))
 </pre>

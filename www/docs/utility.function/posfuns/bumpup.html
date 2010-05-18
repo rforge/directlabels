@@ -24,7 +24,7 @@ bumpup &lt;- function(d,...){
   d &lt;- <a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>(d)[order(d$y),]
   for(i in 2:nrow(d)){
     dif &lt;- d$bottom[i]-d$top[i-1]
-    bpts &lt;- with(d[i,],data.frame(y=bottom,x=c(left,right)))
+    bpts &lt;- with(d[i,],data.frame(y=bottom,x=c(left,x,right)))
     n.in &lt;- <a href="../../utility.function/posfuns/in1box.html">in1box</a>(bpts,d[i-1,])
     if(dif&lt;0&amp;&amp;n.in&gt;0){
       d$bottom[i] &lt;- d$bottom[i]-dif

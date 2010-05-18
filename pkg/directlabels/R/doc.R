@@ -174,7 +174,9 @@ extract.posfun <- function # Extract Positioning Function for documentation
  ){
   require(inlinedocs)
   require(directlabels)
-  L <- extract.docs.file(f)##TODO:update for new inlinedocs version
+  ## FIXME: this is a HACK! we should be just able to call
+  ## extract.docs.file(code)
+  L <- extract.docs.code(readLines(f),list(extract.docs.file),verbose=FALSE)
   e <- new.env()
   sys.source(f,e)
   for(N in names(L)){

@@ -18,6 +18,7 @@ iris</h1>
 
 <pre>
 iris2 &lt;- melt(iris,id="Species")
+library(lattice)
 p &lt;- densityplot(~value|variable,iris2,groups=Species,scales="free")
 </pre>
 

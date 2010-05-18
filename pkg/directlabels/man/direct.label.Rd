@@ -21,7 +21,7 @@ direct.label(p, method = NULL, debug = FALSE)
 
 
 \examples{
-data(mpg,package="ggplot2")
+library(ggplot2)
 ## direct label simple ggplot2 scatterplot
 scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
                  main="Fuel efficiency depends on car size")
@@ -30,6 +30,7 @@ print(direct.label(scatter,list(extreme.grid,dl.move("suv",15,15))))
 ## scatterplot in lattice
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
+library(lattice)
 mpg.scatter <- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
 plot(direct.label(mpg.scatter))
 

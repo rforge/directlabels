@@ -25,6 +25,7 @@ dl.move(groups, x, y)
 
 \examples{
 data(mpg,package="ggplot2")
+library(lattice)
 scatter <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
 dlcompare(list(scatter),
           list("extreme.grid",

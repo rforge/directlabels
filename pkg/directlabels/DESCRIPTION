@@ -5,12 +5,12 @@ Version: 1.0
 License: GPL-3
 Title: Direct labels for plots
 Description: Direct labeling functions meant to be used with several plotting packages, including lattice and ggplot2.
-Imports: proto, plyr, lattice, grid, ggplot2 (>= 0.8.5)
-Depends: proto, plyr, lattice, grid, ggplot2 (>= 0.8.5)
 URL: http://directlabels.r-forge.r-project.org/
 LazyLoad: false
 LazyData: true
-Suggests: nlme, mlmRev, ElemStatLearn, inlinedocs, quadprog, lars, ks, MASS
+Depends: proto
+Suggests: ks, MASS, inlinedocs, quadprog, ggplot2, lattice
+Imports: ggplot2
 Collate: utility.function.R compare.R dotplot.R lineplot.R 
 	 densityplot.R  ggplot2.R  positioning.functions.R 
 	 doc.R lattice.R scatterplot.R contourplot.R

@@ -16,9 +16,7 @@
 <h1><a href="../../index.html">directlabels</a> - utility.function -
 Positioning Function - dl.trans</h1>
 
-<p>Make a function that transforms the data. This is for conveniently
-making a function that calls transform on the data frame, with the
-arguments provided. See examples.</p>
+<p></p>
 
 <pre>
 dl.trans &lt;- function # Direct label data transform
@@ -29,8 +27,14 @@ dl.trans &lt;- function # Direct label data transform
 ### Arguments to pass to transform.
  ){
   L &lt;- as.list(match.call())[-1]
-  function(d,...)do.call("transform",c(list(d),L))
+  pf &lt;- function(d,...)do.call("transform",c(list(d),L))
+  return(pf)
 ### A Positioning Function.
+  complicated &lt;- list(dl.trans(x=x+10),
+                      <a href="../../utility.function/posfuns/dl.indep.html">dl.indep</a>(d[-2,]),
+                      rot=c(30,180))
+  library(lattice)
+  direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
 }
 </pre>
 

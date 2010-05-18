@@ -34,10 +34,12 @@ dl.combine <- function # Combine output of several methods
 ### applying each specified Positioning Function.
   ## Simple example: label the start and endpoints
   data(BodyWeight,package="nlme")
+  library(lattice)
   ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
   plot(direct.label(ratplot,dl.combine(first.points,last.points)))
   ## can also do this by repeatedly calling direct.label (ugly)
   plot(direct.label(direct.label(ratplot,last.points),first.points))
+  library(ggplot2)
   rp2 <- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
   print(direct.label(direct.label(rp2,last.points),first.points))
 
@@ -143,6 +145,7 @@ dl.indep <- function # Direct label groups independently
   complicated <- list(dl.trans(x=x+10),
                       dl.indep(d[-2,]),
                       rot=c(30,180))
+  library(lattice)
   direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
 }
 
@@ -160,6 +163,7 @@ dl.trans <- function # Direct label data transform
   complicated <- list(dl.trans(x=x+10),
                       dl.indep(d[-2,]),
                       rot=c(30,180))
+  library(lattice)
   direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
 }
 
@@ -180,6 +184,7 @@ dl.move <- function # Manually move a direct label
   return(pf)
 ### A Positioning Function that moves a label into a good spot.
   data(mpg,package="ggplot2")
+  library(lattice)
   scatter <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
   dlcompare(list(scatter),
             list("extreme.grid",

@@ -20,6 +20,7 @@ sexdeaths</h1>
 dts &lt;- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
 ddf &lt;- melt(as.data.frame(dts),id="time")
 names(ddf) &lt;- c("time","sex","deaths")
+library(ggplot2)
 p &lt;- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
 </pre>
 
@@ -68,13 +69,7 @@ direct.label(p,"<a href="../posfuns/last.qp.html">last.qp</a>")
 </tr>
 <tr>
   <td><img alt="lines2" src="../../lineplot/sexdeaths.lines2.png" /></td>
-  <td><p>Positioning Function for 2 groups of longitudinal data. One curve
-is on top of the other one (on average), so we label the top one
-at its maximal point, and the bottom one at its minimal
-point. Vertical justification is chosen to minimize collisions
-with the other line. This may not work so well for data with high
-variability, but then again lineplots may not be the best for
-these data either.</p>
+  <td><p></p>
     <pre>
 direct.label(p,"<a href="../posfuns/lines2.html">lines2</a>")
   </pre></td>

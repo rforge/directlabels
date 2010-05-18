@@ -16,9 +16,7 @@
 <h1><a href="../../index.html">directlabels</a> - utility.function -
 Positioning Function - dl.move</h1>
 
-<p>Sometimes there is 1 label that is placed oddly by another
-Positioning Function. This function can be used to manually place
-that label in a good spot.</p>
+<p></p>
 
 <pre>
 dl.move &lt;- function # Manually move a direct label
@@ -29,13 +27,20 @@ dl.move &lt;- function # Manually move a direct label
  x,
  y
  ){
-  function(d,...){
+  pf &lt;- function(d,...){
     v &lt;- sapply(groups,function(g)which(d$groups==g))
     d[v,"x"] &lt;- x
     d[v,"y"] &lt;- y
     d
   }
+  return(pf)
 ### A Positioning Function that moves a label into a good spot.
+  data(mpg,package="ggplot2")
+  library(lattice)
+  scatter &lt;- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
+  dlcompare(list(scatter),
+            list("<a href="../../scatterplot/posfuns/extreme.grid.html">extreme.grid</a>",
+                 `+dl.move`=list(<a href="../../scatterplot/posfuns/extreme.grid.html">extreme.grid</a>,dl.move("suv",15,15))))
 }
 </pre>
 

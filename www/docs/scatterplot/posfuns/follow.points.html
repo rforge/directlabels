@@ -16,12 +16,7 @@
 <h1><a href="../../index.html">directlabels</a> - scatterplot -
 Positioning Function - follow.points</h1>
 
-<p>Draws a line between each center and every point, then follows the
-line out far enough to give a box outside the cloud. Out of all
-the boxes constructed in this way that do not contain any points,
-take the one which has the smallest distance to the center. FIXME:
-does not work with ggplot2 since the ggplot2 backend doesn't yet
-have support of actually knowing how big the text bounding box is.</p>
+<p></p>
 
 <pre>
 follow.points &lt;- function
@@ -71,6 +66,7 @@ follow.points &lt;- function
 data(mpg,package="ggplot2")
 m &lt;- lm(cty~displ,data=mpg)
 mpgf &lt;- fortify(m,mpg)
+library(lattice)
 p &lt;- xyplot(jitter(.resid)~jitter(.fitted)|manufacturer,mpgf,groups=class)
 direct.label(p,"follow.points")
   </pre></td>
@@ -81,6 +77,7 @@ direct.label(p,"follow.points")
 data(mpg,package="ggplot2")
 m &lt;- lm(cty~displ,data=mpg)
 mpgf &lt;- fortify(m,mpg)
+library(lattice)
 p &lt;- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
 direct.label(p,"follow.points")
   </pre></td>
@@ -88,6 +85,7 @@ direct.label(p,"follow.points")
 <tr>
   <td><img alt="iris" src="../../scatterplot/iris.follow.points.png" /></td>
   <td><p><a href="../plots/iris.html">iris</a></p><pre>
+library(lattice)
 p &lt;- xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species)
 direct.label(p,"follow.points")
   </pre></td>
@@ -96,6 +94,7 @@ direct.label(p,"follow.points")
   <td><img alt="mpglattice" src="../../scatterplot/mpglattice.follow.points.png" /></td>
   <td><p><a href="../plots/mpglattice.html">mpglattice</a></p><pre>
 data(mpg,package="ggplot2")
+library(lattice)
 p &lt;- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,
        main="Fuel efficiency depends on car size")
 direct.label(p,"follow.points")
@@ -104,6 +103,7 @@ direct.label(p,"follow.points")
 <tr>
   <td><img alt="mpg" src="../../scatterplot/mpg.follow.points.png" /></td>
   <td><p><a href="../plots/mpg.html">mpg</a></p><pre>
+library(ggplot2)
 data(mpg,package="ggplot2")
 p &lt;- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
       main="Fuel efficiency depends on car size")

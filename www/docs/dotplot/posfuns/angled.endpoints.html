@@ -26,6 +26,7 @@ angled.endpoints &lt;- list("<a href="../../lineplot/posfuns/last.points.html">l
 <tr>
   <td><img alt="vadeaths-lattice" src="../../dotplot/vadeaths-lattice.angled.endpoints.png" /></td>
   <td><p><a href="../plots/vadeaths-lattice.html">vadeaths-lattice</a></p><pre>
+library(lattice)
 p &lt;- dotplot(VADeaths,xlim=c(8,85),type="o")
 direct.label(p,"angled.endpoints")
   </pre></td>
@@ -35,6 +36,7 @@ direct.label(p,"angled.endpoints")
   <td><p><a href="../plots/vadeaths.html">vadeaths</a></p><pre>
 vad &lt;- as.data.frame.table(VADeaths)
 names(vad) &lt;- c("age","demographic","deaths")
+library(ggplot2)
 p &lt;- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)+
   xlim(8,80)
 direct.label(p,"angled.endpoints")

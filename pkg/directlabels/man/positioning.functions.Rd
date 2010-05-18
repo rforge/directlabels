@@ -20,6 +20,7 @@
 for(p in list({
 ## Example from help(contourplot)
 require(stats)
+require(lattice)
 attach(environmental)
 ozo.m <- loess((ozone^(1/3)) ~ wind * temperature * radiation,
                parametric = c("radiation", "wind"), span = 1, degree = 2)
@@ -31,6 +32,7 @@ wtr.marginal <- list(wind = w.marginal, temperature = t.marginal,
 grid <- expand.grid(wtr.marginal)
 grid[, "fit"] <- c(predict(ozo.m, grid))
 detach(environmental)
+library(ggplot2)
 p <- ggplot(grid,aes(wind,temperature,z=fit))+
   stat_contour(aes(colour=..level..))+
   facet_wrap(~radiation)
@@ -40,6 +42,7 @@ p <- ggplot(grid,aes(wind,temperature,z=fit))+
 ## example from help(stat_contour)
 volcano3d <- melt(volcano)
 names(volcano3d) <- c("x", "y", "z")
+library(ggplot2)
 p <- ggplot(volcano3d, aes(x, y, z = z))+
   stat_contour(aes(colour = ..level..))
 })){
@@ -50,17 +53,20 @@ p <- ggplot(volcano3d, aes(x, y, z = z))+
 
 for(p in list({
 data(Chem97,package="mlmRev")
+library(lattice)
 p <- densityplot(~gcsescore|gender,Chem97,
             groups=factor(score),layout=c(1,2),
             n=500,plot.points=FALSE)
 },
 {
 iris2 <- melt(iris,id="Species")
+library(lattice)
 p <- densityplot(~value|variable,iris2,groups=Species,scales="free")
 },
 {
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
+library(ggplot2)
 p <- qplot(ppp,data=loci,colour=type,geom="density")
 })){
   print(direct.label(p,"top.bumptwice"))
@@ -70,11 +76,13 @@ p <- qplot(ppp,data=loci,colour=type,geom="density")
 
 
 for(p in list({
+library(lattice)
 p <- dotplot(VADeaths,xlim=c(8,85),type="o")
 },
 {
 vad <- as.data.frame.table(VADeaths)
 names(vad) <- c("age","demographic","deaths")
+library(ggplot2)
 p <- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)+
   xlim(8,80)
 })){
@@ -84,16 +92,19 @@ p <- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)
 
 for(p in list({
 data(BodyWeight,package="nlme")
+library(lattice)
 p <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',
        layout=c(3,1),xlim=c(-10,75))
 },
 {
 data(Chem97,package="mlmRev")
+library(lattice)
 p <- qqmath(~gcsescore|gender,Chem97,groups=factor(score),
        type=c('l','g'),f.value=ppoints(100))
 },
 {
 data(Chem97,package="mlmRev")
+library(lattice)
 p <- qqmath(~gcsescore,Chem97,groups=gender,
        type=c("l","g"),f.value=ppoints(100))
 },
@@ -117,6 +128,7 @@ myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
 data(prostate,package="ElemStatLearn")
 pros <- subset(prostate,train==TRUE,select=-train)
 m <- myridge(lpsa~.,pros)
+library(lattice)
 p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
        panel=function(...){
          panel.xyplot(...)
@@ -133,6 +145,7 @@ p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
 dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
 ddf <- melt(as.data.frame(dts),id="time")
 names(ddf) <- c("time","sex","deaths")
+library(ggplot2)
 p <- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
 })){
   print(direct.label(p,"first.bumpup"))
@@ -151,23 +164,28 @@ for(p in list({
 data(mpg,package="ggplot2")
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
+library(lattice)
 p <- xyplot(jitter(.resid)~jitter(.fitted)|manufacturer,mpgf,groups=class)
 },
 {
 data(mpg,package="ggplot2")
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
+library(lattice)
 p <- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
 },
 {
+library(lattice)
 p <- xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species)
 },
 {
 data(mpg,package="ggplot2")
+library(lattice)
 p <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,
        main="Fuel efficiency depends on car size")
 },
 {
+library(ggplot2)
 data(mpg,package="ggplot2")
 p <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
       main="Fuel efficiency depends on car size")

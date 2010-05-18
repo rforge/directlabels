@@ -20,10 +20,12 @@ applying each specified Positioning Function.}
 \examples{
 ## Simple example: label the start and endpoints
 data(BodyWeight,package="nlme")
+library(lattice)
 ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
 plot(direct.label(ratplot,dl.combine(first.points,last.points)))
 ## can also do this by repeatedly calling direct.label (ugly)
 plot(direct.label(direct.label(ratplot,last.points),first.points))
+library(ggplot2)
 rp2 <- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
 print(direct.label(direct.label(rp2,last.points),first.points))
 

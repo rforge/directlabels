@@ -27,6 +27,7 @@ top.<a href="../../utility.function/posfuns/bumpup.html">bumpup</a> &lt;- list(<
   <td><img alt="chemscore" src="../../densityplot/chemscore.top.bumpup.png" /></td>
   <td><p><a href="../plots/chemscore.html">chemscore</a></p><pre>
 data(Chem97,package="mlmRev")
+library(lattice)
 p &lt;- densityplot(~gcsescore|gender,Chem97,
             groups=factor(score),layout=c(1,2),
             n=500,plot.points=FALSE)
@@ -37,6 +38,7 @@ direct.label(p,"top.bumpup")
   <td><img alt="iris" src="../../densityplot/iris.top.bumpup.png" /></td>
   <td><p><a href="../plots/iris.html">iris</a></p><pre>
 iris2 &lt;- melt(iris,id="Species")
+library(lattice)
 p &lt;- densityplot(~value|variable,iris2,groups=Species,scales="free")
 direct.label(p,"top.bumpup")
   </pre></td>
@@ -46,6 +48,7 @@ direct.label(p,"top.bumpup")
   <td><p><a href="../plots/loci.html">loci</a></p><pre>
 loci &lt;- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
+library(ggplot2)
 p &lt;- qplot(ppp,data=loci,colour=type,geom="density")
 direct.label(p,"top.bumpup")
   </pre></td>

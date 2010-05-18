@@ -52,7 +52,7 @@ defaultpf.ggplot <- function
 }
 
 ### Position class for direct label placement.
-PositionDl <- proto(ggplot2::Position,{
+PositionDl <- proto(ggplot2:::Position,{
   method <- NULL
   debug <- FALSE
   orig <- NULL

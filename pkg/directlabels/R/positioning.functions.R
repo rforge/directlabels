@@ -14,7 +14,7 @@ direct.label <- function
   else
     UseMethod("direct.label")
 ### The plot object, with direct labels added.
-  data(mpg,package="ggplot2")
+  library(ggplot2)
   ## direct label simple ggplot2 scatterplot
   scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
                    main="Fuel efficiency depends on car size")
@@ -23,6 +23,7 @@ direct.label <- function
   ## scatterplot in lattice
   m <- lm(cty~displ,data=mpg)
   mpgf <- fortify(m,mpg)
+  library(lattice)
   mpg.scatter <- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
   plot(direct.label(mpg.scatter))
 

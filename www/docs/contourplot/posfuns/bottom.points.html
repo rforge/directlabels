@@ -25,10 +25,11 @@ bottom.points &lt;-
 
 <table>
 <tr>
-  <td><img alt="envrionmental" src="../../contourplot/envrionmental.bottom.points.png" /></td>
-  <td><p><a href="../plots/envrionmental.html">envrionmental</a></p><pre>
+  <td><img alt="environmental" src="../../contourplot/environmental.bottom.points.png" /></td>
+  <td><p><a href="../plots/environmental.html">environmental</a></p><pre>
 ## Example from help(contourplot)
 require(stats)
+require(lattice)
 attach(environmental)
 ozo.m &lt;- loess((ozone^(1/3)) ~ wind * temperature * radiation,
                parametric = c("radiation", "wind"), span = 1, degree = 2)
@@ -40,6 +41,7 @@ wtr.marginal &lt;- list(wind = w.marginal, temperature = t.marginal,
 grid &lt;- expand.grid(wtr.marginal)
 grid[, "fit"] &lt;- c(predict(ozo.m, grid))
 detach(environmental)
+library(ggplot2)
 p &lt;- ggplot(grid,aes(wind,temperature,z=fit))+
   stat_contour(aes(colour=..level..))+
   facet_wrap(~radiation)
@@ -53,6 +55,7 @@ direct.label(p,"bottom.points")
 ## example from help(stat_contour)
 volcano3d &lt;- melt(volcano)
 names(volcano3d) &lt;- c("x", "y", "z")
+library(ggplot2)
 p &lt;- ggplot(volcano3d, aes(x, y, z = z))+
   stat_contour(aes(colour = ..level..))
 direct.label(p,"bottom.points")

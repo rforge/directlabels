@@ -22,7 +22,7 @@ Positioning Function - maxvar.points</h1>
 maxvar.points &lt;- function(d,...){
   myrange &lt;- function(x){
     if(is.factor(x))levels(x)[c(1,nlevels(x))]
-    else range(x)
+    else range(x,na.rm=TRUE)
   }
   vars &lt;- sapply(myrange(d$x),function(v)var(subset(d,x==v)$y,na.rm=TRUE))
   FUN &lt;- if(is.na(vars[1]))<a href="../../lineplot/posfuns/last.points.html">last.points</a>
@@ -37,6 +37,7 @@ maxvar.points &lt;- function(d,...){
   <td><img alt="bodyweight" src="../../lineplot/bodyweight.maxvar.points.png" /></td>
   <td><p><a href="../plots/bodyweight.html">bodyweight</a></p><pre>
 data(BodyWeight,package="nlme")
+library(lattice)
 p &lt;- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',
        layout=c(3,1),xlim=c(-10,75))
 direct.label(p,"maxvar.points")
@@ -46,6 +47,7 @@ direct.label(p,"maxvar.points")
   <td><img alt="chemqqmathscore" src="../../lineplot/chemqqmathscore.maxvar.points.png" /></td>
   <td><p><a href="../plots/chemqqmathscore.html">chemqqmathscore</a></p><pre>
 data(Chem97,package="mlmRev")
+library(lattice)
 p &lt;- qqmath(~gcsescore|gender,Chem97,groups=factor(score),
        type=c('l','g'),f.value=ppoints(100))
 direct.label(p,"maxvar.points")
@@ -55,6 +57,7 @@ direct.label(p,"maxvar.points")
   <td><img alt="chemqqmathsex" src="../../lineplot/chemqqmathsex.maxvar.points.png" /></td>
   <td><p><a href="../plots/chemqqmathsex.html">chemqqmathsex</a></p><pre>
 data(Chem97,package="mlmRev")
+library(lattice)
 p &lt;- qqmath(~gcsescore,Chem97,groups=gender,
        type=c("l","g"),f.value=ppoints(100))
 direct.label(p,"maxvar.points")
@@ -82,6 +85,7 @@ myridge &lt;- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
 data(prostate,package="ElemStatLearn")
 pros &lt;- subset(prostate,train==TRUE,select=-train)
 m &lt;- myridge(lpsa~.,pros)
+library(lattice)
 p &lt;- xyplot(value~df,m,groups=variable,type="o",pch="+",
        panel=function(...){
          panel.xyplot(...)
@@ -102,6 +106,7 @@ direct.label(p,"maxvar.points")
 dts &lt;- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
 ddf &lt;- melt(as.data.frame(dts),id="time")
 names(ddf) &lt;- c("time","sex","deaths")
+library(ggplot2)
 p &lt;- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
 direct.label(p,"maxvar.points")
   </pre></td>

@@ -18,6 +18,7 @@ chemscore</h1>
 
 <pre>
 data(Chem97,package="mlmRev")
+library(lattice)
 p &lt;- densityplot(~gcsescore|gender,Chem97,
             groups=factor(score),layout=c(1,2),
             n=500,plot.points=FALSE)

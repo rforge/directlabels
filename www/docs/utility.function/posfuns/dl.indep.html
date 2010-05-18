@@ -16,8 +16,7 @@
 <h1><a href="../../index.html">directlabels</a> - utility.function -
 Positioning Function - dl.indep</h1>
 
-<p>Makes a function you can use to specify the location of each group
-independently.</p>
+<p></p>
 
 <pre>
 dl.indep &lt;- function # Direct label groups independently
@@ -30,8 +29,14 @@ dl.indep &lt;- function # Direct label groups independently
   foo &lt;- substitute(expr)
   f &lt;- function(d,...)eval(foo)
   src &lt;- paste("dl.indep(",paste(deparse(foo),collapse="n"),")",sep="")
-  structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
+  pf &lt;- structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
+  return(pf)
 ### A Positioning Function.
+  complicated &lt;- list(<a href="../../utility.function/posfuns/dl.trans.html">dl.trans</a>(x=x+10),
+                      dl.indep(d[-2,]),
+                      rot=c(30,180))
+  library(lattice)
+  direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
 }
 </pre>
 
