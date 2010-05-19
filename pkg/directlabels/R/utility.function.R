@@ -264,17 +264,35 @@ draw.rects <- function(d,...){
 ### collide with the label underneath.
 bumpup <- function(d,...){
   d <- calc.boxes(d)[order(d$y),]
+  "%between%" <- function(v,lims)lims[1]<v&v<lims[2]
+  obox <- function(x,y){
+    tocheck <- with(x,c(left,(right-left)/2+left,right))
+    tocheck %between% with(y,c(left,right))
+  }
   for(i in 2:nrow(d)){
     dif <- d$bottom[i]-d$top[i-1]
-    bpts <- with(d[i,],data.frame(y=bottom,x=c(left,x,right)))
-    n.in <- in1box(bpts,d[i-1,])
-    if(dif<0&&n.in>0){
+    ## here we are trying to test if box i can possibly collide with
+    ## the box below it! Originally we checked if the bottom points of
+    ## this box fall in the box below it, but this causes problems
+    ## since we are reassigning box positions. If all boxes start at
+    ## the same place, 2 will get moved up, 3 will not since its
+    ## bottom points are no longer inside box 2. Solution: Look at box
+    ## left and right limits and see if they collide!
+
+    ## GOTCHA: If all the boxes are exactly the same size, on top of
+    ## each other, then if we only examine left and right points of
+    ## each box, none of the boxes will be detected as
+    ## overlapping. One way to fix this is change > to >= in %between%
+    ## but this is a bad idea since you can have boxes right next to
+    ## each other that we don't want to move, that would be detected
+    ## as overlapping. Solution: use the midpoint of the box as well!
+    overlap <- c(obox(d[i,],d[i-1,]),obox(d[i-1,],d[i,]))
+    if(dif<0&&any(overlap)){
       d$bottom[i] <- d$bottom[i]-dif
       d$top[i] <- d$top[i]-dif
       d$y[i] <- d$y[i]-dif
     }
   }
-  ##print(sapply(d,class))
   d
 }
 
