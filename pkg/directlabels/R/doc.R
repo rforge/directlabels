@@ -26,7 +26,8 @@ dldoc <- function # Make directlabels documentation
       if(length(items)){
         ## at the end: [.<] means do not find tags twice, when some
         ## function names are subsets of others
-        FIND <- paste("\\b(",paste(items,collapse="|"),")\\b(?![.<])",sep="")
+        grp <- paste(sub("[.]","[.]",items),collapse="|")
+        FIND <- paste("\\b(",grp,")\\b(?![.<])",sep="")
         gsub(FIND,REP,def,perl=TRUE)
       }else def
     }
@@ -174,9 +175,7 @@ extract.posfun <- function # Extract Positioning Function for documentation
  ){
   require(inlinedocs)
   require(directlabels)
-  ## FIXME: this is a HACK! we should be just able to call
-  ## extract.docs.file(code)
-  L <- extract.docs.code(readLines(f),list(extract.docs.file),verbose=FALSE)
+  L <- extract.docs.file(f)
   e <- new.env()
   sys.source(f,e)
   for(N in names(L)){

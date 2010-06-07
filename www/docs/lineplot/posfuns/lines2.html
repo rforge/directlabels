@@ -16,7 +16,13 @@
 <h1><a href="../../index.html">directlabels</a> - lineplot -
 Positioning Function - lines2</h1>
 
-<p></p>
+<p>Positioning Function for 2 groups of longitudinal data. One curve
+is on top of the other one (on average), so we label the top one
+at its maximal point, and the bottom one at its minimal
+point. Vertical justification is chosen to minimize collisions
+with the other line. This may not work so well for data with high
+variability, but then again lineplots may not be the best for
+these data either.</p>
 
 <pre>
 lines2 &lt;- function

@@ -17,7 +17,10 @@
 Positioning Function - bumpup</h1>
 
 <p>Sequentially bump labels up, starting from the bottom, if they
-collide with the label underneath.</p>
+collide with the label underneath. NOTE: behavior is undefined
+when used with ggplot2 since it relies on the calc.boxes()
+function which doesn't know how to calculate bounding boxes for
+ggplot2 labels (yet).</p>
 
 <pre>
 bumpup &lt;- function(d,...){
@@ -30,11 +33,11 @@ bumpup &lt;- function(d,...){
   for(i in 2:nrow(d)){
     dif &lt;- d$bottom[i]-d$top[i-1]
     ## here we are trying to test if box i can possibly collide with
-    ## the box below it! Originally we checked if the <a href="../../contourplot/posfuns/bottom points.html">bottom points</a> of
+    ## the box below it! Originally we checked if the bottom points of
     ## this box fall in the box below it, but this causes problems
     ## since we are reassigning box positions. If all boxes start at
     ## the same place, 2 will get moved up, 3 will not since its
-    ## <a href="../../contourplot/posfuns/bottom points.html">bottom points</a> are no longer <a href="../../utility.function/posfuns/inside.html">inside</a> box 2. Solution: Look at box
+    ## bottom points are no longer <a href="../../utility.function/posfuns/inside.html">inside</a> box 2. Solution: Look at box
     ## left and right limits and see if they collide!
 
     ## GOTCHA: If all the boxes are exactly the same size, on top of

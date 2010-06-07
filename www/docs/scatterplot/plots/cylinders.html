@@ -27,7 +27,11 @@ p &lt;- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
 <table>
 <tr>
   <td><img alt="empty.grid" src="../../scatterplot/cylinders.empty.grid.png" /></td>
-  <td><p></p>
+  <td><p>Label placement method for scatterplots that ensures labels are
+placed in different places. A grid is drawn over the whole
+plot. Each cluster is considered in sequence and assigned to the
+point on this grid which is closest to the point given by
+loc.fun().</p>
     <pre>
 direct.label(p,"<a href="../posfuns/empty.grid.html">empty.grid</a>")
   </pre></td>
@@ -48,7 +52,12 @@ direct.label(p,"<a href="../posfuns/extreme.grid.html">extreme.grid</a>")
 </tr>
 <tr>
   <td><img alt="follow.points" src="../../scatterplot/cylinders.follow.points.png" /></td>
-  <td><p></p>
+  <td><p>Draws a line between each center and every point, then follows the
+line out far enough to give a box outside the cloud. Out of all
+the boxes constructed in this way that do not contain any points,
+take the one which has the smallest distance to the center. FIXME:
+does not work with ggplot2 since the ggplot2 backend doesn't yet
+have support of actually knowing how big the text bounding box is.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/follow.points.html">follow.points</a>")
   </pre></td>

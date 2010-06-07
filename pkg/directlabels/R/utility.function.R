@@ -261,7 +261,10 @@ draw.rects <- function(d,...){
 }
 
 ### Sequentially bump labels up, starting from the bottom, if they
-### collide with the label underneath.
+### collide with the label underneath. NOTE: behavior is undefined
+### when used with ggplot2 since it relies on the calc.boxes()
+### function which doesn't know how to calculate bounding boxes for
+### ggplot2 labels (yet).
 bumpup <- function(d,...){
   d <- calc.boxes(d)[order(d$y),]
   "%between%" <- function(v,lims)lims[1]<v&v<lims[2]
