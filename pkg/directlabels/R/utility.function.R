@@ -186,7 +186,8 @@ dl.move <- function # Manually move a direct label
       d[v,N] <- L[[N]]
     ## maybe generalize this to be symmetric on x and y one day?
     if("x" %in% names(L) && (!"y" %in% names(L))){
-      orig <- subset(attr(d,"orig.data"),groups==group)
+      orig <- attr(d,"orig.data")
+      orig <- orig[orig$groups==group,]
       d[v,"y"] <- if(L$x %in% orig$x)subset(orig,x==L$x)[1,"y"]
       else {      ## do linear interpolation to find a good y-value
         f <- with(orig,approxfun(x,y))

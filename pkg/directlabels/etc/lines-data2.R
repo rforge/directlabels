@@ -9,6 +9,7 @@ p <- xyplot(rate~log10(gamma)|replicate+nu,pred,groups=data,type="l",
   ylab="proportion of data contained in 1-SVM hypersphere",
   xlim=c(min(log10(pred$gamma)),7),
   xlab="log10(gamma) - shape parameter of gaussian kernel on 4 important variables")
+p <- qplot(log10(gamma),rate,data=pred,group=data,colour=data,geom="line",facets=replicate~nu)
 direct.label(p,list(last.points,dl.move("kif",x=0)))
 direct.label(p,list(last.points,dl.move("kif",0,0.5)))
 direct.label(p,list(last.points,dl.move("kif",x=-0.9,hjust=1,vjust=1)))
