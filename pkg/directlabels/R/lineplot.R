@@ -52,16 +52,22 @@ lines2 <- function
   bottom <- 1+offset
   y <- ddply(d,.(groups),function(d)mean(d$y))
   ddply(y,.(groups),function(D){
-    biggest.on.average <- D$V==max(y$V)
-    f <- if(biggest.on.average)max else min
-    ld <- subset(d,groups==D$groups)
-    pos <- ddply(subset(ld,y==f(ld$y)),.(groups),function(x)
-          data.frame(x=max(x$x)-diff(range(x$x))/2,y=x$y[1]))
+    bigger.on.average <- D$V==max(y$V)
+    f <- if(bigger.on.average)max else min
+    compare <- get(if(bigger.on.average)">" else "<")
+    ld    <- subset(d,groups==D$groups)
     other <- subset(d,groups!=D$groups)
-    other.y <- other[which.min(abs(other$x-pos$x)),"y"]
-    smaller.here <- pos$y<other.y
-    data.frame(pos,vjust=if(biggest.on.average)
-               if(smaller.here)bottom else top#bigger mean
-               else if(smaller.here)bottom else top)#smaller mean
+    find.closest.y <- function(x){
+      closest.x.on.other.line <- which.min(abs(other$x-x))
+      other[closest.x.on.other.line,"y"]
+    }
+    ld$other.yvals <- sapply(ld$x,find.closest.y)
+    ld$diff <- abs(ld$y-ld$other.yvals)
+    more.extreme <- compare(ld$y,ld$other.yvals)
+    ld <- ld[more.extreme,]
+    ld <- ld[ld$y==f(ld$y),]
+    which.closest <- which.max(ld$diff)
+    pos <- ld[which.closest,]
+    data.frame(pos,vjust=if(bigger.on.average)top else bottom)
   })
 }
