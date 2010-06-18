@@ -69,7 +69,7 @@ dlcompare <- function # Direct label comparison plot
   }
   popViewport()
   return()
-### Nothing.
+  ##examples<<
   library(lattice)
   library(ggplot2)
   dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))

@@ -33,6 +33,7 @@ dl.indep &lt;- function # Direct label groups independently
   pf &lt;- structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
   return(pf)
 ### A Positioning Function.
+  ##examples&lt;&lt;
   complicated &lt;- list(<a href="../../utility.function/posfuns/dl.trans.html">dl.trans</a>(x=x+10),
                       dl.indep(d[-2,]),
                       rot=c(30,180))

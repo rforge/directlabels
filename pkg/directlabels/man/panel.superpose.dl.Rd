@@ -22,7 +22,7 @@ panel.groups function.}
   \item{\dots}{Additional arguments to panel.superpose.}
 }
 
-\value{Nothing.}
+
 
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 

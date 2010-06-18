@@ -21,7 +21,7 @@ columns. Otherwise, do the opposite.}
   \item{debug}{Show debug output?}
 }
 
-\value{Nothing.}
+
 
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 

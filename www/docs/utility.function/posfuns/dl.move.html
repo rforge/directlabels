@@ -25,24 +25,49 @@ dl.move &lt;- function # Manually move a direct label
 ### Sometimes there is 1 label that is placed oddly by another
 ### Positioning Function. This function can be used to manually place
 ### that label in a good spot.
-(groups,
+(group,
+### Group to change.
  x,
- y
+### Horizontal position of the new label.
+ y,
+### Vertical position of the new label. If missing(y) and !missing(x)
+### then we will calculate a new y value using linear interpolation.
+ ...
+### Variables to change for the specified group
  ){
+  L &lt;- list(...)
+  if(!missing(x))L$x &lt;- x
+  if(!missing(y))L$y &lt;- y
   pf &lt;- function(d,...){
-    v &lt;- sapply(groups,function(g)which(d$groups==g))
-    d[v,"x"] &lt;- x
-    d[v,"y"] &lt;- y
+    v &lt;- d$groups==group
+    for(N in names(L))
+      d[v,N] &lt;- L[[N]]
+    ## maybe generalize this to be symmetric on x and y one day?
+    if("x" %in% names(L) &amp;&amp; (!"y" %in% names(L))){
+      orig &lt;- attr(d,"orig.data")
+      orig &lt;- orig[orig$groups==group,]
+      ## do linear interpolation to find a good y-value
+      f &lt;- with(orig,approxfun(x,y))
+      d[v,"y"] &lt;- f(L$x)
+    }
     d
   }
   return(pf)
 ### A Positioning Function that moves a label into a good spot.
+  ##examples&lt;&lt;
   data(mpg,package="ggplot2")
   library(lattice)
   scatter &lt;- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
   dlcompare(list(scatter),
             list("<a href="../../scatterplot/posfuns/extreme.grid.html">extreme.grid</a>",
                  `+dl.move`=list(<a href="../../scatterplot/posfuns/extreme.grid.html">extreme.grid</a>,dl.move("suv",15,15))))
+
+  data(svmtrain,package="directlabels")
+  library(ggplot2)
+  p &lt;- qplot(log10(gamma),rate,data=svmtrain,group=data,colour=data,
+             geom="line",facets=replicate~nu)
+  dlcompare(list(p+xlim(-8,7)),list("<a href="../../lineplot/posfuns/last.points.html">last.points</a>",
+    `+dl.move`=list(<a href="../../lineplot/posfuns/last.points.html">last.points</a>,dl.move("kif",-0.9,hjust=1,vjust=1))))
 }
 </pre>
 

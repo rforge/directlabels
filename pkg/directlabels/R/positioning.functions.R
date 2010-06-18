@@ -14,6 +14,7 @@ direct.label <- function
   else
     UseMethod("direct.label")
 ### The plot object, with direct labels added.
+  ##examples<<
   library(ggplot2)
   ## direct label simple ggplot2 scatterplot
   scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,

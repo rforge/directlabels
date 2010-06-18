@@ -32,6 +32,7 @@ dl.combine <- function # Combine output of several methods
   return(pf)
 ### A Positioning Function that returns the combined data frame after
 ### applying each specified Positioning Function.
+  ##examples<<
   ## Simple example: label the start and endpoints
   data(BodyWeight,package="nlme")
   library(lattice)
@@ -142,6 +143,7 @@ dl.indep <- function # Direct label groups independently
   pf <- structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
   return(pf)
 ### A Positioning Function.
+  ##examples<<
   complicated <- list(dl.trans(x=x+10),
                       dl.indep(d[-2,]),
                       rot=c(30,180))
@@ -160,6 +162,7 @@ dl.trans <- function # Direct label data transform
   pf <- function(d,...)do.call("transform",c(list(d),L))
   return(pf)
 ### A Positioning Function.
+  ##examples<<
   complicated <- list(dl.trans(x=x+10),
                       dl.indep(d[-2,]),
                       rot=c(30,180))
@@ -172,8 +175,12 @@ dl.move <- function # Manually move a direct label
 ### Positioning Function. This function can be used to manually place
 ### that label in a good spot.
 (group,
+### Group to change.
  x,
+### Horizontal position of the new label.
  y,
+### Vertical position of the new label. If missing(y) and !missing(x)
+### then we will calculate a new y value using linear interpolation.
  ...
 ### Variables to change for the specified group
  ){
@@ -188,22 +195,28 @@ dl.move <- function # Manually move a direct label
     if("x" %in% names(L) && (!"y" %in% names(L))){
       orig <- attr(d,"orig.data")
       orig <- orig[orig$groups==group,]
-      d[v,"y"] <- if(L$x %in% orig$x)subset(orig,x==L$x)[1,"y"]
-      else {      ## do linear interpolation to find a good y-value
-        f <- with(orig,approxfun(x,y))
-        f(L$x)
-      }
+      ## do linear interpolation to find a good y-value
+      f <- with(orig,approxfun(x,y))
+      d[v,"y"] <- f(L$x)
     }
     d
   }
   return(pf)
 ### A Positioning Function that moves a label into a good spot.
+  ##examples<<
   data(mpg,package="ggplot2")
   library(lattice)
   scatter <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
   dlcompare(list(scatter),
             list("extreme.grid",
-                 `+dl.move`=list(extreme.grid,dl.move("suv",x=15,y=15))))
+                 `+dl.move`=list(extreme.grid,dl.move("suv",15,15))))
+
+  data(svmtrain,package="directlabels")
+  library(ggplot2)
+  p <- qplot(log10(gamma),rate,data=svmtrain,group=data,colour=data,
+             geom="line",facets=replicate~nu)
+  dlcompare(list(p+xlim(-8,7)),list("last.points",
+    `+dl.move`=list(last.points,dl.move("kif",-0.9,hjust=1,vjust=1))))
 }
 
 ### Make a Positioning Function with empty.grid, that calculates label
