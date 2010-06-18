@@ -171,14 +171,28 @@ dl.move <- function # Manually move a direct label
 ### Sometimes there is 1 label that is placed oddly by another
 ### Positioning Function. This function can be used to manually place
 ### that label in a good spot.
-(groups,
+(group,
  x,
- y
+ y,
+ ...
+### Variables to change for the specified group
  ){
+  L <- list(...)
+  if(!missing(x))L$x <- x
+  if(!missing(y))L$y <- y
   pf <- function(d,...){
-    v <- sapply(groups,function(g)which(d$groups==g))
-    d[v,"x"] <- x
-    d[v,"y"] <- y
+    v <- d$groups==group
+    for(N in names(L))
+      d[v,N] <- L[[N]]
+    ## maybe generalize this to be symmetric on x and y one day?
+    if("x" %in% names(L) && (!"y" %in% names(L))){
+      orig <- subset(attr(d,"orig.data"),groups==group)
+      d[v,"y"] <- if(L$x %in% orig$x)subset(orig,x==L$x)[1,"y"]
+      else {      ## do linear interpolation to find a good y-value
+        f <- with(orig,approxfun(x,y))
+        f(L$x)
+      }
+    }
     d
   }
   return(pf)
@@ -188,7 +202,7 @@ dl.move <- function # Manually move a direct label
   scatter <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
   dlcompare(list(scatter),
             list("extreme.grid",
-                 `+dl.move`=list(extreme.grid,dl.move("suv",15,15))))
+                 `+dl.move`=list(extreme.grid,dl.move("suv",x=15,y=15))))
 }
 
 ### Make a Positioning Function with empty.grid, that calculates label

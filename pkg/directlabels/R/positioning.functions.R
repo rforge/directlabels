@@ -187,6 +187,8 @@ label.positions <- function
   }
   if(!"rot"%in%names(d))d$rot <- NA
   d$rot[is.na(d$rot)] <- 0
+  if(!"cex"%in%names(d))d$cex <- NA
+  d$cex[is.na(d$cex)] <- 1
   d <- unique(d)
   if(debug)print(d)
   d
@@ -233,8 +235,13 @@ eval.list <- function # Evaluate Positioning Method list
     }
     if(isconst())
       d[[names(method)[1]]] <- method[[1]]
-    else
+    else{
+      old <- d
       d <- method[[1]](d,...)
+      attr(d,"orig.data") <-
+        if(is.null(attr(old,"orig.data")))old
+        else attr(old,"orig.data")
+    }
     method <- method[-1]
   }
   d
