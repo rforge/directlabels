@@ -252,7 +252,8 @@ big.boxes <- function(d,...)enlarge.box(calc.boxes(visualcenter(d)))
 
 ### Point in the middle of the min and max for each group.
 visualcenter <-
-  dl.indep(summarise(d,x=diff(range(x))/2+min(x),y=diff(range(y))/2+min(y)))
+  dl.indep(unique(transform(d,x=diff(range(x))/2+min(x),
+                            y=diff(range(y))/2+min(y))))
 
 ### Positioning Function for the mean of each cluster of points.
 get.means <-

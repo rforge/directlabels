@@ -20,7 +20,8 @@ Positioning Function - visualcenter</h1>
 
 <pre>
 visualcenter &lt;-
-  <a href="../../utility.function/posfuns/dl.indep.html">dl.indep</a>(summarise(d,x=diff(range(x))/2+min(x),y=diff(range(y))/2+min(y)))
+  <a href="../../utility.function/posfuns/dl.indep.html">dl.indep</a>(unique(transform(d,x=diff(range(x))/2+min(x),
+                            y=diff(range(y))/2+min(y))))
 </pre>
 
 

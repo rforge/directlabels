@@ -15,7 +15,7 @@ empty.grid <- function
  ...
 ### ignored.
  ){
-  loc <- loc.fun(d,debug)
+  loc <- loc.fun(d,debug=debug)
   NREP <- 10
   gridpts <- d
   gl <- function(v){

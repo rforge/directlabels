@@ -38,19 +38,21 @@ plot(direct.label(mpg.scatter))
 ## direct labels
 plot(direct.label(mpg.scatter,debug=TRUE))
 
-## bigger text works better here
-plot(direct.label(mpg.scatter,list(cex=1.5,smart.grid)))
+## bigger text works better here. With the smart.grid Positioning
+## Method, the search grid size is the same size as the text box, so
+## the grid is bigger here.
+plot(direct.label(mpg.scatter,list(cex=1.5,smart.grid),TRUE))
 
 ## try custom panel function and title
 mpgs2 <- update(mpg.scatter,
                 panel=function(...){
                   panel.abline(0,col="grey");panel.xyplot(...)},
                 main="foobar2")
-plot(direct.label(mpgs2))
+plot(direct.label(mpgs2,list(cex=2,smart.grid)))
 
 data(Chem97,package="mlmRev")
 qqm <- qqmath(~gcsescore,Chem97,groups=gender,f.value=ppoints(25),auto.key=TRUE)
-plot(direct.label(qqm,,TRUE))
+plot(direct.label(qqm,empty.grid.fun(get.means)))
 ## default for points is different for default for lines
 plot(direct.label(update(qqm,type=c("l","g"))))
 ## you can hard-core label positions if you really want to:
@@ -76,6 +78,10 @@ print(direct.label(qplot(ppp,data=loci,colour=type,geom="density"),top.points))
 plot(direct.label(dotplot(VADeaths,type="o"),angled.endpoints))
 plot(direct.label(dotplot(VADeaths,type="o"),
                   list(cex=0.7,dl.trans(y=y+0.1),top.qp)))
+VAD2 <- VADeaths
+colnames(VAD2) <- sub(" ","\n",colnames(VAD2))
+plot(direct.label(dotplot(VAD2,type="o"),
+                  list(dl.trans(y=y+0.1),top.qp)))
 ## Try the same plot with ggplot2
 vad <- as.data.frame.table(VADeaths)
 names(vad) <- c("age","demographic","deaths")
