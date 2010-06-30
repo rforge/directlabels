@@ -17,10 +17,10 @@ of negative control samples, and then used to test on a positive control.
       replicate separately.}
     \item{\code{rate}}{a numeric vector, the percent of observations
       that were outside the trained model.}
-    \item{\code{data}}{a factor with levels \code{kif} \code{test}
+    \item{\code{data}}{a factor with levels \code{KIF11} \code{test}
       \code{train}, which set of observations did we measure. test and
       train are each 50\% random splits of the negative controls in the
-      experiment, and kif is the positive control in the experiment.}
+      experiment, and KIF11 is the positive control in the experiment.}
     \item{\code{gamma}}{a numeric vector, the tuning parameter of the
       radial basis function kernel.}
     \item{\code{nu}}{a numeric vector, the regularization parameter

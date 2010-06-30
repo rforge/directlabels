@@ -10,7 +10,7 @@ context of other Positioning Methods (i.e. dl.combine) and
 label.positions should be used when you actually when to plot the
 result (i.e. in lattice+ggplot2 backends).}
 \usage{
-label.positions(d, method, debug = FALSE, ...)
+\method{label}{positions}(d, method, debug = FALSE, ...)
 }
 \arguments{
   \item{d}{Data frame to which we will sequentially apply the Positioning
