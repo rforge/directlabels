@@ -28,8 +28,10 @@ direct.label.ggplot <- function
   dlgeom <- geom_text(position=position_dl(list(method),debug,p),
                       stat=p$layers[[1]]$stat)
   ##print(dlgeom)
-  SCALE <- if(geom=="path")scale_colour_continuous else scale_colour_discrete
-  p+dlgeom+SCALE(legend=FALSE)
+  for(i in seq_along(p$scales$.scales))
+    if(p$scales$.scales[[i]]$.output=="colour")
+      p$scales$.scales[[i]]$legend <- FALSE
+  p+dlgeom
 ### The ggplot object with direct labels added.
 }
 
