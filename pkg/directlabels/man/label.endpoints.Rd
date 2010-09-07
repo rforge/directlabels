@@ -3,7 +3,7 @@
 \title{label endpoints}
 \description{Make a Positioning Method that labels a certain x value.}
 \usage{
-\method{label}{endpoints}(FUN, hjust)
+label.endpoints(FUN, hjust)
 }
 \arguments{
   \item{FUN}{FUN(d$x) should return an index of which point to label. for
