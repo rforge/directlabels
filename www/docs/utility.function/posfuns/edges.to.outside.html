@@ -1,0 +1,64 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+	<meta http-equiv="Content-Type" content="text/html;
+	charset=UTF-8" />
+	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
+	rel="stylesheet" type="text/css" />
+	<title>directlabels documentation - edges.to.outside</title>
+  </head>
+
+<body>
+
+<h1><a href="../../index.html">directlabels</a> - utility.function -
+Positioning Function - edges.to.outside</h1>
+
+<p>Given a list of edges from the convex or alpha hull, and a list of
+cluster centers, calculate a point near to each cluster on the
+outside of the hull.</p>
+
+<pre>
+edges.to.outside &lt;- function
+### Given a list of edges from the convex or alpha hull, and a list of
+### cluster centers, calculate a point near to each cluster on the
+### outside of the hull.
+(edges,centers,debug=FALSE){
+  if(debug){
+    with(centers,lpoints(x,y,pch="+"))
+    with(edges,lsegments(x1,y1,x2,y2))
+  }
+  closepts &lt;- ddply(centers,.(groups),<a href="../../utility.function/posfuns/project.onto.segments.html">project.onto.segments</a>,edges,debug)
+  closepts$vjust &lt;- ifelse(closepts$y-centers$y&gt;0,0,1)
+  closepts$hjust &lt;- ifelse(closepts$x-centers$x&gt;0,0,1)
+  r &lt;- <a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>(closepts)
+  transform(r,x=(right-left)/2+left,y=(top-bottom)/2+bottom,hjust=0.5,vjust=0.5)
+}
+</pre>
+
+
+
+<center>
+<table>
+<tr><td>Please contact <a href="http://cbio.ensmp.fr/~thocking/">Toby
+Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
+contribute, thanks!</td>
+</tr>
+<tr><td align="center">Documentation website generated from comments
+in R source code
+using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
+</tr>
+<tr>
+<td align="center">
+    <a href="http://validator.w3.org/check?uri=referer">validate</a>
+</td>
+</tr>
+</table>
+
+</center>
+
+</body>
+
+</html>

@@ -25,6 +25,26 @@ p &lt;- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,
 
 <table>
 <tr>
+  <td><img alt="closest.on.ahull" src="../../scatterplot/mpglattice.closest.on.ahull.png" /></td>
+  <td><p>Calculate closest point on the alpha hull with size of the boxes,
+and put it outside that point. (only technically correct for
+aspect="iso" TODO: check and correct for perspective changes.)
+TODO: doesn't work with ggplot2 since we can't calculate bounding
+box.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/closest.on.ahull.html">closest.on.ahull</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="closest.on.chull" src="../../scatterplot/mpglattice.closest.on.chull.png" /></td>
+  <td><p>Calculate closest point on the convex hull and put it outside that
+point. TODO: doesn't work with ggplot2 since we can't calculate
+bounding box.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/closest.on.chull.html">closest.on.chull</a>")
+  </pre></td>
+</tr>
+<tr>
   <td><img alt="empty.grid" src="../../scatterplot/mpglattice.empty.grid.png" /></td>
   <td><p>Label placement method for scatterplots that ensures labels are
 placed in different places. A grid is drawn over the whole

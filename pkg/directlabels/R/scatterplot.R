@@ -1,3 +1,31 @@
+### Calculate closest point on the alpha hull with size of the boxes,
+### and put it outside that point. (only technically correct for
+### aspect="iso" TODO: check and correct for perspective changes.)
+### TODO: doesn't work with ggplot2 since we can't calculate bounding
+### box.
+closest.on.ahull <- function(d,debug=FALSE,center.fun=big.boxes,...){
+  require(alphahull)
+  centers <- center.fun(d)
+  alpha <- mean(unlist(centers[,c("w","h")]))/2
+  as <- ashape(d[,c("x","y")],alpha=alpha)
+  edges <- as.data.frame(as$edges)
+  edges.to.outside(edges,centers,debug=debug)
+}
+
+### Calculate closest point on the convex hull and put it outside that
+### point. TODO: doesn't work with ggplot2 since we can't calculate
+### bounding box.
+closest.on.chull <- function(d,debug=FALSE,center.fun=big.boxes,...){
+  centers <- center.fun(d,debug=debug,...)
+  bpts <- d[with(d,chull(x,y)),]
+  edges <- transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
+                             x1=bpts$x[i1],
+                             y1=bpts$y[i1],
+                             x2=bpts$x[i2],
+                             y2=bpts$y[i2])
+  edges.to.outside(edges,centers,debug=debug)
+}
+
 empty.grid <- function
 ### Label placement method for scatterplots that ensures labels are
 ### placed in different places. A grid is drawn over the whole

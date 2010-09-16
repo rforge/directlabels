@@ -15,3 +15,8 @@ plot(ukoch) ## looks the same
 plot(ashape(ukoch,alpha=0.1))##not a good solution
 ## actually fitting ahull in this space
 xyplot(X2~X1,data.frame(ukoch),aspect="iso")
+
+##try on iris data.
+p <- xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,group=Species,aspect="iso")
+library(directlabels)
+direct.label(p,closest.on.ahull)

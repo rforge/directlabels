@@ -190,6 +190,8 @@ data(mpg,package="ggplot2")
 p <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
       main="Fuel efficiency depends on car size")
 })){
+  print(direct.label(p,"closest.on.ahull"))
+  print(direct.label(p,"closest.on.chull"))
   print(direct.label(p,"empty.grid"))
   print(direct.label(p,"empty.grid.2"))
   print(direct.label(p,"extreme.grid"))

@@ -14,7 +14,7 @@ URL: \tab http://directlabels.r-forge.r-project.org/\cr
 LazyLoad: \tab false\cr
 LazyData: \tab true\cr
 Depends: \tab proto\cr
-Suggests: \tab ks, MASS, inlinedocs, quadprog, ggplot2, lattice\cr
+Suggests: \tab ks, MASS, inlinedocs, quadprog, ggplot2, lattice, alphahull\cr
 Imports: \tab ggplot2\cr
 Collate: \tab utility.function.R compare.R dotplot.R lineplot.R
 densityplot.R  ggplot2.R  positioning.functions.R

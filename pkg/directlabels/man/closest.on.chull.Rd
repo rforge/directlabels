@@ -2,7 +2,8 @@
 \alias{closest.on.chull}
 \title{closest on chull}
 \description{Calculate closest point on the convex hull and put it outside that
-point.}
+point. TODO: doesn't work with ggplot2 since we can't calculate
+bounding box.}
 \usage{
 closest.on.chull(d, debug = FALSE, center.fun = big.boxes, ...)
 }

@@ -432,44 +432,52 @@ extreme.points <- dl.indep({
   d[which.max(d$d),]
 })
 
-### Calculate closest point on the convex hull and put it outside that
-### point.
-closest.on.chull <- function(d,debug=FALSE,center.fun=big.boxes,...){
-  centers <- center.fun(d,debug=debug,...)
-  bpts <- d[with(d,chull(x,y)),]
-  hull.segments <- transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
-                             x1=bpts$x[i1],
-                             y1=bpts$y[i1],
-                             x2=bpts$x[i2],
-                             y2=bpts$y[i2])
+edges.to.outside <- function
+### Given a list of edges from the convex or alpha hull, and a list of
+### cluster centers, calculate a point near to each cluster on the
+### outside of the hull.
+(edges,centers,debug=FALSE){
   if(debug){
     with(centers,lpoints(x,y,pch="+"))
-    with(hull.segments,lsegments(x1,y1,x2,y2))
+    with(edges,lsegments(x1,y1,x2,y2))
   }
-  closepts <- ddply(centers,.(groups),function(m){
-    ## m is 1 row, a center of a point cloud, we need to find the
-    ## distance to the closest point on each segment of the convex
-    ## hull.
-    these <- within(hull.segments,{
-      s <- (y2-y1)/(x2-x1)
-      ## the closest point on the line formed by expanding this line
-      ## segment (this expression is calculated by finding the minimum
-      ## of the distance function).
-      xstar <- (m$x + m$y*s + x1*s^2 - s*y1)/(s^2+1)
-      minval <- apply(cbind(x1,x2),1,min)
-      maxval <- apply(cbind(x1,x2),1,max)
-      ## xopt is the closest point on the line segment
-      xopt <- ifelse(xstar<minval,minval,ifelse(xstar>maxval,maxval,xstar))
-      yopt <- s*(xopt-x1)+y1
-      ## distance to each point on line segment from the center
-      d <- (m$x-xopt)^2+(m$y-yopt)^2
-    })
-    i <- which.min(these$d)
-    h <- with(these[i,],data.frame(x=xopt,y=yopt))
-    if(debug)with(h,lsegments(m$x,m$y,h$x,h$y))
-    h
+  closepts <- ddply(centers,.(groups),project.onto.segments,edges,debug)
+  closepts$vjust <- ifelse(closepts$y-centers$y>0,0,1)
+  closepts$hjust <- ifelse(closepts$x-centers$x>0,0,1)
+  r <- big.boxes(closepts)
+  transform(r,x=(right-left)/2+left,y=(top-bottom)/2+bottom,hjust=0.5,vjust=0.5)
+}
+
+project.onto.segments <- function
+### Given a point and a set of line segments representing a convex or
+### alpha hull, calculate the closest point on the segments.
+(m,
+### m is 1 row, a center of a point cloud, we need to find the
+### distance to the closest point on each segment of the convex
+### hull.
+ hull.segments,
+### Data frame describing the line segments of the convex or alpha
+### hull.
+ debug=FALSE
+ ){
+  these <- within(hull.segments,{
+    s <- (y2-y1)/(x2-x1)
+    ## the closest point on the line formed by expanding this line
+    ## segment (this expression is calculated by finding the minimum
+    ## of the distance function).
+    xstar <- (m$x + m$y*s + x1*s^2 - s*y1)/(s^2+1)
+    minval <- apply(cbind(x1,x2),1,min)
+    maxval <- apply(cbind(x1,x2),1,max)
+    ## xopt is the closest point on the line segment
+    xopt <- ifelse(xstar<minval,minval,ifelse(xstar>maxval,maxval,xstar))
+    yopt <- s*(xopt-x1)+y1
+    ## distance to each point on line segment from the center
+    d <- (m$x-xopt)^2+(m$y-yopt)^2
   })
-  big.boxes(closepts)
+  i <- which.min(these$d)
+  h <- with(these[i,],data.frame(x=xopt,y=yopt))
+  if(debug)with(h,lsegments(m$x,m$y,h$x,h$y))
+  h
 }
 
 ### Make a Positioning Method from a set of points on a vertical line
