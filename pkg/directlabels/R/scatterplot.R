@@ -7,7 +7,9 @@ closest.on.ahull <- function(d,debug=FALSE,center.fun=big.boxes,...){
   require(alphahull)
   centers <- center.fun(d)
   alpha <- mean(unlist(centers[,c("w","h")]))/2
-  as <- ashape(d[,c("x","y")],alpha=alpha)
+  xy <- d[,c("x","y")]
+  xy <- unique(xy)
+  as <- ashape(xy,alpha=alpha)
   edges <- as.data.frame(as$edges)
   edges.to.outside(edges,centers,debug=debug)
 }

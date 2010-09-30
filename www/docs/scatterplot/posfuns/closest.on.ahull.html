@@ -27,7 +27,9 @@ closest.on.ahull &lt;- function(d,debug=FALSE,center.fun=<a href="../../utility.
   require(alphahull)
   centers &lt;- center.fun(d)
   alpha &lt;- mean(unlist(centers[,c("w","h")]))/2
-  as &lt;- ashape(d[,c("x","y")],alpha=alpha)
+  xy &lt;- d[,c("x","y")]
+  xy &lt;- unique(xy)
+  as &lt;- ashape(xy,alpha=alpha)
   edges &lt;- as.data.frame(as$edges)
   <a href="../../utility.function/posfuns/edges.to.outside.html">edges.to.outside</a>(edges,centers,debug=debug)
 }
