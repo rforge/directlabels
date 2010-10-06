@@ -12,4 +12,4 @@ angled.midpoints <- dl.indep({
     y <- mean(y)
   })[1,]
 })
-direct.label(p,angled.midpoints,TRUE)
+direct.label(update(p,aspect="iso"),angled.midpoints,TRUE)
