@@ -4,7 +4,11 @@ How to respect predefined scale_colour_manual() in ggplot2?
 http://stackoverflow.com/questions/3337765/can-i-use-direct-label-with-ggplots-scale-colour-manual
 I tried to do a hack that looks into p$scales$.scales to turn off the
 legend (r371), but that didn't work so well, so I went back to the
-method of just adding a new scale_colour_discrete(legend=FALSE) (r379)
+method of just adding a new scale_colour_discrete(legend=FALSE) (r382)
+For now, just set the scale_colour_manual AFTER the call to direct.label():
+p <- ggplot(...)
+p2 <- direct.label(p)
+p2+scale_colour_manual(...)
 
 Need to figure out how to calculate label bounding boxes for ggplot2.
 
