@@ -33,7 +33,8 @@ direct.label.ggplot <- function
 ##       p$scales$.scales[[i]]$legend <- FALSE
   ## TDH 13 oct 2010 this doesn't work so well,
   ##lets go back to overwriting the color scale
-  p+dlgeom+scale_colour_discrete(legend=FALSE)
+  SCALE <- if(geom=="path")scale_colour_continuous else scale_colour_discrete
+  p+dlgeom+SCALE(legend=FALSE)
 ### The ggplot object with direct labels added.
 }
 
