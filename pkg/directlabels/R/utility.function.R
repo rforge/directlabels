@@ -14,7 +14,7 @@ label.endpoints <- function
 ### A Positioning Method like first.points or last.points.
 }
 
-dl.combine <- function # Combine output of several methods
+dl.combine <- structure(function # Combine output of several methods
 ### Apply several Positioning methods to the original data frame.
 (...
 ### Several Positioning Functions.
@@ -29,10 +29,10 @@ dl.combine <- function # Combine output of several methods
     }
     res
   }
-  return(pf)
+  pf
 ### A Positioning Function that returns the combined data frame after
 ### applying each specified Positioning Function.
-  ##examples<<
+},ex=function(){
   ## Simple example: label the start and endpoints
   data(BodyWeight,package="nlme")
   library(lattice)
@@ -128,9 +128,9 @@ dl.combine <- function # Combine output of several methods
   dres <- with(diabetes,mylars(x,y))
   P <- xyplot(coef~arclength,dres,groups=variable,type="l")
   plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
-}
+})
 
-dl.indep <- function # Direct label groups independently
+dl.indep <- structure(function # Direct label groups independently
 ### Makes a function you can use to specify the location of each group
 ### independently.
 (expr
@@ -141,17 +141,17 @@ dl.indep <- function # Direct label groups independently
   f <- function(d,...)eval(foo)
   src <- paste("dl.indep(",paste(deparse(foo),collapse="\n"),")",sep="")
   pf <- structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
-  return(pf)
+  pf
 ### A Positioning Function.
-  ##examples<<
+},ex=function(){
   complicated <- list(dl.trans(x=x+10),
                       dl.indep(d[-2,]),
                       rot=c(30,180))
   library(lattice)
   direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
-}
+})
 
-dl.trans <- function # Direct label data transform
+dl.trans <- structure(function # Direct label data transform
 ### Make a function that transforms the data. This is for conveniently
 ### making a function that calls transform on the data frame, with the
 ### arguments provided. See examples.
@@ -160,17 +160,17 @@ dl.trans <- function # Direct label data transform
  ){
   L <- as.list(match.call())[-1]
   pf <- function(d,...)do.call("transform",c(list(d),L))
-  return(pf)
+  pf
 ### A Positioning Function.
-  ##examples<<
+},ex=function(){
   complicated <- list(dl.trans(x=x+10),
                       dl.indep(d[-2,]),
                       rot=c(30,180))
   library(lattice)
   direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
-}
+})
 
-dl.move <- function # Manually move a direct label
+dl.move <- structure(function # Manually move a direct label
 ### Sometimes there is 1 label that is placed oddly by another
 ### Positioning Function. This function can be used to manually place
 ### that label in a good spot.
@@ -201,9 +201,9 @@ dl.move <- function # Manually move a direct label
     }
     d
   }
-  return(pf)
+  pf
 ### A Positioning Function that moves a label into a good spot.
-  ##examples<<
+},ex=function(){
   data(mpg,package="ggplot2")
   library(lattice)
   scatter <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
@@ -217,7 +217,7 @@ dl.move <- function # Manually move a direct label
              geom="line",facets=replicate~nu)
   dlcompare(list(p+xlim(-8,7)),list("last.points",
     `+dl.move`=list(last.points,dl.move("KIF11",-0.9,hjust=1,vjust=1))))
-}
+})
 
 ### Make a Positioning Function with empty.grid, that calculates label
 ### position targets using f.

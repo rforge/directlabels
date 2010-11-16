@@ -70,7 +70,7 @@ direct.label.trellis <- function
   update(p,debug=debug)
 ### The lattice plot.
 }
-panel.superpose.dl <- function
+panel.superpose.dl <- structure(function
 ### Call panel.superpose for the data points and then for the direct
 ### labels. This is a proper lattice panel function that behaves much
 ### like panel.superpose.
@@ -119,8 +119,7 @@ panel.superpose.dl <- function
   type <- type[type!="g"] ## printing the grid twice looks bad.
   panel.superpose(panel.groups=dl.text,labs=labs,type=type,x=x,
                        groups=groups,subscripts=seq_along(groups),...)
-  return()
-  ##examples<<
+},ex=function(){
   loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                      type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
   ## 3 equivalent ways to make the same plot:
@@ -203,7 +202,7 @@ panel.superpose.dl <- function
   print(direct.label(both,method=first.points))
   print(ratxy(panel=panel.line1(panel.superpose.dl),
               panel.groups=panel.model,method=first.points))
-}
+})
 
 defaultpf.trellis <- function
 ### If no Positioning Function specified, choose a default using this

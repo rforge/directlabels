@@ -1,4 +1,4 @@
-direct.label <- function
+direct.label <- structure(function
 ### Add direct labels to a plot. This is a S3 generic and there are
 ### appropriate methods for "trellis" and "ggplot" objects.
 (p,
@@ -14,7 +14,7 @@ direct.label <- function
   else
     UseMethod("direct.label")
 ### The plot object, with direct labels added.
-  ##examples<<
+},ex=function(){
   library(ggplot2)
   ## direct label simple ggplot2 scatterplot
   scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
@@ -154,7 +154,8 @@ direct.label <- function
               xlab=expression(df(lambda)))
   print(direct.label(update(p,xlim=c(0,9.25)),
                      list(last.qp,cex=0.75,dl.trans(x=x+0.1))))
-}
+})
+
 label.positions <- function
 ### Calculates table of positions of each label based on input data
 ### for each panel and Positioning Functions. This is meant for

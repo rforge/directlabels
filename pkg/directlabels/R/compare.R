@@ -1,4 +1,4 @@
-dlcompare <- function # Direct label comparison plot
+dlcompare <- structure(function # Direct label comparison plot
 ### Compare several plots and/or label placement methods. This creates
 ### a custom grid graphics display based on lattice and/or ggplot2
 ### output. This is possible because the direct.label function is
@@ -68,8 +68,7 @@ dlcompare <- function # Direct label comparison plot
     }
   }
   popViewport()
-  return()
-  ##examples<<
+},ex=function(){
   library(lattice)
   library(ggplot2)
   dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
@@ -163,4 +162,4 @@ dlcompare <- function # Direct label comparison plot
   ## Interesting --- qp.last almost works here, but actually we are
   ## getting the bounding boxes in the wrong viewport -> wrong size.
   dlcompare(list(p,p2),pfuns[1:2],rects=FALSE,debug=TRUE)
-}
+})
