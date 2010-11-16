@@ -28,10 +28,12 @@ direct.label.ggplot <- function
   dlgeom <- geom_text(position=position_dl(list(method),debug,p),
                       stat=p$layers[[1]]$stat)
   ##print(dlgeom)
-  for(i in seq_along(p$scales$.scales))
-    if(p$scales$.scales[[i]]$.output=="colour")
-      p$scales$.scales[[i]]$legend <- FALSE
-  p+dlgeom
+##   for(i in seq_along(p$scales$.scales))
+##     if(p$scales$.scales[[i]]$.output=="colour")
+##       p$scales$.scales[[i]]$legend <- FALSE
+  ## TDH 13 oct 2010 this doesn't work so well,
+  ##lets go back to overwriting the color scale
+  p+dlgeom+scale_colour_discrete(legend=FALSE)
 ### The ggplot object with direct labels added.
 }
 
