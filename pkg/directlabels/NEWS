@@ -16,4 +16,6 @@ closest.on.ahull calculation should take into account visual
 coordinates, not plotting coordinates (could run into problems if
 horiz and vert axes are on widely different scales).
 
-1.0 16 nov 2010 initial release to CRAN.
+1.1 26 nov 2010 delete many examples so CRAN check completes quicker.
+
+1.0 16 nov 2010 initial release attempted to CRAN -- too many examples.

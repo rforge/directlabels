@@ -50,14 +50,15 @@ dldoc <- function # Make directlabels documentation
    ){
     
     plotcodes <-
-      paste("{\n",sapply(L$plots,function(x)x$code),"\n}",sep="",collapse=",\n")
+      paste("{\n",sapply(L$plots,"[[","code"),"\n}",sep="",collapse=",\n")
     forloop <- paste("\nfor(p in list(",plotcodes,"))",sep="")
     dlines <-
       paste(paste('print(direct.label(p,"',
                   names(L$posfuns),'"))',sep=""),collapse="\n  ")
-    paste(forloop,"{\n  ",dlines,"\n}\n",sep="")
+    sprintf("### %s Positioning Methods%s{\n  %s\n}\n",L$type,forloop,dlines)
   }
-  rd <- apply(m[-nrow(m),],1,makerd)
+  rd <- apply(m[rownames(m)!="utility.function",],1,makerd)
+  rd <- c("\n\\dontrun{",rd,"}")
   pf.file <- file.path("man","positioning.functions.Rd")
   pflines <- readLines(pf.file)
   exline <- grep("\\\\examples[{]",pflines)[1]

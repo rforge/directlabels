@@ -1,22 +1,22 @@
 \name{positioning.functions}
 \Rdversion{1.1}
 \alias{positioning.functions}
-\alias{positioning.function}
-\alias{Positioning.Function}
-\alias{Positioning.Functions}
-\title{Built-in Positioning Functions for direct label placement}
+\alias{positioning.methods}
+\title{Built-in Positioning Methods for direct label placement}
 \description{When adding direct labels to a grouped plot, label
-  placement can be specified using a Positioning Function (or a list of
+  placement can be specified using a Positioning Method (or a list of
   them), of the form function(d,...), where d is a data frame of the
   points to plot, with columns x y groups. The job of the Positioning
-  Function(s) is to return the position of each direct label you want to
+  Method(s) is to return the position of each direct label you want to
   plot as a data frame, with 1 row for each label. Thus normally a
-  Positioning Function will return 1 row for each group. Several
-  built-in Positioning Functions are discussed below, but you can also
+  Positioning Method will return 1 row for each group. Several
+  built-in Positioning Methods are discussed below, but you can also
   create your own, either from scratch or by using dl.indep and
   dl.trans.}
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 \examples{
+\dontrun{
+### contourplot Positioning Methods
 for(p in list({
 ## Example from help(contourplot)
 require(stats)
@@ -50,7 +50,7 @@ p <- ggplot(volcano3d, aes(x, y, z = z))+
   print(direct.label(p,"top.points"))
 }
 
-
+### densityplot Positioning Methods
 for(p in list({
 data(Chem97,package="mlmRev")
 library(lattice)
@@ -74,7 +74,7 @@ p <- qplot(ppp,data=loci,colour=type,geom="density")
   print(direct.label(p,"top.points"))
 }
 
-
+### dotplot Positioning Methods
 for(p in list({
 library(lattice)
 p <- dotplot(VADeaths,xlim=c(8,85),type="o")
@@ -89,7 +89,7 @@ p <- qplot(deaths,age,data=vad,group=demographic,geom="line",colour=demographic)
   print(direct.label(p,"angled.endpoints"))
 }
 
-
+### lineplot Positioning Methods
 for(p in list({
 data(BodyWeight,package="nlme")
 library(lattice)
@@ -159,7 +159,7 @@ p <- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
   print(direct.label(p,"maxvar.qp"))
 }
 
-
+### scatterplot Positioning Methods
 for(p in list({
 data(mpg,package="ggplot2")
 m <- lm(cty~displ,data=mpg)
@@ -199,4 +199,5 @@ p <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
   print(direct.label(p,"smart.grid"))
 }
 
+}
 }
