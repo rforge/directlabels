@@ -41,11 +41,11 @@ directlabels website navigation:
 </p>
 
 <ul>
-<li><a href="docs/index.html">Positioning Function examples database</a></li>
+<li><a href="docs/index.html">Positioning Method examples database</a></li>
 <li><a href="motivation.html">When are direct labels better than
 legends? Why not just add direct labels by hand?</a></li>
 <li><a href="examples.html">Several advanced examples</a></li>
-<li><a href="smart.html">Smart label Positioning Functions that avoid label collisions</a></li>
+<li><a href="smart.html">Smart label Positioning Methods that avoid label collisions</a></li>
 </ul>
 
 <h2>An extensible framework for thinking about direct labeling
@@ -66,21 +66,21 @@ the left or right of the lines:</p>
 
 <pre>
 install.packages("ggplot2")
-data(BodyWeight,package="nlme")
 library(ggplot2)
+data(BodyWeight,package="nlme")
 p &lt;- qplot(Time,weight,data=BodyWeight,colour=Rat,geom="line",facets=.~Diet)
 direct.label(p,<a href="docs/lineplot/posfuns/first.points.html">first.points</a>)
 direct.label(p,<a href="docs/lineplot/posfuns/last.points.html">last.points</a>)
 </pre>
 
 <p>Here first.points and last.points
-are <a href="docs/index.html">Positioning Functions</a> of the form
-function(d,...){return(data.frame(x=,y=,groups=))}, where d is all the
-data to plot, as a data frame with columns <tt>x y
-groups</tt>. first.points simply returns the rows of the data frame
-which correspond to the first points for each group. The directlabels
-package plots a direct label for each row returned by the Positioning
-Function.</p>
+are <a href="docs/index.html">Positioning Methods</a> of the form
+<tt>function(d,...){return(data.frame(x=,y=,groups=))}</tt>,
+where <tt>d</tt> is all the data to plot, as a data frame with
+columns <tt>x y groups</tt>. first.points simply returns the rows of
+the data frame which correspond to the first points for each
+group. The directlabels package plots a direct label for each row
+returned by the Positioning Method.</p>
 
 <img src="rat-ggplot2-firstlast.png" alt="rat data plotted in ggplot2" />
 
