@@ -9,7 +9,7 @@ uselegend.trellis <- function
   else p
 }
  
-### Functions which need translation before applying Positioning Function.
+### Functions which need translation before applying Positioning Method.
 need.trans <- c("qqmath","densityplot")
 dl.text <- function
 ### To be used as panel.groups= argument in panel.superpose. Analyzes
@@ -87,7 +87,7 @@ panel.superpose.dl <- structure(function
 ### panel.superpose.
  method=NULL,
 ### Method for direct labeling as described in ?label.positions. NULL
-### indicates to choose a Positioning Function based on the
+### indicates to choose a Positioning Method based on the
 ### panel.groups function.
  .panel.superpose=panel.superpose,
 ### The panel function to use for drawing data points.
@@ -175,7 +175,7 @@ panel.superpose.dl <- structure(function
   pg <- ratxy(panel=panel.superpose,panel.groups=panel.model)
   print(pg)
   ## If you use panel.superpose.dl with a custom panel.groups function,
-  ## you need to manually specify the Positioning Function, since the
+  ## you need to manually specify the Positioning Method, since the
   ## name of panel.groups is used to infer a default:
   print(direct.label(pg,method=first.points))
   print(ratxy(panel=panel.superpose.dl,panel.groups="panel.model",
@@ -205,7 +205,7 @@ panel.superpose.dl <- structure(function
 })
 
 defaultpf.trellis <- function
-### If no Positioning Function specified, choose a default using this
+### If no Positioning Method specified, choose a default using this
 ### function. The idea is that this is called with all the variables
 ### in the environment of panel.superpose.dl, and this can be
 ### user-customizable by setting the directlabels.defaultpf.lattice

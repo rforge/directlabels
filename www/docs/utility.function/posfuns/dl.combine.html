@@ -22,7 +22,7 @@ Positioning Method - dl.combine</h1>
 dl.combine &lt;- structure(function # Combine output of several methods
 ### Apply several Positioning methods to the original data frame.
 (...
-### Several Positioning Functions.
+### Several Positioning Methods.
  ){
   FUNS &lt;- list(...)
   pf &lt;- function(d,...){
@@ -35,8 +35,8 @@ dl.combine &lt;- structure(function # Combine output of several methods
     res
   }
   pf
-### A Positioning Function that returns the combined data frame after
-### applying each specified Positioning Function.
+### A Positioning Method that returns the combined data frame after
+### applying each specified Positioning Method.
 },ex=function(){
   ## Simple example: label the start and endpoints
   data(BodyWeight,package="nlme")

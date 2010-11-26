@@ -2,7 +2,7 @@
 \alias{label.positions}
 \title{label positions}
 \description{Calculates table of positions of each label based on input data
-for each panel and Positioning Functions. This is meant for
+for each panel and Positioning Method. This is meant for
 internal use inside a direct.label method, and is a wrapper around
 eval.list which makes sure the inputs are good and the outputs are
 plottable. eval.list is more efficient and should be used in the
@@ -14,7 +14,7 @@ label.positions(d, method, debug = FALSE, ...)
 }
 \arguments{
   \item{d}{Data frame to which we will sequentially apply the Positioning
-Functions.}
+Method.}
   \item{method}{Method for direct labeling, described in ?eval.list.}
   \item{debug}{Show debug output? If TRUE, the resulting table of label positions
 will be printed.}

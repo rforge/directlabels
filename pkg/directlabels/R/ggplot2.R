@@ -8,7 +8,7 @@ uselegend.ggplot <- function
   p
 }
 
-### Geoms which need translation before applying Positioning Function.
+### Geoms which need translation before applying Positioning Method.
 need.trans.ggplot <- c()
 direct.label.ggplot <- function
 ### Direct label a ggplot2 grouped plot.

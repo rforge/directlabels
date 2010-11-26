@@ -17,7 +17,7 @@ label.endpoints <- function
 dl.combine <- structure(function # Combine output of several methods
 ### Apply several Positioning methods to the original data frame.
 (...
-### Several Positioning Functions.
+### Several Positioning Methods.
  ){
   FUNS <- list(...)
   pf <- function(d,...){
@@ -30,8 +30,8 @@ dl.combine <- structure(function # Combine output of several methods
     res
   }
   pf
-### A Positioning Function that returns the combined data frame after
-### applying each specified Positioning Function.
+### A Positioning Method that returns the combined data frame after
+### applying each specified Positioning Method.
 },ex=function(){
   ## Simple example: label the start and endpoints
   data(BodyWeight,package="nlme")
@@ -480,7 +480,7 @@ project.onto.segments <- function
   h
 }
 
-### Make a Positioning Method from a set of points on a vertical line
-### that will be spaced out using qp.labels
+### Make a Positioning Function from a set of points on a vertical
+### line that will be spaced out using qp.labels
 vertical.qp <- function(M)list(M,calc.boxes,qp.labels("y","h"))
 
