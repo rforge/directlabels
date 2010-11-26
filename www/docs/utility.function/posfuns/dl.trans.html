@@ -21,7 +21,7 @@ making a function that calls transform on the data frame, with the
 arguments provided. See examples.</p>
 
 <pre>
-dl.trans &lt;- function # Direct label data transform
+dl.trans &lt;- structure(function # Direct label data transform
 ### Make a function that transforms the data. This is for conveniently
 ### making a function that calls transform on the data frame, with the
 ### arguments provided. See examples.
@@ -30,15 +30,15 @@ dl.trans &lt;- function # Direct label data transform
  ){
   L &lt;- as.list(match.call())[-1]
   pf &lt;- function(d,...)do.call("transform",c(list(d),L))
-  return(pf)
+  pf
 ### A Positioning Function.
-  ##examples&lt;&lt;
+},ex=function(){
   complicated &lt;- list(dl.trans(x=x+10),
                       <a href="../../utility.function/posfuns/dl.indep.html">dl.indep</a>(d[-2,]),
                       rot=c(30,180))
   library(lattice)
   direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
-}
+})
 </pre>
 
 

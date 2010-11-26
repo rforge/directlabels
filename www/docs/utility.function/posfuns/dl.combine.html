@@ -19,7 +19,7 @@ Positioning Function - dl.combine</h1>
 <p>Apply several Positioning methods to the original data frame.</p>
 
 <pre>
-dl.combine &lt;- function # Combine output of several methods
+dl.combine &lt;- structure(function # Combine output of several methods
 ### Apply several Positioning methods to the original data frame.
 (...
 ### Several Positioning Functions.
@@ -34,10 +34,10 @@ dl.combine &lt;- function # Combine output of several methods
     }
     res
   }
-  return(pf)
+  pf
 ### A Positioning Function that returns the combined data frame after
 ### applying each specified Positioning Function.
-  ##examples&lt;&lt;
+},ex=function(){
   ## Simple example: label the start and endpoints
   data(BodyWeight,package="nlme")
   library(lattice)
@@ -133,7 +133,7 @@ dl.combine &lt;- function # Combine output of several methods
   dres &lt;- with(diabetes,mylars(x,y))
   P &lt;- xyplot(coef~arclength,dres,groups=variable,type="l")
   plot(direct.label(P,dl.combine(lasso.labels,<a href="../../lineplot/posfuns/last.qp.html">last.qp</a>)))
-}
+})
 </pre>
 
 

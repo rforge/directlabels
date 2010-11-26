@@ -21,7 +21,7 @@ Positioning Function. This function can be used to manually place
 that label in a good spot.</p>
 
 <pre>
-dl.move &lt;- function # Manually move a direct label
+dl.move &lt;- structure(function # Manually move a direct label
 ### Sometimes there is 1 label that is placed oddly by another
 ### Positioning Function. This function can be used to manually place
 ### that label in a good spot.
@@ -52,9 +52,9 @@ dl.move &lt;- function # Manually move a direct label
     }
     d
   }
-  return(pf)
+  pf
 ### A Positioning Function that moves a label into a good spot.
-  ##examples&lt;&lt;
+},ex=function(){
   data(mpg,package="ggplot2")
   library(lattice)
   scatter &lt;- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
@@ -68,7 +68,7 @@ dl.move &lt;- function # Manually move a direct label
              geom="line",facets=replicate~nu)
   dlcompare(list(p+xlim(-8,7)),list("<a href="../../lineplot/posfuns/last.points.html">last.points</a>",
     `+dl.move`=list(<a href="../../lineplot/posfuns/last.points.html">last.points</a>,dl.move("KIF11",-0.9,hjust=1,vjust=1))))
-}
+})
 </pre>
 
 
