@@ -65,7 +65,9 @@ direct.label. For example, we can label longitudinal data either on
 the left or right of the lines:</p>
 
 <pre>
+install.packages("ggplot2")
 data(BodyWeight,package="nlme")
+library(ggplot2)
 p &lt;- qplot(Time,weight,data=BodyWeight,colour=Rat,geom="line",facets=.~Diet)
 direct.label(p,<a href="docs/lineplot/posfuns/first.points.html">first.points</a>)
 direct.label(p,<a href="docs/lineplot/posfuns/last.points.html">last.points</a>)
