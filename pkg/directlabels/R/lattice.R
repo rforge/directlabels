@@ -11,6 +11,7 @@ uselegend.trellis <- function
  
 ### Functions which need translation before applying Positioning Method.
 need.trans <- c("qqmath","densityplot")
+
 dl.text <- function
 ### To be used as panel.groups= argument in panel.superpose. Analyzes
 ### arguments to determine correct text color for this group, and then
