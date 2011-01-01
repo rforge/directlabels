@@ -11,10 +11,10 @@ maxvar.points <- function(d,...){
     else range(x,na.rm=TRUE)
   }
   vars <- sapply(myrange(d$x),function(v)var(subset(d,x==v)$y,na.rm=TRUE))
-  FUN <- if(is.na(vars[1]))last.points
-  else if(is.na(vars[2]))first.points
-  else if(diff(vars)<0)first.points else last.points
-  eval.list(FUN,d,...)
+  FUN <- if(is.na(vars[1]))"last.points"
+  else if(is.na(vars[2]))"first.points"
+  else if(diff(vars)<0)"first.points" else "last.points"
+  eval.list(list(FUN),d,...)
 }
 
 ### Label last points, bumping labels up if they collide.

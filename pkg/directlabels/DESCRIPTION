@@ -8,7 +8,8 @@ Description: Direct labeling functions meant to be used with several plotting pa
 URL: http://directlabels.r-forge.r-project.org/
 LazyLoad: false
 LazyData: true
-Suggests: ks, MASS, inlinedocs, quadprog, ggplot2, lattice, alphahull, ElemStatLearn, proto, grid
+Suggests: ks, MASS, inlinedocs, quadprog, ggplot2, lattice, alphahull, ElemStatLearn, proto
+Depends: grid, plyr
 Collate: utility.function.R compare.R dotplot.R lineplot.R 
 	 densityplot.R  ggplot2.R  positioning.functions.R 
 	 doc.R lattice.R scatterplot.R contourplot.R

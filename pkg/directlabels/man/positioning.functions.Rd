@@ -142,10 +142,10 @@ p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
        xlab=expression(df(lambda)))
 },
 {
+library(ggplot2)
 dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
 ddf <- melt(as.data.frame(dts),id="time")
 names(ddf) <- c("time","sex","deaths")
-library(ggplot2)
 p <- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
 })){
   print(direct.label(p,"first.bumpup"))
