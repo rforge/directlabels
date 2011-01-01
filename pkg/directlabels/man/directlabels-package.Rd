@@ -7,7 +7,7 @@
 \tabular{ll}{Package: \tab directlabels\cr
 Maintainer: \tab Toby Dylan Hocking <toby.hocking@inria.fr>\cr
 Author: \tab Toby Dylan Hocking\cr
-Version: \tab 1.2\cr
+Version: \tab 1.3\cr
 License: \tab GPL-3\cr
 Title: \tab Direct labels for plots\cr
 URL: \tab http://directlabels.r-forge.r-project.org/\cr
