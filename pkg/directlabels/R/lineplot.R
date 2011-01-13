@@ -1,8 +1,8 @@
 ### Positioning Method for the first of a group of points.
-first.points <- label.endpoints(which.min,1)
+first.points <- label.endpoints(min,1)
 
 ### Positioning Method for the last of a group of points.
-last.points <- label.endpoints(which.max,0)
+last.points <- label.endpoints(max,0)
 
 ### Do first or last, whichever has points most spread out.
 maxvar.points <- function(d,...){

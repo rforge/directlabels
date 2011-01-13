@@ -154,6 +154,13 @@ direct.label <- structure(function
               xlab=expression(df(lambda)))
   print(direct.label(update(p,xlim=c(0,9.25)),
                      list(last.qp,cex=0.75,dl.trans(x=x+0.1))))
+  data(iris.l1path,package="directlabels")
+  p <- ggplot(iris.l1path,aes(lambda,alpha,group=row,colour=Species))+
+    geom_line(alpha=1/4)+
+      facet_grid(col~.)
+  library(directlabels)
+  print(p)
+  direct.label(p,list(first.points,get.means))
 })
 
 label.positions <- function

@@ -7,7 +7,7 @@ label.endpoints <- function
 ### hjust of the labels.
  ){
   function(d,...)ddply(d,.(groups),function(d,...){
-    i <- FUN(d$x)
+    i <- FUN(d$x)==d$x
     if(length(i))data.frame(d[i,],hjust,vjust=0.5)
     else data.frame()
   })
@@ -252,12 +252,12 @@ big.boxes <- function(d,...)enlarge.box(calc.boxes(visualcenter(d)))
 
 ### Point in the middle of the min and max for each group.
 visualcenter <-
-  dl.indep(unique(transform(d,x=diff(range(x))/2+min(x),
-                            y=diff(range(y))/2+min(y))))
+  dl.indep(dl.summarize(d,x=diff(range(x))/2+min(x),
+                            y=diff(range(y))/2+min(y)))
 
 ### Positioning Function for the mean of each cluster of points.
 get.means <-
-  dl.indep(unique(transform(d,x=mean(x),y=mean(y))))
+  dl.indep(dl.summarize(d,x=mean(x),y=mean(y)))
 
 calc.borders <- function
 ### Calculate bounding box based on newly calculated width and height.
@@ -377,6 +377,17 @@ inside <- function
  ){
   sapply(1:nrow(boxes),function(i)in1box(points,boxes[i,]))
 ### Vector of point counts for each box.
+}
+
+dl.summarize <- function
+### summarize which preserves important columns for direct labels.
+(d,
+### data frame
+ ...
+ ){
+  tmp <- summarize(d,...)
+  targs <- c(list(d[1,]),as.list(tmp))
+  do.call(transform,targs)
 }
 
 perpendicular.lines <- function
