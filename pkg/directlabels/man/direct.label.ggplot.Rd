@@ -3,7 +3,7 @@
 \title{direct label ggplot}
 \description{Direct label a ggplot2 grouped plot.}
 \usage{
-\method{direct.label}{ggplot}(p, method = NULL, debug = FALSE)
+direct.label.ggplot(p, method = NULL, debug = FALSE)
 }
 \arguments{
   \item{p}{The ggplot object.}

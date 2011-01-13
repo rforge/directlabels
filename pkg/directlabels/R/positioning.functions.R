@@ -160,20 +160,21 @@ direct.label <- structure(function
                      list(last.qp,cex=0.75,dl.trans(x=x+0.1))))
   
   ## some data from clustering algorithms
-  data(df.iris.sp,package="directlabels")
-  p <- ggplot(df.iris.sp,aes(lambda,alpha,group=row,colour=Species))+
+  data(iris.l1.cluster,package="directlabels")
+  p <- ggplot(iris.l1.cluster,aes(lambda,alpha,group=row,colour=Species))+
     geom_line(alpha=1/4)+
     facet_grid(col~.)
-  direct.label(p+xlim(-0.0025,max(df.iris.sp$lambda)),list(first.points,get.means))
+  p2 <- p+xlim(-0.0025,max(iris.l1.cluster$lambda))
+  print(direct.label(p2,list(first.points,get.means)))
 
   ## TODO
-  data(path,package="directlabels")
-  p <- ggplot(joined,aes(x,y))+
+  data(normal.l2.cluster,package="directlabels")
+  p <- ggplot(normal.l2.cluster$path,aes(x,y))+
     geom_path(aes(group=row),colour="grey")+
     geom_point(aes(size=lambda),colour="grey")+
-    geom_point(aes(colour=class),data=pts)+
+    geom_point(aes(colour=class),data=normal.l2.cluster$pts)+
     coord_equal()
-  direct.label(p,extreme.points) ##FIXME
+  print(direct.label(p,extreme.points)) ##FIXME
 })
 
 label.positions <- function

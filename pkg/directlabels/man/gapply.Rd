@@ -1,7 +1,7 @@
 \name{gapply}
 \alias{gapply}
 \title{gapply}
-
+\description{apply a function to every group}
 \usage{
 gapply(d, ...)
 }

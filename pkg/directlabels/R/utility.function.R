@@ -443,9 +443,12 @@ perpendicular.lines <- function
 ### which is the furthest out along the line drawn through its center.
 }
 
-## apply a function to every group
+### apply a function to every group
 gapply <- function(d,...){
-  ddply(d,.(groups),...)
+  d$groups <- factor(d$groups)
+  dfs <- lapply(levels(d$groups),function(g)d[d$groups==g,])
+  results <- lapply(dfs,...)
+  do.call(rbind,results)
 }
 
 ### Label the points furthest from the middle for each group.

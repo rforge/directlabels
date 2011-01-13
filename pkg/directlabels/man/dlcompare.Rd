@@ -35,9 +35,9 @@ dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
 ddf <- melt(as.data.frame(dts),id="time")
 names(ddf) <- c("time","sex","deaths")
 plots <- list(lattice=
-            xyplot(deaths~time,ddf,groups=sex,type="l",xlim=c(-15,80)),
-            ggplot2=
-            qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-10,80))
+              xyplot(deaths~time,ddf,groups=sex,type="l",xlim=c(-15,80)),
+              ggplot2=
+              qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-10,80))
 pos.funs <- list("first.points","lines2")
 ##pdf("compare.pdf",width=10,height=10)
 dlcompare(plots,pos.funs)
@@ -47,11 +47,11 @@ dlcompare(plots,pos.funs,rects=FALSE,row.items="posfuns") ## exchange axes
 
 ## Try some more exotic labeling options.
 exotic <- list(lines2,
-             rot=c(0,180),
-             fontsize=c(10,20),
-             fontface=c("bold","italic"),
-             fontfamily=c("mono","serif"),
-             alpha=c(0.25,1))
+               rot=c(0,180),
+               fontsize=c(10,20),
+               fontface=c("bold","italic"),
+               fontfamily=c("mono","serif"),
+               alpha=c(0.25,1))
 ## Currently ggplot2 backend doesn't support face and family.
 dlcompare(plots,list(exotic))
 
@@ -73,10 +73,10 @@ dlcompare(list(plots[[1]],ratplot),list("first.points","lines2"))
 
 ## Compare scatterplot labeling methods.
 scatters <-
-list(xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1),
-     xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species),
-     qplot(jitter(Petal.Length),jitter(Sepal.Length),
-           data=iris,colour=Species))
+  list(xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1),
+       xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species),
+       qplot(jitter(Petal.Length),jitter(Sepal.Length),
+             data=iris,colour=Species))
 ##pdf("scattercompare.pdf",width=10,height=5)
 s.methods <- list("empty.grid","smart.grid")
 dlcompare(scatters[1:2],s.methods)
@@ -84,40 +84,40 @@ dlcompare(scatters[2:3],s.methods)
 ##dev.off();system("xpdf scattercompare.pdf")
 
 myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
-require(MASS)
-fit <- lm.ridge(f,data,lambda=lambda)
-X <- data[-which(names(data)==as.character(f[[2]]))]
-Xs <- svd(scale(X)) ## my d's should come from the scaled matrix
-dsq <- Xs$d^2
-## make the x axis degrees of freedom
-df <- sapply(lambda,function(l)sum(dsq/(dsq+l)))
-D <- data.frame(t(fit$coef),lambda,df) # scaled coefs
-molt <- melt(D,id=c("lambda","df"))
-## add in the points for df=0
-limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
-rbind(limpts,molt)
+  require(MASS)
+  fit <- lm.ridge(f,data,lambda=lambda)
+  X <- data[-which(names(data)==as.character(f[[2]]))]
+  Xs <- svd(scale(X)) ## my d's should come from the scaled matrix
+  dsq <- Xs$d^2
+  ## make the x axis degrees of freedom
+  df <- sapply(lambda,function(l)sum(dsq/(dsq+l)))
+  D <- data.frame(t(fit$coef),lambda,df) # scaled coefs
+  molt <- melt(D,id=c("lambda","df"))
+  ## add in the points for df=0
+  limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
+  rbind(limpts,molt)
 }
 data(prostate,package="ElemStatLearn")
 pros <- subset(prostate,train==TRUE,select=-train)
 m <- myridge(lpsa~.,pros)
 p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
-          panel=function(...){
-            panel.xyplot(...)
-            panel.abline(h=0)
-          },
-          xlim=c(0,10),
-          auto.key=list(space="right",lines=TRUE,points=FALSE),
-          ylab="scaled coefficients",
-          xlab=expression(df(lambda)))
+            panel=function(...){
+              panel.xyplot(...)
+              panel.abline(h=0)
+            },
+            xlim=c(0,10),
+            auto.key=list(space="right",lines=TRUE,points=FALSE),
+            ylab="scaled coefficients",
+            xlab=expression(df(lambda)))
 dlcompare(list(p,ratplot),list("last.bumpup","last.qp"))
 
 ## direct labels are way less confusing here
 p2 <- qplot(df,value,data=m,group=variable,colour=variable,
-          geom=c("line","point"))+geom_hline(yintercept=0)+xlim(0,9)
+            geom=c("line","point"))+geom_hline(yintercept=0)+xlim(0,9)
 pfuns <- list("legend","direct labels"=
-            list(cex=2,last.qp,dl.trans(x=x+0.1)),
-            list(cex=c(0.5,1,2,4),last.qp,dl.trans(x=x+0.1),
-                 calc.boxes,draw.rects))
+              list(cex=2,last.qp,dl.trans(x=x+0.1)),
+              list(cex=c(0.5,1,2,4),last.qp,dl.trans(x=x+0.1),
+                   calc.boxes,draw.rects))
 dlcompare(list(p),pfuns,rects=FALSE,row.items="posfuns")
 ## Interesting --- qp.last almost works here, but actually we are
 ## getting the bounding boxes in the wrong viewport -> wrong size.

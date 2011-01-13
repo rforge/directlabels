@@ -21,8 +21,8 @@ only a single group, and returns the direct label position.}
 
 \examples{
 complicated <- list(dl.trans(x=x+10),
-                  dl.indep(d[-2,]),
-                  rot=c(30,180))
+                    dl.indep(d[-2,]),
+                    rot=c(30,180))
 library(lattice)
 direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
 }

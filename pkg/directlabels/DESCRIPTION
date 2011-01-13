@@ -9,7 +9,7 @@ URL: http://directlabels.r-forge.r-project.org/
 LazyLoad: false
 LazyData: true
 Suggests: ks, MASS, inlinedocs, quadprog, ggplot2, lattice, alphahull, ElemStatLearn, proto
-Depends: grid, plyr
+Depends: grid
 Collate: utility.function.R compare.R dotplot.R lineplot.R 
 	 densityplot.R  ggplot2.R  positioning.functions.R 
 	 doc.R lattice.R scatterplot.R contourplot.R
