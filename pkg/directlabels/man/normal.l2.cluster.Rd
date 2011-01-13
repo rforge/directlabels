@@ -17,7 +17,7 @@ List of 2
   ..$ class: Factor w/ 8 levels "1","2","3","4",..: 1 1 1 1 1 1 1 1 1 1 ...
   ..$ x    : num [1:320] -2.73 -3.63 -2.13 -1.27 -2.98 ...
   ..$ y    : num [1:320] -3.89 -3.43 -3.42 -3.17 -2.75 ...
- $ path:Classes ‘l2’, ‘clusterpath’ and 'data.frame':	21760 obs. of  7 variables:
+ $ path:Classes 'l2', 'clusterpath' and 'data.frame':	21760 obs. of  7 variables:
   ..$ x     : num [1:21760] -2.73 -3.63 -2.13 -1.27 -2.98 ...
   ..$ y     : num [1:21760] -3.89 -3.43 -3.42 -3.17 -2.75 ...
   ..$ lambda: num [1:21760] 0 0 0 0 0 0 0 0 0 0 ...
@@ -42,12 +42,13 @@ clusterpath package
 clusterpath article
 }
 \examples{
-  data(normal.l2.cluster)
-  p <- ggplot(normal.l2.cluster$path,aes(x,y))+
-    geom_path(aes(group=row),colour="grey")+
-    geom_point(aes(size=lambda),colour="grey")+
-    geom_point(aes(colour=class),data=normal.l2.cluster$pts)+
-    coord_equal()
-  print(direct.label(p))
+data(normal.l2.cluster)
+library(ggplot2)
+p <- ggplot(normal.l2.cluster$path,aes(x,y))+
+  geom_path(aes(group=row),colour="grey")+
+  geom_point(aes(size=lambda),colour="grey")+
+  geom_point(aes(colour=class),data=normal.l2.cluster$pts)+
+  coord_equal()
+print(direct.label(p))
 }
 \keyword{datasets}

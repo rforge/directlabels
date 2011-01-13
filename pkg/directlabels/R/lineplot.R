@@ -50,9 +50,9 @@ lines2 <- function
  ){
   top <- 0-offset
   bottom <- 1+offset
-  y <- gapply(d,function(d)mean(d$y))
+  y <- gapply(d,get.means)
   gapply(y,function(D){
-    bigger.on.average <- D$V==max(y$V)
+    bigger.on.average <- D$y==max(y$y)
     f <- if(bigger.on.average)max else min
     compare <- get(if(bigger.on.average)">" else "<")
     ld    <- subset(d,groups==D$groups)

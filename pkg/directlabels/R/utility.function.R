@@ -445,9 +445,14 @@ perpendicular.lines <- function
 
 ### apply a function to every group
 gapply <- function(d,...){
+  stopifnot(is.data.frame(d))
   d$groups <- factor(d$groups)
   dfs <- lapply(levels(d$groups),function(g)d[d$groups==g,])
   results <- lapply(dfs,...)
+  if(any(!sapply(results,is.data.frame))){
+    print(results)
+    stop("function did not return data.frame")
+  }
   do.call(rbind,results)
 }
 
