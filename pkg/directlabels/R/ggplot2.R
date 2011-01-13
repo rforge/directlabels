@@ -22,25 +22,35 @@ direct.label.ggplot <- function
  ){
   require(proto)
   require(ggplot2)
+  SCALE <- scale_colour_discrete
+  maps <- lapply(p$layers,function(L){
+    m <- p$mapping
+    m[names(L$mapping)] <- L$mapping
+    m
+  })
+  cvars <- lapply(maps,"[[","colour")
+  has.colour <- !sapply(cvars,is.null)
+  if(any(has.colour)){
+    i <- which(has.colour)[1] ##just pick the first one
+    L <- p$layers[[i]]
+    colvar <- cvars[[i]]
+    if(colvar=="..level..")SCALE <- scale_colour_continuous
+    colvar <- gsub("^[.][.](.*)[.][.]$","\\1",colvar)
+  }else stop("Need colour aesthetic to direct label.")
   ## Position class for direct label placement.
   PositionDl <- proto(ggplot2:::Position,{
     method <- NULL
     debug <- FALSE
-    orig <- NULL
-    new <- function(., method=NULL, debug=FALSE, orig=NULL) {
-      .$proto(method=method,debug=debug,orig=orig)
+    colvar <- NULL
+    new <- function(.,method=NULL,debug=FALSE,colvar=NULL){
+      .$proto(method=method,debug=debug,colvar=colvar)
     }
-    adjust <- function(.,data,scales){
-      ##print(head(data))
+    adjust <- function(.,data,...){
       if(is.null(data$colour)){
-        colvar <- .$orig$layers[[1]]$mapping$colour
-        if(!is.null(colvar)){
-          colvar <- gsub("^[.][.](.*)[.][.]$","\\1",colvar)
-          data$colour <- data[,colvar]
-        }else stop("Need colour aesthetic to direct label.")
+        data$colour <- data[,.$colvar]
       }
       d <- transform(data,groups=if("piece"%in%names(data))piece else colour)
-      labtab <- label.positions(d,.$method[[1]],.$debug)
+      labtab <- label.positions(d,.$method,.$debug)
       targs <- list(label=if("colour"%in%names(labtab))"colour" else "groups",
                     angle="rot",
                     size="fontsize",
@@ -62,24 +72,20 @@ direct.label.ggplot <- function
     }
     objname <- "dl"
   })
-
-  ##lvar <- if("group" %in% names(p$mapping))"group" else "colour"
-  geom <- p$layers[[1]]$geom$objname
+  geom <- L$geom$objname
   if(is.null(method))method <- default.picker("ggplot")
   if(geom%in%need.trans.ggplot)method <-
-    c(paste("trans.",geom,sep=""),method)
-  ##print(p$layers[[1]]$mapping)
-  pos.inst <- PositionDl$new(list(method),debug,p)
-  dlgeom <- geom_text(position=pos.inst,
-                      stat=p$layers[[1]]$stat)
-  ##print(dlgeom)
-##   for(i in seq_along(p$scales$.scales))
-##     if(p$scales$.scales[[i]]$.output=="colour")
-##       p$scales$.scales[[i]]$legend <- FALSE
-  ## TDH 13 oct 2010 this doesn't work so well,
-  ##lets go back to overwriting the color scale
-  SCALE <- if(geom=="path")scale_colour_continuous else scale_colour_discrete
-  p+dlgeom+SCALE(legend=FALSE)
+    list(paste("trans.",geom,sep=""),method)
+  pos.inst <- PositionDl$new(method=list(method),debug=debug,colvar=colvar)
+  dlgeom <- geom_text(position=pos.inst,stat=L$stat) #for contourplots
+  scale.types <- sapply(p$scales$.scales,"[[",".output")
+  scale.i <- which("colour"==scale.types)
+  if(length(scale.i)){
+    p$scales$.scales[[scale.i[1]]]$legend <- FALSE
+  }else{
+    p <- p+SCALE(legend=FALSE)
+  }
+  p+dlgeom
 ### The ggplot object with direct labels added.
 }
 
