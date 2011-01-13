@@ -88,7 +88,11 @@ names(vad) <- c("age","demographic","deaths")
 p2 <- qplot(deaths,age,data=vad,
           group=demographic,geom="line",colour=demographic)
 print(direct.label(p2,angled.endpoints)+xlim(5,80))
-
+vad2 <- as.data.frame.table(VAD2)
+names(vad2) <- names(vad)
+p3 <- qplot(deaths,age,data=vad2,
+          group=demographic,geom="line",colour=demographic)
+direct.label(p3,top.points)
 ## contour plot
 volcano3d <- melt(volcano)
 names(volcano3d) <- c("x", "y", "z")
@@ -160,4 +164,23 @@ p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
           xlab=expression(df(lambda)))
 print(direct.label(update(p,xlim=c(0,9.25)),
                  list(last.qp,cex=0.75,dl.trans(x=x+0.1))))
+
+## some data from clustering algorithms
+data(df.iris.sp,package="directlabels")
+p <- ggplot(df.iris.sp,aes(lambda,alpha,group=row,colour=Species))+
+geom_line(alpha=1/4)+
+facet_grid(col~.)
+print(p)
+direct.label(p+xlim(-0.0025,max(df.iris.sp$lambda)),list(first.points,get.means))
+
+## TODO
+data(path,package="directlabels")
+p <- ggplot(joined,aes(x,y))+
+geom_path(aes(group=row),colour="grey")+
+geom_point(aes(size=lambda),colour="grey")+
+geom_point(aes(colour=class),data=pts)+
+coord_equal()
+print(p)
+## need to debug:
+direct.label(p,extreme.points)
 }

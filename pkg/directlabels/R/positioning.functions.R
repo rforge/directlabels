@@ -164,8 +164,7 @@ direct.label <- structure(function
   p <- ggplot(df.iris.sp,aes(lambda,alpha,group=row,colour=Species))+
     geom_line(alpha=1/4)+
     facet_grid(col~.)
-  print(p)
-  direct.label(p,list(first.points,get.means))
+  direct.label(p+xlim(-0.0025,max(df.iris.sp$lambda)),list(first.points,get.means))
 
   ## TODO
   data(path,package="directlabels")
@@ -174,9 +173,7 @@ direct.label <- structure(function
     geom_point(aes(size=lambda),colour="grey")+
     geom_point(aes(colour=class),data=pts)+
     coord_equal()
-  print(p)
-  ## need to debug:
-  direct.label(p,extreme.points)
+  direct.label(p,extreme.points) ##FIXME
 })
 
 label.positions <- function
@@ -292,7 +289,7 @@ trans.density <- trans.densityplot
 ### Transformation function for 1d qqmath plots. This is a copy-paste
 ### from panel.qqmath. (total hack)
 trans.qqmath <- function(d,distribution,f.value,qtype=7,...){
-  ddply(d,.(groups),function(d){
+  gapply(d,function(d){
     x <- as.numeric(d$x)
     distribution <- if (is.function(distribution)) 
       distribution
@@ -314,8 +311,8 @@ trans.qqmath <- function(d,distribution,f.value,qtype=7,...){
 
 ### Place points on top of the mean value of the rug.
 rug.mean <- function(d,...,end)
-  ddply(d,.(groups),function(d)
-        data.frame(x=mean(d$x),
+  gapply(d,function(d)
+         data.frame(x=mean(d$x),
                    y=as.numeric(convertY(unit(end,"npc"),"native")),
                    vjust=0))
 

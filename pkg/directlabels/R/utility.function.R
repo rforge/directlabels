@@ -6,7 +6,7 @@ label.endpoints <- function
  hjust
 ### hjust of the labels.
  ){
-  function(d,...)ddply(d,.(groups),function(d,...){
+  function(d,...)gapply(d,function(d,...){
     i <- FUN(d$x)==d$x
     if(length(i))data.frame(d[i,],hjust,vjust=0.5)
     else data.frame()
@@ -133,14 +133,16 @@ dl.combine <- structure(function # Combine output of several methods
 dl.indep <- structure(function # Direct label groups independently
 ### Makes a function you can use to specify the location of each group
 ### independently.
-(expr
+(expr,
 ### Expression that takes a subset of the d data frame, with data from
 ### only a single group, and returns the direct label position.
+ ...
+### variables to store for access to code in expr.
  ){
   foo <- substitute(expr)
   f <- function(d,...)eval(foo)
   src <- paste("dl.indep(",paste(deparse(foo),collapse="\n"),")",sep="")
-  pf <- structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
+  pf <- structure(function(d,...)gapply(d,f,...),"source"=src)
   pf
 ### A Positioning Function.
 },ex=function(){
@@ -250,10 +252,14 @@ calc.boxes <- function(d,debug=FALSE,...){
 ### Calculate big boxes around the means of each cluster.
 big.boxes <- function(d,...)enlarge.box(calc.boxes(visualcenter(d)))
 
+### Point halfway between the min and max
+midrange <- function(x){
+  r <- range(x)
+  (r[2]-r[1])/2+r[1]
+}
+
 ### Point in the middle of the min and max for each group.
-visualcenter <-
-  dl.indep(dl.summarize(d,x=diff(range(x))/2+min(x),
-                            y=diff(range(y))/2+min(y)))
+visualcenter <- dl.indep(dl.summarize(d,x=midrange(x),y=midrange(y)))
 
 ### Positioning Function for the mean of each cluster of points.
 get.means <-
@@ -414,14 +420,14 @@ perpendicular.lines <- function
                     d=sqrt((x-x1)^2+(y-y1)^2),
                     dm=sqrt((x-mx)^2+(y-my)^2))
   big5 <- transform(big4,ratio=d/dm)
-  winners <- ddply(big5,.(groups),subset,
+  winners <- gapply(big5,subset,
                    subset=seq_along(ratio)==which.min(ratio))
   ## gives back a function of a line that goes through the designated center
   f <- function(v)function(x){
     r <- means[means$groups==v,]
     -1/m*(x-r$mx)+r$my
   }
-  ##dd <- ddply(means,.(groups),summarise,x=x+sdx*seq(0,-2,l=5)[-1])
+  ##dd <- gapply(means,summarise,x=x+sdx*seq(0,-2,l=5)[-1])
   ##dd$y <- mdply(dd,function(groups,x)f(groups)(x))$x
   if(debug){
     ## myline draws a line over the range of the data for a given fun F
@@ -437,11 +443,16 @@ perpendicular.lines <- function
 ### which is the furthest out along the line drawn through its center.
 }
 
-### Label the points furthest from the origin for each group.
-extreme.points <- dl.indep({
-  d <- transform(d,d=sqrt(x^2+y^2))
-  d[which.max(d$d),]
-})
+## apply a function to every group
+gapply <- function(d,...){
+  ddply(d,.(groups),...)
+}
+
+### Label the points furthest from the middle for each group.
+extreme.points <- function(d,...){
+  d$dist.from.center <- sqrt((d$x-midrange(d$x))^2+(d$y-midrange(d$y))^2)
+  gapply(d,function(d)d[which.max(d$dist.from.center),])
+}
 
 edges.to.outside <- function
 ### Given a list of edges from the convex or alpha hull, and a list of
@@ -452,7 +463,7 @@ edges.to.outside <- function
     with(centers,lpoints(x,y,pch="+"))
     with(edges,lsegments(x1,y1,x2,y2))
   }
-  closepts <- ddply(centers,.(groups),project.onto.segments,edges,debug)
+  closepts <- gapply(centers,project.onto.segments,edges,debug)
   closepts$vjust <- ifelse(closepts$y-centers$y>0,0,1)
   closepts$hjust <- ifelse(closepts$x-centers$x>0,0,1)
   r <- big.boxes(closepts)

@@ -41,14 +41,10 @@ direct.label.ggplot <- function
   PositionDl <- proto(ggplot2:::Position,{
     method <- NULL
     debug <- FALSE
-    colvar <- NULL
-    new <- function(.,method=NULL,debug=FALSE,colvar=NULL){
-      .$proto(method=method,debug=debug,colvar=colvar)
+    new <- function(.,method=NULL,debug=FALSE){
+      .$proto(method=method,debug=debug)
     }
     adjust <- function(.,data,...){
-      if(is.null(data$colour)){
-        data$colour <- data[,.$colvar]
-      }
       d <- transform(data,groups=if("piece"%in%names(data))piece else colour)
       labtab <- label.positions(d,.$method,.$debug)
       targs <- list(label=if("colour"%in%names(labtab))"colour" else "groups",
@@ -65,7 +61,6 @@ direct.label.ggplot <- function
       r <- do.call("transform",c(list(labtab),targs))
       if(is.numeric(data$colour)&&!is.numeric(r$colour))
         r$colour <- as.numeric(as.character(r$colour))
-      ##print(head(r))
       ##Positive control:
       ##data.frame(head(data),label="foo")
       r
@@ -76,8 +71,11 @@ direct.label.ggplot <- function
   if(is.null(method))method <- default.picker("ggplot")
   if(geom%in%need.trans.ggplot)method <-
     list(paste("trans.",geom,sep=""),method)
-  pos.inst <- PositionDl$new(method=list(method),debug=debug,colvar=colvar)
-  dlgeom <- geom_text(position=pos.inst,stat=L$stat) #for contourplots
+  pos.inst <- PositionDl$new(method=list(method),debug=debug)
+  dlgeom <- geom_text(L$mapping,
+                      position=pos.inst,
+                      stat=L$stat, #for contourplots
+                      data=if(nrow(L$data))L$data else p$data)
   scale.types <- sapply(p$scales$.scales,"[[",".output")
   scale.i <- which("colour"==scale.types)
   if(length(scale.i)){

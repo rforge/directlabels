@@ -10,7 +10,7 @@ top.bumpup <- list(top.points,bumpup)
 top.bumptwice <- function(d,debug=FALSE,...){
   labtab <- eval.list(top.bumpup,d)
   if(debug)draw.rects(labtab)
-  ddply(labtab,.(groups),function(l){
+  gapply(labtab,function(l){
     x <- sort(c(range(d$x),subset(d,y>l$bottom&y<l$top)$x))
     if(length(x)==2)return(l)
     dif <- diff(x)

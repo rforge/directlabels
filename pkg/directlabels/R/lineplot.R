@@ -50,8 +50,8 @@ lines2 <- function
  ){
   top <- 0-offset
   bottom <- 1+offset
-  y <- ddply(d,.(groups),function(d)mean(d$y))
-  ddply(y,.(groups),function(D){
+  y <- gapply(d,function(d)mean(d$y))
+  gapply(y,function(D){
     bigger.on.average <- D$V==max(y$V)
     f <- if(bigger.on.average)max else min
     compare <- get(if(bigger.on.average)">" else "<")

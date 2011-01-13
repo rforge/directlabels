@@ -18,6 +18,11 @@ horiz and vert axes are on widely different scales).
 
 1.3 no longer depend on ggplot2/proto for further modularity.
 
+path example datasets.
+
+redo ggplot2 backend --- analyze layers to determine which has the
+color.
+
 1.2 Positioning Function -> Positioning Method.
 
 1.1 26 nov 2010 delete many examples so CRAN check completes quicker.
