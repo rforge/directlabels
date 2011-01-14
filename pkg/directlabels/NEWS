@@ -23,7 +23,9 @@ path example datasets.
 redo ggplot2 backend --- analyze layers to determine which has the
 color.
 
-gapply function implemented in-package to avoid plyr dependency.
+gapply function for applying a function to each group.
+
+eval.list -> apply.method 
 
 1.2 Positioning Function -> Positioning Method.
 

@@ -31,6 +31,7 @@ print(direct.label(scatter,list(extreme.grid,dl.move("suv",15,15))))
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
 library(lattice)
+##if(!interactive())lattice.options(panel.error=NULL)
 mpg.scatter <- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
 plot(direct.label(mpg.scatter))
 

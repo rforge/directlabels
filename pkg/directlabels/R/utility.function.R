@@ -21,7 +21,7 @@ dl.combine <- structure(function # Combine output of several methods
  ){
   FUNS <- list(...)
   pf <- function(d,...){
-    dfs <- lapply(FUNS,eval.list,d)
+    dfs <- lapply(FUNS,apply.method,d)
     res <- data.frame()
     for(df in dfs){
       if(nrow(res))res <- merge(df,res,all=TRUE)
@@ -443,17 +443,31 @@ perpendicular.lines <- function
 ### which is the furthest out along the line drawn through its center.
 }
 
-### apply a function to every group
-gapply <- function(d,...){
+gapply <- function
+### apply a function to every group. works like ddply from plyr
+### package, but the grouping column is always called groups.
+(d,
+### data frame with column groups.
+ FUN,
+### function to apply to every group separately.
+ ...
+### additional arguments for FUN.
+ ){
   stopifnot(is.data.frame(d))
   d$groups <- factor(d$groups)
   dfs <- lapply(levels(d$groups),function(g)d[d$groups==g,])
-  results <- lapply(dfs,...)
+  f <- function(d,...){
+    res <- FUN(d,...)
+    res$groups <- d$groups[1]
+    res
+  }
+  results <- lapply(dfs,f,...)
   if(any(!sapply(results,is.data.frame))){
     print(results)
-    stop("function did not return data.frame")
+    stop("FUN did not return data.frame")
   }
   do.call(rbind,results)
+### data frame of results after applying FUN to each group in d.
 }
 
 ### Label the points furthest from the middle for each group.

@@ -14,7 +14,7 @@ maxvar.points <- function(d,...){
   FUN <- if(is.na(vars[1]))"last.points"
   else if(is.na(vars[2]))"first.points"
   else if(diff(vars)<0)"first.points" else "last.points"
-  eval.list(list(FUN),d,...)
+  apply.method(FUN,d,...)
 }
 
 ### Label last points, bumping labels up if they collide.

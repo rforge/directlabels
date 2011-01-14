@@ -25,6 +25,7 @@ direct.label <- structure(function
   m <- lm(cty~displ,data=mpg)
   mpgf <- fortify(m,mpg)
   library(lattice)
+  ##if(!interactive())lattice.options(panel.error=NULL)
   mpg.scatter <- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
   plot(direct.label(mpg.scatter))
 
@@ -179,18 +180,19 @@ direct.label <- structure(function
 
 label.positions <- function
 ### Calculates table of positions of each label based on input data
-### for each panel and Positioning Method. This is meant for
-### internal use inside a direct.label method, and is a wrapper around
-### eval.list which makes sure the inputs are good and the outputs are
-### plottable. eval.list is more efficient and should be used in the
-### context of other Positioning Methods (i.e. dl.combine) and
+### for each panel and Positioning Method. This is meant for internal
+### use inside a direct.label method, and is a wrapper around
+### apply.method which makes sure the inputs are good and the outputs
+### are plottable. apply.method is more efficient and should be used
+### in the context of other Positioning Methods (i.e. dl.combine) and
 ### label.positions should be used when you actually when to plot the
 ### result (i.e. in lattice+ggplot2 backends).
 (d,
 ### Data frame to which we will sequentially apply the Positioning
 ### Method.
  method,
-### Method for direct labeling, described in ?eval.list.
+### Method for direct labeling, described in
+### \code{\link{apply.method}}.
  debug=FALSE,
 ### Show debug output? If TRUE, the resulting table of label positions
 ### will be printed.
@@ -205,8 +207,7 @@ label.positions <- function
   if("y"%in%names(d))d <- transform(d,y=as.numeric(y))
   ##save original levels for later in case PFs mess them up.
   levs <- levels(d$groups)
-  if(!is.list(method))method <- list(method)
-  d <- eval.list(method,d,debug=debug,...)
+  d <- apply.method(method,d,debug=debug,...)
   if(nrow(d)==0)return(d)## empty data frames can cause many bugs
   ## rearrange factors in case pos fun messed up the order:
   d$groups <- factor(as.character(d$groups),levs)
@@ -226,13 +227,13 @@ label.positions <- function
 ### position of 1 label to be drawn later.
 }
 
-eval.list <- function # Evaluate Positioning Method list
-### Run all the Positioning Methods on a given data set. This
-### function contains all the logic for parsing the method= argument
-### and sequentially applying the Positioning Methods to the input
-### data to obtain the label positions. This is useful since it is
-### often much less verbose to define Positioning Methods in list form
-### instead of function form, ex lasso.labels.
+apply.method <- function # Apply a Positioning Method
+### Run a Positioning Method list on a given data set. This function
+### contains all the logic for parsing a Positioning Method and
+### sequentially applying its elements to the input data to obtain the
+### label positions. This is useful since it is often much less
+### verbose to define Positioning Methods in list form instead of
+### function form, ex lasso.labels.
 (method,
 ### Direct labeling Positioning Method, which is a list comprised of
 ### any of the following: (1) a Positioning Function, (2) a character
@@ -240,14 +241,13 @@ eval.list <- function # Evaluate Positioning Method list
 ### named values, or (4) a Positioning Method list. Starting from the
 ### data frame of points to plot for the panel, the elements of the
 ### list are applied in sequence, and each row of the resulting data
-### frame is used to draw a direct label. See examples in
-### ?direct.label and ?positioning.functions.
+### frame is used to draw a direct label.
  d,
-### Data frame to which we apply the Positioning Methods.
+### Data frame to which we apply the Positioning Method.
  ...
 ### Passed to Positioning Functions.
  ){
-  if(!is.list(method))stop("method is not a valid Positioning Method list")
+  if(!is.list(method))method <- list(method)
   isconst <- function(){
     m.var <- names(method)[1]
     !(is.null(m.var)||m.var=="")
