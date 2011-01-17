@@ -1,15 +1,5 @@
 TODO
 
-How to respect predefined scale_colour_manual() in ggplot2?
-http://stackoverflow.com/questions/3337765/can-i-use-direct-label-with-ggplots-scale-colour-manual
-I tried to do a hack that looks into p$scales$.scales to turn off the
-legend (r371), but that didn't work so well, so I went back to the
-method of just adding a new scale_colour_discrete(legend=FALSE) (r382)
-For now, just set the scale_colour_manual AFTER the call to direct.label():
-p <- ggplot(...)
-p2 <- direct.label(p)
-p2+scale_colour_manual(...)
-
 Need to figure out how to calculate label bounding boxes for ggplot2.
 
 closest.on.ahull calculation should take into account visual
@@ -22,6 +12,21 @@ path example datasets.
 
 redo ggplot2 backend --- analyze layers to determine which has the
 color.
+
+Respect predefined scale_colour_manual() in ggplot2:
+http://stackoverflow.com/questions/3337765/can-i-use-direct-label-with-ggplots-scale-colour-manual
+I tried to do a hack that looks into p$scales$.scales to turn off the
+legend (r371), but that didn't work so well, so I went back to the
+method of just adding a new scale_colour_discrete(legend=FALSE) (r382)
+You could always set the scale_colour_manual AFTER the call to direct.label():
+p <- ggplot(...)
+p2 <- direct.label(p)
+p2+scale_colour_manual(...,legend=FALSE)
+As of r400 I do analysis of the layers of the ggplot object, and turn off
+ the color legend off if there was one. Thus this should be equivalent:
+p <- ggplot(...)+
+  scale_colour_manual(...)
+direct.label(p)
 
 gapply function for applying a Positioning Method to each group.
 
