@@ -73,7 +73,13 @@ direct.label(densityplot(~value|variable,iris2,groups=Species,scales="free"))
 loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                    type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
 plot(direct.label(densityplot(~ppp,loci,groups=type,n=500)))
-print(direct.label(qplot(ppp,data=loci,colour=type,geom="density"),top.points))
+lplot <- qplot(ppp,data=loci,colour=type,geom="density")
+print(direct.label(lplot))
+## respect the manual color scale. these 2 should be the same:
+lplot2 <- direct.label(lplot)+
+  scale_colour_manual(values=c("red","black","blue"),legend=FALSE)
+print(lplot2)
+print(direct.label(lplot+scale_colour_manual(values=c("red","black","blue"))))
 
 ## dotplot:
 plot(direct.label(dotplot(VADeaths,type="o"),angled.endpoints))
@@ -182,6 +188,9 @@ p <- ggplot(normal.l2.cluster$path,aes(x,y))+
   geom_point(aes(colour=class),data=normal.l2.cluster$pts)+
   coord_equal()
 print(direct.label(p,extreme.points)) ##FIXME
+## respect the color scale. these should look the same:
+print(direct.label(p+scale_colour_manual(values=rainbow(8))))
+print(direct.label(p)+scale_colour_manual(values=rainbow(8),legend=FALSE))
 
 lattice.options(oldopt)
 }
