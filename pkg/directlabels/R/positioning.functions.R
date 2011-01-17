@@ -292,7 +292,7 @@ apply.method <- function # Apply a Positioning Method
 
 
 ### Transformation function for 1d densityplots.
-trans.densityplot <- dl.indep({
+trans.densityplot <- gapply.fun({
   dens <- density(d$x,na.rm=TRUE)
   data.frame(x=dens$x,y=dens$y)
 })
@@ -334,7 +334,7 @@ top.qp <- list(top.points,calc.boxes,qp.labels("x","w"))
 ### Label points at the zero before the first nonzero y value.
 lasso.labels <-
   list(rot=60,
-       dl.indep({
+       gapply.fun({
          d <- d[order(d$x),]
          i <- which(d$y!=0)[1]
          hjust <- as.integer(d[i,"y"]>0)

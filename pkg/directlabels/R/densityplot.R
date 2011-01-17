@@ -1,6 +1,6 @@
 ### Positioning Method for the top of a group of points.
 top.points <-
-  dl.indep(data.frame(d[which.max(d$y),],hjust=0.5,vjust=0))
+  gapply.fun(data.frame(d[which.max(d$y),],hjust=0.5,vjust=0))
 
 ### Label the tops, but bump labels up to avoid collisions.
 top.bumpup <- list(top.points,bumpup)

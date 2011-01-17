@@ -130,7 +130,7 @@ dl.combine <- structure(function # Combine output of several methods
   plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
 })
 
-dl.indep <- structure(function # Direct label groups independently
+gapply.fun <- structure(function # Direct label groups independently
 ### Makes a function you can use to specify the location of each group
 ### independently.
 (expr,
@@ -141,13 +141,13 @@ dl.indep <- structure(function # Direct label groups independently
  ){
   foo <- substitute(expr)
   f <- function(d,...)eval(foo)
-  src <- paste("dl.indep(",paste(deparse(foo),collapse="\n"),")",sep="")
+  src <- paste("gapply.fun(",paste(deparse(foo),collapse="\n"),")",sep="")
   pf <- structure(function(d,...)gapply(d,f,...),"source"=src)
   pf
 ### A Positioning Function.
 },ex=function(){
   complicated <- list(dl.trans(x=x+10),
-                      dl.indep(d[-2,]),
+                      gapply.fun(d[-2,]),
                       rot=c(30,180))
   library(lattice)
   direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
@@ -166,7 +166,7 @@ dl.trans <- structure(function # Direct label data transform
 ### A Positioning Function.
 },ex=function(){
   complicated <- list(dl.trans(x=x+10),
-                      dl.indep(d[-2,]),
+                      gapply.fun(d[-2,]),
                       rot=c(30,180))
   library(lattice)
   direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
@@ -259,11 +259,11 @@ midrange <- function(x){
 }
 
 ### Point in the middle of the min and max for each group.
-visualcenter <- dl.indep(dl.summarize(d,x=midrange(x),y=midrange(y)))
+visualcenter <- gapply.fun(dl.summarize(d,x=midrange(x),y=midrange(y)))
 
 ### Positioning Function for the mean of each cluster of points.
 get.means <-
-  dl.indep(dl.summarize(d,x=mean(x),y=mean(y)))
+  gapply.fun(dl.summarize(d,x=mean(x),y=mean(y)))
 
 calc.borders <- function
 ### Calculate bounding box based on newly calculated width and height.
