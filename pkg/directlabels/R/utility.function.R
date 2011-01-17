@@ -444,12 +444,13 @@ perpendicular.lines <- function
 }
 
 gapply <- function
-### apply a function to every group. works like ddply from plyr
-### package, but the grouping column is always called groups.
+### apply a Positioning Method to every group. works like ddply from
+### plyr package, but the grouping column is always called groups, and
+### the Positioning Method is not necessarily a function (but can be).
 (d,
 ### data frame with column groups.
- FUN,
-### function to apply to every group separately.
+ method,
+### Positioning Method to apply to every group separately.
  ...
 ### additional arguments for FUN.
  ){
@@ -457,14 +458,14 @@ gapply <- function
   d$groups <- factor(d$groups)
   dfs <- lapply(levels(d$groups),function(g)d[d$groups==g,])
   f <- function(d,...){
-    res <- FUN(d,...)
+    res <- apply.method(method,d,...)
     res$groups <- d$groups[1]
     res
   }
   results <- lapply(dfs,f,...)
   if(any(!sapply(results,is.data.frame))){
     print(results)
-    stop("FUN did not return data.frame")
+    stop("Positioning Method did not return data.frame")
   }
   do.call(rbind,results)
 ### data frame of results after applying FUN to each group in d.
