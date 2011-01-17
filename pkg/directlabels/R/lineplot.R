@@ -48,6 +48,8 @@ lines2 <- function
  ...
 ### ignored.
  ){
+  if(length(unique(d$groups))!=2)
+    stop("need 2 groups for lines2")
   top <- 0-offset
   bottom <- 1+offset
   y <- gapply(d,get.means)

@@ -1,14 +1,15 @@
 \name{gapply}
 \alias{gapply}
 \title{gapply}
-\description{apply a function to every group. works like ddply from plyr
-package, but the grouping column is always called groups.}
+\description{apply a Positioning Method to every group. works like ddply from
+plyr package, but the grouping column is always called groups, and
+the Positioning Method is not necessarily a function (but can be).}
 \usage{
-gapply(d, FUN, ...)
+gapply(d, method, ...)
 }
 \arguments{
   \item{d}{data frame with column groups.}
-  \item{FUN}{function to apply to every group separately.}
+  \item{method}{Positioning Method to apply to every group separately.}
   \item{\dots}{additional arguments for FUN.}
 }
 

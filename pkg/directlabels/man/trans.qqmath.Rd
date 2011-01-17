@@ -4,7 +4,7 @@
 \description{Transformation function for 1d qqmath plots. This is a copy-paste
 from panel.qqmath. (total hack)}
 \usage{
-trans.qqmath(d, distribution = qnorm, f.value = NULL, qtype = 7, ...)
+trans.qqmath(d, distribution, f.value, qtype = 7, ...)
 }
 \arguments{
   \item{d}{

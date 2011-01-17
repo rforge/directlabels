@@ -25,7 +25,7 @@ direct.label <- structure(function
   m <- lm(cty~displ,data=mpg)
   mpgf <- fortify(m,mpg)
   library(lattice)
-  ##if(!interactive())lattice.options(panel.error=NULL)
+  oldopt <- lattice.options(panel.error=NULL)
   mpg.scatter <- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
   plot(direct.label(mpg.scatter))
 
@@ -176,6 +176,8 @@ direct.label <- structure(function
     geom_point(aes(colour=class),data=normal.l2.cluster$pts)+
     coord_equal()
   print(direct.label(p,extreme.points)) ##FIXME
+
+  lattice.options(oldopt)
 })
 
 label.positions <- function
