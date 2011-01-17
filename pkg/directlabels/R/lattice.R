@@ -212,7 +212,15 @@ defaultpf.trellis <- function
 ### user-customizable by setting the directlabels.defaultpf.lattice
 ### option to a function like this.
 (lattice.fun.name,groups,type,...){
-  ldefault <- function()if(nlevels(groups)==2)"lines2" else "maxvar.qp"
+  ldefault <- function(){
+    if(nlevels(groups)==2)"lines2" else {
+      if(require(quadprog))"maxvar.qp"
+      else {
+        warning("install quadprog package for smarter labeling")
+        "maxvar.points"
+      }
+    }
+  }
   lattice.fun.name <-
     switch(lattice.fun.name,
            qqmath="xyplot",
