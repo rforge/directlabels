@@ -1,0 +1,58 @@
+\documentclass[a4paper]{article}
+
+\usepackage{fullpage}
+\usepackage{hyperref}
+
+\title{Adding direct labels to plots using the directlabels package}
+
+\author{Toby Dylan Hocking  -- toby.hocking@inria.fr -- \url{http://cbio.ensmp.fr/~thocking}
+}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+High-level plotting systems such as lattice and ggplot2 provide
+automatic legends for decoding color labels
+\cite{lattice,ggplot2}. However, with many colors, legends become
+difficult to read, and direct labels are a more suitable decoding
+method:
+
+<<echo=FALSE>>=
+@ 
+
+<<fig=TRUE,height=4,width=8,center=TRUE>>=
+library(lattice)
+data(mpg,package="ggplot2")
+p <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class)
+p2 <- update(p,main="City and highway fuel efficiency depends on car class")
+library(directlabels)
+print(direct.label(p2))
+@ 
+
+Direct labels are inherently more intuitive to decode than legends,
+since they are placed near the related data. However, direct labels
+are not widely used because they are often much more difficult to
+implement than legends, and their implementation varies between
+plotting systems.
+
+The directlabels package solves these problems by providing a simple,
+unified interface for direct labeling in R. Given a lattice or ggplot2
+plot saved in the variable \texttt{p}, direct labels can be added by
+calling \texttt{direct.label(p,f)} where \texttt{f} is a Positioning
+Function that describes where labels should be placed as a function of
+the data. The power of this system lies in the fact that you can write
+your own Positioning Functions, and that any Positioning Function can
+be used with any plot. So once you have a library of Positioning
+Functions, direct labeling becomes trivial and so can more easily used
+as a visualization technique in everyday statistical practice.
+
+% The
+% directlabels package comes with several Positioning Functions for
+% different plot types, and a system of intelligent defaults so that
+% often you don't even need to specify the Positioning Function.
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}
