@@ -7,7 +7,7 @@ for each item found add the value and its name to the list.}
 extract.posfun(f)
 }
 \arguments{
-  \item{f}{R code file, which should contain only Positioning Method that
+  \item{f}{R code file, which should contain only Positioning Methods that
 can be used with examples defined in the doc/ subdirectory with
 the same name.}
 }

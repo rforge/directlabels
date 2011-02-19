@@ -230,7 +230,7 @@ empty.grid.fun <- function(f)
 dl.jitter <- dl.trans(x=jitter(x),y=jitter(y))
 
 ### Calculate boxes around labels, for collision detection.
-calc.boxes <- function(d,debug=FALSE,...){
+calc.boxes <- function(d,debug=FALSE,class="ggplot2",...){
   vp <- current.viewport()
   convert <- function(worh){
     conv <- get(paste("convert",worh,sep=""))
@@ -243,6 +243,10 @@ calc.boxes <- function(d,debug=FALSE,...){
       popViewport()
       w
     }))
+  }
+  if(class=="ggplot"){
+    warning("label bounding boxes are not accurate for ggplot2.",
+            "direct labels may overlap!")
   }
   w <- convert("Width")
   h <- convert("Height")
@@ -391,7 +395,7 @@ dl.summarize <- function
 ### data frame
  ...
  ){
-  tmp <- summarize(d,...)
+  tmp <- unique(transform(d,...))
   targs <- c(list(d[1,]),as.list(tmp))
   do.call(transform,targs)
 }

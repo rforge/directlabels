@@ -116,7 +116,7 @@ panel.superpose.dl <- structure(function
   groups <- groups[subscripts]
   d <- data.frame(x,groups)
   if(!missing(y))d$y <- y
-  labs <- label.positions(d,method,...)
+  labs <- label.positions(d,method,class="lattice",...)
   type <- type[type!="g"] ## printing the grid twice looks bad.
   panel.superpose(panel.groups=dl.text,labs=labs,type=type,x=x,
                        groups=groups,subscripts=seq_along(groups),...)

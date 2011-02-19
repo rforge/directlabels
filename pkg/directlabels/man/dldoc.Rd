@@ -14,7 +14,7 @@ dldoc(pkgdir = "..")
 }
 
 \value{Matrix of lists describing example plots and matching builtin
-Positioning Method.}
+Positioning Methods.}
 
 \author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 

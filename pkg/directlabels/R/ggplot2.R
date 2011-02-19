@@ -28,12 +28,15 @@ direct.label.ggplot <- function
     m[names(L$mapping)] <- L$mapping
     m
   })
+  ##TODO: need to design framework around other aesthetics besides
+  ##colour. ie fill and linetype, see etc/rod.R
   cvars <- lapply(maps,"[[","colour")
   has.colour <- !sapply(cvars,is.null)
   if(any(has.colour)){
     i <- which(has.colour)[1] ##just pick the first one
     L <- p$layers[[i]]
     colvar <- cvars[[i]]
+    ## FIXME: kind of a hack.
     if(colvar=="..level..")SCALE <- scale_colour_continuous
     colvar <- gsub("^[.][.](.*)[.][.]$","\\1",colvar)
   }else stop("Need colour aesthetic to direct label.")
@@ -46,10 +49,11 @@ direct.label.ggplot <- function
     }
     adjust <- function(.,data,...){
       d <- transform(data,groups=if("piece"%in%names(data))piece else colour)
-      labtab <- label.positions(d,.$method,.$debug)
+      labtab <- label.positions(d,.$method,.$debug,class="ggplot")
       targs <- list(label=if("colour"%in%names(labtab))"colour" else "groups",
                     angle="rot",
                     size="fontsize",
+                    size="cex",
                     ##face="fontface",
                     ##family="fontfamily",
                     alpha="alpha")

@@ -164,13 +164,14 @@ dldoc <- function # Make directlabels documentation
 
   m
 ### Matrix of lists describing example plots and matching builtin
-### Positioning Method.
+### Positioning Methods.
 }
+
 extract.posfun <- function # Extract Positioning Method for documentation
 ### Use inlinedocs to extract comments and definitions from code, then
 ### for each item found add the value and its name to the list.
 (f
-### R code file, which should contain only Positioning Method that
+### R code file, which should contain only Positioning Methods that
 ### can be used with examples defined in the doc/ subdirectory with
 ### the same name.
  ){
@@ -191,6 +192,7 @@ extract.posfun <- function # Extract Positioning Method for documentation
 ### List of lists, each of which describes one Positioning Method
 ### defined in f.
 }
+
 extract.plot <- function # Extract plot and definition for documentation
 ### Given an R code file, execute it, store the definition, and save
 ### the resulting plot in a variable.
@@ -209,6 +211,7 @@ extract.plot <- function # Extract plot and definition for documentation
        plot=e$p,
        name=sub(".R$","",basename(f)))
 }
+
 rhtmlescape <- function
 ### for standards compliance we should escape <>&
 (code
