@@ -26,12 +26,16 @@
 \title{Adding direct labels to plots}
 
 \begin{center}
-  {\bf Toby Dylan Hocking$^{1,^\star}$}
+  {\bf Toby Dylan Hocking$^{1,2,^\star}$}
 \end{center}
 
 \begin{affiliations}
-  1. Affiliation...\\[-2pt]
-  $^\star$Contact author: \href{mailto:toby.hocking@inria.fr}{toby.hocking@inria.fr}
+  1. INRIA Sierra team for machine learning research,
+  23 avenue d'Italie, Paris, France\\[-2pt]
+  2. Institut Curie/INSERM U900/Mines ParisTech cancer bioinformatics group,
+  26 rue d'Ulm, Paris, France\\[-2pt]
+  $^\star$Contact author:
+  \href{mailto:toby.hocking@inria.fr}{toby.hocking@inria.fr}
 \end{affiliations}
 
 \keywords Visualization, graphics, legends, direct labels
