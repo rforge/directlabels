@@ -53,7 +53,7 @@ direct.label.ggplot <- function
       targs <- list(label=if("colour"%in%names(labtab))"colour" else "groups",
                     angle="rot",
                     size="fontsize",
-                    size="cex",
+                    ##size="cex", ##DONT DO THIS --- will cause disappearing!!
                     ##face="fontface",
                     ##family="fontfamily",
                     alpha="alpha")
@@ -65,8 +65,6 @@ direct.label.ggplot <- function
       r <- do.call("transform",c(list(labtab),targs))
       if(is.numeric(data$colour)&&!is.numeric(r$colour))
         r$colour <- as.numeric(as.character(r$colour))
-      ##Positive control:
-      ##data.frame(head(data),label="foo")
       r
     }
     objname <- "dl"
