@@ -6,11 +6,11 @@ label.endpoints <- function
  hjust
 ### hjust of the labels.
  ){
-  function(d,...)gapply(d,function(d,...){
+  list("ignore.na",function(d,...)gapply(d,function(d,...){
     i <- FUN(d$x)==d$x
     if(length(i))data.frame(d[i,],hjust,vjust=0.5)
     else data.frame()
-  })
+  }))
 ### A Positioning Method like first.points or last.points.
 }
 
@@ -338,9 +338,15 @@ bumpup <- function(d,...){
   d
 }
 
+### Remove rows for which either x or y is NA
+ignore.na <- function(d,...){
+  subset(d,!is.na(x) & !is.na(y))
+}
+
 ### Use a QP solver to find the best places to put the points on a
-### line, subject to the constraint that they should not overlap
-qp.labels <- function(var,spacer)function(d,...){
+### line, subject to the constraint that they should not
+### overlap.
+qp.labels <- function(var,spacer)list("na.ignore",function(d,...){
   if(!spacer%in%names(d))stop("need to have calculated ",spacer)
   require(quadprog)
   d <- d[order(d[,var],decreasing=TRUE),]
@@ -353,7 +359,7 @@ qp.labels <- function(var,spacer)function(d,...){
   sol <- solve.QP(D,d[,var],A,b0)
   d[,var] <- sol$solution
   d
-}
+})
 
 ### Make text bounding box larger by some amount.
 enlarge.box <- function(d,...){
@@ -531,5 +537,5 @@ project.onto.segments <- function
 
 ### Make a Positioning Function from a set of points on a vertical
 ### line that will be spaced out using qp.labels
-vertical.qp <- function(M)list(M,calc.boxes,qp.labels("y","h"))
+vertical.qp <- function(M)list(M,"calc.boxes",qp.labels("y","h"))
 
