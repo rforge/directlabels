@@ -12,7 +12,9 @@ coordinate distance. ie smart.grid tries to find the label position
 which is closest to the center, but this can be very skewed if x and y
 axes are not on the same scale.
 
-1.3 no longer depend on ggplot2/proto for further modularity.
+1.3 ignore.na Positioning Method for removing rows with NA x or y.
+
+no longer depend on ggplot2/proto for further modularity.
 
 gapply function for applying a Positioning Method to each group, also
 eliminates need to depend on plyr.
