@@ -267,7 +267,7 @@ visualcenter <- gapply.fun(dl.summarize(d,x=midrange(x),y=midrange(y)))
 
 ### Positioning Function for the mean of each cluster of points.
 get.means <-
-  gapply.fun(dl.summarize(d,x=mean(x),y=mean(y)))
+  list("ignore.na",gapply.fun(dl.summarize(d,x=mean(x),y=mean(y))))
 
 calc.borders <- function
 ### Calculate bounding box based on newly calculated width and height.
@@ -340,7 +340,7 @@ bumpup <- function(d,...){
 
 ### Remove rows for which either x or y is NA
 ignore.na <- function(d,...){
-  subset(d,!is.na(x) & !is.na(y))
+  subset(d,is.finite(x) & is.finite(y))
 }
 
 ### Use a QP solver to find the best places to put the points on a
@@ -401,9 +401,11 @@ dl.summarize <- function
 ### data frame
  ...
  ){
-  tmp <- unique(transform(d,...))
-  targs <- c(list(d[1,]),as.list(tmp))
-  do.call(transform,targs)
+  df <- unique(transform(d,...))
+  to.copy <- names(d)[!names(d)%in%names(df)]
+  for(N in to.copy)
+    df[,N] <- d[,N]
+  df
 }
 
 perpendicular.lines <- function
