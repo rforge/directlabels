@@ -66,7 +66,7 @@ lines2 <- function
     ld$other.yvals <- sapply(ld$x,find.closest.y)
     ld$diff <- abs(ld$y-ld$other.yvals)
     more.extreme <- compare(ld$y,ld$other.yvals)
-    ld <- ld[more.extreme,]
+    ld <- ld[which(more.extreme),] ## which since can have NA
     ld <- ld[ld$y==f(ld$y),]
     which.closest <- which.max(ld$diff)
     pos <- ld[which.closest,]
