@@ -46,8 +46,9 @@ direct.label <- structure(function
   plot(direct.label(mpgs2,list(cex=2,smart.grid)))
 
   data(Chem97,package="mlmRev")
-  qqm <- qqmath(~gcsescore,Chem97,groups=gender,f.value=ppoints(25),auto.key=TRUE)
-  plot(direct.label(qqm,empty.grid.fun(get.means)))
+  qqm <- qqmath(~gcsescore,Chem97,groups=gender,
+                f.value=ppoints(25),auto.key=list())
+  plot(direct.label(qqm,list("get.means","empty.grid"),TRUE))
   ## default for points is different for default for lines
   plot(direct.label(update(qqm,type=c("l","g"))))
   ## you can hard-core label positions if you really want to:
@@ -267,11 +268,17 @@ apply.method <- function # Apply a Positioning Method
   isref <- function()(!isconst())&&is.character(method[[1]])
   while(length(method)){
     ## Resolve any PF names or nested lists
+    is.trans <- FALSE
     while(islist()||isref()){
       if(islist()){
         method <- c(method[[1]],method[-1])
       }else{ #must be character -> get the fun(s)
-        method <- c(lapply(method[[1]],get),method[-1])
+        if(length(method[[1]])>1){
+          warning("using first element of character vector")
+          method[[1]] <- method[[1]][1]
+        }
+        is.trans <- grepl("^trans[.]",method[[1]])
+        method <- c(get(method[[1]]),method[-1])
       }
     }
     if(isconst())
@@ -280,8 +287,10 @@ apply.method <- function # Apply a Positioning Method
       old <- d
       d <- method[[1]](d,...)
       attr(d,"orig.data") <-
-        if(is.null(attr(old,"orig.data")))old
-        else attr(old,"orig.data")
+        if(is.trans)d else{
+          if(is.null(attr(old,"orig.data")))old
+          else attr(old,"orig.data")
+        }
     }
     method <- method[-1]
   }

@@ -33,36 +33,34 @@ empty.grid <- function
 ### placed in different places. A grid is drawn over the whole
 ### plot. Each cluster is considered in sequence and assigned to the
 ### point on this grid which is closest to the point given by
-### loc.fun().
+### the input data points. Makes use of attr(d,"orig.data").
 (d,
-### Data frame of points on the scatterplot with columns groups x y.
+### Data frame of target points on the scatterplot for each label.
  debug=FALSE,
-### Show debugging info on the plot? This is passed to loc.fun.
- loc.fun=get.means,
-### Function that takes d and returns a data frame with 1 column for
-### each group, giving the point we will use to look for a close point
-### on the grid, to put the group label.
+### Show debugging info on the plot?
  ...
 ### ignored.
  ){
-  loc <- loc.fun(d,debug=debug)
   NREP <- 10
-  gridpts <- d
+  all.points <- attr(d,"orig.data")
+  label.targets <- d
   gl <- function(v){
-    s <- seq(min(gridpts[,v]),max(gridpts[,v]),l=NREP)
+    s <- seq(min(all.points[,v]),max(all.points[,v]),l=NREP)
     if(expand){
       dif <- s[2]-s[1]
-      s <- seq(min(gridpts[,v])-expand*dif,
-               max(gridpts[,v])+expand*dif,
+      s <- seq(min(all.points[,v])-expand*dif,
+               max(all.points[,v])+expand*dif,
                l=NREP+2*expand)
     }
     list(centers=s,diff=s[2]-s[1])
   }
   hgrid <- function(x,w){
-    hboxes <- floor(diff(range(gridpts[,x]))/r[,w])
-    (-expand:(hboxes+expand-1))*r[,w]+min(gridpts[,x])+r[,w]/2
+    hboxes <- floor(diff(range(all.points[,x]))/r[,w])
+    (-expand:(hboxes+expand-1))*r[,w]+min(all.points[,x])+r[,w]/2
   }
-  if(debug)with(loc,grid.points(x,y,default.units="native"))
+  if(debug)with(label.targets,{
+    grid.points(x,y,default.units="native",gp=gpar(col="green"))
+  })
   draw <- function(g){
     gridlines <- with(g,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
     drawlines <- function(a,b,c,d)
@@ -71,19 +69,19 @@ empty.grid <- function
     with(gridlines,drawlines(x,min(y),x,max(y)))
   }
   res <- data.frame()
-  for(v in loc$groups){
-    r <- subset(loc,groups==v)
+  for(v in label.targets$groups){
+    r <- subset(label.targets,groups==v)
     no.points <- data.frame()
     expand <- 0
     while(nrow(no.points)==0){
-      boxes <- if("left"%in%names(loc)){
+      boxes <- if("left"%in%names(label.targets)){
         list(x=hgrid("x","w"),y=hgrid("y","h"),w=r$w,h=r$h)
       }else{
         L <- sapply(c("x","y"),gl,simplify=FALSE)
         list(x=L$x$centers,y=L$y$centers,w=L$x$diff,h=L$y$diff)
       }
       boxes <- calc.borders(do.call(expand.grid,boxes))
-      boxes <- cbind(boxes,data=inside(boxes,d))
+      boxes <- cbind(boxes,data=inside(boxes,all.points))
       no.points <- transform(subset(boxes,data==0))
       expand <- expand+1 ## look further out if we can't find any labels inside
     }
@@ -97,9 +95,9 @@ empty.grid <- function
     newpts <- data.frame(newpts,
                          subset(d,select=-c(x,y))[1,,drop=FALSE],
                          row.names=NULL)
-    d <- rbind(d,newpts[,names(d)])
+    all.points <- rbind(all.points,newpts[,names(all.points)])
   }
-  if(debug)with(d,grid.points(x,y))
+  if(debug)with(all.points,grid.points(x,y))
   res
 ### Data frame with columns groups x y, 1 line for each group, giving
 ### the positions on the grid closest to each cluster.
@@ -110,13 +108,13 @@ empty.grid <- function
 ### which is close to the visual center of the data. TODO: does not
 ### work with ggplot2 since the backend does not support bounding box
 ### calculation.
-smart.grid <- empty.grid.fun(big.boxes)
+smart.grid <- list("big.boxes","empty.grid")
 
 ### Use empty.grid with perpendicular.lines.
-empty.grid.2 <- empty.grid.fun(perpendicular.lines)
+perpendicular.grid <- list("perpendicular.lines","empty.grid")
 
 ### Use empty.grid with extreme.points.
-extreme.grid <- empty.grid.fun(extreme.points)
+extreme.grid <- list("extreme.points","empty.grid")
 
 follow.points <- function
 ### Draws a line between each center and every point, then follows the

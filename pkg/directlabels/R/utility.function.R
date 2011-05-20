@@ -221,11 +221,6 @@ dl.move <- structure(function # Manually move a direct label
     `+dl.move`=list(last.points,dl.move("KIF11",-0.9,hjust=1,vjust=1))))
 })
 
-### Make a Positioning Function with empty.grid, that calculates label
-### position targets using f.
-empty.grid.fun <- function(f)
-  function(d,debug,...)empty.grid(d,debug,f)
-
 ### Jitter the label positions.
 dl.jitter <- dl.trans(x=jitter(x),y=jitter(y))
 
@@ -254,7 +249,7 @@ calc.boxes <- function(d,debug=FALSE,class="ggplot2",...){
 }
 
 ### Calculate big boxes around the means of each cluster.
-big.boxes <- function(d,...)enlarge.box(calc.boxes(visualcenter(d)))
+big.boxes <- list("get.means","calc.boxes","enlarge.box")
 
 ### Point halfway between the min and max
 midrange <- function(x){

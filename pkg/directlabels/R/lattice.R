@@ -111,7 +111,7 @@ panel.superpose.dl <- structure(function
   if(is.null(method))method <- default.picker("trellis")
   ## maybe eventually allow need.trans to be specified in options()??
   if(lattice.fun.name%in%need.trans)method <-
-    c(paste("trans.",lattice.fun.name,sep=""),method)
+    list(paste("trans.",lattice.fun.name,sep=""),method)
   groups <- as.factor(groups)
   groups <- groups[subscripts]
   d <- data.frame(x,groups)

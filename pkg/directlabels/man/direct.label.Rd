@@ -52,8 +52,9 @@ mpgs2 <- update(mpg.scatter,
 plot(direct.label(mpgs2,list(cex=2,smart.grid)))
 
 data(Chem97,package="mlmRev")
-qqm <- qqmath(~gcsescore,Chem97,groups=gender,f.value=ppoints(25),auto.key=TRUE)
-plot(direct.label(qqm,empty.grid.fun(get.means)))
+qqm <- qqmath(~gcsescore,Chem97,groups=gender,
+              f.value=ppoints(25),auto.key=list())
+plot(direct.label(qqm,list("get.means","empty.grid"),TRUE))
 ## default for points is different for default for lines
 plot(direct.label(update(qqm,type=c("l","g"))))
 ## you can hard-core label positions if you really want to:
