@@ -14,9 +14,12 @@ axes are not on the same scale.
 
 1.3
 
-alter lines2 to ignore NAs
+delete empty.grid.fun ... now to use empty.grid, do i.e.
+list("get.means","empty.grid") 
+for labels with target points at the means of each point cloud.
 
-ignore.na Positioning Method for removing rows with NA x or y.
+ignore.na Positioning Method for removing rows with NA x or y. This is
+applied before all Positioning Methods in label.positions().
 
 no longer depend on ggplot2/proto for further modularity.
 

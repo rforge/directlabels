@@ -1,9 +1,20 @@
 \name{last.points}
 \alias{last.points}
-\docType{data}
 \title{last points}
 \description{Positioning Method for the last of a group of points.}
-\usage{last.points}
+\usage{
+last.points(d, ...)
+}
+\arguments{
+  \item{d}{
+}
+  \item{\dots}{
+}
+}
+
+
+
+\author{Toby Dylan Hocking <toby.hocking@inria.fr>}
 
 
 

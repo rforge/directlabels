@@ -6,11 +6,11 @@ label.endpoints <- function
  hjust
 ### hjust of the labels.
  ){
-  list("ignore.na",function(d,...)gapply(d,function(d,...){
+  function(d,...)gapply(d,function(d,...){
     i <- FUN(d$x)==d$x
     if(length(i))data.frame(d[i,],hjust,vjust=0.5)
     else data.frame()
-  }))
+  })
 ### A Positioning Method like first.points or last.points.
 }
 
@@ -262,7 +262,7 @@ visualcenter <- gapply.fun(dl.summarize(d,x=midrange(x),y=midrange(y)))
 
 ### Positioning Function for the mean of each cluster of points.
 get.means <-
-  list("ignore.na",gapply.fun(dl.summarize(d,x=mean(x),y=mean(y))))
+  gapply.fun(dl.summarize(d,x=mean(x),y=mean(y)))
 
 calc.borders <- function
 ### Calculate bounding box based on newly calculated width and height.
@@ -335,7 +335,11 @@ bumpup <- function(d,...){
 
 ### Remove rows for which either x or y is NA
 ignore.na <- function(d,...){
-  subset(d,is.finite(x) & is.finite(y))
+  not.na <- is.finite(d$x)
+  if("y"%in% names(d)){
+    not.na <- not.na & is.finite(d$y)
+  }
+  d[not.na,]
 }
 
 ### Use a QP solver to find the best places to put the points on a

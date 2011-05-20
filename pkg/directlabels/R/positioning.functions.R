@@ -182,7 +182,7 @@ direct.label <- structure(function
     geom_point(aes(size=lambda),colour="grey")+
     geom_point(aes(colour=class),data=normal.l2.cluster$pts)+
     coord_equal()
-  print(direct.label(p,extreme.points)) ##FIXME
+  print(direct.label(p,list("extreme.points","empty.grid"))) ##FIXME
   ## respect the color scale. these should look the same:
   print(direct.label(p+scale_colour_manual(values=rainbow(8))))
   print(direct.label(p)+scale_colour_manual(values=rainbow(8),legend=FALSE))
@@ -219,6 +219,8 @@ label.positions <- function
   if("y"%in%names(d))d <- transform(d,y=as.numeric(y))
   ##save original levels for later in case PFs mess them up.
   levs <- levels(d$groups)
+  ## first apply ignore.na function
+  d <- ignore.na(d)
   d <- apply.method(method,d,debug=debug,...)
   if(nrow(d)==0)return(d)## empty data frames can cause many bugs
   ## rearrange factors in case pos fun messed up the order:
@@ -259,6 +261,7 @@ apply.method <- function # Apply a Positioning Method
  ...
 ### Passed to Positioning Functions.
  ){
+  attr(d,"orig.data") <- d
   if(!is.list(method))method <- list(method)
   isconst <- function(){
     m.var <- names(method)[1]

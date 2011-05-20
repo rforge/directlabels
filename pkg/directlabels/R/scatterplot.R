@@ -42,7 +42,8 @@ empty.grid <- function
 ### ignored.
  ){
   NREP <- 10
-  all.points <- attr(d,"orig.data")
+  all.points <- attr(d,"orig.data")[,c("x","y")]
+  if(any(table(d$groups)>1))d <- get.means(d)
   label.targets <- d
   gl <- function(v){
     s <- seq(min(all.points[,v]),max(all.points[,v]),l=NREP)
@@ -92,10 +93,7 @@ empty.grid <- function
     ## add points to cloud
     newpts <- with(best,data.frame(x=c(left,left,right,right,x,x,x,left,right),
                                    y=c(bottom,top,top,bottom,top,bottom,y,y,y)))
-    newpts <- data.frame(newpts,
-                         subset(d,select=-c(x,y))[1,,drop=FALSE],
-                         row.names=NULL)
-    all.points <- rbind(all.points,newpts[,names(all.points)])
+    all.points <- rbind(all.points,newpts)
   }
   if(debug)with(all.points,grid.points(x,y))
   res
