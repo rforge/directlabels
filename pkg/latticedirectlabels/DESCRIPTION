@@ -1,9 +1,10 @@
 Package: latticedl
 Maintainer: Toby Dylan Hocking <toby.hocking@inria.fr>
 Author: Toby Dylan Hocking
-Version: 1.1
+Version: 1.2
 License: GPL-3
 Title: Lattice direct labels
-Description: Direct labeling functions that use the lattice package.
+Description: OBSOLETE, still on CRAN for historical purposes.
+ Please use the more modern directlabels package instead.
 Depends: plyr, lattice, grid
 Suggests: nlme, mlmRev, ggplot2
