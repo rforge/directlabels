@@ -26,7 +26,7 @@ dl.combine &lt;- structure(function # Combine output of several methods
  ){
   FUNS &lt;- list(...)
   pf &lt;- function(d,...){
-    dfs &lt;- lapply(FUNS,eval.list,d)
+    dfs &lt;- lapply(FUNS,apply.method,d)
     res &lt;- data.frame()
     for(df in dfs){
       if(nrow(res))res &lt;- merge(df,res,all=TRUE)

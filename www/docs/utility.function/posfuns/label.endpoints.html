@@ -27,8 +27,8 @@ label.endpoints &lt;- function
  hjust
 ### hjust of the labels.
  ){
-  function(d,...)ddply(d,.(groups),function(d,...){
-    i &lt;- FUN(d$x)
+  function(d,...)<a href="../../utility.function/posfuns/gapply.html">gapply</a>(d,function(d,...){
+    i &lt;- FUN(d$x)==d$x
     if(length(i))data.frame(d[i,],hjust,vjust=0.5)
     else data.frame()
   })

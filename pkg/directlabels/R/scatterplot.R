@@ -7,37 +7,12 @@ closest.on.ahull <- function(d,...){
   edges.to.outside(ahull.points(d),visualcenter(d),...)
 }
 
-### Calculate the default alpha parameter for ashape based on the
-### average size of label boxes.
-default.ahull <- function(d,...){
-  labels <- apply.method("big.boxes",d,...)
-  mean(unlist(labels[,c("w","h")]))/2
-}
-
-### Calculate the points on the ashape.
-ahull.points <- function(d,ahull=default.ahull(d)){
-  require(alphahull)
-  xy <- unique(d[,c("x","y")])
-  as <- ashape(xy,alpha=ahull)
-  as.data.frame(as$edges)
-}
-
 ### Calculate closest point on the convex hull and put it outside that
 ### point. TODO: doesn't work with ggplot2 since we can't calculate
 ### bounding box. Assume d is the center for each point cloud and then
 ### use orig.data to calculate hull.
 closest.on.chull <- function(d,...){
   edges.to.outside(chull.points(d),visualcenter(d),...)
-}
-
-### Calculate the points on the convex hull.
-chull.points <- function(d,...){
-  bpts <- d[with(d,chull(x,y)),]
-  transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
-            x1=bpts$x[i1],
-            y1=bpts$y[i1],
-            x2=bpts$x[i2],
-            y2=bpts$y[i2])
 }
 
 empty.grid <- function
@@ -126,41 +101,3 @@ perpendicular.grid <- list("perpendicular.lines","empty.grid")
 ### Use empty.grid with extreme.points.
 extreme.grid <- list("extreme.points","empty.grid")
 
-follow.points <- function
-### Draws a line between each center and every point, then follows the
-### line out far enough to give a box outside the cloud. Out of all
-### the boxes constructed in this way that do not contain any points,
-### take the one which has the smallest distance to the center. FIXME:
-### does not work with ggplot2 since the ggplot2 backend doesn't yet
-### have support of actually knowing how big the text bounding box is.
-(d,debug=FALSE,...){
-  allm <- apply.method(list("dl.jitter","big.boxes"),d)
-  if(debug)draw.rects(allm)
-  labtab <- data.frame()
-  for(g in levels(d$groups)){
-    x <- d
-    m <- subset(allm,groups==g)
-    x$a <- x$y - m$y
-    x$b <- x$x - m$x
-    x$h <- sqrt(x$a^2+x$b^2) ## hypotenuse of triangle, not box height!
-    x$x <- x$x + m$w/2 * x$b/x$h *1.01 ## b/h = cos(theta)
-    x$y <- x$y + m$h/2 * x$a/x$h *1.01 ## a/h = sin(theta)
-    x$dist <- (x$x-m$x)^2+(x$y-m$y)^2
-    x <- transform(x,
-                   left=x-m$w/2,right=x+m$w/2,
-                   top=y+m$h/2,bottom=y-m$h/2)
-    x$points <- inside(x,d)
-    ## consider only subset of boxes that contain no points
-    x <- subset(x,points==0)
-    ## take the box with the minimal distance
-    x <- subset(x,dist==min(dist))[1,]
-    labtab <- rbind(labtab,transform(x,x=x,y=y,groups=g))
-    ## add the box's 4 points to the list of points
-    newpoints <- d[1:4,]
-    newpoints$x <- c(x$left,x$right,x$right,x$left)
-    newpoints$groups <- g
-    newpoints$y <- c(x$top,x$top,x$bottom,x$bottom)
-    d <- rbind(d,newpoints)
-  }
-  labtab
-}

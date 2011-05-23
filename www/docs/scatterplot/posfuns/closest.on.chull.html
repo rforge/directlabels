@@ -18,18 +18,12 @@ Positioning Method - closest.on.chull</h1>
 
 <p>Calculate closest point on the convex hull and put it outside that
 point. TODO: doesn't work with ggplot2 since we can't calculate
-bounding box.</p>
+bounding box. Assume d is the center for each point cloud and then
+use orig.data to calculate hull.</p>
 
 <pre>
-closest.on.chull &lt;- function(d,debug=FALSE,center.fun=<a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>,...){
-  centers &lt;- center.fun(d,debug=debug,...)
-  bpts &lt;- d[with(d,chull(x,y)),]
-  edges &lt;- transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
-                             x1=bpts$x[i1],
-                             y1=bpts$y[i1],
-                             x2=bpts$x[i2],
-                             y2=bpts$y[i2])
-  <a href="../../utility.function/posfuns/edges.to.outside.html">edges.to.outside</a>(edges,centers,debug=debug)
+closest.on.chull &lt;- function(d,...){
+  <a href="../../utility.function/posfuns/edges.to.outside.html">edges.to.outside</a>(<a href="../../utility.function/posfuns/chull.points.html">chull.points</a>(d),<a href="../../utility.function/posfuns/visualcenter.html">visualcenter</a>(d),...)
 }
 </pre>
 
@@ -81,6 +75,19 @@ library(ggplot2)
 data(mpg,package="ggplot2")
 p &lt;- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
       main="Fuel efficiency depends on car size")
+direct.label(p,"closest.on.chull")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="path" src="../../scatterplot/path.closest.on.chull.png" /></td>
+  <td><p><a href="../plots/path.html">path</a></p><pre>
+data(normal.l2.cluster,package="directlabels")
+library(ggplot2)
+p &lt;- ggplot(normal.l2.cluster$path,aes(x,y))+
+  geom_path(aes(group=row),colour="grey")+
+  geom_point(aes(size=lambda),colour="grey")+
+  geom_point(aes(colour=class),data=normal.l2.cluster$pts,pch=21,fill="white")+
+  coord_equal()
 direct.label(p,"closest.on.chull")
   </pre></td>
 </tr>

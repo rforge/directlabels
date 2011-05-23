@@ -23,15 +23,8 @@ TODO: doesn't work with ggplot2 since we can't calculate bounding
 box.</p>
 
 <pre>
-closest.on.ahull &lt;- function(d,debug=FALSE,center.fun=<a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>,...){
-  require(alphahull)
-  centers &lt;- center.fun(d)
-  alpha &lt;- mean(unlist(centers[,c("w","h")]))/2
-  xy &lt;- d[,c("x","y")]
-  xy &lt;- unique(xy)
-  as &lt;- ashape(xy,alpha=alpha)
-  edges &lt;- as.data.frame(as$edges)
-  <a href="../../utility.function/posfuns/edges.to.outside.html">edges.to.outside</a>(edges,centers,debug=debug)
+closest.on.ahull &lt;- function(d,...){
+  <a href="../../utility.function/posfuns/edges.to.outside.html">edges.to.outside</a>(<a href="../../utility.function/posfuns/ahull.points.html">ahull.points</a>(d),<a href="../../utility.function/posfuns/visualcenter.html">visualcenter</a>(d),...)
 }
 </pre>
 
@@ -83,6 +76,19 @@ library(ggplot2)
 data(mpg,package="ggplot2")
 p &lt;- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
       main="Fuel efficiency depends on car size")
+direct.label(p,"closest.on.ahull")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="path" src="../../scatterplot/path.closest.on.ahull.png" /></td>
+  <td><p><a href="../plots/path.html">path</a></p><pre>
+data(normal.l2.cluster,package="directlabels")
+library(ggplot2)
+p &lt;- ggplot(normal.l2.cluster$path,aes(x,y))+
+  geom_path(aes(group=row),colour="grey")+
+  geom_point(aes(size=lambda),colour="grey")+
+  geom_point(aes(colour=class),data=normal.l2.cluster$pts,pch=21,fill="white")+
+  coord_equal()
 direct.label(p,"closest.on.ahull")
   </pre></td>
 </tr>

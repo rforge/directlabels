@@ -16,13 +16,13 @@
 <h1><a href="../../index.html">directlabels</a> - utility.function -
 Positioning Method - extreme.points</h1>
 
-<p>Label the points furthest from the origin for each group.</p>
+<p>Label the points furthest from the middle for each group.</p>
 
 <pre>
-extreme.points &lt;- <a href="../../utility.function/posfuns/dl.indep.html">dl.indep</a>({
-  d &lt;- transform(d,d=sqrt(x^2+y^2))
-  d[which.max(d$d),]
-})
+extreme.points &lt;- function(d,...){
+  d$dist.from.center &lt;- sqrt((d$x-<a href="../../utility.function/posfuns/midrange.html">midrange</a>(d$x))^2+(d$y-<a href="../../utility.function/posfuns/midrange.html">midrange</a>(d$y))^2)
+  <a href="../../utility.function/posfuns/gapply.html">gapply</a>(d,function(d)d[which.max(d$dist.from.center),])
+}
 </pre>
 
 

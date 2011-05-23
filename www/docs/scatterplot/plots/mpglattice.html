@@ -39,7 +39,8 @@ direct.label(p,"<a href="../posfuns/closest.on.ahull.html">closest.on.ahull</a>"
   <td><img alt="closest.on.chull" src="../../scatterplot/mpglattice.closest.on.chull.png" /></td>
   <td><p>Calculate closest point on the convex hull and put it outside that
 point. TODO: doesn't work with ggplot2 since we can't calculate
-bounding box.</p>
+bounding box. Assume d is the center for each point cloud and then
+use orig.data to calculate hull.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/closest.on.chull.html">closest.on.chull</a>")
   </pre></td>
@@ -50,16 +51,9 @@ direct.label(p,"<a href="../posfuns/closest.on.chull.html">closest.on.chull</a>"
 placed in different places. A grid is drawn over the whole
 plot. Each cluster is considered in sequence and assigned to the
 point on this grid which is closest to the point given by
-loc.fun().</p>
+the input data points. Makes use of attr(d,"orig.data").</p>
     <pre>
 direct.label(p,"<a href="../posfuns/empty.grid.html">empty.grid</a>")
-  </pre></td>
-</tr>
-<tr>
-  <td><img alt="empty.grid.2" src="../../scatterplot/mpglattice.empty.grid.2.png" /></td>
-  <td><p>Use empty.grid with perpendicular.lines.</p>
-    <pre>
-direct.label(p,"<a href="../posfuns/empty.grid.2.html">empty.grid.2</a>")
   </pre></td>
 </tr>
 <tr>
@@ -70,15 +64,10 @@ direct.label(p,"<a href="../posfuns/extreme.grid.html">extreme.grid</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="follow.points" src="../../scatterplot/mpglattice.follow.points.png" /></td>
-  <td><p>Draws a line between each center and every point, then follows the
-line out far enough to give a box outside the cloud. Out of all
-the boxes constructed in this way that do not contain any points,
-take the one which has the smallest distance to the center. FIXME:
-does not work with ggplot2 since the ggplot2 backend doesn't yet
-have support of actually knowing how big the text bounding box is.</p>
+  <td><img alt="perpendicular.grid" src="../../scatterplot/mpglattice.perpendicular.grid.png" /></td>
+  <td><p>Use empty.grid with perpendicular.lines.</p>
     <pre>
-direct.label(p,"<a href="../posfuns/follow.points.html">follow.points</a>")
+direct.label(p,"<a href="../posfuns/perpendicular.grid.html">perpendicular.grid</a>")
   </pre></td>
 </tr>
 <tr>

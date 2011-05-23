@@ -19,7 +19,7 @@ Positioning Method - extreme.grid</h1>
 <p>Use empty.grid with extreme.points.</p>
 
 <pre>
-extreme.grid &lt;- <a href="../../utility.function/posfuns/empty.grid.fun.html">empty.grid.fun</a>(<a href="../../utility.function/posfuns/extreme.points.html">extreme.points</a>)
+extreme.grid &lt;- list("<a href="../../utility.function/posfuns/extreme.points.html">extreme.points</a>","<a href="../../scatterplot/posfuns/empty.grid.html">empty.grid</a>")
 </pre>
 
 <table>
@@ -70,6 +70,19 @@ library(ggplot2)
 data(mpg,package="ggplot2")
 p &lt;- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
       main="Fuel efficiency depends on car size")
+direct.label(p,"extreme.grid")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="path" src="../../scatterplot/path.extreme.grid.png" /></td>
+  <td><p><a href="../plots/path.html">path</a></p><pre>
+data(normal.l2.cluster,package="directlabels")
+library(ggplot2)
+p &lt;- ggplot(normal.l2.cluster$path,aes(x,y))+
+  geom_path(aes(group=row),colour="grey")+
+  geom_point(aes(size=lambda),colour="grey")+
+  geom_point(aes(colour=class),data=normal.l2.cluster$pts,pch=21,fill="white")+
+  coord_equal()
 direct.label(p,"extreme.grid")
   </pre></td>
 </tr>

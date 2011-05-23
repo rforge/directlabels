@@ -32,7 +32,7 @@ follow.points &lt;- function
 ### does not work with ggplot2 since the ggplot2 backend doesn't yet
 ### have support of actually knowing how big the text bounding box is.
 (d,debug=FALSE,...){
-  allm &lt;- <a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>(<a href="../../utility.function/posfuns/dl.jitter.html">dl.jitter</a>(d))
+  allm &lt;- apply.method(list("<a href="../../utility.function/posfuns/dl.jitter.html">dl.jitter</a>","<a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>"),d)
   if(debug)<a href="../../utility.function/posfuns/draw.rects.html">draw.rects</a>(allm)
   labtab &lt;- data.frame()
   for(g in levels(d$groups)){
@@ -112,6 +112,19 @@ library(ggplot2)
 data(mpg,package="ggplot2")
 p &lt;- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
       main="Fuel efficiency depends on car size")
+direct.label(p,"follow.points")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="path" src="../../scatterplot/path.follow.points.png" /></td>
+  <td><p><a href="../plots/path.html">path</a></p><pre>
+data(normal.l2.cluster,package="directlabels")
+library(ggplot2)
+p &lt;- ggplot(normal.l2.cluster$path,aes(x,y))+
+  geom_path(aes(group=row),colour="grey")+
+  geom_point(aes(size=lambda),colour="grey")+
+  geom_point(aes(colour=class),data=normal.l2.cluster$pts,pch=21,fill="white")+
+  coord_equal()
 direct.label(p,"follow.points")
   </pre></td>
 </tr>

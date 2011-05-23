@@ -20,7 +20,7 @@ Positioning Method - empty.grid</h1>
 placed in different places. A grid is drawn over the whole
 plot. Each cluster is considered in sequence and assigned to the
 point on this grid which is closest to the point given by
-loc.fun().</p>
+the input data points. Makes use of attr(d,"orig.data").</p>
 
 <pre>
 empty.grid &lt;- function
@@ -28,36 +28,35 @@ empty.grid &lt;- function
 ### placed in different places. A grid is drawn over the whole
 ### plot. Each cluster is considered in sequence and assigned to the
 ### point on this grid which is closest to the point given by
-### loc.fun().
+### the input data points. Makes use of attr(d,"orig.data").
 (d,
-### Data frame of points on the scatterplot with columns groups x y.
+### Data frame of target points on the scatterplot for each label.
  debug=FALSE,
-### Show debugging info on the plot? This is passed to loc.fun.
- loc.fun=<a href="../../utility.function/posfuns/get.means.html">get.means</a>,
-### Function that takes d and returns a data frame with 1 column for
-### each group, giving the point we will use to look for a close point
-### on the grid, to put the group label.
+### Show debugging info on the plot?
  ...
 ### ignored.
  ){
-  loc &lt;- loc.fun(d,debug=debug)
   NREP &lt;- 10
-  gridpts &lt;- d
+  all.points &lt;- attr(d,"orig.data")[,c("x","y")]
+  if(any(table(d$groups)&gt;1))d &lt;- <a href="../../utility.function/posfuns/get.means.html">get.means</a>(d)
+  label.targets &lt;- d
   gl &lt;- function(v){
-    s &lt;- seq(min(gridpts[,v]),max(gridpts[,v]),l=NREP)
+    s &lt;- seq(min(all.points[,v]),max(all.points[,v]),l=NREP)
     if(expand){
       dif &lt;- s[2]-s[1]
-      s &lt;- seq(min(gridpts[,v])-expand*dif,
-               max(gridpts[,v])+expand*dif,
+      s &lt;- seq(min(all.points[,v])-expand*dif,
+               max(all.points[,v])+expand*dif,
                l=NREP+2*expand)
     }
     list(centers=s,diff=s[2]-s[1])
   }
   hgrid &lt;- function(x,w){
-    hboxes &lt;- floor(diff(range(gridpts[,x]))/r[,w])
-    (-expand:(hboxes+expand-1))*r[,w]+min(gridpts[,x])+r[,w]/2
+    hboxes &lt;- floor(diff(range(all.points[,x]))/r[,w])
+    (-expand:(hboxes+expand-1))*r[,w]+min(all.points[,x])+r[,w]/2
   }
-  if(debug)with(loc,grid.points(x,y,default.units="native"))
+  if(debug)with(label.targets,{
+    grid.points(x,y,default.units="native",gp=gpar(col="green"))
+  })
   draw &lt;- function(g){
     gridlines &lt;- with(g,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
     drawlines &lt;- function(a,b,c,d)
@@ -66,19 +65,19 @@ empty.grid &lt;- function
     with(gridlines,drawlines(x,min(y),x,max(y)))
   }
   res &lt;- data.frame()
-  for(v in loc$groups){
-    r &lt;- subset(loc,groups==v)
+  for(v in label.targets$groups){
+    r &lt;- subset(label.targets,groups==v)
     no.points &lt;- data.frame()
     expand &lt;- 0
     while(nrow(no.points)==0){
-      boxes &lt;- if("left"%in%names(loc)){
+      boxes &lt;- if("left"%in%names(label.targets)){
         list(x=hgrid("x","w"),y=hgrid("y","h"),w=r$w,h=r$h)
       }else{
         L &lt;- sapply(c("x","y"),gl,simplify=FALSE)
         list(x=L$x$centers,y=L$y$centers,w=L$x$diff,h=L$y$diff)
       }
       boxes &lt;- <a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>(do.call(expand.grid,boxes))
-      boxes &lt;- cbind(boxes,data=<a href="../../utility.function/posfuns/inside.html">inside</a>(boxes,d))
+      boxes &lt;- cbind(boxes,data=<a href="../../utility.function/posfuns/inside.html">inside</a>(boxes,all.points))
       no.points &lt;- transform(subset(boxes,data==0))
       expand &lt;- expand+1 ## look further out if we can't find any labels <a href="../../utility.function/posfuns/inside.html">inside</a>
     }
@@ -89,12 +88,9 @@ empty.grid &lt;- function
     ## add points to cloud
     newpts &lt;- with(best,data.frame(x=c(left,left,right,right,x,x,x,left,right),
                                    y=c(bottom,top,top,bottom,top,bottom,y,y,y)))
-    newpts &lt;- data.frame(newpts,
-                         subset(d,select=-c(x,y))[1,,drop=FALSE],
-                         row.names=NULL)
-    d &lt;- rbind(d,newpts[,names(d)])
+    all.points &lt;- rbind(all.points,newpts)
   }
-  if(debug)with(d,grid.points(x,y))
+  if(debug)with(all.points,grid.points(x,y))
   res
 ### Data frame with columns groups x y, 1 line for each group, giving
 ### the positions on the grid closest to each cluster.
@@ -149,6 +145,19 @@ library(ggplot2)
 data(mpg,package="ggplot2")
 p &lt;- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
       main="Fuel efficiency depends on car size")
+direct.label(p,"empty.grid")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="path" src="../../scatterplot/path.empty.grid.png" /></td>
+  <td><p><a href="../plots/path.html">path</a></p><pre>
+data(normal.l2.cluster,package="directlabels")
+library(ggplot2)
+p &lt;- ggplot(normal.l2.cluster$path,aes(x,y))+
+  geom_path(aes(group=row),colour="grey")+
+  geom_point(aes(size=lambda),colour="grey")+
+  geom_point(aes(colour=class),data=normal.l2.cluster$pts,pch=21,fill="white")+
+  coord_equal()
 direct.label(p,"empty.grid")
   </pre></td>
 </tr>

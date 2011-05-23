@@ -28,7 +28,7 @@ maxvar.points &lt;- function(d,...){
   FUN &lt;- if(is.na(vars[1]))"<a href="../../lineplot/posfuns/last.points.html">last.points</a>"
   else if(is.na(vars[2]))"<a href="../../lineplot/posfuns/first.points.html">first.points</a>"
   else if(diff(vars)&lt;0)"<a href="../../lineplot/posfuns/first.points.html">first.points</a>" else "<a href="../../lineplot/posfuns/last.points.html">last.points</a>"
-  eval.list(list(FUN),d,...)
+  apply.method(FUN,d,...)
 }
 </pre>
 

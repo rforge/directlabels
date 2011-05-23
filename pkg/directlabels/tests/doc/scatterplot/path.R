@@ -1,8 +1,7 @@
-data(path,package="directlabels")
+data(normal.l2.cluster,package="directlabels")
 library(ggplot2)
-p <- ggplot(joined,aes(x,y))+
+ggplot(normal.l2.cluster$path,aes(x,y))+
   geom_path(aes(group=row),colour="grey")+
-  geom_point(aes(size=lambda))+
-  geom_point(aes(colour=class),data=pts,pch=21,fill="white")+
+  geom_point(aes(size=lambda),colour="grey")+
+  geom_point(aes(colour=class),data=normal.l2.cluster$pts,pch=21,fill="white")+
   coord_equal()
-direct.label(p)

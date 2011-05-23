@@ -21,9 +21,9 @@ side to avoid collisions with points.</p>
 
 <pre>
 top.bumptwice &lt;- function(d,debug=FALSE,...){
-  labtab &lt;- eval.list(<a href="../../densityplot/posfuns/top.bumpup.html">top.bumpup</a>,d)
+  labtab &lt;- apply.method(<a href="../../densityplot/posfuns/top.bumpup.html">top.bumpup</a>,d)
   if(debug)<a href="../../utility.function/posfuns/draw.rects.html">draw.rects</a>(labtab)
-  ddply(labtab,.(groups),function(l){
+  <a href="../../utility.function/posfuns/gapply.html">gapply</a>(labtab,function(l){
     x &lt;- sort(c(range(d$x),subset(d,y&gt;l$bottom&amp;y&lt;l$top)$x))
     if(length(x)==2)return(l)
     dif &lt;- diff(x)
@@ -55,6 +55,7 @@ direct.label(p,"top.bumptwice")
 <tr>
   <td><img alt="iris" src="../../densityplot/iris.top.bumptwice.png" /></td>
   <td><p><a href="../plots/iris.html">iris</a></p><pre>
+library(reshape)
 iris2 &lt;- melt(iris,id="Species")
 library(lattice)
 p &lt;- densityplot(~value|variable,iris2,groups=Species,scales="free")

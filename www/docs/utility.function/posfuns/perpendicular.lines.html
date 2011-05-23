@@ -35,6 +35,7 @@ perpendicular.lines &lt;- function
  ...
 ### ignored.
  ){
+  if(length(unique(d$groups))==1)return(<a href="../../utility.function/posfuns/extreme.points.html">extreme.points</a>(d))
   means &lt;- rename(<a href="../../utility.function/posfuns/get.means.html">get.means</a>(d),list(x="mx",y="my",groups="groups"))
   big &lt;- merge(d,means,by="groups")
   fit &lt;- lm(my~mx,means)
@@ -46,14 +47,14 @@ perpendicular.lines &lt;- function
                     d=sqrt((x-x1)^2+(y-y1)^2),
                     dm=sqrt((x-mx)^2+(y-my)^2))
   big5 &lt;- transform(big4,ratio=d/dm)
-  winners &lt;- ddply(big5,.(groups),subset,
+  winners &lt;- <a href="../../utility.function/posfuns/gapply.html">gapply</a>(big5,subset,
                    subset=seq_along(ratio)==which.min(ratio))
   ## gives back a function of a line that goes through the designated center
   f &lt;- function(v)function(x){
     r &lt;- means[means$groups==v,]
     -1/m*(x-r$mx)+r$my
   }
-  ##dd &lt;- ddply(means,.(groups),summarise,x=x+sdx*seq(0,-2,l=5)[-1])
+  ##dd &lt;- <a href="../../utility.function/posfuns/gapply.html">gapply</a>(means,summarise,x=x+sdx*seq(0,-2,l=5)[-1])
   ##dd$y &lt;- mdply(dd,function(groups,x)f(groups)(x))$x
   if(debug){
     ## myline draws a line over the range of the data for a given fun F
