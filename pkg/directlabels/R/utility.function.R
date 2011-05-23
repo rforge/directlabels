@@ -492,7 +492,7 @@ edges.to.outside <- function
 ### Given a list of edges from the convex or alpha hull, and a list of
 ### cluster centers, calculate a point near to each cluster on the
 ### outside of the hull.
-(edges,centers,debug=FALSE){
+(edges,centers,debug=FALSE,...){
   if(debug){
     with(centers,lpoints(x,y,pch="+"))
     with(edges,lsegments(x1,y1,x2,y2))
@@ -500,7 +500,7 @@ edges.to.outside <- function
   closepts <- gapply(centers,project.onto.segments,edges,debug)
   closepts$vjust <- ifelse(closepts$y-centers$y>0,0,1)
   closepts$hjust <- ifelse(closepts$x-centers$x>0,0,1)
-  r <- big.boxes(closepts)
+  r <- apply.method("big.boxes",closepts)
   transform(r,x=(right-left)/2+left,y=(top-bottom)/2+bottom,hjust=0.5,vjust=0.5)
 }
 

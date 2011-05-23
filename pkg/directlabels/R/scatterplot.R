@@ -3,29 +3,41 @@
 ### aspect="iso" TODO: check and correct for perspective changes.)
 ### TODO: doesn't work with ggplot2 since we can't calculate bounding
 ### box.
-closest.on.ahull <- function(d,debug=FALSE,center.fun=big.boxes,...){
+closest.on.ahull <- function(d,...){
+  edges.to.outside(ahull.points(d),visualcenter(d),...)
+}
+
+### Calculate the default alpha parameter for ashape based on the
+### average size of label boxes.
+default.ahull <- function(d,...){
+  labels <- apply.method("big.boxes",d,...)
+  mean(unlist(labels[,c("w","h")]))/2
+}
+
+### Calculate the points on the ashape.
+ahull.points <- function(d,ahull=default.ahull(d)){
   require(alphahull)
-  centers <- center.fun(d)
-  alpha <- mean(unlist(centers[,c("w","h")]))/2
-  xy <- d[,c("x","y")]
-  xy <- unique(xy)
-  as <- ashape(xy,alpha=alpha)
-  edges <- as.data.frame(as$edges)
-  edges.to.outside(edges,centers,debug=debug)
+  xy <- unique(d[,c("x","y")])
+  as <- ashape(xy,alpha=ahull)
+  as.data.frame(as$edges)
 }
 
 ### Calculate closest point on the convex hull and put it outside that
 ### point. TODO: doesn't work with ggplot2 since we can't calculate
-### bounding box.
-closest.on.chull <- function(d,debug=FALSE,center.fun=big.boxes,...){
-  centers <- center.fun(d,debug=debug,...)
+### bounding box. Assume d is the center for each point cloud and then
+### use orig.data to calculate hull.
+closest.on.chull <- function(d,...){
+  edges.to.outside(chull.points(d),visualcenter(d),...)
+}
+
+### Calculate the points on the convex hull.
+chull.points <- function(d,...){
   bpts <- d[with(d,chull(x,y)),]
-  edges <- transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
-                             x1=bpts$x[i1],
-                             y1=bpts$y[i1],
-                             x2=bpts$x[i2],
-                             y2=bpts$y[i2])
-  edges.to.outside(edges,centers,debug=debug)
+  transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
+            x1=bpts$x[i1],
+            y1=bpts$y[i1],
+            x2=bpts$x[i2],
+            y2=bpts$y[i2])
 }
 
 empty.grid <- function
@@ -122,7 +134,7 @@ follow.points <- function
 ### does not work with ggplot2 since the ggplot2 backend doesn't yet
 ### have support of actually knowing how big the text bounding box is.
 (d,debug=FALSE,...){
-  allm <- big.boxes(dl.jitter(d))
+  allm <- apply.method(list("dl.jitter","big.boxes"),d)
   if(debug)draw.rects(allm)
   labtab <- data.frame()
   for(g in levels(d$groups)){

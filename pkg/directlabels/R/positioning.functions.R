@@ -352,7 +352,7 @@ lasso.labels <-
          hjust <- as.integer(d[i,"y"]>0)
          data.frame(d[i-1,],hjust,vjust=hjust)
        }),
-       calc.boxes,
+       "calc.boxes",
        ## calculate how wide the tilted box is
        dl.trans(h.inches=convertHeight(unit(h,"native"),"inches",TRUE)),
        dl.trans(hyp.inches=h.inches/sin(2*pi*rot/360)),

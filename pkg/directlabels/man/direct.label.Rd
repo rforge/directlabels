@@ -100,7 +100,7 @@ vad2 <- as.data.frame.table(VAD2)
 names(vad2) <- names(vad)
 p3 <- qplot(deaths,age,data=vad2,
             group=demographic,geom="line",colour=demographic)
-direct.label(p3,top.points)
+direct.label(p3,"top.points")
 ## contour plot
 volcano3d <- melt(volcano)
 names(volcano3d) <- c("x", "y", "z")
