@@ -102,7 +102,7 @@ defaultpf.ggplot <- function
            d <- structure(p$data[,rename.vec],names=names(varnames))
            if(nlevels(d$groups)==2)"lines2" else "maxvar.points"
          },
-         point="perpendicular.grid",
+         point="extreme.grid",
          path="bottom.points",
          stop("No default label placement for this type of ggplot."))
 }

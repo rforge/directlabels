@@ -188,7 +188,7 @@ p <- ggplot(normal.l2.cluster$path,aes(x,y))+
   geom_point(aes(size=lambda),colour="grey")+
   geom_point(aes(colour=class),data=normal.l2.cluster$pts)+
   coord_equal()
-print(direct.label(p,list("extreme.points","empty.grid"))) ##FIXME
+print(direct.label(p))
 ## respect the color scale. these should look the same:
 print(direct.label(p+scale_colour_manual(values=rainbow(8))))
 print(direct.label(p)+scale_colour_manual(values=rainbow(8),legend=FALSE))

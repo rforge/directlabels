@@ -112,9 +112,6 @@ dlcompare <- structure(function # Direct label comparison plot
 
   data(BodyWeight,package="nlme")
   ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
-  ## lines2 works only when there are 2 groups
-  if(interactive())
-    dlcompare(list(plots[[1]],ratplot),list("first.points","lines2"))
 
   ## Compare scatterplot labeling methods.
   scatters <-
