@@ -8,38 +8,25 @@
 	charset=UTF-8" />
 	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
 	rel="stylesheet" type="text/css" />
-	<title>directlabels documentation - dl.indep</title>
+	<title>directlabels documentation - chull.points</title>
   </head>
 
 <body>
 
 <h1><a href="../../index.html">directlabels</a> - utility.function -
-Positioning Method - dl.indep</h1>
+Positioning Method - chull.points</h1>
 
-<p>Makes a function you can use to specify the location of each group
-independently.</p>
+<p>Calculate the points on the convex hull.</p>
 
 <pre>
-dl.indep &lt;- structure(function # Direct label groups independently
-### Makes a function you can use to specify the location of each group
-### independently.
-(expr
-### Expression that takes a subset of the d data frame, with data from
-### only a single group, and returns the direct label position.
- ){
-  foo &lt;- substitute(expr)
-  f &lt;- function(d,...)eval(foo)
-  src &lt;- paste("dl.indep(",paste(deparse(foo),collapse="n"),")",sep="")
-  pf &lt;- structure(function(d,...)ddply(d,.(groups),f,...),"source"=src)
-  pf
-### A Positioning Function.
-},ex=function(){
-  complicated &lt;- list(<a href="../../utility.function/posfuns/dl.trans.html">dl.trans</a>(x=x+10),
-                      dl.indep(d[-2,]),
-                      rot=c(30,180))
-  library(lattice)
-  direct.label(dotplot(VADeaths,type="o"),complicated,TRUE)
-})
+chull.points &lt;- function(d,...){
+  bpts &lt;- d[with(d,chull(x,y)),]
+  transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
+            x1=bpts$x[i1],
+            y1=bpts$y[i1],
+            x2=bpts$x[i2],
+            y2=bpts$y[i2])
+}
 </pre>
 
 

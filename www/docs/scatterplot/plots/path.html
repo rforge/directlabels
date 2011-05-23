@@ -1,0 +1,110 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+	<meta http-equiv="Content-Type" content="text/html;
+	charset=UTF-8" />
+	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
+	rel="stylesheet" type="text/css" />
+	<title>directlabels documentation - path</title>
+  </head>
+
+<body>
+
+<h1><a href="../../index.html">directlabels</a> - scatterplot - example -
+path</h1>
+
+<pre>
+data(normal.l2.cluster,package="directlabels")
+library(ggplot2)
+p &lt;- ggplot(normal.l2.cluster$path,aes(x,y))+
+  geom_path(aes(group=row),colour="grey")+
+  geom_point(aes(size=lambda),colour="grey")+
+  geom_point(aes(colour=class),data=normal.l2.cluster$pts,pch=21,fill="white")+
+  coord_equal()
+</pre>
+
+<table>
+<tr>
+  <td><img alt="closest.on.ahull" src="../../scatterplot/path.closest.on.ahull.png" /></td>
+  <td><p>Calculate closest point on the alpha hull with size of the boxes,
+and put it outside that point. (only technically correct for
+aspect="iso" TODO: check and correct for perspective changes.)
+TODO: doesn't work with ggplot2 since we can't calculate bounding
+box.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/closest.on.ahull.html">closest.on.ahull</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="closest.on.chull" src="../../scatterplot/path.closest.on.chull.png" /></td>
+  <td><p>Calculate closest point on the convex hull and put it outside that
+point. TODO: doesn't work with ggplot2 since we can't calculate
+bounding box. Assume d is the center for each point cloud and then
+use orig.data to calculate hull.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/closest.on.chull.html">closest.on.chull</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="empty.grid" src="../../scatterplot/path.empty.grid.png" /></td>
+  <td><p>Label placement method for scatterplots that ensures labels are
+placed in different places. A grid is drawn over the whole
+plot. Each cluster is considered in sequence and assigned to the
+point on this grid which is closest to the point given by
+the input data points. Makes use of attr(d,"orig.data").</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/empty.grid.html">empty.grid</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="extreme.grid" src="../../scatterplot/path.extreme.grid.png" /></td>
+  <td><p>Use empty.grid with extreme.points.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/extreme.grid.html">extreme.grid</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="perpendicular.grid" src="../../scatterplot/path.perpendicular.grid.png" /></td>
+  <td><p>Use empty.grid with perpendicular.lines.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/perpendicular.grid.html">perpendicular.grid</a>")
+  </pre></td>
+</tr>
+<tr>
+  <td><img alt="smart.grid" src="../../scatterplot/path.smart.grid.png" /></td>
+  <td><p>Use bounding box information with a small empty.grid to find the a
+non-colliding label that is close to a point on the convex hull,
+which is close to the visual center of the data. TODO: does not
+work with ggplot2 since the backend does not support bounding box
+calculation.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/smart.grid.html">smart.grid</a>")
+  </pre></td>
+</tr>
+</table>
+
+<center>
+<table>
+<tr><td>Please contact <a href="http://cbio.ensmp.fr/~thocking/">Toby
+Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
+contribute, thanks!</td>
+</tr>
+<tr><td align="center">Documentation website generated from comments
+in R source code
+using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
+</tr>
+<tr>
+<td align="center">
+    <a href="http://validator.w3.org/check?uri=referer">validate</a>
+</td>
+</tr>
+</table>
+
+</center>
+
+</body>
+
+</html>

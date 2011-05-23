@@ -8,20 +8,29 @@
 	charset=UTF-8" />
 	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
 	rel="stylesheet" type="text/css" />
-	<title>directlabels documentation - empty.grid.fun</title>
+	<title>directlabels documentation - dl.summarize</title>
   </head>
 
 <body>
 
 <h1><a href="../../index.html">directlabels</a> - utility.function -
-Positioning Method - empty.grid.fun</h1>
+Positioning Method - dl.summarize</h1>
 
-<p>Make a Positioning Function with empty.grid, that calculates label
-position targets using f.</p>
+<p>summarize which preserves important columns for direct labels.</p>
 
 <pre>
-empty.grid.fun &lt;- function(f)
-  function(d,debug,...)<a href="../../scatterplot/posfuns/empty.grid.html">empty.grid</a>(d,debug,f)
+dl.summarize &lt;- function
+### summarize which preserves important columns for direct labels.
+(d,
+### data frame
+ ...
+ ){
+  df &lt;- unique(transform(d,...))
+  to.copy &lt;- names(d)[!names(d)%in%names(df)]
+  for(N in to.copy)
+    df[,N] &lt;- d[,N]
+  df
+}
 </pre>
 
 
