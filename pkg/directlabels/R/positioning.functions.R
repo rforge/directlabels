@@ -45,24 +45,26 @@ direct.label <- structure(function
                   main="foobar2")
   plot(direct.label(mpgs2,list(cex=2,smart.grid)))
 
-  data(Chem97,package="mlmRev")
-  qqm <- qqmath(~gcsescore,Chem97,groups=gender,
-                f.value=ppoints(25),auto.key=list())
-  plot(direct.label(qqm,list("get.means","empty.grid"),TRUE))
-  ## default for points is different for default for lines
-  plot(direct.label(update(qqm,type=c("l","g"))))
-  ## you can hard-core label positions if you really want to:
-  static.labels <- data.frame(x=c(-2,0),y=c(6,4),groups=c("F","M"))
-  plot(direct.label(qqm,method=static.labels,debug=TRUE))
-  plot(direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),
-                           type=c('l','g'),f.value=ppoints(100))))
+  if(require(mlmRev)){
+    data(Chem97)
+    qqm <- qqmath(~gcsescore,Chem97,groups=gender,
+                  f.value=ppoints(25),auto.key=list())
+    plot(direct.label(qqm,list("get.means","empty.grid"),TRUE))
+    ## default for points is different for default for lines
+    plot(direct.label(update(qqm,type=c("l","g"))))
+    ## you can hard-core label positions if you really want to:
+    static.labels <- data.frame(x=c(-2,0),y=c(6,4),groups=c("F","M"))
+    plot(direct.label(qqm,method=static.labels,debug=TRUE))
+    plot(direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),
+                             type=c('l','g'),f.value=ppoints(100))))
 
-  ## densityplot labeling
-  plot(direct.label(densityplot(~gcsescore,Chem97,groups=factor(score),
-                                plot.points=FALSE,n=500)))
-  ## Try with several panels:
-  plot(direct.label(densityplot(~gcsescore|gender,Chem97,plot.points=FALSE,
-                                groups=factor(score),layout=c(1,2),n=500)))
+    ## densityplot labeling
+    plot(direct.label(densityplot(~gcsescore,Chem97,groups=factor(score),
+                                  plot.points=FALSE,n=500)))
+    ## Try with several panels:
+    plot(direct.label(densityplot(~gcsescore|gender,Chem97,plot.points=FALSE,
+                                  groups=factor(score),layout=c(1,2),n=500)))
+  }
   iris2 <- melt(iris,id="Species")
   direct.label(densityplot(~value|variable,iris2,groups=Species,scales="free"))
   loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
@@ -151,22 +153,23 @@ direct.label <- structure(function
     limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
     rbind(limpts,molt)
   }
-  data(prostate,package="ElemStatLearn")
-  pros <- subset(prostate,train==TRUE,select=-train)
-  m <- myridge(lpsa~.,pros)
-  p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
-              panel=function(...){
-                panel.xyplot(...)
-                panel.abline(h=0)
-                panel.abline(v=5,col="grey")
-              },
-              main="Ridge regression shrinks least squares coefficients",
-              ylab="scaled coefficients",
-              sub="grey line shows coefficients chosen by cross-validation",
-              xlab=expression(df(lambda)))
-  print(direct.label(update(p,xlim=c(0,9.25)),
-                     list(last.qp,cex=0.75,dl.trans(x=x+0.1))))
-  
+  if(require(ElemStatLearn)){
+    data(prostate)
+    pros <- subset(prostate,train==TRUE,select=-train)
+    m <- myridge(lpsa~.,pros)
+    p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
+                panel=function(...){
+                  panel.xyplot(...)
+                  panel.abline(h=0)
+                  panel.abline(v=5,col="grey")
+                },
+                main="Ridge regression shrinks least squares coefficients",
+                ylab="scaled coefficients",
+                sub="grey line shows coefficients chosen by cross-validation",
+                xlab=expression(df(lambda)))
+    print(direct.label(update(p,xlim=c(0,9.25)),
+                       list(last.qp,cex=0.75,dl.trans(x=x+0.1))))
+  }  
   ## some data from clustering algorithms
   data(iris.l1.cluster,package="directlabels")
   p <- ggplot(iris.l1.cluster,aes(lambda,alpha,group=row,colour=Species))+

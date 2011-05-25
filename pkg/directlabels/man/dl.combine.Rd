@@ -100,17 +100,21 @@ mylars <- function
 }
 
 ## Calculate lasso path
-data(prostate,package="ElemStatLearn")
-pros <- subset(prostate,select=-train,train==TRUE)
-ycol <- which(names(pros)=="lpsa")
-x <- as.matrix(pros[-ycol])
-y <- unlist(pros[ycol])
-res <- mylars(x,y)
-P <- xyplot(coef~arclength,res,groups=variable,type="l")
-plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
+if(require(ElemStatLearn)){
+  data(prostate)
+  pros <- subset(prostate,select=-train,train==TRUE)
+  ycol <- which(names(pros)=="lpsa")
+  x <- as.matrix(pros[-ycol])
+  y <- unlist(pros[ycol])
+  res <- mylars(x,y)
+  P <- xyplot(coef~arclength,res,groups=variable,type="l")
+  plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
+}
 
-data(diabetes,package="lars")
-dres <- with(diabetes,mylars(x,y))
-P <- xyplot(coef~arclength,dres,groups=variable,type="l")
-plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
+if(require(lars)){
+  data(diabetes)
+  dres <- with(diabetes,mylars(x,y))
+  P <- xyplot(coef~arclength,dres,groups=variable,type="l")
+  plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
+}
 }

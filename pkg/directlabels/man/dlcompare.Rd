@@ -98,20 +98,21 @@ myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
   limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
   rbind(limpts,molt)
 }
-data(prostate,package="ElemStatLearn")
-pros <- subset(prostate,train==TRUE,select=-train)
-m <- myridge(lpsa~.,pros)
-p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
-            panel=function(...){
-              panel.xyplot(...)
-              panel.abline(h=0)
-            },
-            xlim=c(0,10),
-            auto.key=list(space="right",lines=TRUE,points=FALSE),
-            ylab="scaled coefficients",
-            xlab=expression(df(lambda)))
-dlcompare(list(p,ratplot),list("last.bumpup","last.qp"))
-
+if(require(ElemStatLearn)){
+  data(prostate)
+  pros <- subset(prostate,train==TRUE,select=-train)
+  m <- myridge(lpsa~.,pros)
+  p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
+              panel=function(...){
+                panel.xyplot(...)
+                panel.abline(h=0)
+              },
+              xlim=c(0,10),
+              auto.key=list(space="right",lines=TRUE,points=FALSE),
+              ylab="scaled coefficients",
+              xlab=expression(df(lambda)))
+  dlcompare(list(p,ratplot),list("last.bumpup","last.qp"))
+}
 ## direct labels are way less confusing here
 p2 <- qplot(df,value,data=m,group=variable,colour=variable,
             geom=c("line","point"))+geom_hline(yintercept=0)+xlim(0,9)

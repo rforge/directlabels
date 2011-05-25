@@ -18,6 +18,11 @@ that will eventually be used to plot the labels. That way each
 individual Positioning Method doesn't have to worry about keeping
 track of all the weird annotation columns that can be there on input.
 
+1.4
+
+if(require(pkg)) in examples so you can see the rest even if you don't
+have pkg
+
 1.3
 
 delete empty.grid.fun ... now to use empty.grid, do i.e.
