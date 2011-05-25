@@ -171,7 +171,7 @@ example:</p>
 
 <pre>
 complicated &lt;- list(<a href="http://directlabels.r-forge.r-project.org/docs/utility.function/posfuns/dl.trans.html">dl.trans</a>(x=x+10), ## add 10 to every x value
-                    <a href="http://directlabels.r-forge.r-project.org/docs/utility.function/posfuns/dl.indep.html">dl.indep</a>(d[-2,]), ## delete the 2nd point of every group
+                    <a href="http://directlabels.r-forge.r-project.org/docs/utility.function/posfuns/gapply.fun.html">gapply.fun</a>(d[-2,]), ## delete the 2nd point of every group
                     rot=c(30,180)) ## rotate by alternately 30 and 180 degrees
 direct.label(dotplot(VADeaths,type="o"),complicated)
 </pre>
@@ -187,7 +187,7 @@ this example, </p>
 <li>the first element is a function that adds 10 to every x value,
 thus shifting the labels to the right relative to the points.</li>
 
-<li>the second element is a call to dl.indep, which lets you specify
+<li>the second element is a call to gapply.fun, which lets you specify
 an expression to apply to each group, as a function of the data d. In
 this case d[-2,] means delete the second row from each group.</li>
 
