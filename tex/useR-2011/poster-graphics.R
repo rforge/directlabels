@@ -1,7 +1,8 @@
 library(lattice)
-loci <- data.frame(score=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
+set.seed(1)
+loci <- data.frame(score=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.25)),
   type=factor(c(rep("Neutral",800),rep("Positive",100),rep("Balancing",100))))
-p <- densityplot(~score,loci,groups=type,auto.key=list(space="top",columns=3),n=500)
+p <- densityplot(~score,loci,groups=type,auto.key=list(space="top",columns=3),n=500,main=tit <- "Distribution of scores by selection type")
 pdf("confusing-legend.pdf")
 print(p)
 dev.off()
@@ -12,6 +13,6 @@ print(labeled)
 dev.off()
 library(ggplot2)
 pdf("ggplot2-density.pdf")
-ggdensity <- qplot(score,data=loci,color=type,geom="density")
+ggdensity <- qplot(score,data=loci,color=type,geom="density",main=tit)
 print(direct.label(ggdensity))
 dev.off()
