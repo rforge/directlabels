@@ -29,3 +29,9 @@ dev.off()
 pdf("directlabel-rat.pdf",h=4.5,w=7)
 print(direct.label(update(ratplot,xlim=c(0,72)),last.qp))
 dev.off()
+## what is a Positioning Method?
+last.points <- function(d,...){
+  labels <- data.frame()
+  for(class in d$groups){
+    cloud <- d[d$groups==class,]
+    labels <- rbind(labels,
