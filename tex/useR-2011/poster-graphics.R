@@ -162,8 +162,12 @@ ycol <- which(names(pros)=="lpsa")
 x <- as.matrix(pros[-ycol])
 y <- unlist(pros[ycol])
 res <- mylars(x,y)
-P <- xyplot(coef~arclength,res,groups=variable,type="l")
-plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
+P <- xyplot(coef~arclength,res,groups=variable,type="l",xlim=c(-0.17,2.7),
+            main=paste("Direct labeled lasso path visualizes",
+              "important predictors of prostate cancer"))
+pdf("lasso-labels.pdf")
+print(direct.label(P,list(cex=1.5,dl.combine(lasso.labels,last.qp))))
+dev.off()
 
 data(diabetes,package="lars")
 dres <- with(diabetes,mylars(x,y))
@@ -171,3 +175,9 @@ P <- xyplot(coef~arclength,dres,groups=variable,type="l")
 plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
 
 
+set.seed(1)
+p <- xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species,
+            main="Fisher's iris data with species labeled")
+pdf("iris.pdf")
+print(direct.label(p))
+dev.off()
