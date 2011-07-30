@@ -134,6 +134,10 @@ dl.combine <- structure(function # Combine output of several methods
   }
 })
 
+gapply.method <- function(method){
+  function(d,...)gapply(d,method)
+}
+
 gapply.fun <- structure(function # Direct label groups independently
 ### Makes a function you can use to specify the location of each group
 ### independently.
@@ -288,14 +292,13 @@ calc.borders <- function
 ### to have previously called calc.boxes. Does not edit the data
 ### frame.
 draw.rects <- function(d,...){
-  ## easy way -- not correct, doesn't use calc'ed borders
-  ##with(d,grid.rect(x,y,w,h,hjust=hjust,vjust=vjust,
-  ##                 default.units="native",gp=gpar(col="grey")))
-  d_ply(d,.(groups),function(D){
-    with(D,grid.lines(c(left,left,right,right,left),
-                      c(bottom,top,top,bottom,bottom),
-                      "native",gp=gpar(col="grey")))
-  })
+  for(i in 1:nrow(d)){
+    with(d[i,],{
+      grid.lines(c(left,left,right,right,left),
+                 c(bottom,top,top,bottom,bottom),
+                 "native",gp=gpar(col="grey"))
+    })
+  }
   d
 }
 
@@ -353,14 +356,19 @@ ignore.na <- function(d,...){
 qp.labels <- function(var,spacer)function(d,...){
   if(!spacer%in%names(d))stop("need to have calculated ",spacer)
   require(quadprog)
-  d <- d[order(d[,var],decreasing=TRUE),]
   ## sorts data so that m_1 is on top, m_n on bottom.
-  n <- nrow(d)
-  D <- diag(rep(1,n))
-  A <- diag(rep(1,n))[,-n]-rbind(0,diag(rep(1,n-1)))
+  ##d <- d[order(d[,var],decreasing=TRUE),]
+  ## sorts data so that target_1 <= target_2 <= ... <= target_n
+  d <- d[order(d[,var]),]
+  target <- d[,var]
+  k <- nrow(d)
+  D <- diag(rep(1,k))
+  ##A <- diag(rep(1,k))[,-k]-rbind(0,diag(rep(1,k-1)))
+  Ik <- diag(rep(1,k-1))
+  A <- rbind(0,Ik)-rbind(Ik,0)
   h <- d[,spacer]
-  b0 <- (h[-n]+h[-1])/2
-  sol <- solve.QP(D,d[,var],A,b0)
+  b0 <- (h[-k]+h[-1])/2
+  sol <- solve.QP(D,target,A,b0)
   d[,var] <- sol$solution
   d
 }
@@ -472,8 +480,7 @@ gapply <- function
 ### additional arguments for FUN.
  ){
   stopifnot(is.data.frame(d))
-  d$groups <- factor(d$groups)
-  dfs <- lapply(levels(d$groups),function(g)d[d$groups==g,])
+  dfs <- split(d,as.character(d$groups))
   f <- function(d,...){
     res <- apply.method(method,d,...)
     res$groups <- d$groups[1]

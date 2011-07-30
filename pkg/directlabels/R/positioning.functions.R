@@ -261,6 +261,7 @@ apply.method <- function # Apply a Positioning Method
 ### frame is used to draw a direct label.
  d,
 ### Data frame to which we apply the Positioning Method.
+ debug=FALSE,
  ...
 ### Passed to Positioning Functions.
  ){
@@ -273,6 +274,7 @@ apply.method <- function # Apply a Positioning Method
   islist <- function()is.list(method[[1]])
   isref <- function()(!isconst())&&is.character(method[[1]])
   while(length(method)){
+    if(debug)print(method[1])
     ## Resolve any PF names or nested lists
     is.trans <- FALSE
     while(islist()||isref()){
@@ -291,12 +293,15 @@ apply.method <- function # Apply a Positioning Method
       d[[names(method)[1]]] <- method[[1]]
     else{
       old <- d
-      d <- method[[1]](d,...)
+      d <- method[[1]](d,...,debug=debug)
       attr(d,"orig.data") <-
         if(is.trans)d else{
           if(is.null(attr(old,"orig.data")))old
           else attr(old,"orig.data")
         }
+    }
+    if(debug){
+      print(d)
     }
     method <- method[-1]
   }
