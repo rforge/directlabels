@@ -81,7 +81,7 @@ m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
 library(lattice)
 p <- xyplot(jitter(hwy)~jitter(cty)|manufacturer,mpgf,groups=class,
-            main="Fuel efficiency depends on manufacturer and car class")
+  main="City and highway fuel efficiency depends on manufacturer and car class")
 pdf("cars.pdf",h=10,w=14)
 direct.label(p,smart.grid)
 dev.off()

@@ -29,11 +29,11 @@ text(0.25,3.5,"$\\vdots$",adj=c(0,0.5))
   possible to the target locations:
 \begin{equation}
 \begin{aligned}
-&\min_{b\in\RR^k} && \sum_{i=1}^k (b_k-t_k)^2
+&\min_{b\in\RR^k} && \sum_{i=1}^k (b_i-t_i)^2
 =||b-t||^2
 \\
 &\text{subject to} && b_{i+1} \geq b_i + h_{i+1}/2+h_i/2,
-\ \forall\ i=1,...,n-1
+\ \forall\ i=1,...,k-1
 \end{aligned}
 \end{equation}
 This is a quadratic program (QP) that we can solve using
