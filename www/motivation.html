@@ -74,7 +74,7 @@ useful:</p>
   <li>Direct labeling is difficult to do "by hand" using standard
   base/lattice/ggplot2 plotting functions. The directlabels package
   allows you to define your direct labels in terms of a simple
-  Positioning Function. This makes your code simpler, more readable,
+  Positioning Method. This makes your code simpler, more readable,
   and less repetitive.</li>
 
   <li>The functions that you will use to direct label a plot "by hand"
@@ -140,9 +140,9 @@ above.</p>
 <pre>
 install.packages("directlabels", repos="http://R-Forge.R-project.org")
 library(directlabels)
-## The Positioning Function can be any function of d the data, or a list as shown here
+## The Positioning Method can be any function of d the data, or a list as shown here
 direct.label(dp,list(function(d,...)ddply(d,.(groups),subset,y==max(y)),vjust=0))
-## Using dl.indep makes it simpler to define Positioning Functions
+## Using dl.indep makes it simpler to define Positioning Methods
 direct.label(dp,list(dl.indep(d[which.max(d$y),]),vjust=0))
 ## The built-in top.points function is exactly what we need for this
 direct.label(dp,top.points)
@@ -190,13 +190,13 @@ code make the same direct labeled figure:</p>
 <pre>
 install.packages("directlabels", repos="http://R-Forge.R-project.org")
 library(directlabels)
-## Use a custom Positioning Function to specify direct label positions
+## Use a custom Positioning Method to specify direct label positions
 direct.label(lp,function(d,...)data.frame(subset(d,x==min(x)),hjust=1))
 ## Specifying a list and using dl.indep is more concise
 direct.label(lp,list(dl.indep(d[which.min(d$x),]),hjust=1))
-## first.points is a Positioning Function that comes with the directlabels package
+## first.points is a Positioning Method that comes with the directlabels package
 direct.label(lp,first.points)
-## The default Positioning Function for lineplots is similar
+## The default Positioning Method for lineplots is similar
 direct.label(lp)
 </pre>
 
@@ -207,7 +207,7 @@ it by hand using lattice or ggplot2. Instead of several lines of code,
 you can almost always add your direct labels using just 1 line!
 <!--
  Consult the ?positioning.functions documentation page in R to see a
-list of available built-in Positioning Functions. 
+list of available built-in Positioning Methods. 
 -->
 </p>
 
