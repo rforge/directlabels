@@ -53,7 +53,7 @@ lines2 <- function
   top <- 0-offset
   bottom <- 1+offset
   y <- gapply(d,get.means)
-  gapply(y,function(D){
+  gapply(y,function(D,...){
     bigger.on.average <- D$y==max(y$y)
     f <- if(bigger.on.average)max else min
     compare <- get(if(bigger.on.average)">" else "<")

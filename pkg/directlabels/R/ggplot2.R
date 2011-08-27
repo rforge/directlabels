@@ -11,54 +11,24 @@ uselegend.ggplot <- function
 ### Geoms which need translation before applying Positioning Method.
 need.trans.ggplot <- c()
 
-drawDetails.dlgrob <- function(x,...){
-  x$data$rot <- as.integer(x$data$angle)
-  x$data$groups <- x$data$label
-  labs <- label.positions(x$data,x$method,x$debug)
-  str(labs)
-  ##browser()
-  with(labs,{
-    grid.text(label,x,y,hjust=hjust,vjust=vjust,rot=rot,default.units="native",
-              gp=gpar(col=colour))
+geom_dl <- function(mapping,method,...){
+  require(ggplot2)
+  ## Geom for direct labeling that creates dlgrobs in the draw()
+  ## method.
+  GeomDirectLabel <- proto(Geom, {
+    draw_groups <- function(., ...) .$draw(...)
+    draw <- function(., data, scales, coordinates,
+                     method=NULL,debug=FALSE, ...) {
+      data$rot <- as.integer(data$angle)
+      dlgrob(coordinates$transform(data, scales),method,debug=debug)
+    }
+    default_stat <- function(.) StatIdentity
+    required_aes <- c("x", "y", "groups")
+    default_aes <- function(.)
+      aes(colour="black", size=5 , angle=0, hjust=0.5, vjust=0.5, alpha = 1)
   })
+  GeomDirectLabel$new(mapping,method=method,...)
 }
-## Replacement for geom_text
-GeomDirectLabel <- proto(Geom, {
-  draw_groups <- function(., ...) .$draw(...)
-  draw <- function(., data, scales, coordinates, method=NULL,debug=FALSE, ...) {
-    code <- unique(data[,c("colour","label")])
-    grob(data=coordinates$transform(data, scales),method=method,debug=debug,
-         cl="dlgrob",gp=gpar(col="red"),code=code)
-  }
-  draw_legend <- function(., data, ...) {
-    data <- aesdefaults(data, .$default_aes(), list(...))
-    with(data,
-         textGrob("a", 0.5, 0.5, rot = angle, 
-                  gp=gpar(col=alpha(colour, alpha), fontsize = size * .pt))
-         )
-  }
-
-  objname <- "DirectLabel"
-  desc <- "Direct labels"
-  
-  default_stat <- function(.) StatIdentity
-  required_aes <- c("x", "y", "label")
-  default_aes <- function(.) aes(colour="black", size=5 , angle=0, hjust=0.5, vjust=0.5, alpha = 1)
-  guide_geom <- function(x) "text"
-})
-geom_dl <- function (mapping = NULL, data = NULL, stat = "identity",
-                     position = "identity", parse = FALSE,
-                     method=NULL, debug=FALSE,...) {
-  GeomDirectLabel$new(mapping = mapping, data = data, stat = stat,
-                           position = position, parse = parse, ...)
-}
-vad <- as.data.frame.table(VADeaths)
-names(vad) <- c("age","demographic","deaths")
-ggplot(vad,aes(deaths,age))+geom_line(aes(group=demographic,colour=demographic))+GeomDirectLabel$new(aes(label=demographic,colour=demographic),method="top.qp")+scale_colour_discrete(legend=FALSE)
-ggplot(vad,aes(deaths,age))+geom_line(aes(group=demographic))+GeomDirectLabel$new(aes(label=demographic),method="top.qp")
-data(BodyWeight,package="nlme")
-ggplot(BodyWeight,aes(Time,weight))+geom_line(aes(group=Rat))+facet_grid(~Diet)+GeomDirectLabel$new(aes(label=Rat),method="last.qp")
-ggplot(BodyWeight,aes(Time,weight))+geom_line(aes(group=Rat,colour=Rat))+facet_grid(~Diet)+GeomDirectLabel$new(aes(label=Rat,colour=Rat),method="last.qp")+scale_colour_discrete(legend=FALSE)
 direct.label.ggplot <- function
 ### Direct label a ggplot2 grouped plot.
 (p,
@@ -122,7 +92,7 @@ direct.label.ggplot <- function
   if(geom%in%need.trans.ggplot)method <-
     list(paste("trans.",geom,sep=""),method)
   pos.inst <- PositionDl$new(method=list(method),debug=debug)
-  dlgeom <- geom_dl(aes(label=demographic,group=NULL))
+  dlgeom <- geom_dl(aes(groups=demographic),method=)
   scale.types <- sapply(p$scales$.scales,"[[",".output")
   scale.i <- which("colour"==scale.types)
   if(length(scale.i)){

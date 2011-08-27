@@ -242,7 +242,7 @@ calc.boxes <- function(d,debug=FALSE,class="ggplot2",...){
       if("cex"%in%names(d))vp$gp <- gpar(cex=cex[i])
       pushViewport(vp)
       if(debug)grid.rect() ##highlight current viewport
-      w <- conv(stri(as.character(groups[i])),"native")
+      w <- conv(stri(as.character(groups[i])),"cm")
       popViewport()
       w
     }))
@@ -296,7 +296,7 @@ draw.rects <- function(d,...){
     with(d[i,],{
       grid.lines(c(left,left,right,right,left),
                  c(bottom,top,top,bottom,bottom),
-                 "native",gp=gpar(col="grey"))
+                 "cm",gp=gpar(col="grey"))
     })
   }
   d
@@ -376,10 +376,10 @@ qp.labels <- function(var,spacer)function(d,...){
 ### Make text bounding box larger by some amount.
 enlarge.box <- function(d,...){
   if(!"h"%in%names(d))stop("need to have already calculated height and width.")
-  h <- unit(d$h,"native")
-  d$h <- d$h*2
-  d$w <- d$w+as.numeric(convertWidth(convertHeight(h,"inches"),"native"))
-  calc.borders(d)
+  calc.borders(within(d,{
+    w <- w+h
+    h <- h+h
+  }))
 }
 
 in1which <- function
@@ -457,7 +457,7 @@ perpendicular.lines <- function
   if(debug){
     ## myline draws a line over the range of the data for a given fun F
     myline <- function(F)
-      grid.lines(range(d$x),F(range(d$x)),default.units="native")
+      grid.lines(range(d$x),F(range(d$x)),default.units="cm")
     ## Then draw a line between these means
     myline(function(x)m*x+b)
     ## Then draw perpendiculars that go through each center
@@ -498,7 +498,7 @@ gapply <- function
 ### Label the points furthest from the middle for each group.
 extreme.points <- function(d,...){
   d$dist.from.center <- sqrt((d$x-midrange(d$x))^2+(d$y-midrange(d$y))^2)
-  gapply(d,function(d)d[which.max(d$dist.from.center),])
+  gapply(d,function(d,...)d[which.max(d$dist.from.center),])
 }
 
 edges.to.outside <- function

@@ -1,3 +1,24 @@
+drawDetails.dlgrob <- function(g,...){
+  ## calculate x and y position in cm!
+  cm.data <- transform(g$data,
+                       x=convertX(unit(x,"native"),"cm",valueOnly=TRUE),
+                       y=convertY(unit(y,"native"),"cm",valueOnly=TRUE))
+  labs <- label.positions(cm.data,g$method,g$debug)
+  with(labs,{
+    grid.text(groups,x,y,hjust=hjust,vjust=vjust,rot=rot,default.units="cm",
+              gp=gpar(col=colour))
+  })
+}
+dlgrob <- function
+### Make a grid grob that will draw direct labels.
+(data,
+### Data frame including points to plot in native coordinates.
+ method,
+### Positioning Method.
+ ...
+ ){
+  grob(data=data,method=method,cl="dlgrob",...)
+}
 direct.label <- structure(function
 ### Add direct labels to a plot. This is a S3 generic and there are
 ### appropriate methods for "trellis" and "ggplot" objects.
@@ -293,6 +314,7 @@ apply.method <- function # Apply a Positioning Method
       d[[names(method)[1]]] <- method[[1]]
     else{
       old <- d
+      ##print(method[[1]])
       d <- method[[1]](d,...,debug=debug)
       attr(d,"orig.data") <-
         if(is.trans)d else{
@@ -321,7 +343,7 @@ trans.density <- trans.densityplot
 ### Transformation function for 1d qqmath plots. This is a copy-paste
 ### from panel.qqmath. (total hack)
 trans.qqmath <- function(d,distribution,f.value,qtype=7,...){
-  gapply(d,function(d){
+  gapply(d,function(d,...){
     x <- as.numeric(d$x)
     distribution <- if (is.function(distribution)) 
       distribution
@@ -343,7 +365,7 @@ trans.qqmath <- function(d,distribution,f.value,qtype=7,...){
 
 ### Place points on top of the mean value of the rug.
 rug.mean <- function(d,...,end)
-  gapply(d,function(d)
+  gapply(d,function(d,...)
          data.frame(x=mean(d$x),
                    y=as.numeric(convertY(unit(end,"npc"),"native")),
                    vjust=0))
