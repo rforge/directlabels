@@ -18,7 +18,6 @@ Version: \tab 2.0\cr
 License: \tab GPL-3\cr
 Title: \tab Direct labels for multicolor plots in lattice or ggplot2\cr
 URL: \tab http://directlabels.r-forge.r-project.org/\cr
-LazyLoad: \tab false\cr
 LazyData: \tab true\cr
 Suggests: \tab ks, MASS, inlinedocs, quadprog, ggplot2, lattice, alphahull,
 ElemStatLearn, proto, lars, mlmRev\cr
