@@ -11,7 +11,7 @@ uselegend.ggplot <- function
 ### Geoms which need translation before applying Positioning Method.
 need.trans.ggplot <- c()
 
-geom_dl <- function(mapping,method,...){
+geom_dl <- structure(function(mapping=NULL,method,...){
   require(ggplot2)
   ## Geom for direct labeling that creates dlgrobs in the draw()
   ## method.
@@ -20,15 +20,52 @@ geom_dl <- function(mapping,method,...){
     draw <- function(., data, scales, coordinates,
                      method=NULL,debug=FALSE, ...) {
       data$rot <- as.integer(data$angle)
+      data$groups <- data$label
       dlgrob(coordinates$transform(data, scales),method,debug=debug)
     }
+    draw_legend <- function(.,data,...){
+      data <- aesdefaults(data,.$default_aes(),list(...))
+      with(data,{
+        textGrob("dl",0.5,0.5,rot=angle,
+                 gp=gpar(col=alpha(colour,alpha),fontsize=size*.pt))
+      })
+    }
+    objname <- "dl"
+    desc <- "Direct labels"
     default_stat <- function(.) StatIdentity
-    required_aes <- c("x", "y", "groups")
+    required_aes <- c("x", "y", "label")
     default_aes <- function(.)
       aes(colour="black", size=5 , angle=0, hjust=0.5, vjust=0.5, alpha = 1)
   })
   GeomDirectLabel$new(mapping,method=method,...)
-}
+},ex=function(){
+  vad <- as.data.frame.table(VADeaths)
+  names(vad) <- c("age","demographic","deaths")
+  ## no color, just direct labels!
+  p <- ggplot(vad,aes(deaths,age))+
+    geom_line(aes(group=demographic))+
+    geom_dl(aes(label=demographic),method="top.qp")
+  print(p)
+  ## add color:
+  p+aes(colour=demographic)+
+    scale_colour_discrete(legend=FALSE)
+  ## add linetype:
+  p+aes(linetype=demographic)+
+    scale_linetype(legend=FALSE)
+  ## no color, just direct labels
+  data(BodyWeight,package="nlme")
+  bw <- ggplot(BodyWeight,aes(Time,weight,label=Rat))+
+    geom_line(aes(group=Rat))+
+    facet_grid(~Diet)+
+    geom_dl(method="last.qp")
+  print(bw)
+  ## add some more direct labels
+  bw2 <- bw+geom_dl(method="first.qp")
+  print(bw2)
+  ## add color
+  bw2+aes(colour=Rat)+
+    scale_colour_discrete(legend=FALSE)
+})
 direct.label.ggplot <- function
 ### Direct label a ggplot2 grouped plot.
 (p,
