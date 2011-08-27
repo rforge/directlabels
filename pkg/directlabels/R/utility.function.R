@@ -134,9 +134,9 @@ dl.combine <- structure(function # Combine output of several methods
   }
 })
 
-gapply.method <- function(method){
-  function(d,...)gapply(d,method)
-}
+##gapply.method <- function(method){
+##  function(d,...)gapply(d,method)
+##}
 
 gapply.fun <- structure(function # Direct label groups independently
 ### Makes a function you can use to specify the location of each group

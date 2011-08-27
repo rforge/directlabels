@@ -1,0 +1,59 @@
+\name{geom_dl}
+\alias{geom_dl}
+\title{geom dl}
+
+\usage{
+geom_dl(mapping = NULL, method, ...)
+}
+\arguments{
+  \item{mapping}{
+}
+  \item{method}{
+}
+  \item{\dots}{
+}
+}
+
+
+
+\author{Toby Dylan Hocking <toby.hocking@inria.fr>}
+
+
+
+
+\examples{
+vad <- as.data.frame.table(VADeaths)
+names(vad) <- c("age","demographic","deaths")
+## no color, just direct labels!
+p <- ggplot(vad,aes(deaths,age))+
+  geom_line(aes(group=demographic))+
+  geom_dl(aes(label=demographic),method="top.qp")
+print(p)
+## color + legend
+leg <- ggplot(vad,aes(deaths,age,colour=demographic))+
+  geom_line(aes(group=demographic))
+print(leg)
+direct.label(leg,list(last.points,rot=30))
+## add color:
+p+aes(colour=demographic)+
+  scale_colour_discrete(legend=FALSE)
+## add linetype:
+p+aes(linetype=demographic)+
+  scale_linetype(legend=FALSE)
+## no color, just direct labels
+data(BodyWeight,package="nlme")
+bwbase <- ggplot(BodyWeight,aes(Time,weight,label=Rat))+
+  geom_line(aes(group=Rat))+
+  facet_grid(~Diet)
+bw <- bwbase+geom_dl(method="last.qp")
+print(bw)
+## add some more direct labels
+bw2 <- bw+geom_dl(method="first.qp")
+print(bw2)
+## add color
+bw2+aes(colour=Rat)+
+  scale_colour_discrete(legend=FALSE)
+## add color and legend
+bwleg <- bwbase+aes(colour=Rat)
+direct.label(bwleg)
+}

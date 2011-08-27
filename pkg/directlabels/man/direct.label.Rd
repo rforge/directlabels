@@ -8,8 +8,7 @@ direct.label(p, method = NULL, debug = FALSE)
 }
 \arguments{
   \item{p}{The plot to which you would like to add direct labels.}
-  \item{method}{The direct label placement method as described in
-?label.positions.}
+  \item{method}{Positioning Method.}
   \item{debug}{Show debug output?}
 }
 
