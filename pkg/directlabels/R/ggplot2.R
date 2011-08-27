@@ -15,6 +15,8 @@ drawDetails.dlgrob <- function(x,...){
   x$data$rot <- as.integer(x$data$angle)
   x$data$groups <- x$data$label
   labs <- label.positions(x$data,x$method,x$debug)
+  str(labs)
+  ##browser()
   with(labs,{
     grid.text(label,x,y,hjust=hjust,vjust=vjust,rot=rot,default.units="native",
               gp=gpar(col=colour))
@@ -53,8 +55,10 @@ geom_dl <- function (mapping = NULL, data = NULL, stat = "identity",
 vad <- as.data.frame.table(VADeaths)
 names(vad) <- c("age","demographic","deaths")
 ggplot(vad,aes(deaths,age))+geom_line(aes(group=demographic,colour=demographic))+GeomDirectLabel$new(aes(label=demographic,colour=demographic),method="top.qp")+scale_colour_discrete(legend=FALSE)
+ggplot(vad,aes(deaths,age))+geom_line(aes(group=demographic))+GeomDirectLabel$new(aes(label=demographic),method="top.qp")
 data(BodyWeight,package="nlme")
-ggplot(BodyWeight,aes(Time,weight))+geom_line(aes(group=Rat))+facet_grid(~Diet)+GeomDirectLabel$new(aes(label=Rat),method="maxvar.qp")
+ggplot(BodyWeight,aes(Time,weight))+geom_line(aes(group=Rat))+facet_grid(~Diet)+GeomDirectLabel$new(aes(label=Rat),method="last.qp")
+ggplot(BodyWeight,aes(Time,weight))+geom_line(aes(group=Rat,colour=Rat))+facet_grid(~Diet)+GeomDirectLabel$new(aes(label=Rat,colour=Rat),method="last.qp")+scale_colour_discrete(legend=FALSE)
 direct.label.ggplot <- function
 ### Direct label a ggplot2 grouped plot.
 (p,

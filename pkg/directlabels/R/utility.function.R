@@ -3,12 +3,12 @@ label.endpoints <- function
 (FUN,
 ### FUN(d$x) should return an index of which point to label. for
 ### example you can use which.min or which.max.
- hjust
+ HJUST
 ### hjust of the labels.
  ){
   function(d,...)gapply(d,function(d,...){
     i <- FUN(d$x)==d$x
-    if(length(i))data.frame(d[i,],hjust,vjust=0.5)
+    if(length(i))transform(d[i,],hjust=HJUST,vjust=0.5)
     else data.frame()
   })
 ### A Positioning Method like first.points or last.points.

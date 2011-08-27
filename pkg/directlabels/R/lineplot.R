@@ -70,6 +70,6 @@ lines2 <- function
     ld <- ld[ld$y==f(ld$y),]
     which.closest <- which.max(ld$diff)
     pos <- ld[which.closest,]
-    data.frame(pos,vjust=if(bigger.on.average)top else bottom)
+    transform(pos,vjust=if(bigger.on.average)top else bottom)
   })
 }
