@@ -46,6 +46,11 @@ geom_dl <- structure(function(mapping=NULL,method,...){
     geom_line(aes(group=demographic))+
     geom_dl(aes(label=demographic),method="top.qp")
   print(p)
+  ## color + legend
+  leg <- ggplot(vad,aes(deaths,age,colour=demographic))+
+    geom_line(aes(group=demographic))
+  print(leg)
+  direct.label(leg,list(last.points,rot=30))
   ## add color:
   p+aes(colour=demographic)+
     scale_colour_discrete(legend=FALSE)
@@ -54,10 +59,10 @@ geom_dl <- structure(function(mapping=NULL,method,...){
     scale_linetype(legend=FALSE)
   ## no color, just direct labels
   data(BodyWeight,package="nlme")
-  bw <- ggplot(BodyWeight,aes(Time,weight,label=Rat))+
+  bwbase <- ggplot(BodyWeight,aes(Time,weight,label=Rat))+
     geom_line(aes(group=Rat))+
-    facet_grid(~Diet)+
-    geom_dl(method="last.qp")
+    facet_grid(~Diet)
+  bw <- bwbase+geom_dl(method="last.qp")
   print(bw)
   ## add some more direct labels
   bw2 <- bw+geom_dl(method="first.qp")
@@ -65,6 +70,9 @@ geom_dl <- structure(function(mapping=NULL,method,...){
   ## add color
   bw2+aes(colour=Rat)+
     scale_colour_discrete(legend=FALSE)
+  ## add color and legend
+  bwleg <- bwbase+aes(colour=Rat)
+  direct.label(bwleg)
 })
 
 direct.label.ggplot <- function
@@ -79,13 +87,12 @@ direct.label.ggplot <- function
   require(proto)
   require(ggplot2)
   SCALE <- scale_colour_discrete
+  ## First look through layers for a colour aesthetic
   maps <- lapply(p$layers,function(L){
     m <- p$mapping
     m[names(L$mapping)] <- L$mapping
     m
   })
-  ##TODO: need to design framework around other aesthetics besides
-  ##colour. ie fill and linetype, see etc/rod.R
   cvars <- lapply(maps,"[[","colour")
   has.colour <- !sapply(cvars,is.null)
   if(any(has.colour)){
@@ -95,42 +102,13 @@ direct.label.ggplot <- function
     ## FIXME: kind of a hack.
     if(colvar=="..level..")SCALE <- scale_colour_continuous
     colvar <- gsub("^[.][.](.*)[.][.]$","\\1",colvar)
-  }else stop("Need colour aesthetic to direct label.")
-  ## Position class for direct label placement.
-  PositionDl <- proto(ggplot2:::Position,{
-    method <- NULL
-    debug <- FALSE
-    new <- function(.,method=NULL,debug=FALSE){
-      .$proto(method=method,debug=debug)
-    }
-    adjust <- function(.,data,...){
-      d <- transform(data,groups=if("piece"%in%names(data))piece else colour)
-      labtab <- label.positions(d,.$method,.$debug,class="ggplot")
-      targs <- list(label=if("colour"%in%names(labtab))"colour" else "groups",
-                    angle="rot",
-                    size="fontsize",
-                    ##size="cex", ##DONT DO THIS --- will cause disappearing!!
-                    ##face="fontface",
-                    ##family="fontfamily",
-                    alpha="alpha")
-      possibly.missing <- c("colour","group")
-      toadd <- possibly.missing[(!possibly.missing%in%names(labtab))]
-      targs[toadd] <- "groups"
-      targs <- targs[targs%in%names(labtab)]
-      targs <- sapply(targs,as.name)
-      r <- do.call("transform",c(list(labtab),targs))
-      if(is.numeric(data$colour)&&!is.numeric(r$colour))
-        r$colour <- as.numeric(as.character(r$colour))
-      r
-    }
-    objname <- "dl"
-  })
+  }else stop("Need colour aesthetic to infer default direct labels.")
+  ## Try to figure out a good default based on the colored geom
   geom <- L$geom$objname
   if(is.null(method))method <- default.picker("ggplot")
   if(geom%in%need.trans.ggplot)method <-
     list(paste("trans.",geom,sep=""),method)
-  pos.inst <- PositionDl$new(method=list(method),debug=debug)
-  dlgeom <- geom_dl(aes(groups=demographic),method=)
+  dlgeom <- geom_dl(do.call(aes,list(label=as.symbol(colvar))),method)
   scale.types <- sapply(p$scales$.scales,"[[",".output")
   scale.i <- which("colour"==scale.types)
   if(length(scale.i)){
@@ -146,16 +124,16 @@ defaultpf.ggplot <- function
 ### Default method selection method for ggplot2 plots.
 (geom,p,...){
   switch(geom,
-         density="top.points",
+         density="top.bumptwice",
          line={
            varnames <- c(groups="colour",x="x")
            if("y" %in% names(p$mapping))varnames <- c(varnames,y="y")
            rename.vec <- sapply(p$mapping[varnames],deparse)
            rename.vec <- gsub("[a-z]+[(]([^)]+)[)]","\\1",rename.vec)
            d <- structure(p$data[,rename.vec],names=names(varnames))
-           if(nlevels(d$groups)==2)"lines2" else "maxvar.points"
+           if(nlevels(d$groups)==2)"lines2" else "maxvar.qp"
          },
-         point="extreme.grid",
+         point="smart.grid",
          path="bottom.points",
          stop("No default label placement for this type of ggplot."))
 }
