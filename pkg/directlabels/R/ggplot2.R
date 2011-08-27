@@ -11,6 +11,88 @@ uselegend.ggplot <- function
 ### Geoms which need translation before applying Positioning Method.
 need.trans.ggplot <- c()
 
+MyGeomPoint <- proto(Geom, {
+  draw_groups <- function(., ...) .$draw(...)
+  draw <- function(., data, scales, coordinates, na.rm = FALSE, ...) {    
+    data <- remove_missing(data, na.rm, 
+      c("x", "y", "size", "shape"), name = "geom_point")
+    print(data)
+    if (empty(data)) return(zeroGrob())
+    with(coordinates$transform(data, scales), 
+      ggname(.$my_name(), pointsGrob(x, y, size=unit(size, "mm"), pch=shape, 
+      gp=gpar(col=alpha(colour, alpha), fill = fill, fontsize = size * .pt)))
+    )
+  }
+
+  draw_legend <- function(., data, ...) {
+    # If fill is set, ensure that you can actually see it
+    if (!is.null(data$fill) && !all(is.na(data$fill)) && data$shape == 16) {
+      data$shape <- 21
+    } 
+    data <- aesdefaults(data, .$default_aes(), list(...))
+    
+    with(data,
+      pointsGrob(0.5, 0.5, size=unit(size, "mm"), pch=shape, 
+      gp=gpar(
+        col=alpha(colour, alpha), 
+        fill=alpha(fill, alpha), 
+        fontsize = size * .pt)
+      )
+    )
+  }
+
+  objname <- "point"
+  desc <- "Points, as for a scatterplot"
+  
+  default_stat <- function(.) StatIdentity
+  required_aes <- c("x", "y")
+  default_aes <- function(.) aes(shape=16, colour="black", size=2, fill = NA, alpha = 1)
+})
+drawDetails.dlgrob <- function(x,...){
+  print(x$method)
+  x$data$rot <- as.integer(x$data$angle)
+  print(x$data)
+  with(x$data,{
+    grid:::grid.Call.graphics("L_text", as.graphicsAnnot(label),
+                              unit(x,"native"), unit(y,"native"),
+                              hjust, vjust, rot, FALSE)
+  })
+}
+## Replacement for geom_text
+GeomDirectLabel <- proto(Geom, {
+  draw_groups <- function(., ...) .$draw(...)
+  draw <- function(., data, scales, coordinates, method=NULL,debug=FALSE, ...) {
+    print(data)
+    ##browser()
+    grob(data=coordinates$transform(data, scales),method=method,debug=debug,
+         cl="dlgrob")
+  }
+  draw_legend <- function(., data, ...) {
+    data <- aesdefaults(data, .$default_aes(), list(...))
+    with(data,
+         textGrob("a", 0.5, 0.5, rot = angle, 
+                  gp=gpar(col=alpha(colour, alpha), fontsize = size * .pt))
+         )
+  }
+
+  objname <- "DirectLabel"
+  desc <- "Direct labels"
+  
+  default_stat <- function(.) StatIdentity
+  required_aes <- c("x", "y", "label")
+  default_aes <- function(.) aes(colour="black", size=5 , angle=0, hjust=0.5, vjust=0.5, alpha = 1)
+  guide_geom <- function(x) "text"
+})
+geom_dl <- function (mapping = NULL, data = NULL, stat = "identity",
+                     position = "identity", parse = FALSE,
+                     method=NULL, debug=FALSE,...) {
+  x <- GeomDirectLabel$new(mapping = mapping, data = data, stat = stat,
+                           position = position, parse = parse, ...)
+  x
+}
+ggplot(vad,aes(deaths,age))+geom_line(aes(group=demographic,colour=demographic))+GeomDirectLabel$new(aes(label=demographic,colour=demographic),method="top.qp")
+p <- ggplot(vad,aes(deaths,age))+geom_line(aes(group=demographic))+GeomDirectLabel$new(aes(label=demographic),method="top.qp")
+p2 <- ggplot(BodyWeight,aes(Time,weight))+geom_line(aes(group=Rat))+facet_grid(~Diet)+geom_dl(aes(label=Rat),method="first.points")
 direct.label.ggplot <- function
 ### Direct label a ggplot2 grouped plot.
 (p,
@@ -40,77 +122,6 @@ direct.label.ggplot <- function
     if(colvar=="..level..")SCALE <- scale_colour_continuous
     colvar <- gsub("^[.][.](.*)[.][.]$","\\1",colvar)
   }else stop("Need colour aesthetic to direct label.")
-##
-GeomDirectLabel <- proto(Geom, {
-  draw <- function(., data, scales, coordinates, ..., parse = FALSE) {
-    
-    lab <- data$label
-    if (parse) {
-      lab <- parse(text = lab)
-    }
-    
-    with(coordinates$transform(data, scales), 
-      textGrob(lab, x, y, default.units="native", hjust=hjust, vjust=vjust, rot=angle, 
-      gp=gpar(col=alpha(colour, alpha), fontsize=size * .pt)) 
-    )
-  }
-
-  desc_params <- list(
-    parse = "If TRUE, the labels will be parsed into expressions and displayed as described in ?plotmath"
-  )
-
-
-  draw_legend <- function(., data, ...) {
-    data <- aesdefaults(data, .$default_aes(), list(...))
-    with(data,
-      textGrob("a", 0.5, 0.5, rot = angle, 
-      gp=gpar(col=alpha(colour, alpha), fontsize = size * .pt))
-    )
-  }
-
-  objname <- "text"
-  icon <- function(.) textGrob("text", rot=45, gp=gpar(cex=1.2))
-  desc <- "Textual annotations"
-  
-  default_stat <- function(.) StatIdentity
-  required_aes <- c("x", "y", "label")
-  default_aes <- function(.) aes(colour="black", size=5 , angle=0, hjust=0.5, vjust=0.5, alpha = 1)
-  guide_geom <- function(x) "text"
-  
-  
-  
-  examples <- function(.) {
-    p <- ggplot(mtcars, aes(x=wt, y=mpg, label=rownames(mtcars)))
-    
-    p + geom_text()
-    p <- p + geom_point()
-
-    # Set aesthetics to fixed value
-    p + geom_text()
-    p + geom_point() + geom_text(hjust=0, vjust=0)
-    p + geom_point() + geom_text(angle = 45)
-
-    # Add aesthetic mappings
-    p + geom_text(aes(colour=factor(cyl)))
-    p + geom_text(aes(colour=factor(cyl))) + scale_colour_discrete(l=40)
-    
-    p + geom_text(aes(size=wt))
-    p + geom_text(aes(size=wt)) + scale_size(to=c(3,6))
-    
-    # You can display expressions by setting parse = TRUE.  The 
-    # details of the display are described in ?plotmath, but note that
-    # geom_text uses strings, not expressions.
-    p + geom_text(aes(label = paste(wt, "^(", cyl, ")", sep = "")),
-      parse = T)
-    
-    # Use qplot instead
-    qplot(wt, mpg, data = mtcars, label = rownames(mtcars),
-       geom=c("point", "text"))
-    qplot(wt, mpg, data = mtcars, label = rownames(mtcars), size = wt) +
-      geom_text(colour = "red")
-  }
-  
-})
   ## Position class for direct label placement.
   PositionDl <- proto(ggplot2:::Position,{
     method <- NULL
@@ -145,10 +156,7 @@ GeomDirectLabel <- proto(Geom, {
   if(geom%in%need.trans.ggplot)method <-
     list(paste("trans.",geom,sep=""),method)
   pos.inst <- PositionDl$new(method=list(method),debug=debug)
-  dlgeom <- geom_text(L$mapping,
-                      position=pos.inst,
-                      stat=L$stat, #for contourplots
-                      data=if(nrow(L$data))L$data else p$data)
+  dlgeom <- geom_dl(aes(label=demographic,group=NULL))
   scale.types <- sapply(p$scales$.scales,"[[",".output")
   scale.i <- which("colour"==scale.types)
   if(length(scale.i)){
