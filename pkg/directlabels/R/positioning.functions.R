@@ -35,9 +35,9 @@ dlgrob <- function
 ### Data frame including points to plot in native coordinates.
  method,
 ### Positioning Method.
- ...
+ debug=FALSE
  ){
-  grob(data=data,method=method,cl="dlgrob",...)
+  grob(data=data,method=method,debug=debug,cl="dlgrob",name="directlabels")
 }
 
 direct.label <- structure(function

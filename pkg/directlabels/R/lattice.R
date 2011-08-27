@@ -38,6 +38,7 @@ direct.label.trellis <- function
   update(p,debug=debug)
 ### The lattice plot.
 }
+
 panel.superpose.dl <- structure(function
 ### Call panel.superpose for the data points and then for the direct
 ### labels. This is a proper lattice panel function that behaves much
@@ -61,8 +62,10 @@ panel.superpose.dl <- structure(function
 ### The panel function to use for drawing data points.
  type="p",
 ### Plot type, used for default method dispatch.
+ debug=FALSE,
+### passed to dlgrob.
  ...
-### Additional arguments to dlgrob.
+### ignored.
  ){
   rgs <- list(x=x,subscripts=subscripts,groups=groups,type=type,`...`=...)
   if(!missing(y))rgs$y <- y
@@ -91,7 +94,7 @@ panel.superpose.dl <- structure(function
     d <- apply.method(paste("trans.",lattice.fun.name,sep=""),d)
   }
   d$colour <- key[as.character(d$groups)]
-  g <- dlgrob(d,method,...)
+  g <- dlgrob(d,method,debug=debug)
   grid.draw(g)
 },ex=function(){
   loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
@@ -152,9 +155,9 @@ panel.superpose.dl <- structure(function
   ## If you use panel.superpose.dl with a custom panel.groups function,
   ## you need to manually specify the Positioning Method, since the
   ## name of panel.groups is used to infer a default:
-  print(direct.label(pg,method=first.points))
+  print(direct.label(pg,method="first.qp"))
   print(ratxy(panel=panel.superpose.dl,panel.groups="panel.model",
-              method=first.points))
+              method="first.qp"))
 
   ## Custom panel function that draws a box around values:
   panel.line1 <- function(ps=panel.superpose){
@@ -174,9 +177,9 @@ panel.superpose.dl <- structure(function
   ## Lattice plot with custom panel and panel.groups functions:
   both <- ratxy(panel=panel.line1(),panel.groups="panel.model")
   print(both)
-  print(direct.label(both,method=first.points))
+  print(direct.label(both,method="first.qp"))
   print(ratxy(panel=panel.line1(panel.superpose.dl),
-              panel.groups=panel.model,method=first.points))
+              panel.groups=panel.model,method="first.qp"))
 })
 
 defaultpf.trellis <- function
