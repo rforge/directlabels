@@ -12,39 +12,6 @@ uselegend.trellis <- function
 ### Functions which need translation before applying Positioning Method.
 need.trans <- c("qqmath","densityplot")
 
-dl.text <- function
-### To be used as panel.groups= argument in panel.superpose. Analyzes
-### arguments to determine correct text color for this group, and then
-### draws the direct label text.
-(labs,
-### table of labels and positions constructed by label.positions
- group.number,
-### which group we are currently plotting, according to levels(labs$groups)
- col.line=NULL,
-### line color
- col.points=NULL,
-### point color
- col=NULL,
-### general color
- col.symbol=NULL,
-### symbol color
- type=NULL,
-### plot type
- ...
-### ignored
- ){
-  ##debugging output:
-  ##print(cbind(col,col.line,col.points,col.symbol,type))
-  col.text <- switch(type,p=col.symbol,l=col.line,col.line)
-  g <- labs[levels(as.factor(labs$groups))[group.number]==labs$groups,]
-  if(nrow(g)==0)return()
-  grid.text(g$groups,g$x,g$y,
-            hjust=g$hjust,vjust=g$vjust,rot=g$rot,
-            gp=gpar(col=col.text,fontsize=g$fontsize,fontfamily=g$fontfamily,
-              fontface=g$fontface,lineheight=g$lineheight,cex=g$cex,
-              alpha=g$alpha),
-            default.units="native")
-}
 direct.label.trellis <- function
 ### Add direct labels to a grouped lattice plot. This works by parsing
 ### the trellis object returned by the high level plot function, and
@@ -95,7 +62,7 @@ panel.superpose.dl <- structure(function
  type="p",
 ### Plot type, used for default method dispatch.
  ...
-### Additional arguments to panel.superpose.
+### Additional arguments to dlgrob.
  ){
   rgs <- list(x=x,subscripts=subscripts,groups=groups,type=type,`...`=...)
   if(!missing(y))rgs$y <- y
@@ -109,17 +76,23 @@ panel.superpose.dl <- structure(function
     if(is.character(subs))sub("panel.","",subs) else ""
   if(is.null(type))type <- "NULL"
   if(is.null(method))method <- default.picker("trellis")
-  ## maybe eventually allow need.trans to be specified in options()??
-  if(lattice.fun.name%in%need.trans)method <-
-    list(paste("trans.",lattice.fun.name,sep=""),method)
   groups <- as.factor(groups)
   groups <- groups[subscripts]
   d <- data.frame(x,groups)
-  if(!missing(y))d$y <- y
-  labs <- label.positions(d,method,class="lattice",...)
+  d$y <- if(missing(y))NA else y
   type <- type[type!="g"] ## printing the grid twice looks bad.
-  panel.superpose(panel.groups=dl.text,labs=labs,type=type,x=x,
-                       groups=groups,subscripts=seq_along(groups),...)
+  col.text <-
+    switch(type,p="superpose.symbol",l="superpose.line","superpose.line")
+  tpar <- trellis.par.get()
+  key <- rep(tpar[[col.text]]$col,length.out=nlevels(d$groups))
+  names(key) <- levels(d$groups)
+  ## maybe eventually allow need.trans to be specified in options()??
+  if(lattice.fun.name%in%need.trans){
+    d <- apply.method(paste("trans.",lattice.fun.name,sep=""),d)
+  }
+  d$colour <- key[as.character(d$groups)]
+  g <- dlgrob(d,method,...)
+  grid.draw(g)
 },ex=function(){
   loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
                      type=factor(c(rep("NEU",800),rep("POS",100),rep("BAL",100))))
@@ -149,6 +122,7 @@ panel.superpose.dl <- structure(function
     xyplot(weight~Time|Diet,bw,groups=Rat,type="l",layout=c(3,1),...)
   }
   ## No custom panel functions:
+  ##regular <- ratxy(par.settings=simpleTheme(col=c("red","black")))
   regular <- ratxy()
   print(regular) ## normal lattice plot
   print(direct.label(regular)) ## with direct labels

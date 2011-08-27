@@ -66,6 +66,7 @@ geom_dl <- structure(function(mapping=NULL,method,...){
   bw2+aes(colour=Rat)+
     scale_colour_discrete(legend=FALSE)
 })
+
 direct.label.ggplot <- function
 ### Direct label a ggplot2 grouped plot.
 (p,

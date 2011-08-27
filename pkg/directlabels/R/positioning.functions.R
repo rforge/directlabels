@@ -1,14 +1,34 @@
 drawDetails.dlgrob <- function(g,...){
-  ## calculate x and y position in cm!
+  ## calculate x and y position in cm --- by this time we should have
+  ## done any preprocessing necessary to convert 1d data to 2d data!
   cm.data <- transform(g$data,
                        x=convertX(unit(x,"native"),"cm",valueOnly=TRUE),
                        y=convertY(unit(y,"native"),"cm",valueOnly=TRUE))
-  labs <- label.positions(cm.data,g$method,g$debug)
-  with(labs,{
+  ## save original levels for later in case Positioning Methods mess
+  ## them up.
+  cm.data$groups <- factor(cm.data$groups)
+  levs <- levels(cm.data$groups)
+  ## apply ignore.na function -- these points are not plotted
+  cm.data <- ignore.na(cm.data)
+  cm.data <- apply.method(g$method,cm.data,debug=g$debug,...)
+  if(nrow(cm.data)==0)return()## empty data frames can cause many bugs
+  ## rearrange factors in case Positioning Methods messed up the
+  ## order:
+  cm.data$groups <- factor(as.character(cm.data$groups),levs)
+  ## defaults for grid parameter values:
+  defaults <- list(hjust=0.5,vjust=0.5,rot=0,cex=1)
+  for(p in names(defaults)){
+    if(!p %in% names(cm.data))cm.data[,p] <- NA
+    cm.data[is.na(cm.data[,p]),p] <- defaults[[p]]
+  }
+  cm.data <- unique(cm.data)
+  if(g$debug)print(cm.data)
+  with(cm.data,{
     grid.text(groups,x,y,hjust=hjust,vjust=vjust,rot=rot,default.units="cm",
               gp=gpar(col=colour))
   })
 }
+
 dlgrob <- function
 ### Make a grid grob that will draw direct labels.
 (data,
@@ -19,14 +39,14 @@ dlgrob <- function
  ){
   grob(data=data,method=method,cl="dlgrob",...)
 }
+
 direct.label <- structure(function
 ### Add direct labels to a plot. This is a S3 generic and there are
 ### appropriate methods for "trellis" and "ggplot" objects.
 (p,
 ### The plot to which you would like to add direct labels.
  method=NULL,
-### The direct label placement method as described in
-### ?label.positions.
+### Positioning Method.
  debug=FALSE
 ### Show debug output?
  ){
@@ -213,57 +233,6 @@ direct.label <- structure(function
 
   lattice.options(oldopt)
 })
-
-label.positions <- function
-### Calculates table of positions of each label based on input data
-### for each panel and Positioning Method. This is meant for internal
-### use inside a direct.label method, and is a wrapper around
-### apply.method which makes sure the inputs are good and the outputs
-### are plottable. apply.method is more efficient and should be used
-### in the context of other Positioning Methods (i.e. dl.combine) and
-### label.positions should be used when you actually when to plot the
-### result (i.e. in lattice+ggplot2 backends).
-(d,
-### Data frame to which we will sequentially apply the Positioning
-### Method.
- method,
-### Method for direct labeling, described in
-### \code{\link{apply.method}}.
- debug=FALSE,
-### Show debug output? If TRUE, the resulting table of label positions
-### will be printed.
- ...
-### Passed to Positioning Function(s).
- ){
-  if(nrow(d)==0)return(d)## empty data frames can cause many bugs
-  ## make sure input data is in good format
-  d <- transform(d,
-                 x=as.numeric(x),
-                 groups=as.factor(groups))
-  if("y"%in%names(d))d <- transform(d,y=as.numeric(y))
-  ##save original levels for later in case PFs mess them up.
-  levs <- levels(d$groups)
-  ## first apply ignore.na function
-  d <- ignore.na(d)
-  d <- apply.method(method,d,debug=debug,...)
-  if(nrow(d)==0)return(d)## empty data frames can cause many bugs
-  ## rearrange factors in case pos fun messed up the order:
-  d$groups <- factor(as.character(d$groups),levs)
-  ## defaults for grid parameter values:
-  for(p in c("hjust","vjust")){
-    d[,p] <- if(p %in% names(d))d[,p] else NA
-    d[is.na(d[,p]),p] <- 0.5
-  }
-  if(!"rot"%in%names(d))d$rot <- NA
-  d$rot[is.na(d$rot)] <- 0
-  if(!"cex"%in%names(d))d$cex <- NA
-  d$cex[is.na(d$cex)] <- 1
-  d <- unique(d)
-  if(debug)print(d)
-  d
-### Data frame of direct label positions. Each row describes the
-### position of 1 label to be drawn later.
-}
 
 apply.method <- function # Apply a Positioning Method
 ### Run a Positioning Method list on a given data set. This function
