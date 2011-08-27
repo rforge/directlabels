@@ -11,59 +11,23 @@ uselegend.ggplot <- function
 ### Geoms which need translation before applying Positioning Method.
 need.trans.ggplot <- c()
 
-MyGeomPoint <- proto(Geom, {
-  draw_groups <- function(., ...) .$draw(...)
-  draw <- function(., data, scales, coordinates, na.rm = FALSE, ...) {    
-    data <- remove_missing(data, na.rm, 
-      c("x", "y", "size", "shape"), name = "geom_point")
-    print(data)
-    if (empty(data)) return(zeroGrob())
-    with(coordinates$transform(data, scales), 
-      ggname(.$my_name(), pointsGrob(x, y, size=unit(size, "mm"), pch=shape, 
-      gp=gpar(col=alpha(colour, alpha), fill = fill, fontsize = size * .pt)))
-    )
-  }
-
-  draw_legend <- function(., data, ...) {
-    # If fill is set, ensure that you can actually see it
-    if (!is.null(data$fill) && !all(is.na(data$fill)) && data$shape == 16) {
-      data$shape <- 21
-    } 
-    data <- aesdefaults(data, .$default_aes(), list(...))
-    
-    with(data,
-      pointsGrob(0.5, 0.5, size=unit(size, "mm"), pch=shape, 
-      gp=gpar(
-        col=alpha(colour, alpha), 
-        fill=alpha(fill, alpha), 
-        fontsize = size * .pt)
-      )
-    )
-  }
-
-  objname <- "point"
-  desc <- "Points, as for a scatterplot"
-  
-  default_stat <- function(.) StatIdentity
-  required_aes <- c("x", "y")
-  default_aes <- function(.) aes(shape=16, colour="black", size=2, fill = NA, alpha = 1)
-})
 drawDetails.dlgrob <- function(x,...){
-  print(x$method)
   x$data$rot <- as.integer(x$data$angle)
-  print(x$data)
-  with(x$data,{
+  x$data$groups <- x$data$label
+  labs <- label.positions(x$data,x$method,x$debug)
+  ##FIXME:: why is this returning hjust and vjust as characters?
+  ##FIXME:: apparently we need to set the gp of the grob BEFORE in
+  ##order to get colour!!! problem?
+  with(labs,{
     grid:::grid.Call.graphics("L_text", as.graphicsAnnot(label),
                               unit(x,"native"), unit(y,"native"),
-                              hjust, vjust, rot, FALSE)
+                              as.numeric(hjust), as.numeric(vjust), rot, FALSE)
   })
 }
 ## Replacement for geom_text
 GeomDirectLabel <- proto(Geom, {
   draw_groups <- function(., ...) .$draw(...)
   draw <- function(., data, scales, coordinates, method=NULL,debug=FALSE, ...) {
-    print(data)
-    ##browser()
     grob(data=coordinates$transform(data, scales),method=method,debug=debug,
          cl="dlgrob")
   }
@@ -86,13 +50,11 @@ GeomDirectLabel <- proto(Geom, {
 geom_dl <- function (mapping = NULL, data = NULL, stat = "identity",
                      position = "identity", parse = FALSE,
                      method=NULL, debug=FALSE,...) {
-  x <- GeomDirectLabel$new(mapping = mapping, data = data, stat = stat,
+  GeomDirectLabel$new(mapping = mapping, data = data, stat = stat,
                            position = position, parse = parse, ...)
-  x
 }
 ggplot(vad,aes(deaths,age))+geom_line(aes(group=demographic,colour=demographic))+GeomDirectLabel$new(aes(label=demographic,colour=demographic),method="top.qp")
-p <- ggplot(vad,aes(deaths,age))+geom_line(aes(group=demographic))+GeomDirectLabel$new(aes(label=demographic),method="top.qp")
-p2 <- ggplot(BodyWeight,aes(Time,weight))+geom_line(aes(group=Rat))+facet_grid(~Diet)+geom_dl(aes(label=Rat),method="first.points")
+ggplot(BodyWeight,aes(Time,weight))+geom_line(aes(group=Rat))+facet_grid(~Diet)+GeomDirectLabel$new(aes(label=Rat),method="maxvar.qp")
 direct.label.ggplot <- function
 ### Direct label a ggplot2 grouped plot.
 (p,
