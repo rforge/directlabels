@@ -15,21 +15,18 @@ drawDetails.dlgrob <- function(x,...){
   x$data$rot <- as.integer(x$data$angle)
   x$data$groups <- x$data$label
   labs <- label.positions(x$data,x$method,x$debug)
-  ##FIXME:: why is this returning hjust and vjust as characters?
-  ##FIXME:: apparently we need to set the gp of the grob BEFORE in
-  ##order to get colour!!! problem?
   with(labs,{
-    grid:::grid.Call.graphics("L_text", as.graphicsAnnot(label),
-                              unit(x,"native"), unit(y,"native"),
-                              as.numeric(hjust), as.numeric(vjust), rot, FALSE)
+    grid.text(label,x,y,hjust=hjust,vjust=vjust,rot=rot,default.units="native",
+              gp=gpar(col=colour))
   })
 }
 ## Replacement for geom_text
 GeomDirectLabel <- proto(Geom, {
   draw_groups <- function(., ...) .$draw(...)
   draw <- function(., data, scales, coordinates, method=NULL,debug=FALSE, ...) {
+    code <- unique(data[,c("colour","label")])
     grob(data=coordinates$transform(data, scales),method=method,debug=debug,
-         cl="dlgrob")
+         cl="dlgrob",gp=gpar(col="red"),code=code)
   }
   draw_legend <- function(., data, ...) {
     data <- aesdefaults(data, .$default_aes(), list(...))
@@ -53,7 +50,10 @@ geom_dl <- function (mapping = NULL, data = NULL, stat = "identity",
   GeomDirectLabel$new(mapping = mapping, data = data, stat = stat,
                            position = position, parse = parse, ...)
 }
-ggplot(vad,aes(deaths,age))+geom_line(aes(group=demographic,colour=demographic))+GeomDirectLabel$new(aes(label=demographic,colour=demographic),method="top.qp")
+vad <- as.data.frame.table(VADeaths)
+names(vad) <- c("age","demographic","deaths")
+ggplot(vad,aes(deaths,age))+geom_line(aes(group=demographic,colour=demographic))+GeomDirectLabel$new(aes(label=demographic,colour=demographic),method="top.qp")+scale_colour_discrete(legend=FALSE)
+data(BodyWeight,package="nlme")
 ggplot(BodyWeight,aes(Time,weight))+geom_line(aes(group=Rat))+facet_grid(~Diet)+GeomDirectLabel$new(aes(label=Rat),method="maxvar.qp")
 direct.label.ggplot <- function
 ### Direct label a ggplot2 grouped plot.

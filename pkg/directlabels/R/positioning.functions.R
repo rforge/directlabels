@@ -230,7 +230,7 @@ label.positions <- function
   d$groups <- factor(as.character(d$groups),levs)
   ## defaults for grid parameter values:
   for(p in c("hjust","vjust")){
-    d[,p] <- if(p %in% names(d))as.character(d[,p]) else NA
+    d[,p] <- if(p %in% names(d))d[,p] else NA
     d[is.na(d[,p]),p] <- 0.5
   }
   if(!"rot"%in%names(d))d$rot <- NA
