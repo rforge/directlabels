@@ -687,7 +687,7 @@ apply.method <- function # Apply a Positioning Method
   islist <- function()is.list(method[[1]])
   isref <- function()(!isconst())&&is.character(method[[1]])
   while(length(method)){
-    if(debug)print(method[[1]])
+    if(debug)print(method[1])##not [[1]] --- named items!
     ## Resolve any names or nested lists
     is.trans <- FALSE
     while(islist()||isref()){
