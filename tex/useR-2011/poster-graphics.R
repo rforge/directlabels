@@ -80,10 +80,10 @@ data(mpg,package="ggplot2")
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
 library(lattice)
-p <- xyplot(jitter(hwy)~jitter(cty)|manufacturer,mpgf,groups=class,
+carpanels <- xyplot(jitter(hwy)~jitter(cty)|manufacturer,mpgf,groups=class,
   main="City and highway fuel efficiency depends on manufacturer and car class")
 pdf("cars.pdf",h=10,w=14)
-direct.label(p,smart.grid)
+direct.label(carpanels,smart.grid)
 dev.off()
 
 mylars <- function
