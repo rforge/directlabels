@@ -26,7 +26,8 @@ geom_dl <- structure(function
                      method=NULL,debug=FALSE, ...) {
       data$rot <- as.integer(data$angle)
       data$groups <- data$label
-      dlgrob(coordinates$transform(data, scales),method,debug=debug,
+      dlgrob(subset(coordinates$transform(data, scales),select=-group),
+             method,debug=debug,
              axes2native=function(data){
                coordinates$transform(data, scales)
              })
@@ -53,6 +54,7 @@ geom_dl <- structure(function
   ## color + legend
   leg <- ggplot(vad,aes(deaths,age,colour=demographic))+
     geom_line(aes(group=demographic))
+dlcompare(list(leg),list(list(cex=0.5,"top.qp"),list("last.points",rot=30)))
   print(leg)
   direct.label(leg,list("last.points",rot=30))
   direct.label(leg,list("last.points",rot=30),TRUE)
@@ -117,8 +119,9 @@ direct.label.ggplot <- function
   ## Try to figure out a good default based on the colored geom
   geom <- L$geom$objname
   if(is.null(method))method <- default.picker("ggplot")
-  dlgeom <- geom_dl(do.call(aes,list(label=as.symbol(colvar))),method,
-                    stat=L$stat,debug=debug)
+  aes_args <- list(label=as.symbol(colvar),colour=as.symbol(colvar))
+  dlgeom <- geom_dl(do.call(aes,aes_args),method,
+                    stat=L$stat,debug=debug,data=L$data)
   scale.types <- sapply(p$scales$.scales,"[[",".output")
   scale.i <- which("colour"==scale.types)
   if(length(scale.i)){

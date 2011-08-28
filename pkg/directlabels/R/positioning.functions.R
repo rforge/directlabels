@@ -226,10 +226,10 @@ direct.label <- structure(function
   ## some data from clustering algorithms
   data(iris.l1.cluster,package="directlabels")
   p <- ggplot(iris.l1.cluster,aes(lambda,alpha,group=row,colour=Species))+
-    geom_line()+
+    geom_line(alpha=1/4)+
     facet_grid(col~.)
   p2 <- p+xlim(-0.0025,max(iris.l1.cluster$lambda))
-  print(direct.label(p2,list("first.points","get.means","first.qp"),TRUE))
+  print(direct.label(p2,list("first.points","get.means","first.qp")))
 
   ## TODO
   data(normal.l2.cluster,package="directlabels")
@@ -239,6 +239,7 @@ direct.label <- structure(function
     geom_point(aes(colour=class),data=normal.l2.cluster$pts)+
     coord_equal()
   print(direct.label(p))
+  print(direct.label(p,"extreme.grid"))
   ## respect the color scale. these should look the same:
   print(direct.label(p+scale_colour_manual(values=rainbow(8))))
   print(direct.label(p)+scale_colour_manual(values=rainbow(8),legend=FALSE))
