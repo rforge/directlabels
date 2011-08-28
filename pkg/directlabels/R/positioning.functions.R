@@ -41,7 +41,7 @@ dlgrob <- function
  debug=FALSE,
  ...
  ){
-  grob(data=data,method=method,debug=debug,cl="dlgrob",name="directlabels",...)
+  grob(data=data,method=method,debug=debug,cl="dlgrob",...)
 }
 
 direct.label <- structure(function
@@ -314,11 +314,12 @@ top.qp <- list("top.points","calc.boxes",qp.labels("x","w"))
 ### Label points at the zero before the first nonzero y value.
 lasso.labels <-
   list(rot=60,
-       gapply.fun({
+       gapply.fun({ ## figure out where the path hits 0
          d <- d[order(d$x),]
-         i <- which(d$y!=0)[1]
-         hjust <- as.integer(d[i,"y"]>0)
-         data.frame(d[i-1,],hjust,vjust=hjust)
+         zero <- d$y[1]
+         i <- which(d$y!=zero)[1]
+         just <- as.integer(d[i,"y"]>zero)
+         transform(d[i-1,],hjust=just,vjust=just)
        }),
        "calc.boxes",
        ## calculate how wide the tilted box is

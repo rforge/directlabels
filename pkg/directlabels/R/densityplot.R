@@ -3,7 +3,7 @@ top.points <-
   gapply.fun(transform(d[which.max(d$y),],hjust=0.5,vjust=0))
 
 ### Label the tops, but bump labels up to avoid collisions.
-top.bumpup <- list(top.points,bumpup)
+top.bumpup <- list("top.points","bumpup")
 
 ### Label the tops, bump labels up to avoid other labels, then to the
 ### side to avoid collisions with points.
