@@ -184,7 +184,6 @@ p <- ggplot(iris.l1.cluster,aes(lambda,alpha,group=row,colour=Species))+
 p2 <- p+xlim(-0.0025,max(iris.l1.cluster$lambda))
 print(direct.label(p2,list("first.points","get.means","first.qp")))
 
-## TODO
 data(normal.l2.cluster,package="directlabels")
 p <- ggplot(normal.l2.cluster$path,aes(x,y))+
   geom_path(aes(group=row),colour="grey")+

@@ -49,12 +49,12 @@ geom_dl <- structure(function
   GeomDirectLabel$new(mapping,method=method,...)
 ### Layer that will plot direct labels.
 },ex=function(){
+  library(ggplot2)
   vad <- as.data.frame.table(VADeaths)
   names(vad) <- c("age","demographic","deaths")
   ## color + legend
   leg <- ggplot(vad,aes(deaths,age,colour=demographic))+
     geom_line(aes(group=demographic))
-dlcompare(list(leg),list(list(cex=0.5,"top.qp"),list("last.points",rot=30)))
   print(leg)
   direct.label(leg,list("last.points",rot=30))
   direct.label(leg,list("last.points",rot=30),TRUE)

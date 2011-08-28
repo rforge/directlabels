@@ -1,10 +1,10 @@
 ### Process data points using the Positioning Method and draw the
 ### resulting direct labels. This is called for every panel with
 ### direct labels, every time the plot window is resized.
-drawDetails.dlgrob <- function(g,...){
+drawDetails.dlgrob <- function(x,recording){
   ## calculate x and y position in cm --- by this time we should have
   ## done any preprocessing necessary to convert 1d data to 2d data!
-  cm.data <- transform(g$data,
+  cm.data <- transform(x$data,
                        x=convertX(unit(x,"native"),"cm",valueOnly=TRUE),
                        y=convertY(unit(y,"native"),"cm",valueOnly=TRUE),
                        groups=factor(groups))
@@ -15,8 +15,8 @@ drawDetails.dlgrob <- function(g,...){
   names(code) <- as.character(cm.data$groups)
   ## apply ignore.na function -- these points are not plotted
   cm.data <- ignore.na(cm.data)
-  cm.data <- apply.method(g$method,cm.data,
-                          debug=g$debug,axes2native=g$axes2native,...)
+  cm.data <- apply.method(x$method,cm.data,
+                          debug=x$debug,axes2native=x$axes2native)
   if(nrow(cm.data)==0)return()## empty data frames can cause many bugs
   ## rearrange factors in case Positioning Methods messed up the
   ## order:
@@ -30,7 +30,7 @@ drawDetails.dlgrob <- function(g,...){
   cm.data <- unique(cm.data)
   gpargs <- c("cex","alpha","fontface","fontfamily","col")
   gp <- do.call(gpar,cm.data[names(cm.data)%in%gpargs])
-  if(g$debug)print(cm.data)
+  if(x$debug)print(cm.data)
   with(cm.data,{
     grid.text(groups,x,y,hjust=hjust,vjust=vjust,rot=rot,default.units="cm",
               gp=gp)
@@ -231,7 +231,6 @@ direct.label <- structure(function
   p2 <- p+xlim(-0.0025,max(iris.l1.cluster$lambda))
   print(direct.label(p2,list("first.points","get.means","first.qp")))
 
-  ## TODO
   data(normal.l2.cluster,package="directlabels")
   p <- ggplot(normal.l2.cluster$path,aes(x,y))+
     geom_path(aes(group=row),colour="grey")+
