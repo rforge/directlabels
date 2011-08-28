@@ -6,6 +6,11 @@ that will eventually be used to plot the labels. That way each
 individual Positioning Method doesn't have to worry about keeping
 track of all the weird annotation columns that can be there on input.
 
+dl.move is broken since we are using the cm coordinates rather than
+the axes coordinates. Also, since ggplot2 doesn't use the axes coords,
+we will have to translate using i.e. axes2native(). ALSO static
+data.frames and lists that specify x and y will be broken!! NEED to update apply.method!!!
+
 2.0
 
 Figured out how to calculate label bounding boxes for ggplot2, by

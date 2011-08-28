@@ -21,7 +21,10 @@ geom_dl <- structure(function(mapping=NULL,method,...){
                      method=NULL,debug=FALSE, ...) {
       data$rot <- as.integer(data$angle)
       data$groups <- data$label
-      dlgrob(coordinates$transform(data, scales),method,debug=debug)
+      dlgrob(coordinates$transform(data, scales),method,debug=debug,
+             axes2native=function(data){
+               coordinates$transform(data, scales)
+             })
     }
     draw_legend <- function(.,data,...){
       data <- aesdefaults(data,.$default_aes(),list(...))
@@ -108,7 +111,8 @@ direct.label.ggplot <- function
   if(is.null(method))method <- default.picker("ggplot")
   if(geom%in%need.trans.ggplot)method <-
     list(paste("trans.",geom,sep=""),method)
-  dlgeom <- geom_dl(do.call(aes,list(label=as.symbol(colvar))),method)
+  dlgeom <- geom_dl(do.call(aes,list(label=as.symbol(colvar))),method,
+                    stat=L$stat)
   scale.types <- sapply(p$scales$.scales,"[[",".output")
   scale.i <- which("colour"==scale.types)
   if(length(scale.i)){

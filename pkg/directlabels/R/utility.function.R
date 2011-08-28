@@ -183,7 +183,8 @@ dl.trans <- structure(function # Direct label data transform
 dl.move <- structure(function # Manually move a direct label
 ### Sometimes there is 1 label that is placed oddly by another
 ### Positioning Function. This function can be used to manually place
-### that label in a good spot.
+### that label in a good spot. FIXME: this doesn't work since we use
+### cm coordinate system instead of the axes. Need to do unit conversion!
 (group,
 ### Group to change.
  x,
