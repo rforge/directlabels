@@ -80,7 +80,7 @@ empty.grid <- function
                                    y=c(bottom,top,top,bottom,top,bottom,y,y,y)))
     all.points <- rbind(all.points,newpts)
   }
-  if(debug)with(all.points,grid.points(x,y))
+  if(debug)with(all.points,grid.points(x,y,default.units="cm"))
   res
 ### Data frame with columns groups x y, 1 line for each group, giving
 ### the positions on the grid closest to each cluster.

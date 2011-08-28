@@ -668,9 +668,9 @@ apply.method <- function # Apply a Positioning Method
 ### frame is used to draw a direct label.
  d,
 ### Data frame to which we apply the Positioning Method.
- ...,
-### Passed to Positioning Functions.
- debug=FALSE
+ debug=FALSE,
+ ...
+### Named arguments, passed to Positioning Functions.
  ){
   attr(d,"orig.data") <- d
   if(!is.list(method))method <- list(method)
@@ -700,7 +700,7 @@ apply.method <- function # Apply a Positioning Method
       d[[names(method)[1]]] <- method[[1]]
     else{
       old <- d
-      d <- method[[1]](d,...,debug=debug)
+      d <- method[[1]](d,debug=debug,...)
       attr(d,"orig.data") <-
         if(is.null(attr(old,"orig.data")))old
         else attr(old,"orig.data")
@@ -715,3 +715,17 @@ apply.method <- function # Apply a Positioning Method
 ### the Positioning Method list.
 }
 
+### to hard-code label positions...
+static.labels <- function(x,y,groups,...){
+  L <- list(...)
+  force(x)
+  force(y)
+  force(groups)
+  function(d,...,axes2native){
+    native <- axes2native(data.frame(x,y))
+    L$x <- convertX(unit(native$x,"native"),"cm",valueOnly=TRUE)
+    L$y <- convertY(unit(native$y,"native"),"cm",valueOnly=TRUE)
+    L$groups <- groups
+    do.call(data.frame,L)
+  }
+}

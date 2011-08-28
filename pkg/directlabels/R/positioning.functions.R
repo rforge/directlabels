@@ -1,24 +1,26 @@
 ### Process data points using the Positioning Method and draw the
-### resulting direct labels. This is called every time the plot window
-### is resized.
+### resulting direct labels. This is called for every panel with
+### direct labels, every time the plot window is resized.
 drawDetails.dlgrob <- function(g,...){
   ## calculate x and y position in cm --- by this time we should have
   ## done any preprocessing necessary to convert 1d data to 2d data!
   cm.data <- transform(g$data,
                        x=convertX(unit(x,"native"),"cm",valueOnly=TRUE),
-                       y=convertY(unit(y,"native"),"cm",valueOnly=TRUE))
+                       y=convertY(unit(y,"native"),"cm",valueOnly=TRUE),
+                       groups=factor(groups))
   ## save original levels for later in case Positioning Methods mess
   ## them up.
-  cm.data$groups <- factor(cm.data$groups)
-  levs <- levels(cm.data$groups)
+  levs <- unique(cm.data[,c("groups","colour")])
+  code <- as.character(cm.data$col)
+  names(code) <- as.character(cm.data$groups)
   ## apply ignore.na function -- these points are not plotted
   cm.data <- ignore.na(cm.data)
-  cm.data <- apply.method(g$method,cm.data,debug=g$debug,...)
+  cm.data <- apply.method(g$method,cm.data,
+                          debug=g$debug,axes2native=g$axes2native,...)
   if(nrow(cm.data)==0)return()## empty data frames can cause many bugs
   ## rearrange factors in case Positioning Methods messed up the
   ## order:
-  cm.data$groups <- factor(as.character(cm.data$groups),levs)
-  cm.data$col <- cm.data$colour
+  cm.data$col <- code[as.character(cm.data$groups)]
   ## defaults for grid parameter values:
   defaults <- list(hjust=0.5,vjust=0.5,rot=0)
   for(p in names(defaults)){
@@ -42,9 +44,11 @@ dlgrob <- function
  method,
 ### Positioning Method.
  debug=FALSE,
+ axes2native=identity,
  ...
  ){
-  grob(data=data,method=method,debug=debug,cl="dlgrob",...)
+  grob(data=data,method=method,debug=debug,axes2native=axes2native,
+       cl="dlgrob",...)
 }
 
 direct.label <- structure(function
@@ -98,11 +102,11 @@ direct.label <- structure(function
     qqm <- qqmath(~gcsescore,Chem97,groups=gender,
                   f.value=ppoints(25),auto.key=list())
     plot(direct.label(qqm,list("get.means","empty.grid"),TRUE))
+    plot(direct.label(qqm,list("get.means","smart.grid"),TRUE))
     ## default for points is different for default for lines
     plot(direct.label(update(qqm,type=c("l","g"))))
     ## you can hard-core label positions if you really want to:
-    static.labels <- data.frame(x=c(-2,0),y=c(6,4),groups=c("F","M"))
-    plot(direct.label(qqm,method=static.labels,debug=TRUE))
+    plot(direct.label(qqm,static.labels(c(-2,0),c(6,4),c("F","M")),TRUE))
     plot(direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),
                              type=c('l','g'),f.value=ppoints(100))))
 
@@ -120,6 +124,7 @@ direct.label <- structure(function
   plot(direct.label(densityplot(~ppp,loci,groups=type,n=500)))
   lplot <- qplot(ppp,data=loci,colour=type,geom="density")
   print(direct.label(lplot))
+  direct.label(lplot,static.labels(c(0,0.5,1),0,c("POS","NEU","BAL"),vjust=1.1))
   ## respect the manual color scale. these 2 should be the same:
   lplot2 <- direct.label(lplot)+
     scale_colour_manual(values=c("red","black","blue"),legend=FALSE)
