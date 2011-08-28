@@ -9,8 +9,36 @@ uselegend.trellis <- function
   else p
 }
  
-### Functions which need translation before applying Positioning Method.
-need.trans <- c("qqmath","densityplot")
+### Some lattice plot functions do some magic in the background to
+### translate the data you give them into the data points that are
+### plotted onscreen. We have to replicate this magic in native
+### coordinate space before applying the Positioning Method in cm
+### space. These functions accomplish this translation.
+lattice.translators <- list(qqmath=function(d,distribution,f.value,qtype=7,...){
+  ## Transformation function for 1d qqmath plots. This is a copy-paste
+  ## from panel.qqmath. (total hack)
+  gapply(d,function(d,...){
+    x <- as.numeric(d$x)
+    distribution <- if (is.function(distribution)) 
+      distribution
+    else if (is.character(distribution)) 
+      get(distribution)
+    else eval(distribution)
+    nobs <- sum(!is.na(x))
+    if (is.null(f.value)) 
+      data.frame(x = distribution(ppoints(nobs)), y = sort(x))
+    else data.frame(x = distribution(
+                      if (is.numeric(f.value))f.value
+                      else f.value(nobs)),
+                    y = quantile(x,
+                      if (is.numeric(f.value))f.value
+                      else f.value(nobs),
+                      names = FALSE, type = qtype, na.rm = TRUE))
+  })
+},densityplot=gapply.fun({
+  dens <- density(d$x,na.rm=TRUE)
+  data.frame(x=dens$x,y=dens$y)
+}))
 
 direct.label.trellis <- function
 ### Add direct labels to a grouped lattice plot. This works by parsing
@@ -65,7 +93,7 @@ panel.superpose.dl <- structure(function
  debug=FALSE,
 ### passed to dlgrob.
  ...
-### ignored.
+### passed to real panel function, and to translator.
  ){
   rgs <- list(x=x,subscripts=subscripts,groups=groups,type=type,`...`=...)
   if(!missing(y))rgs$y <- y
@@ -89,9 +117,10 @@ panel.superpose.dl <- structure(function
   tpar <- trellis.par.get()
   key <- rep(tpar[[col.text]]$col,length.out=nlevels(d$groups))
   names(key) <- levels(d$groups)
-  ## maybe eventually allow need.trans to be specified in options()??
-  if(lattice.fun.name%in%need.trans){
-    d <- apply.method(paste("trans.",lattice.fun.name,sep=""),d)
+  ## maybe eventually allow these to be specified in options()??
+  translator <- lattice.translators[[lattice.fun.name]]
+  if(!is.null(translator)){
+    d <- apply.method(translator,d,...)
   }
   d$colour <- key[as.character(d$groups)]
   g <- dlgrob(d,method,debug=debug)
