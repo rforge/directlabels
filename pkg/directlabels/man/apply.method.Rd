@@ -8,7 +8,7 @@ label positions. This is useful since it is often much less
 verbose to define Positioning Methods in list form instead of
 function form, ex lasso.labels.}
 \usage{
-apply.method(method, d, debug = FALSE, ...)
+apply.method(method, d, ..., debug = FALSE)
 }
 \arguments{
   \item{method}{Direct labeling Positioning Method, which is a list comprised of
@@ -19,9 +19,9 @@ data frame of points to plot for the panel, the elements of the
 list are applied in sequence, and each row of the resulting data
 frame is used to draw a direct label.}
   \item{d}{Data frame to which we apply the Positioning Method.}
+  \item{\dots}{Passed to Positioning Functions.}
   \item{debug}{
 }
-  \item{\dots}{Passed to Positioning Functions.}
 }
 
 \value{The final data frame returned after applying all of the items in

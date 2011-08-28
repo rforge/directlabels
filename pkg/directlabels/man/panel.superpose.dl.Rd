@@ -20,7 +20,7 @@ panel.groups function.}
   \item{.panel.superpose}{The panel function to use for drawing data points.}
   \item{type}{Plot type, used for default method dispatch.}
   \item{debug}{passed to dlgrob.}
-  \item{\dots}{ignored.}
+  \item{\dots}{passed to real panel function, and to translator.}
 }
 
 

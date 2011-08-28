@@ -3,7 +3,8 @@
 \title{Manually move a direct label}
 \description{Sometimes there is 1 label that is placed oddly by another
 Positioning Function. This function can be used to manually place
-that label in a good spot.}
+that label in a good spot. FIXME: this doesn't work since we use
+cm coordinate system instead of the axes. Need to do unit conversion!}
 \usage{
 dl.move(group, x, y, ...)
 }

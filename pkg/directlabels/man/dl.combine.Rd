@@ -22,12 +22,14 @@ applying each specified Positioning Method.}
 data(BodyWeight,package="nlme")
 library(lattice)
 ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
-plot(direct.label(ratplot,dl.combine(first.points,last.points)))
-## can also do this by repeatedly calling direct.label (ugly)
-plot(direct.label(direct.label(ratplot,last.points),first.points))
+both <- dl.combine("first.points","last.points")
+plot(direct.label(ratplot,"both"))
+## can also do this by repeatedly calling direct.label 
+plot(direct.label(direct.label(ratplot,"last.points"),"first.points"))
 library(ggplot2)
 rp2 <- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
-print(direct.label(direct.label(rp2,last.points),first.points))
+print(direct.label(direct.label(rp2,"last.points"),"first.points"))
+print(direct.label(rp2,"both"))
 
 mylars <- function
 ## Least angle regression algorithm for calculating lasso solutions.
@@ -99,7 +101,8 @@ mylars <- function
   }
 }
 
-## Calculate lasso path
+## Calculate lasso path, plot and label
+mylasso <- dl.combine(lasso.labels,last.qp)
 if(require(ElemStatLearn)){
   data(prostate)
   pros <- subset(prostate,select=-train,train==TRUE)
@@ -108,13 +111,16 @@ if(require(ElemStatLearn)){
   y <- unlist(pros[ycol])
   res <- mylars(x,y)
   P <- xyplot(coef~arclength,res,groups=variable,type="l")
-  plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
+  plot(direct.label(P,"mylasso"))
+  p <- ggplot(res,aes(arclength,coef,colour=variable))+
+    geom_line(aes(group=variable))
+  direct.label(p,"mylasso")
 }
 
 if(require(lars)){
   data(diabetes)
   dres <- with(diabetes,mylars(x,y))
   P <- xyplot(coef~arclength,dres,groups=variable,type="l")
-  plot(direct.label(P,dl.combine(lasso.labels,last.qp)))
+  plot(direct.label(P,"mylasso"))
 }
 }

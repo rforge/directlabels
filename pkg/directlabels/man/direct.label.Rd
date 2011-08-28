@@ -24,6 +24,7 @@ library(ggplot2)
 ## direct label simple ggplot2 scatterplot
 scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
                  main="Fuel efficiency depends on car size")
+print(direct.label(scatter))
 print(direct.label(scatter,list(extreme.grid,dl.move("suv",15,15))))
 
 ## scatterplot in lattice
@@ -33,22 +34,21 @@ library(lattice)
 oldopt <- lattice.options(panel.error=NULL)
 mpg.scatter <- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
 plot(direct.label(mpg.scatter))
-
 ## debug=TRUE shows more output on the plot, and a data table of the
 ## direct labels
 plot(direct.label(mpg.scatter,debug=TRUE))
-
 ## bigger text works better here. With the smart.grid Positioning
 ## Method, the search grid size is the same size as the text box, so
 ## the grid is bigger here.
 plot(direct.label(mpg.scatter,list(cex=1.5,smart.grid),TRUE))
 
-## try custom panel function and title
-mpgs2 <- update(mpg.scatter,
-                panel=function(...){
-                  panel.abline(0,col="grey");panel.xyplot(...)},
-                main="foobar2")
-plot(direct.label(mpgs2,list(cex=2,smart.grid)))
+## direct labels are not as good when there are multiple panels, but
+## as long as not every class appears in every panel, it still
+## should be clearer than using a legend.
+carpanels <- xyplot(jitter(hwy)~jitter(cty)|manufacturer,mpgf,groups=class,
+main="City and highway fuel efficiency depends on manufacturer and car class")
+print(direct.label(carpanels))
+
 
 if(require(mlmRev)){
   data(Chem97)
@@ -84,9 +84,9 @@ print(lplot2)
 print(direct.label(lplot+scale_colour_manual(values=c("red","black","blue"))))
 
 ## dotplot:
-plot(direct.label(dotplot(VADeaths,type="o"),angled.endpoints))
+plot(direct.label(dotplot(VADeaths,type="o"),"angled.endpoints"))
 plot(direct.label(dotplot(VADeaths,type="o"),
-                  list(cex=0.7,dl.trans(y=y+0.1),top.qp)))
+       list(cex=0.7,dl.trans(y=y+0.1),"top.qp")))
 VAD2 <- VADeaths
 colnames(VAD2) <- sub(" ","\n",colnames(VAD2))
 plot(direct.label(dotplot(VAD2,type="o"),
@@ -101,14 +101,14 @@ vad2 <- as.data.frame.table(VAD2)
 names(vad2) <- names(vad)
 p3 <- qplot(deaths,age,data=vad2,
             group=demographic,geom="line",colour=demographic)
-direct.label(p3,"top.points")
-## contour plot
+direct.label(p3,"top.qp")
+## contour plot --- FIXME!!
 volcano3d <- melt(volcano)
 names(volcano3d) <- c("x", "y", "z")
-v <- ggplot(volcano3d, aes(x, y, z = z))
-v2 <- v + stat_contour(aes(colour = ..level..))
-direct.label(v2)
-direct.label(v2,"top.points")
+v <- ggplot(volcano3d, aes(x, y, z = z,colour=..level..))+
+  stat_contour()
+direct.label(v)
+direct.label(v,"top.pieces")
 
 ## label 2 groups of longitudinal data:
 dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
@@ -125,9 +125,9 @@ sprayplot <- xyplot(decrease~treatment,OrchardSprays,groups=rowpos,type="a")
 direct.label(sprayplot)
 data(BodyWeight,package="nlme")
 ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
-print(direct.label(ratplot))#default is maxvar.points
-print(direct.label(ratplot,last.points))#squished together
-print(direct.label(ratplot,last.qp)) ## not so good actually
+print(direct.label(ratplot))#default is maxvar.qp
+print(direct.label(ratplot,"last.points"))#squished together
+print(direct.label(ratplot,"last.qp")) ## readable
 ## Say we want to use a simple linear model to explain rat body weight:
 fit <- lm(weight~Time+Diet+Rat,BodyWeight)
 bw <- fortify(fit,BodyWeight)
@@ -140,7 +140,7 @@ panel.model <- function(x,subscripts,col.line,...){
 rat2 <- update(ratplot,
                panel=panel.superpose,
                panel.groups=panel.model)
-print(direct.label(rat2,last.points))
+print(direct.label(rat2,"last.qp"))
 
 ## complicated ridge regression lineplot ex. fig 3.8 from Elements of
 ## Statistical Learning, Hastie et al.
@@ -181,7 +181,7 @@ p <- ggplot(iris.l1.cluster,aes(lambda,alpha,group=row,colour=Species))+
   geom_line(alpha=1/4)+
   facet_grid(col~.)
 p2 <- p+xlim(-0.0025,max(iris.l1.cluster$lambda))
-print(direct.label(p2,list(first.points,get.means)))
+print(direct.label(p2,list("first.points","get.means","first.qp")))
 
 ## TODO
 data(normal.l2.cluster,package="directlabels")
