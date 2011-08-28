@@ -6,12 +6,11 @@ that will eventually be used to plot the labels. That way each
 individual Positioning Method doesn't have to worry about keeping
 track of all the weird annotation columns that can be there on input.
 
-dl.move is broken since we are using the cm coordinates rather than
-the axes coordinates. Also, since ggplot2 doesn't use the axes coords,
-we will have to translate using i.e. axes2native(). ALSO static
-data.frames and lists that specify x and y will be broken!! NEED to update apply.method!!!
-
 2.0
+
+dl.move and static.labels allow specification of label positions in
+terms of the displayed axes! Internally, they convert the
+user-specified numbers to cm.
 
 Figured out how to calculate label bounding boxes for ggplot2, by
 returning dlgrobs from the draw() method of the new
@@ -26,6 +25,9 @@ which is closest to the center, but this can be very skewed if x and y
 axes are not on the same scale. This is now fixed since all
 coordinates are converted to cm before being passed to Positioning
 Methods.
+
+fontface and fontfamily for direct labels are now supported even on
+ggplot2, thanks to the new dlgrob backends! See example(dlcompare).
 
 1.4
 

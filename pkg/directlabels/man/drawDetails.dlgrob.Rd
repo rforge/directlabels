@@ -2,8 +2,8 @@
 \alias{drawDetails.dlgrob}
 \title{drawDetails dlgrob}
 \description{Process data points using the Positioning Method and draw the
-resulting direct labels. This is called every time the plot window
-is resized.}
+resulting direct labels. This is called for every panel with
+direct labels, every time the plot window is resized.}
 \usage{
 \method{drawDetails}{dlgrob}(g, ...)
 }

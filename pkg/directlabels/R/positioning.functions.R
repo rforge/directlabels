@@ -72,7 +72,7 @@ direct.label <- structure(function
   scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
                    main="Fuel efficiency depends on car size")
   print(direct.label(scatter))
-  print(direct.label(scatter,list(extreme.grid,dl.move("suv",15,15))))
+  print(direct.label(scatter,list("extreme.grid",dl.move("suv",15,15))))
 
   ## scatterplot in lattice
   m <- lm(cty~displ,data=mpg)
@@ -81,8 +81,8 @@ direct.label <- structure(function
   oldopt <- lattice.options(panel.error=NULL)
   mpg.scatter <- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
   plot(direct.label(mpg.scatter))
-  ## debug=TRUE shows more output on the plot, and a data table of the
-  ## direct labels
+  ## debug=TRUE shows more output on the plot, and data.tables of the
+  ## transformations from the original data to the direct labels
   plot(direct.label(mpg.scatter,debug=TRUE))
   ## bigger text works better here. With the smart.grid Positioning
   ## Method, the search grid size is the same size as the text box, so

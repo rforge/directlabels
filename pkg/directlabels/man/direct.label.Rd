@@ -25,7 +25,7 @@ library(ggplot2)
 scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
                  main="Fuel efficiency depends on car size")
 print(direct.label(scatter))
-print(direct.label(scatter,list(extreme.grid,dl.move("suv",15,15))))
+print(direct.label(scatter,list("extreme.grid",dl.move("suv",15,15))))
 
 ## scatterplot in lattice
 m <- lm(cty~displ,data=mpg)
@@ -34,8 +34,8 @@ library(lattice)
 oldopt <- lattice.options(panel.error=NULL)
 mpg.scatter <- xyplot(jitter(.resid)~jitter(.fitted),mpgf,groups=factor(cyl))
 plot(direct.label(mpg.scatter))
-## debug=TRUE shows more output on the plot, and a data table of the
-## direct labels
+## debug=TRUE shows more output on the plot, and data.tables of the
+## transformations from the original data to the direct labels
 plot(direct.label(mpg.scatter,debug=TRUE))
 ## bigger text works better here. With the smart.grid Positioning
 ## Method, the search grid size is the same size as the text box, so
@@ -55,11 +55,11 @@ if(require(mlmRev)){
   qqm <- qqmath(~gcsescore,Chem97,groups=gender,
                 f.value=ppoints(25),auto.key=list())
   plot(direct.label(qqm,list("get.means","empty.grid"),TRUE))
+  plot(direct.label(qqm,list("get.means","smart.grid"),TRUE))
   ## default for points is different for default for lines
   plot(direct.label(update(qqm,type=c("l","g"))))
   ## you can hard-core label positions if you really want to:
-  static.labels <- data.frame(x=c(-2,0),y=c(6,4),groups=c("F","M"))
-  plot(direct.label(qqm,method=static.labels,debug=TRUE))
+  plot(direct.label(qqm,static.labels(c(-2,0),c(6,4),c("F","M")),TRUE))
   plot(direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),
                            type=c('l','g'),f.value=ppoints(100))))
 
@@ -77,6 +77,7 @@ loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
 plot(direct.label(densityplot(~ppp,loci,groups=type,n=500)))
 lplot <- qplot(ppp,data=loci,colour=type,geom="density")
 print(direct.label(lplot))
+direct.label(lplot,static.labels(c(0,0.5,1),0,c("POS","NEU","BAL"),vjust=1.1))
 ## respect the manual color scale. these 2 should be the same:
 lplot2 <- direct.label(lplot)+
   scale_colour_manual(values=c("red","black","blue"),legend=FALSE)
@@ -102,7 +103,7 @@ names(vad2) <- names(vad)
 p3 <- qplot(deaths,age,data=vad2,
             group=demographic,geom="line",colour=demographic)
 direct.label(p3,"top.qp")
-## contour plot --- FIXME!!
+## contour plot --- labels each piece, not each group!
 volcano3d <- melt(volcano)
 names(volcano3d) <- c("x", "y", "z")
 v <- ggplot(volcano3d, aes(x, y, z = z,colour=..level..))+
@@ -191,6 +192,7 @@ p <- ggplot(normal.l2.cluster$path,aes(x,y))+
   geom_point(aes(colour=class),data=normal.l2.cluster$pts)+
   coord_equal()
 print(direct.label(p))
+print(direct.label(p,"extreme.grid"))
 ## respect the color scale. these should look the same:
 print(direct.label(p+scale_colour_manual(values=rainbow(8))))
 print(direct.label(p)+scale_colour_manual(values=rainbow(8),legend=FALSE))
