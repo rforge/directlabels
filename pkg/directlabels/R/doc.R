@@ -99,7 +99,8 @@ dldoc <- function # Make directlabels documentation
           tryCatch({
             print(direct.label(p$plot,f$fun))
           },error=function(e){
-            grid.text(e)
+            l <- capture.output(print(e$call))
+            grid.text(sprintf("ERROR\n%s\n%s",l,e$message))
           })
           dev.off()
         }
