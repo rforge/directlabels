@@ -189,8 +189,7 @@ dl.trans <- structure(function # Direct label data transform
 dl.move <- structure(function # Manually move a direct label
 ### Sometimes there is 1 label that is placed oddly by another
 ### Positioning Function. This function can be used to manually place
-### that label in a good spot. FIXME: this doesn't work since we use
-### cm coordinate system instead of the axes. Need to do unit conversion!
+### that label in a good spot.
 (group,
 ### Group to change.
  x,
@@ -201,10 +200,20 @@ dl.move <- structure(function # Manually move a direct label
  ...
 ### Variables to change for the specified group
  ){
-  L <- list(...)
-  if(!missing(x))L$x <- x
-  if(!missing(y))L$y <- y
-  pf <- function(d,...){
+  others <- list(...)
+  pos <- list()
+  if(!missing(x))pos$x <- x
+  if(!missing(y))pos$y <- y
+  L <- c(others,pos)
+  pf <- function(d,...,axes2native){
+    native <- axes2native(do.call(data.frame,pos))
+    ## first convert user-specified axes units to cm
+    for(var in c("x","y")){
+      if(var %in% names(L)){
+        u <- unit(native[[var]],"native")
+        L[[var]] <- convertUnit(u,"cm",var,"location",var,"location")
+      }
+    }
     v <- d$groups==group
     for(N in names(L))
       d[v,N] <- L[[N]]
