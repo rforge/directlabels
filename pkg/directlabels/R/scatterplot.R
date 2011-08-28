@@ -76,8 +76,10 @@ empty.grid <- function
     best <- subset(no.points,len==min(len))[1,]
     res <- rbind(res,transform(r,x=best$x,y=best$y))
     ## add points to cloud
-    newpts <- with(best,data.frame(x=c(left,left,right,right,x,x,x,left,right),
-                                   y=c(bottom,top,top,bottom,top,bottom,y,y,y)))
+    newpts <- with(best,{
+      expand.grid(x=seq(left,right,l=5),
+                  y=seq(top,bottom,l=3))
+    })
     all.points <- rbind(all.points,newpts)
   }
   if(debug)with(all.points,grid.points(x,y,default.units="cm"))
