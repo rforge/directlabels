@@ -8,9 +8,6 @@ uselegend.ggplot <- function
   p
 }
 
-### Geoms which need translation before applying Positioning Method.
-need.trans.ggplot <- c()
-
 geom_dl <- structure(function(mapping=NULL,method,...){
   require(ggplot2)
   ## Geom for direct labeling that creates dlgrobs in the draw()
@@ -109,8 +106,6 @@ direct.label.ggplot <- function
   ## Try to figure out a good default based on the colored geom
   geom <- L$geom$objname
   if(is.null(method))method <- default.picker("ggplot")
-  if(geom%in%need.trans.ggplot)method <-
-    list(paste("trans.",geom,sep=""),method)
   dlgeom <- geom_dl(do.call(aes,list(label=as.symbol(colvar))),method,
                     stat=L$stat)
   scale.types <- sapply(p$scales$.scales,"[[",".output")
