@@ -1,3 +1,6 @@
+### Process data points using the Positioning Method and draw the
+### resulting direct labels. This is called every time the plot window
+### is resized.
 drawDetails.dlgrob <- function(g,...){
   ## calculate x and y position in cm --- by this time we should have
   ## done any preprocessing necessary to convert 1d data to 2d data!

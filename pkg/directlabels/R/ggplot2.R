@@ -8,7 +8,15 @@ uselegend.ggplot <- function
   p
 }
 
-geom_dl <- structure(function(mapping=NULL,method,...){
+geom_dl <- structure(function
+### Geom that will plot direct labels.
+(mapping=NULL,
+### aes(label=variable_that_will_be_used_as_groups_in_Positioning_Methods).
+ method,
+### Positioning Method.
+ ...
+### passed to GeomDirectLabel$new. ie stat= position=
+ ){
   require(ggplot2)
   ## Geom for direct labeling that creates dlgrobs in the draw()
   ## method.
@@ -38,6 +46,7 @@ geom_dl <- structure(function(mapping=NULL,method,...){
       aes(colour="black", size=5 , angle=0, hjust=0.5, vjust=0.5, alpha = 1)
   })
   GeomDirectLabel$new(mapping,method=method,...)
+### Layer that will plot direct labels.
 },ex=function(){
   vad <- as.data.frame.table(VADeaths)
   names(vad) <- c("age","demographic","deaths")

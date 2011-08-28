@@ -395,6 +395,8 @@ in1which <- function
 ### Calculate how many points fall in a box.
 in1box <- function(p,box)sum(in1which(p,box))
 
+### Make a Positioning Method that will, for every piece, select
+### points and assign a vjust value.
 label.pieces <- function(FUN,VJUST){
   function(d,...){
     processed <- gapply(d,function(d,...)d[FUN(d$y),],groups="piece")
