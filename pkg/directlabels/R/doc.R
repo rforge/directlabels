@@ -96,7 +96,11 @@ dldoc <- function # Make directlabels documentation
         if(!file.exists(pngfile)){
           cat(" ",f$name,sep="")
           png(pngfile)
-          print(direct.label(p$plot,f$fun))
+          tryCatch({
+            print(direct.label(p$plot,f$fun))
+          },error=function(e){
+            grid.text(e)
+          })
           dev.off()
         }
         thumbfile <- file.path(subdir,paste(p$name,f$name,"thumb.png",sep="."))
