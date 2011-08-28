@@ -47,12 +47,12 @@ empty.grid <- function
     (-expand:(hboxes+expand-1))*r[,w]+min(all.points[,x])+r[,w]/2
   }
   if(debug)with(label.targets,{
-    grid.points(x,y,default.units="native",gp=gpar(col="green"))
+    grid.points(x,y,default.units="cm",gp=gpar(col="green"))
   })
   draw <- function(g){
     gridlines <- with(g,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
     drawlines <- function(a,b,c,d)
-      grid.segments(a,b,c,d,"native",gp=gpar(col="grey"))
+      grid.segments(a,b,c,d,"cm",gp=gpar(col="grey"))
     with(gridlines,drawlines(min(x),y,max(x),y))
     with(gridlines,drawlines(x,min(y),x,max(y)))
   }
