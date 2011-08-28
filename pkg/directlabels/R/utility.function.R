@@ -200,19 +200,16 @@ dl.move <- structure(function # Manually move a direct label
  ...
 ### Variables to change for the specified group
  ){
-  others <- list(...)
+  L <- list(...)
   pos <- list()
   if(!missing(x))pos$x <- x
   if(!missing(y))pos$y <- y
-  L <- c(others,pos)
   pf <- function(d,...,axes2native){
     native <- axes2native(do.call(data.frame,pos))
     ## first convert user-specified axes units to cm
-    for(var in c("x","y")){
-      if(var %in% names(L)){
-        u <- unit(native[[var]],"native")
-        L[[var]] <- convertUnit(u,"cm",var,"location",var,"location")
-      }
+    for(var in names(pos)){
+      u <- unit(native[[var]],"native")
+      L[[var]] <- convertUnit(u,"cm",var,"location",var,"location")
     }
     v <- d$groups==group
     for(N in names(L))
