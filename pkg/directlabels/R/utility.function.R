@@ -396,7 +396,7 @@ in1which <- function
  box
 ### data frame of 1 row with columns left right top bottom.
  ){
-  p$x>box$left & p$x<box$right & p$y<box$top & p$y>box$bottom
+  p$x>=box$left & p$x<=box$right & p$y<=box$top & p$y>=box$bottom
 }
 
 ### Calculate how many points fall in a box.

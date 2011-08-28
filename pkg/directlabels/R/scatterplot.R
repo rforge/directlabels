@@ -32,19 +32,21 @@ empty.grid <- function
   all.points <- attr(d,"orig.data")[,c("x","y")]
   if(any(table(d$groups)>1))d <- get.means(d)
   label.targets <- d
+  ranges <- list(x=convertX(unit(c(0,1),"npc"),"cm",valueOnly=TRUE),
+                 y=convertY(unit(c(0,1),"npc"),"cm",valueOnly=TRUE))
   gl <- function(v){
     s <- seq(min(all.points[,v]),max(all.points[,v]),l=NREP)
     if(expand){
       dif <- s[2]-s[1]
-      s <- seq(min(all.points[,v])-expand*dif,
-               max(all.points[,v])+expand*dif,
+      s <- seq(min(ranges[[v]])-expand*dif,
+               max(ranges[[v]])+expand*dif,
                l=NREP+2*expand)
     }
     list(centers=s,diff=s[2]-s[1])
   }
   hgrid <- function(x,w){
-    hboxes <- floor(diff(range(all.points[,x]))/r[,w])
-    (-expand:(hboxes+expand-1))*r[,w]+min(all.points[,x])+r[,w]/2
+    hboxes <- floor(diff(ranges[[x]])/r[,w])
+    (-expand:(hboxes+expand-1))*r[,w]+r[,w]/2+min(ranges[[x]])
   }
   if(debug)with(label.targets,{
     grid.points(x,y,default.units="cm",gp=gpar(col="green"))
