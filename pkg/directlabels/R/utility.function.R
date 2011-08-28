@@ -362,14 +362,13 @@ ignore.na <- function(d,...){
 qp.labels <- function(var,spacer)function(d,...){
   if(!spacer%in%names(d))stop("need to have calculated ",spacer)
   require(quadprog)
-  ## sorts data so that m_1 is on top, m_n on bottom.
-  ##d <- d[order(d[,var],decreasing=TRUE),]
   ## sorts data so that target_1 <= target_2 <= ... <= target_n
   d <- d[order(d[,var]),]
   target <- d[,var]
   k <- nrow(d)
   D <- diag(rep(1,k))
-  ##A <- diag(rep(1,k))[,-k]-rbind(0,diag(rep(1,k-1)))
+  ## These are the standard form matrices described in the
+  ## directlabels poster
   Ik <- diag(rep(1,k-1))
   A <- rbind(0,Ik)-rbind(Ik,0)
   h <- d[,spacer]
