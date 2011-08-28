@@ -104,7 +104,7 @@ direct.label.ggplot <- function
     colvar <- cvars[[i]]
     ## FIXME: kind of a hack.
     if(colvar=="..level..")SCALE <- scale_colour_continuous
-    colvar <- gsub("^[.][.](.*)[.][.]$","\\1",colvar)
+    ##colvar <- gsub("^[.][.](.*)[.][.]$","\\1",colvar)
   }else stop("Need colour aesthetic to infer default direct labels.")
   ## Try to figure out a good default based on the colored geom
   geom <- L$geom$objname
@@ -138,7 +138,7 @@ defaultpf.ggplot <- function
            if(nlevels(d$groups)==2)"lines2" else "maxvar.qp"
          },
          point="smart.grid",
-         path="bottom.points",
+         path="bottom.pieces",
          stop("No default label placement for this type of ggplot."))
 }
 

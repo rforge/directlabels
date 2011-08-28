@@ -240,7 +240,7 @@ dl.move <- structure(function # Manually move a direct label
 dl.jitter <- dl.trans(x=jitter(x),y=jitter(y))
 
 ### Calculate boxes around labels, for collision detection.
-calc.boxes <- function(d,debug=FALSE,class="ggplot2",...){
+calc.boxes <- function(d,debug=FALSE,...){
   vp <- current.viewport()
   convert <- function(worh){
     conv <- get(paste("convert",worh,sep=""))
@@ -253,10 +253,6 @@ calc.boxes <- function(d,debug=FALSE,class="ggplot2",...){
       popViewport()
       w
     }))
-  }
-  if(class=="ggplot"){
-    warning("label bounding boxes are not accurate for ggplot2. ",
-            "direct labels may overlap!")
   }
   ## abs since we have a weird bug with ggplot2 sometimes
   w <- abs(convert("Width"))
@@ -310,10 +306,7 @@ draw.rects <- function(d,...){
 }
 
 ### Sequentially bump labels up, starting from the bottom, if they
-### collide with the label underneath. NOTE: behavior is undefined
-### when used with ggplot2 since it relies on the calc.boxes()
-### function which doesn't know how to calculate bounding boxes for
-### ggplot2 labels (yet).
+### collide with the label underneath.
 bumpup <- function(d,...){
   d <- calc.boxes(d)[order(d$y),]
   "%between%" <- function(v,lims)lims[1]<v&v<lims[2]
@@ -402,6 +395,13 @@ in1which <- function
 ### Calculate how many points fall in a box.
 in1box <- function(p,box)sum(in1which(p,box))
 
+label.pieces <- function(FUN,VJUST){
+  function(d,...){
+    processed <- gapply(d,function(d,...)d[FUN(d$y),],groups="piece")
+    transform(processed,hjust=0.5,vjust=VJUST)
+  }
+}
+
 inside <- function
 ### Calculate for each box how many points are inside.
 (boxes,
@@ -483,14 +483,16 @@ gapply <- function
 ### data frame with column groups.
  method,
 ### Positioning Method to apply to every group separately.
- ...
+ ...,
 ### additional arguments for FUN.
+ groups="groups"
+### can also be useful for piece column.
  ){
   stopifnot(is.data.frame(d))
-  dfs <- split(d,as.character(d$groups))
+  dfs <- split(d,as.character(d[[groups]]))
   f <- function(d,...){
     res <- apply.method(method,d,...)
-    res$groups <- d$groups[1]
+    res[[groups]] <- d[[groups]][1]
     res
   }
   results <- lapply(dfs,f,...)
@@ -589,9 +591,7 @@ follow.points <- function
 ### Draws a line between each center and every point, then follows the
 ### line out far enough to give a box outside the cloud. Out of all
 ### the boxes constructed in this way that do not contain any points,
-### take the one which has the smallest distance to the center. FIXME:
-### does not work with ggplot2 since the ggplot2 backend doesn't yet
-### have support of actually knowing how big the text bounding box is.
+### take the one which has the smallest distance to the center. 
 (d,debug=FALSE,...){
   allm <- apply.method(list("dl.jitter","big.boxes"),d)
   if(debug)draw.rects(allm)
@@ -666,9 +666,9 @@ apply.method <- function # Apply a Positioning Method
 ### frame is used to draw a direct label.
  d,
 ### Data frame to which we apply the Positioning Method.
- debug=FALSE,
- ...
+ ...,
 ### Passed to Positioning Functions.
+ debug=FALSE
  ){
   attr(d,"orig.data") <- d
   if(!is.list(method))method <- list(method)
@@ -679,8 +679,8 @@ apply.method <- function # Apply a Positioning Method
   islist <- function()is.list(method[[1]])
   isref <- function()(!isconst())&&is.character(method[[1]])
   while(length(method)){
-    if(debug)print(method[1])
-    ## Resolve any PF names or nested lists
+    if(debug)print(method[[1]])
+    ## Resolve any names or nested lists
     is.trans <- FALSE
     while(islist()||isref()){
       if(islist()){
@@ -698,13 +698,10 @@ apply.method <- function # Apply a Positioning Method
       d[[names(method)[1]]] <- method[[1]]
     else{
       old <- d
-      ##print(method[[1]])
       d <- method[[1]](d,...,debug=debug)
       attr(d,"orig.data") <-
-        if(is.trans)d else{
-          if(is.null(attr(old,"orig.data")))old
-          else attr(old,"orig.data")
-        }
+        if(is.null(attr(old,"orig.data")))old
+        else attr(old,"orig.data")
     }
     if(debug){
       print(d)
