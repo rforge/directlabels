@@ -11,7 +11,7 @@ drawDetails.dlgrob <- function(g,...){
   ## save original levels for later in case Positioning Methods mess
   ## them up.
   levs <- unique(cm.data[,c("groups","colour")])
-  code <- as.character(cm.data$col)
+  code <- as.character(cm.data$colour)
   names(code) <- as.character(cm.data$groups)
   ## apply ignore.na function -- these points are not plotted
   cm.data <- ignore.na(cm.data)
@@ -150,7 +150,7 @@ direct.label <- structure(function
   p3 <- qplot(deaths,age,data=vad2,
               group=demographic,geom="line",colour=demographic)
   direct.label(p3,"top.qp")
-  ## contour plot --- FIXME!!
+  ## contour plot --- labels each piece, not each group!
   volcano3d <- melt(volcano)
   names(volcano3d) <- c("x", "y", "z")
   v <- ggplot(volcano3d, aes(x, y, z = z,colour=..level..))+
@@ -226,10 +226,10 @@ direct.label <- structure(function
   ## some data from clustering algorithms
   data(iris.l1.cluster,package="directlabels")
   p <- ggplot(iris.l1.cluster,aes(lambda,alpha,group=row,colour=Species))+
-    geom_line(alpha=1/4)+
+    geom_line()+
     facet_grid(col~.)
   p2 <- p+xlim(-0.0025,max(iris.l1.cluster$lambda))
-  print(direct.label(p2,list("first.points","get.means","first.qp")))
+  print(direct.label(p2,list("first.points","get.means","first.qp"),TRUE))
 
   ## TODO
   data(normal.l2.cluster,package="directlabels")

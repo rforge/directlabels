@@ -15,7 +15,7 @@ geom_dl <- structure(function
  method,
 ### Positioning Method.
  ...
-### passed to GeomDirectLabel$new. ie stat= position=
+### passed to GeomDirectLabel$new. ie stat= position= debug=
  ){
   require(ggplot2)
   ## Geom for direct labeling that creates dlgrobs in the draw()
@@ -50,16 +50,18 @@ geom_dl <- structure(function
 },ex=function(){
   vad <- as.data.frame.table(VADeaths)
   names(vad) <- c("age","demographic","deaths")
+  ## color + legend
+  leg <- ggplot(vad,aes(deaths,age,colour=demographic))+
+    geom_line(aes(group=demographic))
+  print(leg)
+  direct.label(leg,list("last.points",rot=30))
+  direct.label(leg,list("last.points",rot=30),TRUE)
+  leg+geom_dl(aes(label=demographic),list("last.points",rot=30),debug=TRUE)
   ## no color, just direct labels!
   p <- ggplot(vad,aes(deaths,age))+
     geom_line(aes(group=demographic))+
     geom_dl(aes(label=demographic),method="top.qp")
   print(p)
-  ## color + legend
-  leg <- ggplot(vad,aes(deaths,age,colour=demographic))+
-    geom_line(aes(group=demographic))
-  print(leg)
-  direct.label(leg,list(last.points,rot=30))
   ## add color:
   p+aes(colour=demographic)+
     scale_colour_discrete(legend=FALSE)
@@ -116,7 +118,7 @@ direct.label.ggplot <- function
   geom <- L$geom$objname
   if(is.null(method))method <- default.picker("ggplot")
   dlgeom <- geom_dl(do.call(aes,list(label=as.symbol(colvar))),method,
-                    stat=L$stat)
+                    stat=L$stat,debug=debug)
   scale.types <- sapply(p$scales$.scales,"[[",".output")
   scale.i <- which("colour"==scale.types)
   if(length(scale.i)){
