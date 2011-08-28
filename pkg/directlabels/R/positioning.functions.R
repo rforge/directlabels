@@ -15,17 +15,20 @@ drawDetails.dlgrob <- function(g,...){
   ## rearrange factors in case Positioning Methods messed up the
   ## order:
   cm.data$groups <- factor(as.character(cm.data$groups),levs)
+  cm.data$col <- cm.data$colour
   ## defaults for grid parameter values:
-  defaults <- list(hjust=0.5,vjust=0.5,rot=0,cex=1)
+  defaults <- list(hjust=0.5,vjust=0.5,rot=0)
   for(p in names(defaults)){
     if(!p %in% names(cm.data))cm.data[,p] <- NA
     cm.data[is.na(cm.data[,p]),p] <- defaults[[p]]
   }
   cm.data <- unique(cm.data)
+  gpargs <- c("cex","alpha","fontface","fontfamily","col")
+  gp <- do.call(gpar,cm.data[names(cm.data)%in%gpargs])
   if(g$debug)print(cm.data)
   with(cm.data,{
     grid.text(groups,x,y,hjust=hjust,vjust=vjust,rot=rot,default.units="cm",
-              gp=gpar(col=colour))
+              gp=gp)
   })
 }
 
@@ -35,9 +38,10 @@ dlgrob <- function
 ### Data frame including points to plot in native coordinates.
  method,
 ### Positioning Method.
- debug=FALSE
+ debug=FALSE,
+ ...
  ){
-  grob(data=data,method=method,debug=debug,cl="dlgrob",name="directlabels")
+  grob(data=data,method=method,debug=debug,cl="dlgrob",name="directlabels",...)
 }
 
 direct.label <- structure(function
@@ -61,6 +65,7 @@ direct.label <- structure(function
   scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
                    main="Fuel efficiency depends on car size")
   print(direct.label(scatter,list(extreme.grid,dl.move("suv",15,15))))
+  print(direct.label(scatter))
 
   ## scatterplot in lattice
   m <- lm(cty~displ,data=mpg)
@@ -120,9 +125,11 @@ direct.label <- structure(function
   print(direct.label(lplot+scale_colour_manual(values=c("red","black","blue"))))
   
   ## dotplot:
-  plot(direct.label(dotplot(VADeaths,type="o"),angled.endpoints))
+  plot(direct.label(dotplot(VADeaths,type="o"),"angled.endpoints"))
   plot(direct.label(dotplot(VADeaths,type="o"),
-                    list(cex=0.7,dl.trans(y=y+0.1),top.qp)))
+         list(cex=0.7,"calc.boxes","draw.rects",dl.trans(y=y+0.1),"top.qp")))
+  plot(direct.label(dotplot(VADeaths,type="o"),
+         list(cex=1.7,"calc.boxes","draw.rects",dl.trans(y=y+0.1),"top.qp")))
   VAD2 <- VADeaths
   colnames(VAD2) <- sub(" ","\n",colnames(VAD2))
   plot(direct.label(dotplot(VAD2,type="o"),
@@ -138,7 +145,7 @@ direct.label <- structure(function
   p3 <- qplot(deaths,age,data=vad2,
               group=demographic,geom="line",colour=demographic)
   direct.label(p3,"top.points")
-  ## contour plot
+  ## contour plot --- FIXME!!
   volcano3d <- melt(volcano)
   names(volcano3d) <- c("x", "y", "z")
   v <- ggplot(volcano3d, aes(x, y, z = z))
@@ -301,44 +308,6 @@ apply.method <- function # Apply a Positioning Method
 ### the Positioning Method list.
 }
 
-
-### Transformation function for 1d densityplots.
-trans.densityplot <- gapply.fun({
-  dens <- density(d$x,na.rm=TRUE)
-  data.frame(x=dens$x,y=dens$y)
-})
-trans.density <- trans.densityplot
-
-### Transformation function for 1d qqmath plots. This is a copy-paste
-### from panel.qqmath. (total hack)
-trans.qqmath <- function(d,distribution,f.value,qtype=7,...){
-  gapply(d,function(d,...){
-    x <- as.numeric(d$x)
-    distribution <- if (is.function(distribution)) 
-      distribution
-    else if (is.character(distribution)) 
-      get(distribution)
-    else eval(distribution)
-    nobs <- sum(!is.na(x))
-    if (is.null(f.value)) 
-      data.frame(x = distribution(ppoints(nobs)), y = sort(x))
-    else data.frame(x = distribution(
-                      if (is.numeric(f.value))f.value
-                      else f.value(nobs)),
-                    y = quantile(x,
-                      if (is.numeric(f.value))f.value
-                      else f.value(nobs),
-                      names = FALSE, type = qtype, na.rm = TRUE))
-  })
-}
-
-### Place points on top of the mean value of the rug.
-rug.mean <- function(d,...,end)
-  gapply(d,function(d,...)
-         data.frame(x=mean(d$x),
-                   y=as.numeric(convertY(unit(end,"npc"),"native")),
-                   vjust=0))
-
 ### Label points at the top, making sure they don't collide.
 top.qp <- list("top.points","calc.boxes",qp.labels("x","w"))
 
@@ -353,9 +322,7 @@ lasso.labels <-
        }),
        "calc.boxes",
        ## calculate how wide the tilted box is
-       dl.trans(h.inches=convertHeight(unit(h,"native"),"inches",TRUE)),
-       dl.trans(hyp.inches=h.inches/sin(2*pi*rot/360)),
-       dl.trans(hyp=convertWidth(unit(hyp.inches,"inches"),"native",TRUE)),
+       dl.trans(hyp=h/sin(2*pi*rot/360)),
        ## avoid collisions between tilted boxes
        qp.labels("x","hyp"))
 
