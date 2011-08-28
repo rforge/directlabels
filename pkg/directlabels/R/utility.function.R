@@ -623,3 +623,96 @@ follow.points <- function
   }
   labtab
 }
+
+### Label points at the zero before the first nonzero y value.
+lasso.labels <-
+  list(rot=60,
+       gapply.fun({ ## figure out where the path hits 0
+         d <- d[order(d$x),]
+         zero <- d$y[1]
+         i <- which(d$y!=zero)[1]
+         just <- as.integer(d[i,"y"]>zero)
+         transform(d[i-1,],hjust=just,vjust=just)
+       }),
+       "calc.boxes",
+       ## calculate how wide the tilted box is
+       dl.trans(hyp=h/sin(2*pi*rot/360)),
+       ## avoid collisions between tilted boxes
+       qp.labels("x","hyp"))
+
+### Calculate a 2d density estimate then follow the gradient to a
+### point outside the convex hull.
+dens.gradient <- function(d,...){
+  require(ks)
+  est <- drvkde(with(d,cbind(x,y)),1:2,1,se=FALSE)
+  ##print(dens)
+  d
+}
+
+apply.method <- function # Apply a Positioning Method
+### Run a Positioning Method list on a given data set. This function
+### contains all the logic for parsing a Positioning Method and
+### sequentially applying its elements to the input data to obtain the
+### label positions. This is useful since it is often much less
+### verbose to define Positioning Methods in list form instead of
+### function form, ex lasso.labels.
+(method,
+### Direct labeling Positioning Method, which is a list comprised of
+### any of the following: (1) a Positioning Function, (2) a character
+### string which is the name of an object that could be used, (3)
+### named values, or (4) a Positioning Method list. Starting from the
+### data frame of points to plot for the panel, the elements of the
+### list are applied in sequence, and each row of the resulting data
+### frame is used to draw a direct label.
+ d,
+### Data frame to which we apply the Positioning Method.
+ debug=FALSE,
+ ...
+### Passed to Positioning Functions.
+ ){
+  attr(d,"orig.data") <- d
+  if(!is.list(method))method <- list(method)
+  isconst <- function(){
+    m.var <- names(method)[1]
+    !(is.null(m.var)||m.var=="")
+  }
+  islist <- function()is.list(method[[1]])
+  isref <- function()(!isconst())&&is.character(method[[1]])
+  while(length(method)){
+    if(debug)print(method[1])
+    ## Resolve any PF names or nested lists
+    is.trans <- FALSE
+    while(islist()||isref()){
+      if(islist()){
+        method <- c(method[[1]],method[-1])
+      }else{ #must be character -> get the fun(s)
+        if(length(method[[1]])>1){
+          warning("using first element of character vector")
+          method[[1]] <- method[[1]][1]
+        }
+        is.trans <- grepl("^trans[.]",method[[1]])
+        method <- c(get(method[[1]]),method[-1])
+      }
+    }
+    if(isconst())
+      d[[names(method)[1]]] <- method[[1]]
+    else{
+      old <- d
+      ##print(method[[1]])
+      d <- method[[1]](d,...,debug=debug)
+      attr(d,"orig.data") <-
+        if(is.trans)d else{
+          if(is.null(attr(old,"orig.data")))old
+          else attr(old,"orig.data")
+        }
+    }
+    if(debug){
+      print(d)
+    }
+    method <- method[-1]
+  }
+  d
+### The final data frame returned after applying all of the items in
+### the Positioning Method list.
+}
+
