@@ -97,5 +97,5 @@ smart.grid <- list("big.boxes","empty.grid")
 perpendicular.grid <- list("perpendicular.lines","empty.grid")
 
 ### Use empty.grid with extreme.points.
-extreme.grid <- list("extreme.points","empty.grid")
+extreme.grid <- list("extreme.points","big.boxes","empty.grid")
 
