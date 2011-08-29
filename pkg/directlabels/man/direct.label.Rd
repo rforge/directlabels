@@ -27,7 +27,8 @@ library(ggplot2)
 scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
                  main="Fuel efficiency depends on car size")
 print(direct.label(scatter))
-print(direct.label(scatter,closest.on.ahull,TRUE))
+## Use a different Positioning Method, and edit one of the label
+## positions by hand
 print(direct.label(scatter,list("extreme.grid",dl.move("suv",15,15))))
 ## scatterplot in lattice
 m <- lm(cty~displ,data=mpg)
