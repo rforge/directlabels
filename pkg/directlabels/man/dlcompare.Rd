@@ -71,7 +71,14 @@ unlabeled.plots <- structure(plots,names=NULL)
 dlcompare(plots,mixed.funs)
 dlcompare(plots,mixed.funs[3])
 data(BodyWeight,package="nlme")
-ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
+ratplot <- xyplot(weight~Time|Diet,BodyWeight,
+                  groups=Rat,type="l",layout=c(3,1))
+##   ggrat <- qplot(Time,weight,data=BodyWeight,
+##                  colour=Rat,geom="line",facets=.~Diet)
+##   png("~/R/directlabels/www/rat-ggplot2-firstlast.png",h=400,w=900)
+##   dlcompare(list(ggrat+ylim(130,max(BodyWeight$weight))),
+##             list("first.qp","last.qp"),row.items="pfs",rects=FALSE)
+##   dev.off()
 ## Compare scatterplot labeling methods.
 scatters <-
   list(xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1),
