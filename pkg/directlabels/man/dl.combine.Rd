@@ -30,7 +30,6 @@ library(ggplot2)
 rp2 <- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
 print(direct.label(direct.label(rp2,"last.points"),"first.points"))
 print(direct.label(rp2,"both"))
-
 mylars <- function
 ## Least angle regression algorithm for calculating lasso solutions.
 (x,
@@ -65,7 +64,6 @@ mylars <- function
                                 alpha=alpha.total,
                                 arclength=sum(abs(b)),
                                 coef.unscaled=b/attr(xscale,"scaled:scale")))
-
     if(sum(abs(intercept)) < epsilon)#corr==0 so we are done
       return(transform(out,s=arclength/max(arclength)))
     
@@ -100,7 +98,6 @@ mylars <- function
     else c(j,which(nextvar==colnames(x)))
   }
 }
-
 ## Calculate lasso path, plot and label
 mylasso <- dl.combine(lasso.labels,last.qp)
 if(require(ElemStatLearn)){
@@ -116,7 +113,6 @@ if(require(ElemStatLearn)){
     geom_line(aes(group=variable))
   direct.label(p,"mylasso")
 }
-
 if(require(lars)){
   data(diabetes)
   dres <- with(diabetes,mylars(x,y))

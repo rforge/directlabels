@@ -4,7 +4,8 @@
 \description{Sequentially bump labels up, starting from the bottom, if they
 collide with the label underneath.}
 \usage{
-bumpup(d, ...)
+bumpup(d,
+...)
 }
 \arguments{
   \item{d}{

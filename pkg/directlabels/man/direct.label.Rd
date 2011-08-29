@@ -4,7 +4,9 @@
 \description{Add direct labels to a plot. This is a S3 generic and there are
 appropriate methods for "trellis" and "ggplot" objects.}
 \usage{
-direct.label(p, method = NULL, debug = FALSE)
+direct.label(p,
+method = NULL,
+debug = FALSE)
 }
 \arguments{
   \item{p}{The plot to which you would like to add direct labels.}
@@ -25,8 +27,8 @@ library(ggplot2)
 scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
                  main="Fuel efficiency depends on car size")
 print(direct.label(scatter))
+print(direct.label(scatter,closest.on.ahull,TRUE))
 print(direct.label(scatter,list("extreme.grid",dl.move("suv",15,15))))
-
 ## scatterplot in lattice
 m <- lm(cty~displ,data=mpg)
 mpgf <- fortify(m,mpg)
@@ -41,15 +43,12 @@ plot(direct.label(mpg.scatter,debug=TRUE))
 ## Method, the search grid size is the same size as the text box, so
 ## the grid is bigger here.
 plot(direct.label(mpg.scatter,list(cex=1.5,smart.grid),TRUE))
-
 ## direct labels are not as good when there are multiple panels, but
 ## as long as not every class appears in every panel, it still
 ## should be clearer than using a legend.
 carpanels <- xyplot(jitter(hwy)~jitter(cty)|manufacturer,mpgf,groups=class,
 main="City and highway fuel efficiency depends on manufacturer and car class")
 print(direct.label(carpanels))
-
-
 if(require(mlmRev)){
   data(Chem97)
   qqm <- qqmath(~gcsescore,Chem97,groups=gender,
@@ -62,7 +61,6 @@ if(require(mlmRev)){
   plot(direct.label(qqm,static.labels(c(-2,0),c(6,4),c("F","M")),TRUE))
   plot(direct.label(qqmath(~gcsescore|gender,Chem97,groups=factor(score),
                            type=c('l','g'),f.value=ppoints(100))))
-
   ## densityplot labeling
   plot(direct.label(densityplot(~gcsescore,Chem97,groups=factor(score),
                                 plot.points=FALSE,n=500)))
@@ -110,7 +108,6 @@ v <- ggplot(volcano3d, aes(x, y, z = z,colour=..level..))+
   stat_contour()
 direct.label(v)
 direct.label(v,"top.pieces")
-
 ## label 2 groups of longitudinal data:
 dts <- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
 ddf <- melt(as.data.frame(dts),id="time")
@@ -120,7 +117,6 @@ plots <- list(lattice=xyplot(deaths~time,ddf,groups=sex,type="l"),
 oask <- devAskNewPage(TRUE)
 for(p in plots)print(direct.label(p)) ## should default to lines2
 devAskNewPage(oask)
-
 ## lineplot labeling
 sprayplot <- xyplot(decrease~treatment,OrchardSprays,groups=rowpos,type="a")
 direct.label(sprayplot)
@@ -142,7 +138,6 @@ rat2 <- update(ratplot,
                panel=panel.superpose,
                panel.groups=panel.model)
 print(direct.label(rat2,"last.qp"))
-
 ## complicated ridge regression lineplot ex. fig 3.8 from Elements of
 ## Statistical Learning, Hastie et al.
 myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
@@ -183,7 +178,6 @@ p <- ggplot(iris.l1.cluster,aes(lambda,alpha,group=row,colour=Species))+
   facet_grid(col~.)
 p2 <- p+xlim(-0.0025,max(iris.l1.cluster$lambda))
 print(direct.label(p2,list("first.points","get.means","first.qp")))
-
 data(normal.l2.cluster,package="directlabels")
 p <- ggplot(normal.l2.cluster$path,aes(x,y))+
   geom_path(aes(group=row),colour="grey")+
@@ -195,6 +189,5 @@ print(direct.label(p,"extreme.grid"))
 ## respect the color scale. these should look the same:
 print(direct.label(p+scale_colour_manual(values=rainbow(8))))
 print(direct.label(p)+scale_colour_manual(values=rainbow(8),legend=FALSE))
-
 lattice.options(oldopt)
 }

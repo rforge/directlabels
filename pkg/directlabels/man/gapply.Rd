@@ -5,7 +5,10 @@
 plyr package, but the grouping column is always called groups, and
 the Positioning Method is not necessarily a function (but can be).}
 \usage{
-gapply(d, method, ..., groups = "groups")
+gapply(d,
+method,
+...,
+groups = "groups")
 }
 \arguments{
   \item{d}{data frame with column groups.}

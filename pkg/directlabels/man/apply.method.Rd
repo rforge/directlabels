@@ -8,7 +8,10 @@ label positions. This is useful since it is often much less
 verbose to define Positioning Methods in list form instead of
 function form, ex lasso.labels.}
 \usage{
-apply.method(method, d, debug = FALSE, ...)
+apply.method(method,
+d,
+debug = FALSE,
+...)
 }
 \arguments{
   \item{method}{Direct labeling Positioning Method, which is a list comprised of

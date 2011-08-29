@@ -6,7 +6,9 @@ line out far enough to give a box outside the cloud. Out of all
 the boxes constructed in this way that do not contain any points,
 take the one which has the smallest distance to the center. }
 \usage{
-follow.points(d, debug = FALSE, ...)
+follow.points(d,
+debug = FALSE,
+...)
 }
 \arguments{
   \item{d}{

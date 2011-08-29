@@ -3,7 +3,8 @@
 \title{top pieces}
 \description{Positioning Method for the top of a group of points.}
 \usage{
-top.pieces(d, ...)
+top.pieces(d,
+...)
 }
 \arguments{
   \item{d}{

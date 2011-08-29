@@ -4,7 +4,8 @@
 \description{Make a Positioning Method that will, for every piece, select
 points and assign a vjust value.}
 \usage{
-label.pieces(FUN, VJUST)
+label.pieces(FUN,
+VJUST)
 }
 \arguments{
   \item{FUN}{

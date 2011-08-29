@@ -3,7 +3,9 @@
 \title{geom dl}
 \description{Geom that will plot direct labels.}
 \usage{
-geom_dl(mapping = NULL, method, ...)
+geom_dl(mapping = NULL,
+method,
+...)
 }
 \arguments{
   \item{mapping}{aes(label=variable_that_will_be_used_as_groups_in_Positioning_Methods).}

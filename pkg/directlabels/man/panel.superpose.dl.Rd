@@ -5,7 +5,16 @@
 labels. This is a proper lattice panel function that behaves much
 like panel.superpose.}
 \usage{
-panel.superpose.dl(x, y = NULL, subscripts, groups, panel.groups, method = NULL, .panel.superpose = panel.superpose, type = "p", debug = FALSE, ...)
+panel.superpose.dl(x,
+y = NULL,
+subscripts,
+groups,
+panel.groups,
+method = NULL,
+.panel.superpose = panel.superpose,
+type = "p",
+debug = FALSE,
+...)
 }
 \arguments{
   \item{x}{Vector of x values.}
@@ -47,7 +56,6 @@ print(direct.label( ## exactly the same as above but with specific panel fns
 ## direct labels
 print(densityplot(~ppp,loci,groups=type,n=500,
                   panel=panel.superpose.dl,panel.groups="panel.densityplot"))
-
 ## Exploring custom panel and panel.groups functions
 library(ggplot2)
 data(BodyWeight,package="nlme")
@@ -63,13 +71,11 @@ ratxy <- function(...){
 regular <- ratxy()
 print(regular) ## normal lattice plot
 print(direct.label(regular)) ## with direct labels
-
 ## The direct label panel function panel.superpose.dl can be used to
 ## display direct labels as well:
 print(ratxy(panel=panel.superpose.dl,panel.groups="panel.xyplot"))
 print(ratxy(panel=function(...)
             panel.superpose.dl(panel.groups="panel.xyplot",...)))
-
 ## Not very user-friendly, since default label placement is
 ## impossible, but these should work:
 print(ratxy(panel=panel.superpose.dl,panel.groups=panel.xyplot,
@@ -77,7 +83,6 @@ print(ratxy(panel=panel.superpose.dl,panel.groups=panel.xyplot,
 print(ratxy(panel=function(...)
             panel.superpose.dl(panel.groups=panel.xyplot,...),
             method=first.points))
-
 ## Custom panel.groups functions:
 ## This panel.groups function will display the model fits:
 panel.model <- function(x,subscripts,col.line,...){
@@ -92,7 +97,6 @@ print(pg)
 print(direct.label(pg,method="first.qp"))
 print(ratxy(panel=panel.superpose.dl,panel.groups="panel.model",
             method="first.qp"))
-
 ## Custom panel function that draws a box around values:
 panel.line1 <- function(ps=panel.superpose){
   function(y,...){
@@ -107,7 +111,6 @@ print(direct.label(custom))
 ## panel.superpose.dl in the panel function. This is useful for direct
 ## label plots where you use several datasets.
 print(ratxy(panel=panel.line1(panel.superpose.dl),panel.groups="panel.xyplot"))
-
 ## Lattice plot with custom panel and panel.groups functions:
 both <- ratxy(panel=panel.line1(),panel.groups="panel.model")
 print(both)

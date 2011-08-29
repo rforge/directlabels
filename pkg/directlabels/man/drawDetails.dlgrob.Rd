@@ -5,7 +5,8 @@
 resulting direct labels. This is called for every panel with
 direct labels, every time the plot window is resized.}
 \usage{
-\method{drawDetails}{dlgrob}(x, recording)
+\method{drawDetails}{dlgrob}(x,
+recording)
 }
 \arguments{
   \item{x}{
