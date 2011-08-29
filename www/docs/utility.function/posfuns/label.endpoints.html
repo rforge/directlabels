@@ -16,7 +16,7 @@
 <h1><a href="../../index.html">directlabels</a> - utility.function -
 Positioning Method - label.endpoints</h1>
 
-<p>Make a Positioning Method that labels a certain x value.</p>
+<p></p>
 
 <pre>
 label.endpoints &lt;- function
@@ -24,12 +24,12 @@ label.endpoints &lt;- function
 (FUN,
 ### FUN(d$x) should return an index of which point to label. for
 ### example you can use which.min or which.max.
- hjust
+ HJUST
 ### hjust of the labels.
  ){
   function(d,...)<a href="../../utility.function/posfuns/gapply.html">gapply</a>(d,function(d,...){
     i &lt;- FUN(d$x)==d$x
-    if(length(i))data.frame(d[i,],hjust,vjust=0.5)
+    if(length(i))transform(d[i,],hjust=HJUST,vjust=0.5)
     else data.frame()
   })
 ### A Positioning Method like <a href="../../lineplot/posfuns/first.points.html">first.points</a> or last.points.

@@ -16,10 +16,10 @@
 <h1><a href="../../index.html">directlabels</a> - scatterplot -
 Positioning Method - extreme.grid</h1>
 
-<p>Use empty.grid with extreme.points.</p>
+<p>Label each point cloud near the extremities of the plot region.</p>
 
 <pre>
-extreme.grid &lt;- list("<a href="../../utility.function/posfuns/extreme.points.html">extreme.points</a>","<a href="../../scatterplot/posfuns/empty.grid.html">empty.grid</a>")
+extreme.grid &lt;- list("<a href="../../utility.function/posfuns/extreme.points.html">extreme.points</a>","<a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>","<a href="../../utility.function/posfuns/empty.grid.html">empty.grid</a>")
 </pre>
 
 <table>
@@ -30,7 +30,10 @@ data(mpg,package="ggplot2")
 m &lt;- lm(cty~displ,data=mpg)
 mpgf &lt;- fortify(m,mpg)
 library(lattice)
-p &lt;- xyplot(jitter(.resid)~jitter(.fitted)|manufacturer,mpgf,groups=class)
+library(latticeExtra)
+p &lt;- xyplot(cty~hwy|manufacturer,mpgf,groups=class,aspect="iso",
+       main="City and highway fuel efficiency by car class and manufacturer")+
+  layer_(panel.abline(0,1,col="grey90"))
 direct.label(p,"extreme.grid")
   </pre></td>
 </tr>

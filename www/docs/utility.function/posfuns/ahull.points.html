@@ -19,7 +19,7 @@ Positioning Method - ahull.points</h1>
 <p>Calculate the points on the ashape.</p>
 
 <pre>
-ahull.points &lt;- function(d,ahull=<a href="../../utility.function/posfuns/default.ahull.html">default.ahull</a>(d)){
+ahull.points &lt;- function(d,...,ahull=<a href="../../utility.function/posfuns/default.ahull.html">default.ahull</a>(d)){
   require(alphahull)
   xy &lt;- unique(d[,c("x","y")])
   as &lt;- ashape(xy,alpha=ahull)

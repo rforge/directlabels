@@ -25,58 +25,38 @@ p &lt;- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
 
 <table>
 <tr>
-  <td><img alt="closest.on.ahull" src="../../scatterplot/mpg.closest.on.ahull.png" /></td>
-  <td><p>Calculate closest point on the alpha hull with size of the boxes,
-and put it outside that point. (only technically correct for
-aspect="iso" TODO: check and correct for perspective changes.)
-TODO: doesn't work with ggplot2 since we can't calculate bounding
-box.</p>
+  <td><img alt="ahull.grid" src="../../scatterplot/mpg.ahull.grid.png" /></td>
+  <td><p>Label the closest point on the alpha hull of the data.</p>
     <pre>
-direct.label(p,"<a href="../posfuns/closest.on.ahull.html">closest.on.ahull</a>")
+direct.label(p,"<a href="../posfuns/ahull.grid.html">ahull.grid</a>")
   </pre></td>
 </tr>
 <tr>
-  <td><img alt="closest.on.chull" src="../../scatterplot/mpg.closest.on.chull.png" /></td>
-  <td><p>Calculate closest point on the convex hull and put it outside that
-point. TODO: doesn't work with ggplot2 since we can't calculate
-bounding box. Assume d is the center for each point cloud and then
-use orig.data to calculate hull.</p>
+  <td><img alt="chull.grid" src="../../scatterplot/mpg.chull.grid.png" /></td>
+  <td><p>Label the closest point on the convex hull of the data.</p>
     <pre>
-direct.label(p,"<a href="../posfuns/closest.on.chull.html">closest.on.chull</a>")
-  </pre></td>
-</tr>
-<tr>
-  <td><img alt="empty.grid" src="../../scatterplot/mpg.empty.grid.png" /></td>
-  <td><p>Label placement method for scatterplots that ensures labels are
-placed in different places. A grid is drawn over the whole
-plot. Each cluster is considered in sequence and assigned to the
-point on this grid which is closest to the point given by
-the input data points. Makes use of attr(d,"orig.data").</p>
-    <pre>
-direct.label(p,"<a href="../posfuns/empty.grid.html">empty.grid</a>")
+direct.label(p,"<a href="../posfuns/chull.grid.html">chull.grid</a>")
   </pre></td>
 </tr>
 <tr>
   <td><img alt="extreme.grid" src="../../scatterplot/mpg.extreme.grid.png" /></td>
-  <td><p>Use empty.grid with extreme.points.</p>
+  <td><p>Label each point cloud near the extremities of the plot region.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/extreme.grid.html">extreme.grid</a>")
   </pre></td>
 </tr>
 <tr>
   <td><img alt="perpendicular.grid" src="../../scatterplot/mpg.perpendicular.grid.png" /></td>
-  <td><p>Use empty.grid with perpendicular.lines.</p>
+  <td><p>Draw a regression line through the data, then draw perpendicular
+lines to the extreme points of each point cloud.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/perpendicular.grid.html">perpendicular.grid</a>")
   </pre></td>
 </tr>
 <tr>
   <td><img alt="smart.grid" src="../../scatterplot/mpg.smart.grid.png" /></td>
-  <td><p>Use bounding box information with a small empty.grid to find the a
-non-colliding label that is close to a point on the convex hull,
-which is close to the visual center of the data. TODO: does not
-work with ggplot2 since the backend does not support bounding box
-calculation.</p>
+  <td><p>Search the plot region for a label position near the center of
+each point cloud.</p>
     <pre>
 direct.label(p,"<a href="../posfuns/smart.grid.html">smart.grid</a>")
   </pre></td>

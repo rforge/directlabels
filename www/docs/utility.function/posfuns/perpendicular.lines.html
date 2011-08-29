@@ -16,10 +16,7 @@
 <h1><a href="../../index.html">directlabels</a> - utility.function -
 Positioning Method - perpendicular.lines</h1>
 
-<p>Draw a line between the centers of each cluster, then draw a
-perpendicular line for each cluster that goes through its
-center. For each cluster, return the point the lies furthest out
-along this line.</p>
+<p></p>
 
 <pre>
 perpendicular.lines &lt;- function
@@ -59,7 +56,7 @@ perpendicular.lines &lt;- function
   if(debug){
     ## myline draws a line over the range of the data for a given fun F
     myline &lt;- function(F)
-      grid.lines(range(d$x),F(range(d$x)),default.units="native")
+      grid.lines(range(d$x),F(range(d$x)),default.units="cm")
     ## Then draw a line between these means
     myline(function(x)m*x+b)
     ## Then draw perpendiculars that go through each center

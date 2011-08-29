@@ -21,8 +21,8 @@ average size of label boxes.</p>
 
 <pre>
 default.ahull &lt;- function(d,...){
-  labels &lt;- apply.method("<a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>",d,...)
-  mean(unlist(labels[,c("w","h")]))/2
+  labels &lt;- <a href="../../utility.function/posfuns/apply.method.html">apply.method</a>("<a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>",d,...)
+  mean(unlist(labels[,c("w","h")]))
 }
 </pre>
 

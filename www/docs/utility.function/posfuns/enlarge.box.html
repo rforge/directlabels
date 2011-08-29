@@ -21,10 +21,10 @@ Positioning Method - enlarge.box</h1>
 <pre>
 enlarge.box &lt;- function(d,...){
   if(!"h"%in%names(d))stop("need to have already calculated height and width.")
-  h &lt;- unit(d$h,"native")
-  d$h &lt;- d$h*2
-  d$w &lt;- d$w+as.numeric(convertWidth(convertHeight(h,"inches"),"native"))
-  <a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>(d)
+  <a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>(within(d,{
+    w &lt;- w+h
+    h &lt;- h+h
+  }))
 }
 </pre>
 

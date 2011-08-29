@@ -16,23 +16,16 @@
 <h1><a href="../../index.html">directlabels</a> - utility.function -
 Positioning Method - follow.points</h1>
 
-<p>Draws a line between each center and every point, then follows the
-line out far enough to give a box outside the cloud. Out of all
-the boxes constructed in this way that do not contain any points,
-take the one which has the smallest distance to the center. FIXME:
-does not work with ggplot2 since the ggplot2 backend doesn't yet
-have support of actually knowing how big the text bounding box is.</p>
+<p></p>
 
 <pre>
 follow.points &lt;- function
 ### Draws a line between each center and every point, then follows the
 ### line out far enough to give a box outside the cloud. Out of all
 ### the boxes constructed in this way that do not contain any points,
-### take the one which has the smallest distance to the center. FIXME:
-### does not work with ggplot2 since the ggplot2 backend doesn't yet
-### have support of actually knowing how big the text bounding box is.
+### take the one which has the smallest distance to the center. 
 (d,debug=FALSE,...){
-  allm &lt;- apply.method(list("<a href="../../utility.function/posfuns/dl.jitter.html">dl.jitter</a>","<a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>"),d)
+  allm &lt;- <a href="../../utility.function/posfuns/apply.method.html">apply.method</a>(list("<a href="../../utility.function/posfuns/dl.jitter.html">dl.jitter</a>","<a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>"),d)
   if(debug)<a href="../../utility.function/posfuns/draw.rects.html">draw.rects</a>(allm)
   labtab &lt;- data.frame()
   for(g in levels(d$groups)){

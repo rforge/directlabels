@@ -16,7 +16,7 @@
 <h1><a href="../../index.html">directlabels</a> - utility.function -
 Positioning Method - in1which</h1>
 
-<p>Calculate which points fall in a box.</p>
+<p></p>
 
 <pre>
 in1which &lt;- function
@@ -26,7 +26,7 @@ in1which &lt;- function
  box
 ### data frame of 1 row with columns left right top bottom.
  ){
-  p$x&gt;box$left &amp; p$x&lt;box$right &amp; p$y&lt;box$top &amp; p$y&gt;box$bottom
+  p$x&gt;=box$left &amp; p$x&lt;=box$right &amp; p$y&lt;=box$top &amp; p$y&gt;=box$bottom
 }
 </pre>
 

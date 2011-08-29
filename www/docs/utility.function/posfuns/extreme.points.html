@@ -21,7 +21,7 @@ Positioning Method - extreme.points</h1>
 <pre>
 extreme.points &lt;- function(d,...){
   d$dist.from.center &lt;- sqrt((d$x-<a href="../../utility.function/posfuns/midrange.html">midrange</a>(d$x))^2+(d$y-<a href="../../utility.function/posfuns/midrange.html">midrange</a>(d$y))^2)
-  <a href="../../utility.function/posfuns/gapply.html">gapply</a>(d,function(d)d[which.max(d$dist.from.center),])
+  <a href="../../utility.function/posfuns/gapply.html">gapply</a>(d,function(d,...)d[which.max(d$dist.from.center),])
 }
 </pre>
 

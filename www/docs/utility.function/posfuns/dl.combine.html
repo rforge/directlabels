@@ -16,7 +16,7 @@
 <h1><a href="../../index.html">directlabels</a> - utility.function -
 Positioning Method - dl.combine</h1>
 
-<p>Apply several Positioning methods to the original data frame.</p>
+<p></p>
 
 <pre>
 dl.combine &lt;- structure(function # Combine output of several methods
@@ -26,7 +26,7 @@ dl.combine &lt;- structure(function # Combine output of several methods
  ){
   FUNS &lt;- list(...)
   pf &lt;- function(d,...){
-    dfs &lt;- lapply(FUNS,apply.method,d)
+    dfs &lt;- lapply(FUNS,<a href="../../utility.function/posfuns/apply.method.html">apply.method</a>,d)
     res &lt;- data.frame()
     for(df in dfs){
       if(nrow(res))res &lt;- merge(df,res,all=TRUE)
@@ -42,12 +42,14 @@ dl.combine &lt;- structure(function # Combine output of several methods
   data(BodyWeight,package="nlme")
   library(lattice)
   ratplot &lt;- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
-  plot(direct.label(ratplot,dl.combine(<a href="../../lineplot/posfuns/first.points.html">first.points</a>,<a href="../../lineplot/posfuns/last.points.html">last.points</a>)))
-  ## can also do this by repeatedly calling direct.label (ugly)
-  plot(direct.label(direct.label(ratplot,<a href="../../lineplot/posfuns/last.points.html">last.points</a>),<a href="../../lineplot/posfuns/first.points.html">first.points</a>))
+  both &lt;- dl.combine("<a href="../../lineplot/posfuns/first.points.html">first.points</a>","<a href="../../lineplot/posfuns/last.points.html">last.points</a>")
+  plot(direct.label(ratplot,"both"))
+  ## can also do this by repeatedly calling direct.label 
+  plot(direct.label(direct.label(ratplot,"<a href="../../lineplot/posfuns/last.points.html">last.points</a>"),"<a href="../../lineplot/posfuns/first.points.html">first.points</a>"))
   library(ggplot2)
   rp2 &lt;- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
-  print(direct.label(direct.label(rp2,<a href="../../lineplot/posfuns/last.points.html">last.points</a>),<a href="../../lineplot/posfuns/first.points.html">first.points</a>))
+  print(direct.label(direct.label(rp2,"<a href="../../lineplot/posfuns/last.points.html">last.points</a>"),"<a href="../../lineplot/posfuns/first.points.html">first.points</a>"))
+  print(direct.label(rp2,"both"))
 
   mylars &lt;- function
   ## Least angle regression algorithm for calculating lasso solutions.
@@ -119,20 +121,28 @@ dl.combine &lt;- structure(function # Combine output of several methods
     }
   }
 
-  ## Calculate lasso path
-  data(prostate,package="ElemStatLearn")
-  pros &lt;- subset(prostate,select=-train,train==TRUE)
-  ycol &lt;- which(names(pros)=="lpsa")
-  x &lt;- as.matrix(pros[-ycol])
-  y &lt;- unlist(pros[ycol])
-  res &lt;- mylars(x,y)
-  P &lt;- xyplot(coef~arclength,res,groups=variable,type="l")
-  plot(direct.label(P,dl.combine(lasso.labels,<a href="../../lineplot/posfuns/last.qp.html">last.qp</a>)))
+  ## Calculate lasso path, plot and label
+  mylasso &lt;- dl.combine(<a href="../../lineplot/posfuns/lasso.labels.html">lasso.labels</a>,<a href="../../lineplot/posfuns/last.qp.html">last.qp</a>)
+  if(require(ElemStatLearn)){
+    data(prostate)
+    pros &lt;- subset(prostate,select=-train,train==TRUE)
+    ycol &lt;- which(names(pros)=="lpsa")
+    x &lt;- as.matrix(pros[-ycol])
+    y &lt;- unlist(pros[ycol])
+    res &lt;- mylars(x,y)
+    P &lt;- xyplot(coef~arclength,res,groups=variable,type="l")
+    plot(direct.label(P,"mylasso"))
+    p &lt;- ggplot(res,aes(arclength,coef,colour=variable))+
+      geom_line(aes(group=variable))
+    direct.label(p,"mylasso")
+  }
 
-  data(diabetes,package="lars")
-  dres &lt;- with(diabetes,mylars(x,y))
-  P &lt;- xyplot(coef~arclength,dres,groups=variable,type="l")
-  plot(direct.label(P,dl.combine(lasso.labels,<a href="../../lineplot/posfuns/last.qp.html">last.qp</a>)))
+  if(require(lars)){
+    data(diabetes)
+    dres &lt;- with(diabetes,mylars(x,y))
+    P &lt;- xyplot(coef~arclength,dres,groups=variable,type="l")
+    plot(direct.label(P,"mylasso"))
+  }
 })
 </pre>
 

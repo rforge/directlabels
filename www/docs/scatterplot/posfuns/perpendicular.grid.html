@@ -16,10 +16,11 @@
 <h1><a href="../../index.html">directlabels</a> - scatterplot -
 Positioning Method - perpendicular.grid</h1>
 
-<p>Use empty.grid with perpendicular.lines.</p>
+<p>Draw a regression line through the data, then draw perpendicular
+lines to the extreme points of each point cloud.</p>
 
 <pre>
-perpendicular.grid &lt;- list("<a href="../../utility.function/posfuns/perpendicular.lines.html">perpendicular.lines</a>","<a href="../../scatterplot/posfuns/empty.grid.html">empty.grid</a>")
+perpendicular.grid &lt;- list("<a href="../../utility.function/posfuns/perpendicular.lines.html">perpendicular.lines</a>","<a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>","<a href="../../utility.function/posfuns/empty.grid.html">empty.grid</a>")
 </pre>
 
 <table>
@@ -30,7 +31,10 @@ data(mpg,package="ggplot2")
 m &lt;- lm(cty~displ,data=mpg)
 mpgf &lt;- fortify(m,mpg)
 library(lattice)
-p &lt;- xyplot(jitter(.resid)~jitter(.fitted)|manufacturer,mpgf,groups=class)
+library(latticeExtra)
+p &lt;- xyplot(cty~hwy|manufacturer,mpgf,groups=class,aspect="iso",
+       main="City and highway fuel efficiency by car class and manufacturer")+
+  layer_(panel.abline(0,1,col="grey90"))
 direct.label(p,"perpendicular.grid")
   </pre></td>
 </tr>

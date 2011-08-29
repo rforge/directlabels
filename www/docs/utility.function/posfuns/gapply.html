@@ -16,9 +16,7 @@
 <h1><a href="../../index.html">directlabels</a> - utility.function -
 Positioning Method - gapply</h1>
 
-<p>apply a Positioning Method to every group. works like ddply from
-plyr package, but the grouping column is always called groups, and
-the Positioning Method is not necessarily a function (but can be).</p>
+<p></p>
 
 <pre>
 gapply &lt;- function
@@ -29,15 +27,16 @@ gapply &lt;- function
 ### data frame with column groups.
  method,
 ### Positioning Method to apply to every group separately.
- ...
+ ...,
 ### additional arguments for FUN.
+ groups="groups"
+### can also be useful for piece column.
  ){
   stopifnot(is.data.frame(d))
-  d$groups &lt;- factor(d$groups)
-  dfs &lt;- lapply(levels(d$groups),function(g)d[d$groups==g,])
+  dfs &lt;- split(d,as.character(d[[groups]]))
   f &lt;- function(d,...){
-    res &lt;- apply.method(method,d,...)
-    res$groups &lt;- d$groups[1]
+    res &lt;- <a href="../../utility.function/posfuns/apply.method.html">apply.method</a>(method,d,...)
+    res[[groups]] &lt;- d[[groups]][1]
     res
   }
   results &lt;- lapply(dfs,f,...)

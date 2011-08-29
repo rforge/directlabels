@@ -19,7 +19,7 @@ Positioning Method - calc.boxes</h1>
 <p>Calculate boxes around labels, for collision detection.</p>
 
 <pre>
-calc.boxes &lt;- function(d,debug=FALSE,class="ggplot2",...){
+calc.boxes &lt;- function(d,debug=FALSE,...){
   vp &lt;- current.viewport()
   convert &lt;- function(worh){
     conv &lt;- get(paste("convert",worh,sep=""))
@@ -28,14 +28,10 @@ calc.boxes &lt;- function(d,debug=FALSE,class="ggplot2",...){
       if("cex"%in%names(d))vp$gp &lt;- gpar(cex=cex[i])
       pushViewport(vp)
       if(debug)grid.rect() ##highlight current viewport
-      w &lt;- conv(stri(as.character(groups[i])),"native")
+      w &lt;- conv(stri(as.character(groups[i])),"cm")
       popViewport()
       w
     }))
-  }
-  if(class=="ggplot"){
-    warning("label bounding boxes are not accurate for ggplot2. ",
-            "direct labels may overlap!")
   }
   ## abs since we have a weird bug with ggplot2 sometimes
   w &lt;- abs(convert("Width"))

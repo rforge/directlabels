@@ -24,14 +24,18 @@ overlap.</p>
 qp.labels &lt;- function(var,spacer)function(d,...){
   if(!spacer%in%names(d))stop("need to have calculated ",spacer)
   require(quadprog)
-  d &lt;- d[order(d[,var],decreasing=TRUE),]
-  ## sorts data so that m_1 is on top, m_n on bottom.
-  n &lt;- nrow(d)
-  D &lt;- diag(rep(1,n))
-  A &lt;- diag(rep(1,n))[,-n]-rbind(0,diag(rep(1,n-1)))
+  ## sorts data so that target_1 &lt;= target_2 &lt;= ... &lt;= target_n
+  d &lt;- d[order(d[,var]),]
+  target &lt;- d[,var]
+  k &lt;- nrow(d)
+  D &lt;- diag(rep(1,k))
+  ## These are the standard form matrices described in the
+  ## directlabels poster
+  Ik &lt;- diag(rep(1,k-1))
+  A &lt;- rbind(0,Ik)-rbind(Ik,0)
   h &lt;- d[,spacer]
-  b0 &lt;- (h[-n]+h[-1])/2
-  sol &lt;- solve.QP(D,d[,var],A,b0)
+  b0 &lt;- (h[-k]+h[-1])/2
+  sol &lt;- solve.QP(D,target,A,b0)
   d[,var] &lt;- sol$solution
   d
 }

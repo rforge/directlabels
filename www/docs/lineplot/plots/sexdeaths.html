@@ -18,10 +18,12 @@ sexdeaths</h1>
 
 <pre>
 library(ggplot2)
-dts &lt;- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
-ddf &lt;- melt(as.data.frame(dts),id="time")
-names(ddf) &lt;- c("time","sex","deaths")
-p &lt;- qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-5,77)
+tx &lt;- time(mdeaths)
+Time &lt;- ISOdate(floor(tx),round(tx%%1 * 12)+1,1,0,0,0)
+uk.lung &lt;- rbind(data.frame(Time,sex="male",deaths=as.integer(mdeaths)),
+                 data.frame(Time,sex="female",deaths=as.integer(fdeaths)))
+p &lt;- qplot(Time,deaths,data=uk.lung,colour=sex,geom="line")+
+  xlim(ISOdate(1973,9,1),ISOdate(1980,4,1))
 </pre>
 
 <table>
@@ -47,6 +49,13 @@ direct.label(p,"<a href="../posfuns/first.qp.html">first.qp</a>")
   </pre></td>
 </tr>
 <tr>
+  <td><img alt="lasso.labels" src="../../lineplot/sexdeaths.lasso.labels.png" /></td>
+  <td><p>Label points at the zero before the first nonzero y value.</p>
+    <pre>
+direct.label(p,"<a href="../posfuns/lasso.labels.html">lasso.labels</a>")
+  </pre></td>
+</tr>
+<tr>
   <td><img alt="last.bumpup" src="../../lineplot/sexdeaths.last.bumpup.png" /></td>
   <td><p>Label last points, bumping labels up if they collide.</p>
     <pre>
@@ -69,13 +78,7 @@ direct.label(p,"<a href="../posfuns/last.qp.html">last.qp</a>")
 </tr>
 <tr>
   <td><img alt="lines2" src="../../lineplot/sexdeaths.lines2.png" /></td>
-  <td><p>Positioning Method for 2 groups of longitudinal data. One curve
-is on top of the other one (on average), so we label the top one
-at its maximal point, and the bottom one at its minimal
-point. Vertical justification is chosen to minimize collisions
-with the other line. This may not work so well for data with high
-variability, but then again lineplots may not be the best for
-these data either.</p>
+  <td><p></p>
     <pre>
 direct.label(p,"<a href="../posfuns/lines2.html">lines2</a>")
   </pre></td>

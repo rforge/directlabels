@@ -21,9 +21,9 @@ side to avoid collisions with points.</p>
 
 <pre>
 top.bumptwice &lt;- function(d,debug=FALSE,...){
-  labtab &lt;- apply.method(<a href="../../densityplot/posfuns/top.bumpup.html">top.bumpup</a>,d)
+  labtab &lt;- <a href="../../utility.function/posfuns/apply.method.html">apply.method</a>(<a href="../../densityplot/posfuns/top.bumpup.html">top.bumpup</a>,d)
   if(debug)<a href="../../utility.function/posfuns/draw.rects.html">draw.rects</a>(labtab)
-  <a href="../../utility.function/posfuns/gapply.html">gapply</a>(labtab,function(l){
+  <a href="../../utility.function/posfuns/gapply.html">gapply</a>(labtab,function(l,...){
     x &lt;- sort(c(range(d$x),subset(d,y&gt;l$bottom&amp;y&lt;l$top)$x))
     if(length(x)==2)return(l)
     dif &lt;- diff(x)

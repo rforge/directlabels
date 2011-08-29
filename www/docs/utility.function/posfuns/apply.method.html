@@ -1,0 +1,110 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+	<meta http-equiv="Content-Type" content="text/html;
+	charset=UTF-8" />
+	<link href="http://directlabels.r-forge.r-project.org/estilo1.css"
+	rel="stylesheet" type="text/css" />
+	<title>directlabels documentation - apply.method</title>
+  </head>
+
+<body>
+
+<h1><a href="../../index.html">directlabels</a> - utility.function -
+Positioning Method - apply.method</h1>
+
+<p></p>
+
+<pre>
+apply.method &lt;- function # Apply a Positioning Method
+### Run a Positioning Method list on a given data set. This function
+### contains all the logic for parsing a Positioning Method and
+### sequentially applying its elements to the input data to obtain the
+### label positions. This is useful since it is often much less
+### verbose to define Positioning Methods in list form instead of
+### function form, ex lasso.labels.
+(method,
+### Direct labeling Positioning Method, which is a list comprised of
+### any of the following: (1) a Positioning Function, (2) a character
+### string which is the name of an object that could be used, (3)
+### named values, or (4) a Positioning Method list. Starting from the
+### data frame of points to plot for the panel, the elements of the
+### list are applied in sequence, and each row of the resulting data
+### frame is used to draw a direct label.
+ d,
+### Data frame to which we apply the Positioning Method.
+ debug=FALSE,
+ ...
+### Named arguments, passed to Positioning Functions.
+ ){
+  attr(d,"orig.data") &lt;- d
+  if(!is.list(method))method &lt;- list(method)
+  isconst &lt;- function(){
+    m.var &lt;- names(method)[1]
+    !(is.null(m.var)||m.var=="")
+  }
+  islist &lt;- function()is.list(method[[1]])
+  isref &lt;- function()(!isconst())&amp;&amp;is.character(method[[1]])
+  while(length(method)){
+    if(debug)print(method[1])##not [[1]] --- named items!
+    ## Resolve any names or nested lists
+    is.trans &lt;- FALSE
+    while(islist()||isref()){
+      if(islist()){
+        method &lt;- c(method[[1]],method[-1])
+      }else{ #must be character -&gt; get the fun(s)
+        if(length(method[[1]])&gt;1){
+          warning("using first element of character vector")
+          method[[1]] &lt;- method[[1]][1]
+        }
+        is.trans &lt;- grepl("^trans[.]",method[[1]])
+        method &lt;- c(get(method[[1]]),method[-1])
+      }
+    }
+    if(isconst())
+      d[[names(method)[1]]] &lt;- method[[1]]
+    else{
+      old &lt;- d
+      d &lt;- method[[1]](d,debug=debug,...)
+      attr(d,"orig.data") &lt;-
+        if(is.null(attr(old,"orig.data")))old
+        else attr(old,"orig.data")
+    }
+    if(debug){
+      print(d)
+    }
+    method &lt;- method[-1]
+  }
+  d
+### The final data frame returned after applying all of the items in
+### the Positioning Method list.
+}
+</pre>
+
+
+
+<center>
+<table>
+<tr><td>Please contact <a href="http://cbio.ensmp.fr/~thocking/">Toby
+Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
+contribute, thanks!</td>
+</tr>
+<tr><td align="center">Documentation website generated from comments
+in R source code
+using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
+</tr>
+<tr>
+<td align="center">
+    <a href="http://validator.w3.org/check?uri=referer">validate</a>
+</td>
+</tr>
+</table>
+
+</center>
+
+</body>
+
+</html>

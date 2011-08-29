@@ -22,14 +22,13 @@ frame.</p>
 
 <pre>
 draw.rects &lt;- function(d,...){
-  ## easy way -- not correct, doesn't use calc'ed borders
-  ##with(d,grid.rect(x,y,w,h,hjust=hjust,vjust=vjust,
-  ##                 default.units="native",gp=gpar(col="grey")))
-  d_ply(d,.(groups),function(D){
-    with(D,grid.lines(c(left,left,right,right,left),
-                      c(bottom,top,top,bottom,bottom),
-                      "native",gp=gpar(col="grey")))
-  })
+  for(i in 1:nrow(d)){
+    with(d[i,],{
+      grid.lines(c(left,left,right,right,left),
+                 c(bottom,top,top,bottom,bottom),
+                 "cm",gp=gpar(col="grey"))
+    })
+  }
   d
 }
 </pre>
