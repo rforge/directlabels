@@ -41,9 +41,9 @@ apply.method &lt;- function # Apply a Positioning Method
 ### frame is used to draw a direct label.
  d,
 ### Data frame to which we apply the Positioning Method.
- debug=FALSE,
- ...
+ ...,
 ### Named arguments, passed to Positioning Functions.
+ debug=FALSE
  ){
   attr(d,"orig.data") &lt;- d
   if(!is.list(method))method &lt;- list(method)
