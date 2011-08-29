@@ -104,15 +104,18 @@ using lattice or ggplot2.</p>
 
 <p>
 <a href="http://cbio.ensmp.fr/~thocking/papers/2011-08-16-useR/HOCKING-useR-2011-directlabels-poster.pdf">Adding
-direct labels to plots</a>, a poster which attempts to motivate the
-package and explain how it works.
-Notably,
-the "Optimal Labels" section is basically the only documentation of
-how to implement
+direct labels to
+plots</a>, <a href="http://www.warwick.ac.uk/statsdept/user-2011/">Best
+Student Poster</a> at useR 2011, attempts to motivate the package and
+explain how it works. Notably, the "Optimal Labels" section is
+basically the only documentation of how to implement
 the <a href="http://directlabels.r-forge.r-project.org/docs/utility.function/posfuns/qp.labels.html">qp.labels</a>
-Positioning
-Method. Awarded <a href="http://www.warwick.ac.uk/statsdept/user-2011/">Best
-Student Poster</a> at useR 2011.
+Positioning Method. The details of the "Modular package design"
+section have changed in version 2.0. Rather than
+calling <tt>label.positions</tt> the first time the plot
+is <tt>print</tt>ed, we now draw a <tt>dlgrob</tt>
+whose <tt>drawDetails</tt> method calculates label positions every
+time the plot window is resized/redrawn.
 </p>
 
 <p><a href="http://www.mnhn.fr/semin-r/">semin-r</a>, 15 oct
