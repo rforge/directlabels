@@ -62,9 +62,10 @@ help! <a href="docs/utility.function/posfuns/dl.combine.html">dl.combine</a>
 is included in the directlabels package, and it works like this:</p>
 
 <pre>
-library(directlabels)
 data(BodyWeight,package="nlme")
+library(lattice)
 P &lt;- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type="l",layout=c(3,1))
+library(directlabels)
 direct.label(P,dl.combine(first.points,last.qp))
 </pre>
 
@@ -74,13 +75,34 @@ direct.label(P,dl.combine(first.points,last.qp))
 
 <h2>Labeling black and white plots for printout</h2>
 
+<table>
+<tr>
+<td>
 <pre>
+library(lattice)
 trellis.par.set(standard.theme(color=FALSE))
 p &lt;- xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species)
 direct.label(p)
 </pre>
 
 <img src="scatter-bw.png" alt="direct labeled black and white scatterplot" />
+</td>
+<td>
+<pre>
+library(ggplot2)
+ggplot(iris,aes(Petal.Length,Sepal.Length))+
+  geom_point(aes(shape=Species))+
+  geom_dl(aes(label=Species),method="smart.grid")+
+  scale_shape_manual(values=c(setosa=1,virginica=6,versicolor=3),legend=FALSE)
+</pre>
+<img src="scatter-bw-ggplot2.png" alt="direct labeled black and white
+scatterplot in ggplot2" />
+</td>
+</tr>
+</table>
+
+<p>See also: <tt>example(geom_dl)</tt></p>
+
 
 <h2>Custom panel and panel.groups functions for the rat body weight data</h2>
 
@@ -184,20 +206,25 @@ this example, </p>
 
 <ol>
 
-<li>the first element is a function that adds 10 to every x value,
-thus shifting the labels to the right relative to the points.</li>
+<li>In Positioning Methods the x and y units are centimeters on the
+plotting device. The first list element <tt>dl.trans(x=x+10)</tt> is a
+function that adds 10 to every x value, thus shifting the labels 10cm
+to the right relative to the points. </li>
 
-<li>the second element is a call to gapply.fun, which lets you specify
-an expression to apply to each group, as a function of the data d. In
-this case d[-2,] means delete the second row from each group.</li>
+<li>The second element is a call to <tt>gapply.fun</tt>, which lets
+you specify an expression to apply to each group, as a function of the
+data <tt>d</tt>. In this case <tt>d[-2,]</tt> means delete the second
+row from each group.</li>
 
-<li>named elements are copied to the data frame, so the third element,
-rot=c(30,180), adds a rot column to the data frame, with values 30 and
-180 for every other row. This has the effect of rotating every label
-by 30 or 180 degrees. Text display parameters alpha, fontsize,
-fontfamily, fontface, lineheight, and cex can also be specified in
-this manner (see the help pages for grid::gpar for an exhaustive
-description and directlabels::dlcompare for an example).
+<li>Named elements are copied to the data frame, so the third element,
+<tt>rot=c(30,180)</tt>, adds a <tt>rot</tt> column to the data.frame,
+with values 30 and 180 for every other row. This has the effect of
+rotating every label by 30 or 180 degrees. Text display parameters
+<tt>alpha</tt>, <tt>fontsize</tt>, <tt>fontfamily</tt>, 
+<tt>fontface</tt>, <tt>lineheight</tt>, and <tt>cex</tt> can also be
+specified in this manner (see the help pages for <tt>grid::gpar</tt>
+for an exhaustive description and <tt>directlabels::dlcompare</tt> for
+an example).
 </li>
 
 </ol>
@@ -216,35 +243,11 @@ plots &lt;- list(lattice=
               xyplot(deaths~time,ddf,groups=sex,type="l",xlim=c(-15,80)),
               ggplot2=
               qplot(time,deaths,data=ddf,colour=sex,geom="line")+xlim(-10,80))
-pos.funs &lt;- list("first.points","lines2")
-dlcompare(plots,pos.funs)
+dlcompare(plots,list("first.points","lines2"))
 </pre>
 
 <img alt="lattice and ggplot2 plots can be compared"
 src="compare-new.png" />
-
-<pre>
-scatters &lt;- list(xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1),
-                 xyplot(Sepal.Length~Petal.Length,iris,groups=Species))
-dlcompare(scatters,list("empty.grid","empty.grid.2"))
-</pre>
-
-<img alt="several plots and Positioning Functions can be compared"
-src="scattercompare.png" />
-
-  <!--
-  <h2>Direct labeling several datasets</h2>
-
-  <p>This is a situation that does not occur very often, but if you
-  need to direct label 2 different datasets, here is how you should go
-  about doing it.</p>
-
-  <ul>
-
-  <li>ggplot2: Instead of the usual direct.label(plot)</li>
-
-  </ul>
-  -->
 
 <center>
 <table>

@@ -48,6 +48,19 @@ legends? Why not just add direct labels by hand?</a></li>
 <li><a href="smart.html">Smart label Positioning Methods that avoid label collisions</a></li>
 </ul>
 
+<h2>New in directlabels 2.x</h2>
+
+<ul>
+<li>Direct label positions are re-calculated when the plot window is
+resized.</li>
+<li>ggplot2 support for smart Positioning Methods that avoid label
+collisions.</li>
+<li>ggplot2 support for <tt>fontface</tt>, <tt>fontfamily</tt>,
+etc. text parameters. See <tt>example(dlcompare)</tt>.</li>
+<li>ggplot2 support for direct labeling aesthetics other than
+colour. See <tt>example(geom_dl)</tt>.</li>
+</ul>
+
 <h2>An extensible framework for thinking about direct labeling
 problems</h2>
 
@@ -56,39 +69,36 @@ label positions, then drawing the labels. Drawing the labels will
 always be taken care of for you, using the color of the corresponding
 group. Calculating label positions is also done for you for common
 plot types. For example, with the scatterplot above, the default
-behavior is to position each label close to the mean of the
+behavior is to position each label close to the center of the
 corresponding point cloud.</p>
 
 <p>If default label positions are not satisfactory, you can always
-specify your own label placement method, using the method= argument to
-direct.label. For example, we can label longitudinal data either on
-the left or right of the lines:</p>
+specify your own label placement method, using the <tt>method=</tt>
+argument to <tt>direct.label</tt>. For example, we can label
+longitudinal data either on the left or right of the lines:</p>
 
 <pre>
 install.packages("ggplot2")
 library(ggplot2)
 data(BodyWeight,package="nlme")
 p &lt;- qplot(Time,weight,data=BodyWeight,colour=Rat,geom="line",facets=.~Diet)
-direct.label(p,<a href="docs/lineplot/posfuns/first.points.html">first.points</a>)
-direct.label(p,<a href="docs/lineplot/posfuns/last.points.html">last.points</a>)
+direct.label(p,"<a href="docs/lineplot/posfuns/first.points.html">first.qp</a>")
+direct.label(p,"<a href="docs/lineplot/posfuns/last.points.html">last.qp</a>")
 </pre>
 
-<p>Here first.points and last.points
-are <a href="docs/index.html">Positioning Methods</a> of the form
-<tt>function(d,...){return(data.frame(x=,y=,groups=))}</tt>,
-where <tt>d</tt> is all the data to plot, as a data frame with
-columns <tt>x y groups</tt>. first.points simply returns the rows of
-the data frame which correspond to the first points for each
-group. The directlabels package plots a direct label for each row
-returned by the Positioning Method.</p>
+<p><tt>first.qp</tt> and <tt>last.qp</tt> are the names
+of <a href="docs/index.html">Positioning Methods</a> which place the
+labels respectively near the first or last points, ensuring that the
+labels do not overlap and so are readable.</p>
 
 <img src="rat-ggplot2-firstlast.png" alt="rat data plotted in ggplot2" />
 
-<p>The power of the directlabels system is the fact that you can write
-your own Positioning Methods, and they can be reused for different
-plots. So once you write a Positioning Method that works, adding
-direct labels is as simple as calling direct.label, no matter if you
-are using lattice or ggplot2.</p>
+<p>The power of the directlabels system is the fact that you
+can <a href="motivation.html">write your own</a> Positioning Methods,
+and they can be reused for different plots. So once you write a
+Positioning Method that works, adding direct labels in everyday plots
+is as simple as calling <tt>direct.label</tt>, no matter if you are
+using lattice or ggplot2.</p>
 
 <h2>Talks, links, etc.</h2>
 

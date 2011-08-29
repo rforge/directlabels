@@ -31,18 +31,11 @@ Positioning Methods.</p>
 <p>The key to constructing optimal label positions is knowledge of
 exactly how large the label text will be before it is
 drawn. Fortunately, there are several grid functions that allow
-calculation of the label bounding box from the context of a lattice
-panel function. Thus, you can use
-the <a href="http://directlabels.r-forge.r-project.org/docs/utility.function/posfuns/calc.boxes.html">calc.boxes</a>
-Positioning Method to calculate the limits of the bounding box of
-labels. Then we use this information to construct Positioning
+<a href="http://directlabels.r-forge.r-project.org/docs/utility.function/posfuns/calc.boxes.html">calculation
+of the label bounding box</a> from the context of the plotting
+viewport. Then we use this information to construct Positioning
 Methods that are "smart" --- that is, they are aware of the label
 size, so labels do not collide with points or other labels.</p>
-
-<p>However, this is not yet possible with ggplot2 due to a (possibly
-surmountable) technical limitation of the ggplot2 system. So please
-note that none of these advanced Positioning Methods are able to
-work with ggplot2 (yet).</p>
 
 <h2>Scatterplots</h2>
 
@@ -56,10 +49,10 @@ constraint. However, this optimization problem is non-convex (hard),
 and so the following heuristic is used to give an approximate
 solution.</p>
 
-<p>Essentially we iteratively do a grid search using a grid the size
-of the label bounding box, tiled over the whole plot, then put the
-label in the box that is closest to the center of the point
-cloud. This is implemented
+<p>We iteratively do a grid search using a grid the size of the label
+bounding box, tiled over the whole plot. Then, we put the label in the
+empty box that is closest to the center of the point cloud. This is
+implemented
 in <a href="http://directlabels.r-forge.r-project.org/docs/scatterplot/posfuns/empty.grid.html">empty.grid</a>.</p>
 
 <pre>
@@ -77,11 +70,11 @@ are guaranteed not to overlap each other or any points.</p>
 
 <h2>Lineplots</h2>
 
-<p>Lineplots are often most intuitively labeled at the end of the
-lines which is more spread out. However, sometimes the lines are too
-close together, so the labels overlap (left). A fix is a small
-adjustment of the labels up or down if the labels are too close to
-each other (right).</p>
+<p>Lineplots are often most intuitively labeled on the side where the
+lines are more spread out. However, sometimes the lines are too close
+together, so the labels overlap (left). A fix is a small adjustment of
+the labels up or down if the labels are too close to each other
+(right).</p>
 
 <table>
 <tr>

@@ -140,12 +140,15 @@ above.</p>
 <pre>
 install.packages("directlabels", repos="http://R-Forge.R-project.org")
 library(directlabels)
-## The Positioning Method can be any function of d the data, or a list as shown here
-direct.label(dp,list(function(d,...)ddply(d,.(groups),subset,y==max(y)),vjust=0))
-## Using dl.indep makes it simpler to define Positioning Methods
-direct.label(dp,list(dl.indep(d[which.max(d$y),]),vjust=0))
-## The built-in top.points function is exactly what we need for this
-direct.label(dp,top.points)
+## The simplest kind of Positioning Method is just a function 
+## of the data points that returns the label positions.
+direct.label(dp,function(d,...)transform(gapply(d,subset,y==max(y)),vjust=0))
+## Using gapply.fun makes it simpler to define Positioning Methods.
+direct.label(dp,gapply.fun(transform(subset(d,y==max(y)),vjust=0)))
+## Named list items will be used for label positions.
+direct.label(dp,list(gapply.fun(subset(d,y==max(y))),vjust=0))
+## The built-in top.points Positioning Method does exactly this
+direct.label(dp,"top.points")
 ## And by default direct.label uses top.points for density plots 
 direct.label(dp)
 </pre>
@@ -190,25 +193,27 @@ code make the same direct labeled figure:</p>
 <pre>
 install.packages("directlabels", repos="http://R-Forge.R-project.org")
 library(directlabels)
-## Use a custom Positioning Method to specify direct label positions
-direct.label(lp,function(d,...)data.frame(subset(d,x==min(x)),hjust=1))
-## Specifying a list and using dl.indep is more concise
-direct.label(lp,list(dl.indep(d[which.min(d$x),]),hjust=1))
+## You can use any function that will return the label positions
+direct.label(lp,function(d,...)transform(gapply(d,subset,x==min(x)),hjust=1))
+## Specifying a list and using gapply.fun is more concise
+direct.label(lp,list(gapply.fun(subset(d,x==min(x))),hjust=1))
 ## first.points is a Positioning Method that comes with the directlabels package
-direct.label(lp,first.points)
+direct.label(lp,"first.points")
+## You can avoid label collisions using first.qp
+direct.label(lp,"first.qp")
 ## The default Positioning Method for lineplots is similar
 direct.label(lp)
 </pre>
 
 <h2>Conclusion</h2>
 
-<p>Using the direct.label function is significantly simpler than doing
-it by hand using lattice or ggplot2. Instead of several lines of code,
-you can almost always add your direct labels using just 1 line!
-<!--
- Consult the ?positioning.functions documentation page in R to see a
-list of available built-in Positioning Methods. 
--->
+<p>Using the <tt>direct.label</tt> function is significantly simpler
+than doing it by hand using lattice or ggplot2. Instead of several
+lines of code, you can almost always add your direct labels using just
+1 line! Furthermore, the directlabels package
+includes <a href="smart.html">sophisticated Positioning Methods</a>
+that you can use for everyday plots.
+
 </p>
 
 <p>Back to <a href=".">directlabels home</a>.</p>
