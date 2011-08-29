@@ -70,7 +70,7 @@ dldoc <- function # Make directlabels documentation
   for(i in 1:nrow(m))if(length(m[i,]$plots))for(j in seq_along(m[i,]$plots)){
     m[i,]$plots[[j]]$code <- rhtmlescape(m[i,]$plots[[j]]$code)
   }
-
+  theme_set(theme_grey())
   setwd(file.path("..","..","www","docs"))
   foot <- paste(readLines("templates/foot.html"),collapse="\n")
   makehtml <- function # Make HTML documentation
@@ -96,6 +96,7 @@ dldoc <- function # Make directlabels documentation
         if(!file.exists(pngfile)){
           cat(" ",f$name,sep="")
           png(pngfile)
+          set.seed(1)
           tryCatch({
             print(direct.label(p$plot,f$fun))
           },error=function(e){

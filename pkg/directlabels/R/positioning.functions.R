@@ -72,6 +72,7 @@ direct.label <- structure(function
   scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
                    main="Fuel efficiency depends on car size")
   print(direct.label(scatter))
+  print(direct.label(scatter,closest.on.ahull,TRUE))
   print(direct.label(scatter,list("extreme.grid",dl.move("suv",15,15))))
 
   ## scatterplot in lattice

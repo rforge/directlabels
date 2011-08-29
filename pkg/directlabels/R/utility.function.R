@@ -523,14 +523,27 @@ edges.to.outside <- function
 ### outside of the hull.
 (edges,centers,debug=FALSE,...){
   if(debug){
-    with(centers,lpoints(x,y,pch="+"))
-    with(edges,lsegments(x1,y1,x2,y2))
+    with(centers,grid.points(x,y,pch="+",default.units="cm"))
+    with(edges,grid.segments(x1,y1,x2,y2,default.units="cm"))
   }
-  closepts <- gapply(centers,project.onto.segments,edges,debug)
+  closepts <- gapply(centers,project.onto.segments,edges,debug=debug,...)
   closepts$vjust <- ifelse(closepts$y-centers$y>0,0,1)
   closepts$hjust <- ifelse(closepts$x-centers$x>0,0,1)
   r <- apply.method("big.boxes",closepts)
   transform(r,x=(right-left)/2+left,y=(top-bottom)/2+bottom,hjust=0.5,vjust=0.5)
+}
+
+### Calculate closest point on the alpha hull with size of the boxes,
+### and put it outside that point.
+outside.ahull <- function(d,...){
+  edges.to.outside(ahull.points(d),visualcenter(d),...)
+}
+
+### Calculate closest point on the convex hull and put it outside that
+### point. Assume d is the center for each point cloud and then use
+### orig.data to calculate hull.
+outside.chull <- function(d,...){
+  edges.to.outside(chull.points(d),visualcenter(d),...)
 }
 
 project.onto.segments <- function
@@ -543,7 +556,9 @@ project.onto.segments <- function
  hull.segments,
 ### Data frame describing the line segments of the convex or alpha
 ### hull.
- debug=FALSE
+ debug=FALSE,
+ ...
+### ignored
  ){
   these <- within(hull.segments,{
     s <- (y2-y1)/(x2-x1)
@@ -561,7 +576,7 @@ project.onto.segments <- function
   })
   i <- which.min(these$d)
   h <- with(these[i,],data.frame(x=xopt,y=yopt))
-  if(debug)with(h,lsegments(m$x,m$y,h$x,h$y))
+  if(debug)with(h,grid.segments(m$x,m$y,h$x,h$y,default.units="cm"))
   h
 }
 
@@ -573,11 +588,11 @@ vertical.qp <- function(M)list(M,"calc.boxes",qp.labels("y","h"))
 ### average size of label boxes.
 default.ahull <- function(d,...){
   labels <- apply.method("big.boxes",d,...)
-  mean(unlist(labels[,c("w","h")]))/2
+  mean(unlist(labels[,c("w","h")]))
 }
 
 ### Calculate the points on the ashape.
-ahull.points <- function(d,ahull=default.ahull(d)){
+ahull.points <- function(d,...,ahull=default.ahull(d)){
   require(alphahull)
   xy <- unique(d[,c("x","y")])
   as <- ashape(xy,alpha=ahull)
@@ -630,22 +645,6 @@ follow.points <- function
   }
   labtab
 }
-
-### Label points at the zero before the first nonzero y value.
-lasso.labels <-
-  list(rot=60,
-       gapply.fun({ ## figure out where the path hits 0
-         d <- d[order(d$x),]
-         zero <- d$y[1]
-         i <- which(d$y!=zero)[1]
-         just <- as.integer(d[i,"y"]>zero)
-         transform(d[i-1,],hjust=just,vjust=just)
-       }),
-       "calc.boxes",
-       ## calculate how wide the tilted box is
-       dl.trans(hyp=h/sin(2*pi*rot/360)),
-       ## avoid collisions between tilted boxes
-       qp.labels("x","hyp"))
 
 ### Calculate a 2d density estimate then follow the gradient to a
 ### point outside the convex hull.
@@ -779,6 +778,8 @@ empty.grid <- function
     with(gridlines,drawlines(x,min(y),x,max(y)))
   }
   res <- data.frame()
+  label.targets <-
+    label.targets[order(nchar(as.character(label.targets$groups))),]
   for(v in label.targets$groups){
     r <- subset(label.targets,groups==v)
     no.points <- data.frame()
@@ -801,7 +802,7 @@ empty.grid <- function
     res <- rbind(res,transform(r,x=best$x,y=best$y))
     ## add points to cloud
     newpts <- with(best,{
-      expand.grid(x=seq(left,right,l=5),
+      expand.grid(x=seq(left,right,l=3),
                   y=seq(top,bottom,l=3))
     })
     all.points <- rbind(all.points,newpts)
