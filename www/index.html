@@ -48,11 +48,6 @@ legends? Why not just add direct labels by hand?</a></li>
 <li><a href="smart.html">Smart label Positioning Methods that avoid label collisions</a></li>
 </ul>
 
-
-</td>
-  </tr>
-</table>
-
 <h2>New in directlabels 2.x</h2>
 
 <ul>
@@ -66,19 +61,25 @@ etc. text parameters. See <tt>example(dlcompare)</tt>.</li>
 colour. See <tt>example(geom_dl)</tt>.</li>
 </ul>
 
-<h2>An extensible framework for thinking about direct labeling
-problems</h2>
+
+</td>
+  </tr>
+</table>
+
+<h2>Positioning Methods specify the direct label positions</h2>
 
 <p>Direct labeling a plot can be decomposed into 2 steps: calculating
-label positions, then drawing the labels. Drawing the labels will
-always be taken care of for you, using the color of the corresponding
-group. Calculating label positions is also done for you for common
-plot types. For example, with the scatterplot above, the default
-behavior is to position each label close to the center of the
-corresponding point cloud.</p>
+label positions, then drawing the labels. The directlabels package
+introduces the concept of the Positioning Method, which is a list of
+instructions that specifies how to calculate the label positions based
+on the data points to plot. For example, with the scatterplot above,
+the default Positioning Method is
+<a href="http://directlabels.r-forge.r-project.org/docs/scatterplot/posfuns/smart.grid.html">smart.grid</a>,
+which places each label close to the center of the corresponding point
+cloud.</p>
 
 <p>If default label positions are not satisfactory, you can always
-specify your own label placement method, using the <tt>method=</tt>
+specify your own Positioning Method, using the <tt>method=</tt>
 argument to <tt>direct.label</tt>. For example, we can label
 longitudinal data either on the left or right of the lines:</p>
 
@@ -87,18 +88,20 @@ install.packages("ggplot2")
 library(ggplot2)
 data(BodyWeight,package="nlme")
 p &lt;- qplot(Time,weight,data=BodyWeight,colour=Rat,geom="line",facets=.~Diet)
-direct.label(p,"<a href="docs/lineplot/posfuns/first.points.html">first.qp</a>")
-direct.label(p,"<a href="docs/lineplot/posfuns/last.points.html">last.qp</a>")
+direct.label(p,"<a href="docs/lineplot/posfuns/first.qp.html">first.qp</a>")
+direct.label(p,"<a href="docs/lineplot/posfuns/last.qp.html">last.qp</a>")
 </pre>
 
-<p><tt>first.qp</tt> and <tt>last.qp</tt> are the names
-of <a href="docs/index.html">Positioning Methods</a> which place the
-labels respectively near the first or last points, ensuring that the
-labels do not overlap and so are readable.</p>
+<p><tt>first.qp</tt> and <tt>last.qp</tt> are the names of Positioning
+Methods which place the labels respectively near the first or last
+points, ensuring that the labels do not overlap and so are
+readable. To find out which built-in Positioning Methods are
+appropriate for your plot, <a href="docs/index.html">check out the
+Positioning Methods example database</a>.</p>
 
 <img src="rat-ggplot2-firstlast.png" alt="rat data plotted in ggplot2" />
 
-<p>The power of the directlabels system is the fact that you
+<p>However, the power of the directlabels system is the fact that you
 can <a href="motivation.html">write your own</a> Positioning Methods,
 and they can be reused for different plots. So once you write a
 Positioning Method that works, adding direct labels in everyday plots

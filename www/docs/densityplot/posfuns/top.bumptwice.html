@@ -21,7 +21,7 @@ side to avoid collisions with points.</p>
 
 <pre>
 top.bumptwice &lt;- function(d,debug=FALSE,...){
-  labtab &lt;- <a href="../../utility.function/posfuns/apply.method.html">apply.method</a>(<a href="../../densityplot/posfuns/top.bumpup.html">top.bumpup</a>,d)
+  labtab &lt;- <a href="../../utility.function/posfuns/apply.method.html">apply.method</a>("<a href="../../densityplot/posfuns/top.bumpup.html">top.bumpup</a>",d)
   if(debug)<a href="../../utility.function/posfuns/draw.rects.html">draw.rects</a>(labtab)
   <a href="../../utility.function/posfuns/gapply.html">gapply</a>(labtab,function(l,...){
     x &lt;- sort(c(range(d$x),subset(d,y&gt;l$bottom&amp;y&lt;l$top)$x))
@@ -31,10 +31,11 @@ top.bumptwice &lt;- function(d,debug=FALSE,...){
     if(!any(ok))ok[1] &lt;- TRUE
     i &lt;- which(ok)
     intervals &lt;- data.frame(left=x[i]+l$w/2,right=x[i+1]-l$w/2,i=seq_along(i))
-    dists &lt;- transform(melt(intervals,id="i"),dist=value-l$x)
+    molt &lt;- with(intervals,data.frame(i,x=c(left,right)))
+    dists &lt;- transform(molt,dist=x-l$x)
     best &lt;- dists[which.min(abs(dists$dist)),]
     besti &lt;- intervals[best$i,]
-    l$x &lt;- if(l$x&lt;besti$right &amp; l$x&gt;besti$left)l$x else best$value
+    l$x &lt;- if(l$x&lt;besti$right &amp; l$x&gt;besti$left)l$x else best$x
     l
   })
 }
