@@ -20,22 +20,22 @@
 <table>
 <tr>
   <td><img src="iris-scatter.png" alt="direct labeled iris data" /></td>
-  <td><pre>
-install.packages("directlabels")
-library(lattice)
-library(directlabels)
-direct.label(xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species))
-    </pre></td>
-  </tr>
-</table>
+  <td>
 
 <p>This package is an attempt to make direct labeling a reality in
 everyday statistical practice by making available a body of useful
 functions that make direct labeling of common plots easy to do with
 high-level plotting systems such as lattice and ggplot2. The main
 function that the package provides is <tt>direct.label(p)</tt>, which
-takes a lattice or ggplot2 plot <tt>p</tt> and adds direct labels.</p>
+takes a lattice or ggplot2 plot <tt>p</tt> and adds direct labels:</p>
 
+
+<pre>
+install.packages("directlabels")
+library(lattice)
+library(directlabels)
+direct.label(xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species))
+    </pre>
 <p>
 directlabels website navigation:
 </p>
@@ -47,6 +47,11 @@ legends? Why not just add direct labels by hand?</a></li>
 <li><a href="examples.html">Several advanced examples</a></li>
 <li><a href="smart.html">Smart label Positioning Methods that avoid label collisions</a></li>
 </ul>
+
+
+</td>
+  </tr>
+</table>
 
 <h2>New in directlabels 2.x</h2>
 
