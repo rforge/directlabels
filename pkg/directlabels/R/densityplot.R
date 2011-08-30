@@ -8,7 +8,7 @@ top.bumpup <- list("top.points","bumpup")
 ### Label the tops, bump labels up to avoid other labels, then to the
 ### side to avoid collisions with points.
 top.bumptwice <- function(d,debug=FALSE,...){
-  labtab <- apply.method(top.bumpup,d)
+  labtab <- apply.method("top.bumpup",d)
   if(debug)draw.rects(labtab)
   gapply(labtab,function(l,...){
     x <- sort(c(range(d$x),subset(d,y>l$bottom&y<l$top)$x))
