@@ -1,0 +1,15 @@
+downloaded the svg from http://en.wikipedia.org/wiki/Flags_of_the_U.S._states
+
+Then converted it manually to ps using inkscape... is there some
+command line tool available ?
+
+download all states with download.R
+
+then we can make ps files with svg2ps.py
+
+good example of what i'm trying to do
+
+http://www.flickr.com/photos/47179524@N02/4346623091/in/photostream
+
+however the key difference is that I would like to be able to use size
+and alpha as aesthetics as well.
