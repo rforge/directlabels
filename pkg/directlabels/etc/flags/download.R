@@ -39,7 +39,7 @@ svg.urls <- str_match_perl(state.pages,
 download.args <- data.frame(svg.urls)
 names(download.args) <- c("url","destfile")
 download.args <- within(download.args,{
-  destfile <- sprintf("data/%s.svg",destfile)
+  destfile <- file.path("data",sprintf("%s.svg",destfile))
   url <- as.character(url)
 })
 for(darg in split(download.args,1:nrow(download.args))){
