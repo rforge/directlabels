@@ -24,14 +24,15 @@ drawDetails.dlgrob <- function(x,recording){
                        groups=factor(groups))
   ## save original levels for later in case Positioning Methods mess
   ## them up.
-  images <- x$images
   levs <- unique(cm.data[,c("groups","colour")])
   code <- as.character(cm.data$colour)
   names(code) <- as.character(cm.data$groups)
   ## apply ignore.na function -- these points are not plotted
   cm.data <- ignore.na(cm.data)
   cm.data <- apply.method(x$method,cm.data,
-                          debug=x$debug,axes2native=x$axes2native)
+                          debug=x$debug,
+                          axes2native=x$axes2native,
+                          images=x$images)
   if(nrow(cm.data)==0)return()## empty data frames can cause many bugs
   ## rearrange factors in case Positioning Methods messed up the
   ## order:
@@ -43,29 +44,32 @@ drawDetails.dlgrob <- function(x,recording){
     cm.data[is.na(cm.data[,p]),p] <- defaults[[p]]
   }
   cm.data <- unique(cm.data)
-  gpargs <- c("cex","alpha","fontface","fontfamily","col")
-  gp <- do.call(gpar,cm.data[names(cm.data)%in%gpargs])
+  ## Positioning Methods finished, print result!
   if(x$debug)print(cm.data)
-  if(is.null(images)){
-    with(cm.data,{
+  ## Split data into image labels and text labels
+  has.image <- cm.data$groups%in%names(x$images)
+  text.labels <- cm.data[!has.image,]
+  image.labels <- cm.data[has.image,]
+  if(nrow(text.labels)){
+    gpargs <- c("cex","alpha","fontface","fontfamily","col")
+    gp <- do.call(gpar,text.labels[names(text.labels)%in%gpargs])
+    with(text.labels,{
       grid.text(groups,x,y,hjust=hjust,vjust=vjust,rot=rot,default.units="cm",
                 gp=gp)
     })
-  }else{
-    for(i in seq_along(cm.data$x)){
-      with(cm.data[i,],{
-        pushViewport(viewport(x,y,w,h,"cm",just=c(hjust,vjust)))
-        grid.raster(images[[as.character(groups)]])
-        popViewport()
-      })
-    }
+  }
+  for(i in seq_along(image.labels$groups)){
+    irow <- image.labels[i,]
+    grid.raster(x$images[[as.character(irow$groups)]],
+      vp=with(irow,viewport(x,y,w,h,"cm",just=c(hjust,vjust),angle=rot)))
   }
 }
 ### needed to add images argument to draw
 GeomDirectLabel <- proto(Geom, {
   draw_groups <- function(., ...) .$draw(...)
   draw <- function(., data, scales, coordinates,
-                   method=NULL,debug=FALSE,images=NULL, ...) {
+                   method=NULL,debug=FALSE,images=list(), ...) {
+    if(!is.list(images))stop("images must be a named list of images")
     data$rot <- as.integer(data$angle)
     data$groups <- data$label
     dlgrob(subset(coordinates$transform(data, scales),select=-group),
@@ -182,6 +186,8 @@ p+GeomDirectLabel$new(aes(label=Species),method=function(x,...)x)
 ## strategy to to find a box to put the image in, then push a viewport
 ## into that box, and call grid.raster inside
 png("image-labels.png",w=1100,h=700)
+print(p+GeomDirectLabel$new(aes(label=Species),method=list(empty.grid,rot=30),images=iris.photos[1]))
 print(p+GeomDirectLabel$new(aes(label=Species),method=empty.grid,images=iris.photos))
 dev.off()
+print(p+GeomDirectLabel$new(aes(label=Species),method=empty.grid,images=NULL))
 
