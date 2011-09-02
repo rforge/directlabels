@@ -185,9 +185,15 @@ p+GeomDirectLabel$new(aes(label=Species),method="smart.grid")
 p+GeomDirectLabel$new(aes(label=Species),method=function(x,...)x)
 ## strategy to to find a box to put the image in, then push a viewport
 ## into that box, and call grid.raster inside
+p+GeomDirectLabel$new(aes(label=Species),method=list(empty.grid,rot=30),images=iris.photos[1])
+labeled <- p+
+  GeomDirectLabel$new(aes(label=Species),method=empty.grid,images=iris.photos)
 png("image-labels.png",w=1100,h=700)
-print(p+GeomDirectLabel$new(aes(label=Species),method=list(empty.grid,rot=30),images=iris.photos[1]))
-print(p+GeomDirectLabel$new(aes(label=Species),method=empty.grid,images=iris.photos))
+print(labeled)
 dev.off()
+pdf("image-labels.pdf",w=11,h=7)
+print(labeled)
+dev.off()
+## NULL is invalid -- images must be a list!
 print(p+GeomDirectLabel$new(aes(label=Species),method=empty.grid,images=NULL))
 
