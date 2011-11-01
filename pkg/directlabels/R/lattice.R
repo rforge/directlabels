@@ -53,7 +53,9 @@ direct.label.trellis <- function
  debug=FALSE
 ### Show debug output?
  ){
-  old.panel <- if(class(p$panel)=="character")get(p$panel) else p$panel
+  #print(p$panel)
+  old.panel <- if(is.character(p$panel))get(p$panel) else p$panel
+  #print(old.panel)
   lattice.fun.name <- paste(p$call[[1]])
   p$panel <-
     function(panel.groups=paste("panel.",lattice.fun.name,sep=""),...){
@@ -222,7 +224,7 @@ defaultpf.trellis <- function
     if(nlevels(groups)==2)"lines2" else {
       if(require(quadprog))"maxvar.qp"
       else {
-        warning("install quadprog package for smarter labeling")
+        warning("install quadprog package for labels that do not overlap")
         "maxvar.points"
       }
     }
@@ -236,6 +238,7 @@ defaultpf.trellis <- function
          xyplot=if("p"%in%type)"smart.grid" else ldefault(),
          densityplot="top.bumptwice",
          rug="rug.mean",
+         xyplot.zoo=ldefault(),
          stop("No default direct label placement method for '",
               lattice.fun.name,"'.\nPlease specify method."))
 }
