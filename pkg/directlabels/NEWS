@@ -1,5 +1,9 @@
 TODO
 
+How to tie-break for lineplots with last.qp?
+order(last.value,second.to.last.value) should work, but how to pass
+the data? See example in etc/proportions.R
+
 Implement some mechanism which guarantees that only the columns
 returned by a Positioning Method will be updated in the data frame
 that will eventually be used to plot the labels. That way each
