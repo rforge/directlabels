@@ -1,9 +1,5 @@
 TODO
 
-How to tie-break for lineplots with last.qp?
-order(last.value,second.to.last.value) should work, but how to pass
-the data? See example in etc/proportions.R
-
 Implement some mechanism which guarantees that only the columns
 returned by a Positioning Method will be updated in the data frame
 that will eventually be used to plot the labels. That way each
@@ -16,6 +12,10 @@ legible? For multipanel plots you would have to adjust all the scales!
 method for .zoo plots?
 
 handling custom # of bins/custom densityplot params?
+
+2.3 
+
+Tiebreaking for qp.labels when we are doing lineplots.
 
 2.2 bugfixes
 

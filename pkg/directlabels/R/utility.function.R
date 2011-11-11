@@ -360,8 +360,20 @@ ignore.na <- function(d,...){
 qp.labels <- function(var,spacer)function(d,...){
   if(!spacer%in%names(d))stop("need to have calculated ",spacer)
   require(quadprog)
+  ## calculate a tiebreaker for the ordering. If we are doing a
+  ## standard lineplot, then we can calculate where the line is going
+  ## by looking at the nearest point. TODO: how to tiebreak in other
+  ## situations, like lasso.labels.
+  d$tiebreaker <- if(var=="y"){
+    sapply(seq_along(d$groups),function(i){
+      others <- subset(attr(d,"orig.data"),groups==d$groups[i] & x!=d$x[i])
+      others[which.min(abs(others$x-d$x[i])),"y"]
+    })
+  }else{
+    1
+  }
   ## sorts data so that target_1 <= target_2 <= ... <= target_n
-  d <- d[order(d[,var]),]
+  d <- d[order(d[,var],d$tiebreaker),]
   target <- d[,var]
   k <- nrow(d)
   D <- diag(rep(1,k))
