@@ -17,6 +17,9 @@ handling custom # of bins/custom densityplot params?
 
 2.3 
 
+dlgrobs have names == GRID.dlgrob.method if method is a character
+string.
+
 Tiebreaking for qp.labels when we are doing lineplots.
 
 2.2 bugfixes
