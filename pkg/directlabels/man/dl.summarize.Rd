@@ -3,11 +3,11 @@
 \title{dl summarize}
 \description{summarize which preserves important columns for direct labels.}
 \usage{
-dl.summarize(d,
+dl.summarize(OLD,
 ...)
 }
 \arguments{
-  \item{d}{data frame}
+  \item{OLD}{data frame}
   \item{\dots}{
 }
 }
