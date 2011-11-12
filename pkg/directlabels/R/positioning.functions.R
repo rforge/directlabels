@@ -48,7 +48,12 @@ dlgrob <- function
  ...
  ){
   grob(data=data,method=method,debug=debug,axes2native=axes2native,
-       cl="dlgrob",...)
+       cl="dlgrob",
+       name=if(is.character(method)){
+         sprintf("GRID.dlgrob.%s",method[1])
+       }else{
+         NULL
+       },...)
 }
 
 direct.label <- structure(function

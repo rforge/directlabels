@@ -37,10 +37,20 @@ dl.combine <- structure(function # Combine output of several methods
   data(BodyWeight,package="nlme")
   library(lattice)
   ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
+  ##ratplot <- qplot(Time,weight,data=BodyWeight,group=Rat,colour=Rat,geom="line",facets=.~Diet)
   both <- dl.combine("first.points","last.points")
-  plot(direct.label(ratplot,"both"))
-  ## can also do this by repeatedly calling direct.label 
-  plot(direct.label(direct.label(ratplot,"last.points"),"first.points"))
+  rat.both <- direct.label(ratplot,"both")
+  print(rat.both)
+##   grid.edit(gPath("panel-3-3",".*","GRID.dlgrob"),
+##             method=list(cex=2,fontfamily="bold","both"),
+##             grep=TRUE)
+  ## can also do this by repeatedly calling direct.label
+  rat.repeated <-
+    direct.label(direct.label(ratplot,"last.points"),"first.points")
+  print(rat.repeated)
+##   grid.edit(gPath("panel-3-5",".*","GRID.dlgrob.first.points"),
+##             method=list(cex=2,fontfamily="bold","both"),
+##             grep=TRUE)
   library(ggplot2)
   rp2 <- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
   print(direct.label(direct.label(rp2,"last.points"),"first.points"))
