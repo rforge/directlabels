@@ -1,5 +1,7 @@
 TODO
 
+Get rid of dl.summarize and gapply.fun for simplicity?
+
 Implement some mechanism which guarantees that only the columns
 returned by a Positioning Method will be updated in the data frame
 that will eventually be used to plot the labels. That way each

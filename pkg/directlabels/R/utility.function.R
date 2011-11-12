@@ -433,15 +433,16 @@ inside <- function
 
 dl.summarize <- function
 ### summarize which preserves important columns for direct labels.
-(d,
+(OLD,
 ### data frame
  ...
  ){
-  df <- unique(transform(d,...))
-  to.copy <- names(d)[!names(d)%in%names(df)]
+  rownames(OLD) <- NULL
+  NEW <- unique(transform(OLD,...))
+  to.copy <- names(OLD)[!names(OLD)%in%names(NEW)]
   for(N in to.copy)
-    df[,N] <- d[,N]
-  df
+    NEW[,N] <- OLD[,N]
+  NEW
 }
 
 perpendicular.lines <- function
@@ -686,7 +687,12 @@ apply.method <- function # Apply a Positioning Method
 ### Named arguments, passed to Positioning Functions.
  debug=FALSE
  ){
-  attr(d,"orig.data") <- d
+  ##attr(d,"orig.data") <- d ##TODO: why is this here?
+  for(must.have in c("x","y","groups")){
+    if(! must.have %in% names(d)){
+      stop("data must have a column named ",must.have)
+    }
+  }
   if(!is.list(method))method <- list(method)
   isconst <- function(){
     m.var <- names(method)[1]
