@@ -373,7 +373,7 @@ qp.labels <- function(var,spacer)function(d,...){
   ## calculate a tiebreaker for the ordering. If we are doing a
   ## standard lineplot, then we can calculate where the line is going
   ## by looking at the nearest point. TODO: how to tiebreak in other
-  ## situations, like lasso.labels.
+  ## situations, like lasso.labels?
   d$tiebreaker <- if(var=="y"){
     sapply(seq_along(d$groups),function(i){
       others <- subset(attr(d,"orig.data"),groups==d$groups[i] & x!=d$x[i])
@@ -697,7 +697,9 @@ apply.method <- function # Apply a Positioning Method
 ### Named arguments, passed to Positioning Functions.
  debug=FALSE
  ){
-  ##attr(d,"orig.data") <- d ##TODO: why is this here?
+  attr(d,"orig.data") <- d ##DONT DELETE: if the first Positioning
+                           ##Method needs orig.data, this needs to be
+                           ##here!
   for(must.have in c("x","y","groups")){
     if(! must.have %in% names(d)){
       stop("data must have a column named ",must.have)
