@@ -15,6 +15,9 @@ method for .zoo plots?
 
 handling custom # of bins/custom densityplot params?
 
+problems with plotting color labels in lattice when col= is specified,
+see etc/individual.R
+
 2.3 
 
 dlgrobs have names == GRID.dlgrob.method if method is a character
