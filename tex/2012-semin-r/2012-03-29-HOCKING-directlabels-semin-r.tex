@@ -1,0 +1,70 @@
+\documentclass{beamer}
+
+\begin{document}
+
+\title{Recent developments in direct labeled graphics\\
+  \url{http://directlabels.r-forge.r-project.org}}
+\author{Toby Dylan Hocking \\ toby.hocking AT inria.fr}
+\date{29 March 2012}
+
+\frame{\titlepage}
+
+\section{Motivation: confusing legends}
+
+i.e. from the poster.
+
+\section{How to add direct labels}
+
+1. first try direct.label(p)
+
+2. If that doesn't work check to see if another Positioning Method
+exists on http://directlabels.r-forge.r-project.org/docs/index.html,
+then use direct.label(p,"method")
+
+3. If no Positioning Methods exist you can always write your own.
+
+1---- examples: works well by default
+
+http://directlabels.r-forge.r-project.org/docs/lineplot/plots/sexdeaths.html
+
+http://directlabels.r-forge.r-project.org/docs/densityplot/plots/loci.html
+
+http://directlabels.r-forge.r-project.org/docs/scatterplot/plots/iris.html
+
+2---- examples: lineplot, scatterplot
+
+lasso lineplot: try lasso.labels
+
+bodyweight lineplot: try last.qp or first.qp
+
+3---- examples: ... writing custom methods?
+
+scatterplot: make numbers bigger
+http://directlabels.r-forge.r-project.org/docs/scatterplot/plots/cylinders.html
+
+ridge regression lineplot: space out using dl.trans
+http://directlabels.r-forge.r-project.org/docs/lineplot/plots/ridge.html
+
+lasso plot: add lasso.labels as well!
+http://directlabels.r-forge.r-project.org/docs/lineplot/plots/lars.html
+
+\section{How does it work?}
+
+- lineplot QP
+
+- scatterplot grid search
+
+- drawing grid grobs with a custom drawDetails method. => window
+resize updates, ggplot2 support
+
+- generating a website using plots and methods defined in the R
+package.
+
+\section{Conclusions}
+
+- directlabels is useful for everyday data visualization, but some
+manual tweaking can help make a publication-quality figure.
+
+- future work in image labels?
+
+\end{document}
