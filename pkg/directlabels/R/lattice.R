@@ -59,6 +59,9 @@ direct.label.trellis <- function
   lattice.fun.name <- paste(p$call[[1]])
   p$panel <-
     function(panel.groups=paste("panel.",lattice.fun.name,sep=""),...){
+      ## TODO: redo this interface... to fix (1) lattice problem with
+      ## custom specified color labels and (2) name clash with method
+      ## from xYplot which I suppose should work.
       panel.superpose.dl(panel.groups=panel.groups,
                          .panel.superpose=old.panel,
                          method=method,
@@ -85,9 +88,8 @@ panel.superpose.dl <- structure(function
 ### To be parsed for default labeling method, and passed to
 ### panel.superpose.
  method=NULL,
-### Method for direct labeling as described in ?label.positions. NULL
-### indicates to choose a Positioning Method based on the
-### panel.groups function.
+### Positioning Method for direct labeling. NULL indicates to choose a
+### Positioning Method based on the panel.groups function.
  .panel.superpose=panel.superpose,
 ### The panel function to use for drawing data points.
  type="p",
