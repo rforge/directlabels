@@ -114,7 +114,8 @@ direct.label.ggplot <- function
   require(proto)
   require(ggplot2)
   SCALE <- scale_colour_discrete
-  ## First look through layers for a colour aesthetic
+  ## First look through layers for a colour aesthetic, TODO: look for
+  ## fill aesthetic as well!
   maps <- lapply(p$layers,function(L){
     m <- p$mapping
     m[names(L$mapping)] <- L$mapping
