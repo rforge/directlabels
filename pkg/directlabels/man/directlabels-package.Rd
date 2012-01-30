@@ -19,14 +19,15 @@ License: \tab GPL-3\cr
 Title: \tab Direct labels for multicolor plots in lattice or ggplot2\cr
 URL: \tab http://directlabels.r-forge.r-project.org/\cr
 LazyData: \tab true\cr
-Suggests: \tab ks, MASS, inlinedocs, quadprog, ggplot2, lattice, alphahull,
+Suggests: \tab ks, MASS, inlinedocs, quadprog, ggplot2 (>= 0.9.0),
+lattice, alphahull, reshape2,
 ElemStatLearn, proto, lars, mlmRev, latticeExtra\cr
 Depends: \tab grid\cr
 Collate: \tab utility.function.R compare.R dotplot.R lineplot.R
 densityplot.R  ggplot2.R  positioning.functions.R
 doc.R lattice.R scatterplot.R contourplot.R\cr}
 }
-\author{Toby Dylan Hocking <toby.hocking@inria.fr>}
+\author{Toby Dylan Hocking}
 
 \keyword{ package }
 

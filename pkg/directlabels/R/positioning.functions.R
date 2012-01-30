@@ -124,6 +124,7 @@ direct.label <- structure(function
     plot(direct.label(densityplot(~gcsescore|gender,Chem97,plot.points=FALSE,
                                   groups=factor(score),layout=c(1,2),n=500)))
   }
+  require(reshape2)
   iris2 <- melt(iris,id="Species")
   direct.label(densityplot(~value|variable,iris2,groups=Species,scales="free"))
   loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
@@ -134,7 +135,7 @@ direct.label <- structure(function
   direct.label(lplot,static.labels(c(0,0.5,1),0,c("POS","NEU","BAL"),vjust=1.1))
   ## respect the manual color scale. these 2 should be the same:
   lplot2 <- direct.label(lplot)+
-    scale_colour_manual(values=c("red","black","blue"),legend=FALSE)
+    scale_colour_manual(values=c("red","black","blue"),guide="none")
   print(lplot2)
   print(direct.label(lplot+scale_colour_manual(values=c("red","black","blue"))))
   
@@ -208,6 +209,7 @@ direct.label <- structure(function
     ## make the x axis degrees of freedom
     df <- sapply(lambda,function(l)sum(dsq/(dsq+l)))
     D <- data.frame(t(fit$coef),lambda,df) # scaled coefs
+    require(reshape2)
     molt <- melt(D,id=c("lambda","df"))
     ## add in the points for df=0
     limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
@@ -228,11 +230,12 @@ direct.label <- structure(function
                 sub="grey line shows coefficients chosen by cross-validation",
                 xlab=expression(df(lambda)))
     print(direct.label(update(p,xlim=c(0,9.25)),
-                       list(last.qp,cex=0.75,dl.trans(x=x+0.1))))
+                       list(cex=1.5,last.qp,dl.trans(x=x+0.1))))
   }  
   ## some data from clustering algorithms
   data(iris.l1.cluster,package="directlabels")
-  p <- ggplot(iris.l1.cluster,aes(lambda,alpha,group=row,colour=Species))+
+  ilc <- transform(iris.l1.cluster,coefficient=alpha)
+  p <- ggplot(ilc,aes(lambda,coefficient,group=row,colour=Species))+
     geom_line(alpha=1/4)+
     facet_grid(col~.)
   p2 <- p+xlim(-0.0025,max(iris.l1.cluster$lambda))
@@ -248,7 +251,7 @@ direct.label <- structure(function
   print(direct.label(p,"extreme.grid"))
   ## respect the color scale. these should look the same:
   print(direct.label(p+scale_colour_manual(values=rainbow(8))))
-  print(direct.label(p)+scale_colour_manual(values=rainbow(8),legend=FALSE))
+  print(direct.label(p)+scale_colour_manual(values=rainbow(8),guide="none"))
 
   lattice.options(oldopt)
 })

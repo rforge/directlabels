@@ -18,7 +18,12 @@ handling custom # of bins/custom densityplot params?
 problems with plotting color labels in lattice when col= is specified,
 see etc/individual.R
 
+see etc/xYplot.R for a problem with plotting some weird trellis
+objects.
+
 2.3 
+
+Works with ggplot2 0.9.0
 
 dlgrobs have names == GRID.dlgrob.method if method is a character
 string.
