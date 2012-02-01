@@ -65,6 +65,7 @@ library(lars)
 fit &lt;- lars(x,y,type="lasso")
 beta &lt;- scale(coef(fit),FALSE,1/fit$normx)
 arclength &lt;- rowSums(abs(beta))
+library(reshape2)
 path &lt;- data.frame(melt(beta),arclength)
 names(path)[1:3] &lt;- c("step","variable","standardized.coef")
 library(ggplot2)
@@ -82,6 +83,7 @@ direct.label(p,"last.qp")
 ## Statistical Learning, Hastie et al.
 myridge &lt;- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
   require(MASS)
+  require(reshape2)
   fit &lt;- lm.ridge(f,data,lambda=lambda)
   X &lt;- data[-which(names(data)==as.character(f[[2]]))]
   Xs &lt;- svd(scale(X)) ## my d's should come from the scaled matrix

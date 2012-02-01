@@ -24,8 +24,20 @@ overlap.</p>
 qp.labels &lt;- function(var,spacer)function(d,...){
   if(!spacer%in%names(d))stop("need to have calculated ",spacer)
   require(quadprog)
+  ## calculate a tiebreaker for the ordering. If we are doing a
+  ## standard lineplot, then we can calculate where the line is going
+  ## by looking at the nearest point. TODO: how to tiebreak in other
+  ## situations, like <a href="../../lineplot/posfuns/lasso.labels.html">lasso.labels</a>?
+  d$tiebreaker &lt;- if(var=="y"){
+    sapply(seq_along(d$groups),function(i){
+      others &lt;- subset(attr(d,"orig.data"),groups==d$groups[i] &amp; x!=d$x[i])
+      others[which.min(abs(others$x-d$x[i])),"y"]
+    })
+  }else{
+    1
+  }
   ## sorts data so that target_1 &lt;= target_2 &lt;= ... &lt;= target_n
-  d &lt;- d[order(d[,var]),]
+  d &lt;- d[order(d[,var],d$tiebreaker),]
   target &lt;- d[,var]
   k &lt;- nrow(d)
   D &lt;- diag(rep(1,k))

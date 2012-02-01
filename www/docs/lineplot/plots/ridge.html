@@ -21,6 +21,7 @@ ridge</h1>
 ## Statistical Learning, Hastie et al.
 myridge &lt;- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
   require(MASS)
+  require(reshape2)
   fit &lt;- lm.ridge(f,data,lambda=lambda)
   X &lt;- data[-which(names(data)==as.character(f[[2]]))]
   Xs &lt;- svd(scale(X)) ## my d's should come from the scaled matrix

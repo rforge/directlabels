@@ -52,6 +52,7 @@ direct.label(p,"top.pieces")
   <td><img alt="volcano" src="../../contourplot/volcano.top.pieces.png" /></td>
   <td><p><a href="../plots/volcano.html">volcano</a></p><pre>
 ## example from help(stat_contour)
+library(reshape2)
 volcano3d &lt;- melt(volcano)
 names(volcano3d) &lt;- c("x", "y", "z")
 library(ggplot2)

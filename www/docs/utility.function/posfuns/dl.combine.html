@@ -42,10 +42,20 @@ dl.combine &lt;- structure(function # Combine output of several methods
   data(BodyWeight,package="nlme")
   library(lattice)
   ratplot &lt;- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
+  ##ratplot &lt;- qplot(Time,weight,data=BodyWeight,group=Rat,colour=Rat,geom="line",facets=.~Diet)
   both &lt;- dl.combine("<a href="../../lineplot/posfuns/first.points.html">first.points</a>","<a href="../../lineplot/posfuns/last.points.html">last.points</a>")
-  plot(direct.label(ratplot,"both"))
-  ## can also do this by repeatedly calling direct.label 
-  plot(direct.label(direct.label(ratplot,"<a href="../../lineplot/posfuns/last.points.html">last.points</a>"),"<a href="../../lineplot/posfuns/first.points.html">first.points</a>"))
+  rat.both &lt;- direct.label(ratplot,"both")
+  print(rat.both)
+##   grid.edit(gPath("panel-3-3",".*","GRID.dlgrob"),
+##             method=list(cex=2,fontfamily="bold","both"),
+##             grep=TRUE)
+  ## can also do this by repeatedly calling direct.label
+  rat.repeated &lt;-
+    direct.label(direct.label(ratplot,"<a href="../../lineplot/posfuns/last.points.html">last.points</a>"),"<a href="../../lineplot/posfuns/first.points.html">first.points</a>")
+  print(rat.repeated)
+##   grid.edit(gPath("panel-3-5",".*","GRID.dlgrob.<a href="../../lineplot/posfuns/first.points.html">first.points</a>"),
+##             method=list(cex=2,fontfamily="bold","both"),
+##             grep=TRUE)
   library(ggplot2)
   rp2 &lt;- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
   print(direct.label(direct.label(rp2,"<a href="../../lineplot/posfuns/last.points.html">last.points</a>"),"<a href="../../lineplot/posfuns/first.points.html">first.points</a>"))

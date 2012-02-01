@@ -45,7 +45,14 @@ apply.method &lt;- function # Apply a Positioning Method
 ### Named arguments, passed to Positioning Functions.
  debug=FALSE
  ){
-  attr(d,"orig.data") &lt;- d
+  attr(d,"orig.data") &lt;- d ##DONT DELETE: if the first Positioning
+                           ##Method needs orig.data, this needs to be
+                           ##here!
+  for(must.have in c("x","y","groups")){
+    if(! must.have %in% names(d)){
+      stop("data must have a column named ",must.have)
+    }
+  }
   if(!is.list(method))method &lt;- list(method)
   isconst &lt;- function(){
     m.var &lt;- names(method)[1]

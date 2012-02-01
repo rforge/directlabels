@@ -18,6 +18,7 @@ volcano</h1>
 
 <pre>
 ## example from help(stat_contour)
+library(reshape2)
 volcano3d &lt;- melt(volcano)
 names(volcano3d) &lt;- c("x", "y", "z")
 library(ggplot2)

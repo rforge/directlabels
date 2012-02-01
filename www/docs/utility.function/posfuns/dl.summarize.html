@@ -21,15 +21,16 @@ Positioning Method - dl.summarize</h1>
 <pre>
 dl.summarize &lt;- function
 ### summarize which preserves important columns for direct labels.
-(d,
+(OLD,
 ### data frame
  ...
  ){
-  df &lt;- unique(transform(d,...))
-  to.copy &lt;- names(d)[!names(d)%in%names(df)]
+  rownames(OLD) &lt;- NULL
+  NEW &lt;- unique(transform(OLD,...))
+  to.copy &lt;- names(OLD)[!names(OLD)%in%names(NEW)]
   for(N in to.copy)
-    df[,N] &lt;- d[,N]
-  df
+    NEW[,N] &lt;- OLD[,N]
+  NEW
 }
 </pre>
 
