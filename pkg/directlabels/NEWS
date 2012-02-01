@@ -23,7 +23,8 @@ objects.
 
 2.3 
 
-Works with ggplot2 0.9.0
+Works with ggplot2 0.9.0, including new simplified hiding of the
+legend, using guides(colour="none")
 
 dlgrobs have names == GRID.dlgrob.method if method is a character
 string.

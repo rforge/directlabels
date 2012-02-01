@@ -114,7 +114,6 @@ direct.label.ggplot <- function
  ){
   require(proto)
   require(ggplot2)
-  SCALE <- scale_colour_discrete
   ## First look through layers for a colour aesthetic, TODO: look for
   ## fill aesthetic as well!
   maps <- lapply(p$layers,function(L){
@@ -128,26 +127,13 @@ direct.label.ggplot <- function
     i <- which(has.colour)[1] ##just pick the first one
     L <- p$layers[[i]]
     colvar <- as.character(cvars[[i]])
-    ## FIXME: kind of a hack.
-    if(colvar=="..level..")SCALE <- scale_colour_continuous
-    ##colvar <- gsub("^[.][.](.*)[.][.]$","\\1",colvar)
   }else stop("Need colour aesthetic to infer default direct labels.")
   ## Try to figure out a good default based on the colored geom
   geom <- L$geom$objname
   if(is.null(method))method <- default.picker("ggplot")
-  add_scale <- TRUE
-  for(sc_i in seq_along(p$scales$scales)){
-    if("colour"%in%p$scales$scales[[sc_i]]$aesthetics){
-      p$scales$scales[[sc_i]]$guide <- "none"
-      add_scale <- FALSE
-    }
-  }
-  if(add_scale){
-    p <- p+SCALE(guide="none")
-  }
   dlgeom <- geom_dl(aes_string(label=colvar,colour=colvar),method,
                     stat=L$stat,debug=debug,data=L$data)
-  p+dlgeom
+  p+dlgeom+guides(color="none")
 ### The ggplot object with direct labels added.
 }
 
