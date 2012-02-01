@@ -56,21 +56,30 @@ dlgrob <- function
        },...)
 }
 
-direct.label <- structure(function
-### Add direct labels to a plot. This is a S3 generic and there are
-### appropriate methods for "trellis" and "ggplot" objects.
+direct.label <- structure(function # Direct labels for color decoding
+### Add direct labels to a plot, and hide the color legend. Modern
+### plotting packages like lattice and ggplot2 show automatic legends
+### based on the variable specified for color, but these legends can
+### be confusing if there are too many colors. Direct labels are a
+### useful and clear alternative to a confusing legend in many common
+### plots.
 (p,
-### The plot to which you would like to add direct labels.
+### The "lattice" or "ggplot" object with things drawn in different
+### colors.
  method=NULL,
-### Positioning Method.
+### Positioning Method, which determines the positions of the direct
+### labels as a function of the plotted data. If NULL, we examine the
+### plot p and try to choose an appropriate default. See ?apply.method
+### for more information about Positioning Methods.
  debug=FALSE
 ### Show debug output?
  ){
+  ##alias<< directlabels
   if(is.character(method)&&method[1]=="legend")
     UseMethod("uselegend")
   else
     UseMethod("direct.label")
-### The plot object, with direct labels added.
+### A plot with direct labels and no color legend.
 },ex=function(){
   library(ggplot2)
   ## direct label simple ggplot2 scatterplot

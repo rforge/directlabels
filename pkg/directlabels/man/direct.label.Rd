@@ -1,16 +1,25 @@
 \name{direct.label}
 \alias{direct.label}
-\title{direct label}
-\description{Add direct labels to a plot. This is a S3 generic and there are
-appropriate methods for "trellis" and "ggplot" objects.}
+\alias{directlabels}
+\title{Direct labels for color decoding}
+\description{Add direct labels to a plot, and hide the color legend. Modern
+plotting packages like lattice and ggplot2 show automatic legends
+based on the variable specified for color, but these legends can
+be confusing if there are too many colors. Direct labels are a
+useful and clear alternative to a confusing legend in many common
+plots.}
 \usage{direct.label(p, method = NULL, debug = FALSE)}
 \arguments{
-  \item{p}{The plot to which you would like to add direct labels.}
-  \item{method}{Positioning Method.}
+  \item{p}{The "lattice" or "ggplot" object with things drawn in different
+colors.}
+  \item{method}{Positioning Method, which determines the positions of the direct
+labels as a function of the plotted data. If NULL, we examine the
+plot p and try to choose an appropriate default. See ?apply.method
+for more information about Positioning Methods.}
   \item{debug}{Show debug output?}
 }
 
-\value{The plot object, with direct labels added.}
+\value{A plot with direct labels and no color legend.}
 
 \author{Toby Dylan Hocking}
 
