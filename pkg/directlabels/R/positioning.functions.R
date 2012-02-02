@@ -30,7 +30,10 @@ drawDetails.dlgrob <- function(x,recording){
   cm.data <- unique(cm.data)
   gpargs <- c("cex","alpha","fontface","fontfamily","col")
   gp <- do.call(gpar,cm.data[names(cm.data)%in%gpargs])
-  if(x$debug)print(cm.data)
+  if(x$debug){
+    print(cm.data)
+    ##browser()
+  }
   with(cm.data,{
     grid.text(groups,x,y,hjust=hjust,vjust=vjust,rot=rot,default.units="cm",
               gp=gp)
