@@ -21,6 +21,9 @@ see etc/individual.R
 see etc/xYplot.R for a problem with plotting some weird trellis
 objects.
 
+contourplot labels as in lattice::panel.contourplot or C source code
+in r-source/src/main/plot3d.c
+
 2.3 
 
 Works with ggplot2 0.9.0, including new simplified hiding of the
