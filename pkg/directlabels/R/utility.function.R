@@ -512,14 +512,18 @@ gapply <- function
  method,
 ### Positioning Method to apply to every group separately.
  ...,
-### additional arguments for FUN.
+### additional arguments, passed to Positioning Methods.
  groups="groups"
 ### can also be useful for piece column.
  ){
   stopifnot(is.data.frame(d))
   dfs <- split(d,as.character(d[[groups]]))
   f <- function(d,...){
-    res <- apply.method(method,d,...)
+    res <- if(is.function(method)){
+      method(d,...) #so we can use this inside of apply.method
+    }else{
+      apply.method(method,d,...)
+    }
     res[[groups]] <- d[[groups]][1]
     res
   }
@@ -715,7 +719,6 @@ apply.method <- function # Apply a Positioning Method
   while(length(method)){
     if(debug)print(method[1])##not [[1]] --- named items!
     ## Resolve any names or nested lists
-    is.trans <- FALSE
     while(islist()||isref()){
       if(islist()){
         method <- c(method[[1]],method[-1])
@@ -724,15 +727,21 @@ apply.method <- function # Apply a Positioning Method
           warning("using first element of character vector")
           method[[1]] <- method[[1]][1]
         }
-        is.trans <- grepl("^trans[.]",method[[1]])
         method <- c(get(method[[1]]),method[-1])
       }
     }
     if(isconst())
       d[[names(method)[1]]] <- method[[1]]
-    else{
+    else{ #should be a Positioning Function
       old <- d
+      group.specific <- gapply(d,only.unique.vals) #save group-specific values
       d <- method[[1]](d,debug=debug,...)
+      to.restore <- names(group.specific)[!names(group.specific)%in%names(d)]
+      for(N in to.restore){
+        for(g in unique(d$groups)){
+          d[d$groups==g,N] <- group.specific[group.specific$groups==g,N]
+        }
+      }
       attr(d,"orig.data") <-
         if(is.null(attr(old,"orig.data")))old
         else attr(old,"orig.data")
@@ -745,6 +754,14 @@ apply.method <- function # Apply a Positioning Method
   d
 ### The final data frame returned after applying all of the items in
 ### the Positioning Method list.
+}
+
+### Create a 1-row data.frame consisting of only the columns for which
+### there is only 1 unique value.
+only.unique.vals <- function(d,...){
+  unique.vals <- lapply(d,unique)
+  n.vals <- sapply(unique.vals,length)
+  do.call(data.frame,unique.vals[n.vals==1])
 }
 
 ### to hard-code label positions...
