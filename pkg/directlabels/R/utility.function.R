@@ -519,11 +519,7 @@ gapply <- function
   stopifnot(is.data.frame(d))
   dfs <- split(d,as.character(d[[groups]]))
   f <- function(d,...){
-    res <- if(is.function(method)){
-      method(d,...) #so we can use this inside of apply.method
-    }else{
-      apply.method(method,d,...)
-    }
+    res <- apply.method(method,d,...)
     res[[groups]] <- d[[groups]][1]
     res
   }
@@ -734,11 +730,12 @@ apply.method <- function # Apply a Positioning Method
       d[[names(method)[1]]] <- method[[1]]
     else{ #should be a Positioning Function
       old <- d
-      group.specific <- gapply(d,only.unique.vals) #save group-specific values
+      group.dfs <- split(d,d$groups)
       d <- method[[1]](d,debug=debug,...)
-      to.restore <- names(group.specific)[!names(group.specific)%in%names(d)]
-      for(N in to.restore){
-        for(g in unique(d$groups)){
+      for(g in unique(d$groups)){
+        group.specific <- only.unique.vals(group.dfs[[g]])
+        to.restore <- names(group.specific)[!names(group.specific)%in%names(d)]
+        for(N in to.restore){
           d[d$groups==g,N] <- group.specific[group.specific$groups==g,N]
         }
       }

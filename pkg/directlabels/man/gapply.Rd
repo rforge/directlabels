@@ -8,7 +8,7 @@ the Positioning Method is not necessarily a function (but can be).}
 \arguments{
   \item{d}{data frame with column groups.}
   \item{method}{Positioning Method to apply to every group separately.}
-  \item{\dots}{additional arguments for FUN.}
+  \item{\dots}{additional arguments, passed to Positioning Methods.}
   \item{groups}{can also be useful for piece column.}
 }
 
