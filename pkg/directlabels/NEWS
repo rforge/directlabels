@@ -18,7 +18,7 @@ objects.
 contourplot labels as in lattice::panel.contourplot or C source code
 in r-source/src/main/plot3d.c
 
-2.3 
+2.3 --- 2 March 2012
 
 In apply.method, we look at all groups and determine which columns are
 invariant in each, then after the Positioning Function is applied, we
