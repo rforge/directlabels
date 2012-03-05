@@ -30,14 +30,14 @@ gapply &lt;- function
  method,
 ### Positioning Method to apply to every group separately.
  ...,
-### additional arguments for FUN.
+### additional arguments, passed to Positioning Methods.
  groups="groups"
 ### can also be useful for piece column.
  ){
   stopifnot(is.data.frame(d))
   dfs &lt;- split(d,as.character(d[[groups]]))
   f &lt;- function(d,...){
-    res &lt;- <a href="../../utility.function/posfuns/apply.method.html">apply.method</a>(method,d,...)
+    res &lt;- <a href="../../utility.function/posfuns/apply.method.html">apply.method</a>(method,d,columns.to.check=c("x","y"),...)
     res[[groups]] &lt;- d[[groups]][1]
     res
   }

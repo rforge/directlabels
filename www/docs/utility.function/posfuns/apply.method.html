@@ -41,6 +41,9 @@ apply.method &lt;- function # Apply a Positioning Method
 ### frame is used to draw a direct label.
  d,
 ### Data frame to which we apply the Positioning Method.
+ columns.to.check=c("x","y","groups"),
+### After applying each Positioning Function, we check for the
+### presence of these columns, and if not found we stop with an error.
  ...,
 ### Named arguments, passed to Positioning Functions.
  debug=FALSE
@@ -48,11 +51,7 @@ apply.method &lt;- function # Apply a Positioning Method
   attr(d,"orig.data") &lt;- d ##DONT DELETE: if the first Positioning
                            ##Method needs orig.data, this needs to be
                            ##here!
-  for(must.have in c("x","y","groups")){
-    if(! must.have %in% names(d)){
-      stop("data must have a column named ",must.have)
-    }
-  }
+  <a href="../../utility.function/posfuns/check.for.columns.html">check.for.columns</a>(d,columns.to.check)
   if(!is.list(method))method &lt;- list(method)
   isconst &lt;- function(){
     m.var &lt;- names(method)[1]
@@ -62,8 +61,8 @@ apply.method &lt;- function # Apply a Positioning Method
   isref &lt;- function()(!isconst())&amp;&amp;is.character(method[[1]])
   while(length(method)){
     if(debug)print(method[1])##not [[1]] --- named items!
+    ##browser()
     ## Resolve any names or nested lists
-    is.trans &lt;- FALSE
     while(islist()||isref()){
       if(islist()){
         method &lt;- c(method[[1]],method[-1])
@@ -72,15 +71,26 @@ apply.method &lt;- function # Apply a Positioning Method
           warning("using first element of character vector")
           method[[1]] &lt;- method[[1]][1]
         }
-        is.trans &lt;- grepl("^trans[.]",method[[1]])
         method &lt;- c(get(method[[1]]),method[-1])
       }
     }
     if(isconst())
       d[[names(method)[1]]] &lt;- method[[1]]
-    else{
+    else{ #should be a Positioning Function
       old &lt;- d
+      group.dfs &lt;- split(d,d$groups)
+      group.specific &lt;- lapply(group.dfs,<a href="../../utility.function/posfuns/only.unique.vals.html">only.unique.vals</a>)
+      to.restore &lt;- Reduce(intersect,lapply(group.specific,names))
       d &lt;- method[[1]](d,debug=debug,...)
+      <a href="../../utility.function/posfuns/check.for.columns.html">check.for.columns</a>(d,columns.to.check)
+      ## do not restore if they are present in the returned list!
+      to.restore &lt;- to.restore[!to.restore %in% names(d)]
+      for(N in to.restore){
+        d[[N]] &lt;- NA
+        for(g in unique(d$groups)){
+          d[d$groups==g,N] &lt;- group.specific[[g]][,N]
+        }
+      }
       attr(d,"orig.data") &lt;-
         if(is.null(attr(old,"orig.data")))old
         else attr(old,"orig.data")
