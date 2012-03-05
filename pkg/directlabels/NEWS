@@ -18,6 +18,8 @@ objects.
 contourplot labels as in lattice::panel.contourplot or C source code
 in r-source/src/main/plot3d.c
 
+2.5
+
 2.4 --- 5 March 2012
 
 Suggest nlme to avoid warning on pkg check.
