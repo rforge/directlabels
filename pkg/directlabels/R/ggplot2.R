@@ -18,6 +18,7 @@ geom_dl <- structure(function
 ### passed to GeomDirectLabel$new. ie stat= position= debug=
  ){
   require(ggplot2)
+  require(proto)
   ## Geom for direct labeling that creates dlgrobs in the draw()
   ## method.
   GeomDirectLabel <- proto(ggplot2:::Geom, {
@@ -112,7 +113,6 @@ direct.label.ggplot <- function
  debug=FALSE
 ### Show debug output?
  ){
-  require(proto)
   require(ggplot2)
   ## First look through layers for a colour aesthetic, TODO: look for
   ## fill aesthetic as well!

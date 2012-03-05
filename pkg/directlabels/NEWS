@@ -18,6 +18,13 @@ objects.
 contourplot labels as in lattice::panel.contourplot or C source code
 in r-source/src/main/plot3d.c
 
+2.4 --- 5 March 2012
+
+Suggest nlme to avoid warning on pkg check.
+
+require(proto) in geom_dl to avoid error if it is called without
+direct.label.ggplot
+
 2.3 --- 2 March 2012
 
 In apply.method, we look at all groups and determine which columns are
