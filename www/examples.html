@@ -93,7 +93,7 @@ library(ggplot2)
 ggplot(iris,aes(Petal.Length,Sepal.Length))+
   geom_point(aes(shape=Species))+
   geom_dl(aes(label=Species),method="smart.grid")+
-  scale_shape_manual(values=c(setosa=1,virginica=6,versicolor=3),legend=FALSE)
+  scale_shape_manual(values=c(setosa=1,virginica=6,versicolor=3),guide="none")
 </pre>
 <img src="scatter-bw-ggplot2.png" alt="direct labeled black and white
 scatterplot in ggplot2" />
@@ -192,7 +192,7 @@ illustrate how this works, consider the following contrived
 example:</p>
 
 <pre>
-complicated &lt;- list(<a href="http://directlabels.r-forge.r-project.org/docs/utility.function/posfuns/dl.trans.html">dl.trans</a>(x=x+10), ## add 10 to every x value
+complicated &lt;- list(<a href="http://directlabels.r-forge.r-project.org/docs/utility.function/posfuns/dl.trans.html">dl.trans</a>(x=x+1), ## shift every point to the right 1cm
                     <a href="http://directlabels.r-forge.r-project.org/docs/utility.function/posfuns/gapply.fun.html">gapply.fun</a>(d[-2,]), ## delete the 2nd point of every group
                     rot=c(30,180)) ## rotate by alternately 30 and 180 degrees
 direct.label(dotplot(VADeaths,type="o"),complicated)
@@ -207,9 +207,10 @@ this example, </p>
 <ol>
 
 <li>In Positioning Methods the x and y units are centimeters on the
-plotting device. The first list element <tt>dl.trans(x=x+10)</tt> is a
-function that adds 10 to every x value, thus shifting the labels 10cm
-to the right relative to the points. </li>
+plotting device. The first list element <tt>dl.trans(x=x+1)</tt> is a
+function that adds 1 to every x value, and since standard form
+positions are in units of centimeters, this has the effect of shifting
+the labels to the right 1cm. </li>
 
 <li>The second element is a call to <tt>gapply.fun</tt>, which lets
 you specify an expression to apply to each group, as a function of the
@@ -236,6 +237,7 @@ ggplot2 and/or lattice plots.</p>
 
 <pre>
 library(directlabels)
+library(reshape2)
 dts &lt;- cbind(male=mdeaths,female=fdeaths,time=1:length(mdeaths))
 ddf &lt;- melt(as.data.frame(dts),id="time")
 names(ddf) &lt;- c("time","sex","deaths")

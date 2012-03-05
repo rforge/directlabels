@@ -121,6 +121,7 @@ functions. It is also rather difficult in ggplot2:</p>
 
 <pre>
 library(ggplot2)
+library(plyr)
 ## ggplot2 with usual legend
 dp &lt;- qplot(ppp,data=loci,colour=type,geom="density")
 ## first we need to create a data frame of direct label positions
@@ -143,13 +144,9 @@ library(directlabels)
 ## The simplest kind of Positioning Method is just a function 
 ## of the data points that returns the label positions.
 direct.label(dp,function(d,...)transform(gapply(d,subset,y==max(y)),vjust=0))
-## Using gapply.fun makes it simpler to define Positioning Methods.
-direct.label(dp,gapply.fun(transform(subset(d,y==max(y)),vjust=0)))
-## Named list items will be used for label positions.
-direct.label(dp,list(gapply.fun(subset(d,y==max(y))),vjust=0))
 ## The built-in top.points Positioning Method does exactly this
 direct.label(dp,"top.points")
-## And by default direct.label uses top.points for density plots 
+## The default for density plots is similar, and prevents label overlap
 direct.label(dp)
 </pre>
 
@@ -173,13 +170,14 @@ since you have to construct a custom panel.groups function.</p>
 
 <img src="longitudinal.png" alt="rat body weights with direct labels" />
 
-<p>Adding direct labels by hand in ggplot2 is somewhat simpler in this
-case:</p>
+<p>Adding direct labels by hand in ggplot2 also tiresome, since you
+have to construct a data.frame for the labels:</p>
 
 <pre>
 lp &lt;- qplot(Time,weight,data=BodyWeight,colour=Rat,geom="line",facets=.~Diet)
+ratlabs &lt;- ddply(BodyWeight,.(Rat),function(d)d[which.min(d$Time),])
 lp+
-  geom_text(aes(label=Rat),subset=.(Time==min(Time)),hjust=1)+
+  geom_text(aes(label=Rat),hjust=1,data=ratlabs)+
   opts(legend.position="none")
 </pre>
 
@@ -195,8 +193,6 @@ install.packages("directlabels", repos="http://R-Forge.R-project.org")
 library(directlabels)
 ## You can use any function that will return the label positions
 direct.label(lp,function(d,...)transform(gapply(d,subset,x==min(x)),hjust=1))
-## Specifying a list and using gapply.fun is more concise
-direct.label(lp,list(gapply.fun(subset(d,x==min(x))),hjust=1))
 ## first.points is a Positioning Method that comes with the directlabels package
 direct.label(lp,"first.points")
 ## You can avoid label collisions using first.qp
