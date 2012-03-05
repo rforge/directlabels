@@ -18,7 +18,15 @@ objects.
 contourplot labels as in lattice::panel.contourplot or C source code
 in r-source/src/main/plot3d.c
 
-2.5
+2.5 ---
+
+bugfixes for scatterplots using perpendicular.grid and [ac]hull.grid.
+
+new check.for.columns function to make sure the data.frames returned
+by Positioning Functions in apply.method have the necessary info.
+
+bugfix for apply.method restore invariant columns for each group after
+applying Positioning Method algorithm.
 
 2.4 --- 5 March 2012
 
