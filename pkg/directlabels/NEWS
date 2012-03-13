@@ -20,6 +20,9 @@ in r-source/src/main/plot3d.c
 
 2.5 ---
 
+bugfix for ggplot2 geom_line picker. before we were not actually
+checking the number of levels of the groups.
+
 bugfixes for scatterplots using perpendicular.grid and [ac]hull.grid.
 
 new check.for.columns function to make sure the data.frames returned
