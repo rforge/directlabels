@@ -3,20 +3,27 @@
 \begin{document}
 
 \title{Recent developments in direct labeled graphics\\
-  \small{\url{http://directlabels.r-forge.r-project.org}}}
+  {\small\url{http://directlabels.r-forge.r-project.org}}}
 \author{Toby Dylan Hocking \\ toby.hocking@inria.fr}
 \date{29 March 2012}
 
 \frame{\titlepage}
 
-\SweaveOpts{dev='tikz',fig.width=6,fig.height=3,out.width='\\linewidth',cache=TRUE,
+\SweaveOpts{dev='tikz',fig.width=9,fig.height=4.5,out.width='\\linewidth',cache=TRUE,
+  tidy=FALSE,
 fig.path='figure/graphics-',cache.path='cache/graphics-',fig.align='center'}
 
 \frame{\tableofcontents}
 \section{Motivation: confusing legends}
 
-<<echo=FALSE,results='hide'>>=
+<<echo=FALSE,results='hide',cache=FALSE>>=
 options(width=60)
+library(grid)
+library(directlabels)
+library(lattice)
+library(ggplot2)
+library(proto)
+library(quadprog)
 @ 
 
 
@@ -29,18 +36,19 @@ head(loci)
   
 
 \begin{frame}[fragile]
-  \frametitle{Use case 1: legend inconsistent with data}
+  \frametitle{Problem 1: legend inconsistent with data}
 <<>>=
 library(lattice)
-dens <- densityplot(~score,loci,groups=type,auto.key=list(space="top",columns=3),n=500,
-            main="Distribution of scores by selection type")
+dens <- densityplot(~score,loci,groups=type,
+  auto.key=list(space="top",columns=3),n=500,
+  main="Distribution of scores by selection type")
 print(dens)
 @   
 \end{frame}
 
 
 \begin{frame}[fragile]
-  \frametitle{Use case 2: too many classes render legend unreadable}
+  \frametitle{Problem 2: too many classes render legend unreadable}
 <<>>=
 data(BodyWeight,package="nlme")
 library(ggplot2)
@@ -52,22 +60,31 @@ print(ratplot)
 \end{frame}
 
 
-
-\section{How to add direct labels}
-
-% 1. first try direct.label(p)
-
-% 2. If that doesn't work check to see if another Positioning Method
-% exists on http://directlabels.r-forge.r-project.org/docs/index.html,
-% then use direct.label(p,"method")
-
-% 3. If no Positioning Methods exist you can always write your own.
-
+\frame{\tableofcontents}
+\section{How to add direct labels to some common plots}
+\begin{frame}\frametitle{The protocol I use:}
+  Do as many steps as needed until the plot is readable:
+  \begin{enumerate}
+  \item Make a lattice or ggplot2 plot \texttt{p} using colors and
+    default legends.
+  \item Try the default: \texttt{direct.label(p)}.
+  \item Check to see if another Positioning Method
+    exists on\\{\small \url{http://directlabels.r-forge.r-project.org/docs/index.html}}
+    then use \texttt{direct.label(p,"method")}.
+  \item If no Positioning Methods exist you can always write your own.
+  \end{enumerate}
+\end{frame}
 % 1---- examples: works well by default
 
 % http://directlabels.r-forge.r-project.org/docs/lineplot/plots/sexdeaths.html
 
-% http://directlabels.r-forge.r-project.org/docs/densityplot/plots/loci.html
+\begin{frame}[fragile]
+  \frametitle{Add default direct labels}
+<<>>=
+library(directlabels)
+direct.label(dens)
+@   
+\end{frame}
 
 % http://directlabels.r-forge.r-project.org/docs/scatterplot/plots/iris.html
 
@@ -75,7 +92,37 @@ print(ratplot)
 
 % lasso lineplot: try lasso.labels
 
-% bodyweight lineplot: try last.qp or first.qp
+\begin{frame}[fragile]
+  \frametitle{Default direct labels for lineplots}
+<<>>=
+direct.label(ratplot)
+@   
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The Positioning Method controls direct label placement}
+<<>>=
+direct.label(ratplot,"last.qp")
+@   
+\end{frame}
+ 
+\begin{frame}[fragile]
+  \frametitle{With 2 groups, we label the min and max points}
+<<echo=FALSE,results='hide'>>=
+tx <- time(mdeaths)
+Time <- ISOdate(floor(tx),round(tx%%1 * 12)+1,1,0,0,0)
+sexdf <- function(sex,x)data.frame(Time,sex,deaths=as.integer(x))
+uk.lung <- rbind(sexdf("male",mdeaths),sexdf("female",fdeaths))
+@ 
+
+<<>>=
+p <- xyplot(deaths~Time,uk.lung,
+            groups=sex,type=c("l","g"))
+direct.label(p)
+@   
+\end{frame}
+
+
 
 % 3---- examples: ... writing custom methods?
 
@@ -88,7 +135,32 @@ print(ratplot)
 % lasso plot: add lasso.labels as well!
 % http://directlabels.r-forge.r-project.org/docs/lineplot/plots/lars.html
 
-\section{How does it work?}
+\section{Recent developments in direct labeling}
+
+\begin{frame}
+   \frametitle{Changes in recent versions of directlabels}
+   \begin{tabular}{rcccc}
+directlabels version  & $<2.0$ &$<2.0$& $\geq 2.0$ & $\geq 2.0$\\
+  plotting package & lattice & ggplot2 & lattice & ggplot2\\
+     \hline
+     basic
+     Positioning Methods & \checkmark & \checkmark & \checkmark & \checkmark \\
+     \hline
+     smart Positioning Methods\\
+    that avoid label collisions & \checkmark &  & \checkmark & \checkmark \\
+    \hline
+    redraw labels\\
+     after window resize  &  &  & \checkmark & \checkmark \\
+     \hline
+      \texttt{fontface} and \texttt{fontfamily}\\
+  text parameters   & \checkmark &  & \checkmark & \checkmark \\
+     \hline
+label black and white plots   & \checkmark &  & \checkmark & \checkmark \\
+      \hline
+      label aesthetics\\
+  other than color   &  &  &  & \checkmark \\
+   \end{tabular}
+\end{frame}
 
 % - lineplot QP
 
