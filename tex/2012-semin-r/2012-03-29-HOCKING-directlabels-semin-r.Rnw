@@ -1,30 +1,57 @@
-\documentclass{beamer}
+\documentclass[10pt]{beamer}
 
 \begin{document}
 
 \title{Recent developments in direct labeled graphics\\
-  \url{http://directlabels.r-forge.r-project.org}}
-\author{Toby Dylan Hocking \\ toby.hocking AT inria.fr}
+  \small{\url{http://directlabels.r-forge.r-project.org}}}
+\author{Toby Dylan Hocking \\ toby.hocking@inria.fr}
 \date{29 March 2012}
 
 \frame{\titlepage}
 
+\SweaveOpts{dev='tikz',fig.width=6,fig.height=3,out.width='\\linewidth',cache=TRUE,
+fig.path='figure/graphics-',cache.path='cache/graphics-',fig.align='center'}
+
+\frame{\tableofcontents}
 \section{Motivation: confusing legends}
 
+<<echo=FALSE,results='hide'>>=
+options(width=60)
+@ 
 
-\begin{frame}
 
-<<>>=
-library(lattice)
+<<echo=FALSE,results='hide'>>=
 set.seed(1)
 loci <- data.frame(score=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.25)),
   type=factor(c(rep("Neutral",800),rep("Positive",100),rep("Balancing",100)))) 
 head(loci)
-densityplot(~score,loci,groups=type,auto.key=list(space="top",columns=3),n=500,
-            main=tit <- "Distribution of scores by selection type")
 @ 
+  
 
+\begin{frame}[fragile]
+  \frametitle{Use case 1: legend inconsistent with data}
+<<>>=
+library(lattice)
+dens <- densityplot(~score,loci,groups=type,auto.key=list(space="top",columns=3),n=500,
+            main="Distribution of scores by selection type")
+print(dens)
+@   
 \end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Use case 2: too many classes render legend unreadable}
+<<>>=
+data(BodyWeight,package="nlme")
+library(ggplot2)
+ratplot <- ggplot(BodyWeight,aes(Time,weight,colour=Rat))+
+  facet_grid(.~Diet)+
+  geom_line()
+print(ratplot)
+@   
+\end{frame}
+
+
 
 \section{How to add direct labels}
 
@@ -73,13 +100,16 @@ densityplot(~score,loci,groups=type,auto.key=list(space="top",columns=3),n=500,
 % - generating a website using plots and methods defined in the R
 % package.
 
-\section{What directlabels is NOT}
-
-% - automatic publication-quality labels
-
-% - optimal labels for individual points on scatterplots
-
 \section{Conclusions}
+
+\begin{frame}
+  \frametitle{What directlabels is NOT}
+
+  \begin{itemize}
+  \item Automatic publication-quality direct labels.
+  \item Optimal labels for individual points on scatterplots.
+  \end{itemize}
+\end{frame}
 
 % - directlabels is useful for everyday data visualization, but some
 % manual tweaking can help make a publication-quality figure.
