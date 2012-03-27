@@ -18,6 +18,11 @@ fig.path='figure/graphics-',cache.path='cache/graphics-',fig.align='center'}
 
 <<echo=FALSE,results='hide',cache=FALSE>>=
 options(width=60)
+if(!require(EBImage)){
+  source("http://bioconductor.org/biocLite.R")
+  biocLite("EBImage")
+  library(EBImage)
+}
 library(grid)
 big.last <- list(cex=1.5,"last.qp")
 library(directlabels)
@@ -25,6 +30,19 @@ library(lattice)
 library(ggplot2)
 library(proto)
 library(quadprog)
+data(prostate,package="ElemStatLearn")
+pros <- subset(prostate,select=-train,train==TRUE)
+ycol <- which(names(pros)=="lpsa")
+x <- as.matrix(pros[-ycol])
+y <- pros[[ycol]]
+library(lars)
+fit <- lars(x,y,type="lasso")
+beta <- scale(coef(fit),FALSE,1/fit$normx)
+arclength <- rowSums(abs(beta))
+library(reshape2)
+path <- data.frame(melt(beta),arclength)
+names(path)[1:3] <- c("step","variable","standardized.coef")
+
 @ 
 
 
@@ -105,7 +123,29 @@ direct.label(p)
 
 
 
+\begin{frame}
+  \frametitle{lasso plot}
+<<>>=
+lasso.plot <- ggplot(path,aes(arclength,standardized.coef,colour=variable))+
+  geom_line(aes(group=variable))+
+  opts(title="LASSO path for prostate cancer data calculated using the LARS")+
+  xlim(0,20)
+direct.label(lasso.plot)  
 
+@ 
+\end{frame}
+
+\begin{frame}
+  \frametitle{lasso plot better}
+<<>>=
+lasso.plot <- ggplot(path,aes(arclength,standardized.coef,colour=variable))+
+  geom_line(aes(group=variable))+
+  opts(title="LASSO path for prostate cancer data calculated using the LARS")+
+  xlim(0,20)
+direct.label(lasso.plot,lasso.labels)  
+
+@ 
+\end{frame}
 
 % http://directlabels.r-forge.r-project.org/docs/scatterplot/plots/iris.html
 
@@ -139,55 +179,6 @@ direct.label(irisp)
 \end{frame}
 
 
-\begin{frame}[fragile]
-  \frametitle{Label a scatterplot of the iris data by species}
-<<dev='png'>>=
-set.seed(1)
-library(ggplot2)
-p <- ggplot(iris,aes(jitter(Sepal.Length),jitter(Petal.Length)))+
-  geom_point(aes(colour=Species))
-source("iris-images.R")
-pimg <- p+
-  GeomImageLabel$new(aes(label=Species),
-                      method=find.empty.box,
-                      images=iris.photos)
-library(directlabels)
-direct.label(pimg)  
-@   
-\end{frame}
-
-
-
- 
-\begin{frame}[fragile]
-  \frametitle{Construct your own custom Positioning Method}
-<<>>=
-rp2 <- ratplot+
-  xlim(0,70)+ylim(150,650)
-big.last <- list(cex=1.5,"last.qp")
-direct.label(rp2,"big.last") 
-@   
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Construct your own custom Positioning Method}
-<<>>=
-direct.label(rp2,
-  list("big.last",
-       "calc.boxes",
-       "draw.rects"))#p
-@   
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Construct your own custom Positioning Method}
-<<>>=
-spaced.last <- list(last.points,cex=1.5,calc.boxes,
-                    dl.trans(h=h+h/3),calc.borders,
-                    draw.rects,qp.labels("y","h"))
-direct.label(rp2,spaced.last)
-@   
-\end{frame}
 
 
  
@@ -232,6 +223,52 @@ label black and white plots   & \checkmark &  & \checkmark & \checkmark \\
    \end{tabular}
 \end{frame}
 
+
+\begin{frame}[fragile]
+  \frametitle{Label a scatterplot of the iris data by species}
+<<>>=
+direct.label(irisp,debug=TRUE)
+@   
+\end{frame}
+
+
+
+
+
+ 
+\begin{frame}[fragile]
+  \frametitle{Construct your own custom Positioning Method}
+<<>>=
+rp2 <- ratplot+
+  xlim(0,70)+ylim(150,650)
+big.last <- list(cex=1.5,"last.qp")
+direct.label(rp2,"big.last") 
+@   
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Construct your own custom Positioning Method}
+<<>>=
+direct.label(rp2,
+  list("big.last",
+       "calc.boxes",
+       "draw.rects"))#p
+@   
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Construct your own custom Positioning Method}
+<<>>=
+spaced.last <- list(last.points,cex=1.5,calc.boxes,
+                    dl.trans(h=h+h/3),calc.borders,
+                    draw.rects,qp.labels("y","h"))
+direct.label(rp2,spaced.last)
+@   
+\end{frame}
+
+
+
+
 % - lineplot QP
 
 % - scatterplot grid search
@@ -267,7 +304,7 @@ pointLabel(x, y, as.character(round(x,5)), offset = 0,
 @       
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Use directlabels instead of confusing legends!}
 
   \begin{itemize}
@@ -285,8 +322,22 @@ pointLabel(x, y, as.character(round(x,5)), offset = 0,
     \item Label using images instead of textual factor names?\\
       Possible Google Summer of Code 2012 project:\\
       {\scriptsize \url{http://rwiki.sciviews.org/doku.php?id=developers:projects:gsoc2012}}
+
     \end{itemize}
   \end{itemize}
+<<echo=FALSE,results='hide',dev='png',fig.height=10,fig.width=10,out.width='2in'>>=
+set.seed(1)
+library(ggplot2)
+p <- ggplot(iris,aes(jitter(Sepal.Length),jitter(Petal.Length)))+
+  geom_point(aes(colour=Species))
+source("iris-images.R")
+pimg <- p+
+  GeomImageLabel$new(aes(label=Species),
+                      method=find.empty.box,
+                      images=iris.photos)
+library(directlabels)
+direct.label(pimg)  
+@   
 \end{frame}
 
 \end{document}

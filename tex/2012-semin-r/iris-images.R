@@ -1,8 +1,3 @@
-if(!require(EBImage)){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("EBImage")
-  library(EBImage)
-}
 levels(iris$Species)
 iris.urls <- c(setosa="http://upload.wikimedia.org/wikipedia/commons/5/56/Kosaciec_szczecinkowaty_Iris_setosa.jpg",
                virginica="http://upload.wikimedia.org/wikipedia/commons/9/9f/Iris_virginica.jpg",
