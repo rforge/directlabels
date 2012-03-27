@@ -19,6 +19,7 @@ fig.path='figure/graphics-',cache.path='cache/graphics-',fig.align='center'}
 <<echo=FALSE,results='hide',cache=FALSE>>=
 options(width=60)
 library(grid)
+big.last <- list(cex=1.5,"last.qp")
 library(directlabels)
 library(lattice)
 library(ggplot2)
@@ -67,7 +68,7 @@ print(ratplot)
   \begin{enumerate}
   \item Make a lattice or ggplot2 plot \texttt{p} using colors and
     default legends.
-  \item Try the default: \texttt{direct.label(p)}.
+  \item Try the default direct labels: \texttt{direct.label(p)}.
   \item Check to see if another Positioning Method
     exists on\\{\small \url{http://directlabels.r-forge.r-project.org/docs/index.html}}
     then use \texttt{direct.label(p,"method")}.
@@ -79,33 +80,13 @@ print(ratplot)
 % http://directlabels.r-forge.r-project.org/docs/lineplot/plots/sexdeaths.html
 
 \begin{frame}[fragile]
-  \frametitle{Add default direct labels}
+  \frametitle{Add default direct labels at the mode of each density}
 <<>>=
 library(directlabels)
 direct.label(dens)
 @   
 \end{frame}
 
-% http://directlabels.r-forge.r-project.org/docs/scatterplot/plots/iris.html
-
-% 2---- examples: lineplot, scatterplot
-
-% lasso lineplot: try lasso.labels
-
-\begin{frame}[fragile]
-  \frametitle{Default direct labels for lineplots}
-<<>>=
-direct.label(ratplot)
-@   
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{The Positioning Method controls direct label placement}
-<<>>=
-direct.label(ratplot,"last.qp")
-@   
-\end{frame}
- 
 \begin{frame}[fragile]
   \frametitle{With 2 groups, we label the min and max points}
 <<echo=FALSE,results='hide'>>=
@@ -124,6 +105,94 @@ direct.label(p)
 
 
 
+
+
+% http://directlabels.r-forge.r-project.org/docs/scatterplot/plots/iris.html
+
+% 2---- examples: lineplot, scatterplot
+
+% lasso lineplot: try lasso.labels
+
+\begin{frame}[fragile]
+  \frametitle{Default direct labels for lineplots}
+<<>>=
+direct.label(ratplot)
+@   
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Look up the Positioning Method on the directlabels website}
+<<>>=
+direct.label(ratplot,"last.qp")
+@   
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Label a scatterplot of the iris data by species}
+<<>>=
+set.seed(1)
+irisp <- xyplot(jitter(Sepal.Length)~jitter(Petal.Length),
+                iris,groups=Species)
+direct.label(irisp)
+@   
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Label a scatterplot of the iris data by species}
+<<dev='png'>>=
+set.seed(1)
+library(ggplot2)
+p <- ggplot(iris,aes(jitter(Sepal.Length),jitter(Petal.Length)))+
+  geom_point(aes(colour=Species))
+source("iris-images.R")
+pimg <- p+
+  GeomImageLabel$new(aes(label=Species),
+                      method=find.empty.box,
+                      images=iris.photos)
+library(directlabels)
+direct.label(pimg)  
+@   
+\end{frame}
+
+
+
+ 
+\begin{frame}[fragile]
+  \frametitle{Construct your own custom Positioning Method}
+<<>>=
+rp2 <- ratplot+
+  xlim(0,70)+ylim(150,650)
+big.last <- list(cex=1.5,"last.qp")
+direct.label(rp2,"big.last") 
+@   
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Construct your own custom Positioning Method}
+<<>>=
+direct.label(rp2,
+  list("big.last",
+       "calc.boxes",
+       "draw.rects"))#p
+@   
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Construct your own custom Positioning Method}
+<<>>=
+spaced.last <- list(last.points,cex=1.5,calc.boxes,
+                    dl.trans(h=h+h/3),calc.borders,
+                    draw.rects,qp.labels("y","h"))
+direct.label(rp2,spaced.last)
+@   
+\end{frame}
+
+
+ 
+
+
 % 3---- examples: ... writing custom methods?
 
 % scatterplot: make numbers bigger
@@ -135,6 +204,7 @@ direct.label(p)
 % lasso plot: add lasso.labels as well!
 % http://directlabels.r-forge.r-project.org/docs/lineplot/plots/lars.html
 
+\frame{\tableofcontents}
 \section{Recent developments in direct labeling}
 
 \begin{frame}
@@ -172,20 +242,51 @@ label black and white plots   & \checkmark &  & \checkmark & \checkmark \\
 % - generating a website using plots and methods defined in the R
 % package.
 
+\frame{\tableofcontents}
 \section{Conclusions}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{What directlabels is NOT}
 
   \begin{itemize}
   \item Automatic publication-quality direct labels.
+    \\ (some manual tweaking will always be necessary)
   \item Optimal labels for individual points on scatterplots.
+    \\ (it is a bit more complicated:)
   \end{itemize}
+<<echo=FALSE,results='hide'>>=
+source("pointLabel.R")
+# Examples:
+set.seed(100)
+n = 50
+x = rnorm(n)*10
+y = rnorm(n)*10
+plot(x,y, col="red",pch=20)
+pointLabel(x, y, as.character(round(x,5)), offset = 0, 
+           allowSmallOverlap = F,cex=.7, trace = TRUE)
+@       
 \end{frame}
 
-% - directlabels is useful for everyday data visualization, but some
-% manual tweaking can help make a publication-quality figure.
+\begin{frame}
+  \frametitle{Use directlabels instead of confusing legends!}
 
-% - future work in image labels?
+  \begin{itemize}
+  \item directlabels is useful for everyday data visualization.
+    \begin{itemize}
+    \item It works with lattice and ggplot2,
+    \item has sensible defaults,
+    \item smart Positioning Methods that avoid label collisions,
+    \item and you can write your own Positioning Methods!
+    \end{itemize}
+  \item Future work:
+    \begin{itemize}
+    \item Automatically adjust xlim/ylim so labels stay on plot region?
+    \item Contourplot labels as in \texttt{contour()}?
+    \item Label using images instead of textual factor names?\\
+      Possible Google Summer of Code 2012 project:\\
+      {\scriptsize \url{http://rwiki.sciviews.org/doku.php?id=developers:projects:gsoc2012}}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
 
 \end{document}
