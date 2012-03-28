@@ -376,7 +376,7 @@ direct.label(rp2,list("last.points",cex=1.5,"calc.boxes",
   \item Automatic publication-quality direct labels.
     \\ (some manual tweaking will always be necessary)
   \item Optimal labels for individual points on scatterplots.
-    \\ (it is a bit more complicated:)
+    \\ (it is a bit more complicated)
   \end{itemize}
 <<pointLabel,background='white',echo=FALSE,results='hide'>>=
 source("pointLabel.R")
