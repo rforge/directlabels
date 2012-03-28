@@ -1,3 +1,9 @@
+if(!require(EBImage)){
+  source("http://bioconductor.org/biocLite.R")
+  biocLite("EBImage")
+  library(EBImage)
+}
+library(grid)
 levels(iris$Species)
 iris.urls <- c(setosa="http://upload.wikimedia.org/wikipedia/commons/5/56/Kosaciec_szczecinkowaty_Iris_setosa.jpg",
                virginica="http://upload.wikimedia.org/wikipedia/commons/9/9f/Iris_virginica.jpg",
@@ -108,7 +114,7 @@ find.empty.box <- function # just like empty.grid
  ...
 ### ignored.
  ){
-  NREP <- 10
+  NREP <- 8
   all.points <- attr(d,"orig.data")[,c("x","y")]
   if(any(table(d$groups)>1))d <- get.means(d)
   label.targets <- d
@@ -177,3 +183,22 @@ find.empty.box <- function # just like empty.grid
 ### the positions on the grid closest to each cluster.
 }
 
+set.seed(1)
+library(ggplot2)
+Species <- c("versicolor","virginica","setosa")
+iris$Species <- factor(iris$Species,Species)
+p <- ggplot(iris,aes(Sepal.Length,Petal.Length,colour=Species))+
+  geom_point()
+text.labs <- data.frame(Species,
+                        Petal.Length=c(3,5.8,2.3),
+                        Sepal.Length=c(6.3,7.7,4.3))
+library(directlabels)
+pimg <- p+
+  GeomImageLabel$new(aes(label=Species),
+                     method=find.empty.box,
+                     images=iris.photos)+
+  geom_text(aes(label=Species),data=text.labs)+
+  scale_colour_discrete(guide="none")
+png("iris-images.png")
+print(pimg)
+dev.off()

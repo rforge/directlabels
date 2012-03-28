@@ -1,5 +1,7 @@
 \documentclass[10pt]{beamer}
 
+\newcommand{\RR}{\mathbb R}
+
 \begin{document}
 
 \title{Recent developments in direct labeled graphics\\
@@ -17,32 +19,28 @@ fig.path='figure/graphics-',cache.path='cache/graphics-',fig.align='center'}
 \section{Motivation: confusing legends}
 
 <<echo=FALSE,results='hide',cache=FALSE>>=
-options(width=60)
-if(!require(EBImage)){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("EBImage")
-  library(EBImage)
-}
-library(grid)
-big.last <- list(cex=1.5,"last.qp")
-library(directlabels)
-library(lattice)
-library(ggplot2)
-library(proto)
-library(quadprog)
-data(prostate,package="ElemStatLearn")
-pros <- subset(prostate,select=-train,train==TRUE)
-ycol <- which(names(pros)=="lpsa")
-x <- as.matrix(pros[-ycol])
-y <- pros[[ycol]]
-library(lars)
-fit <- lars(x,y,type="lasso")
-beta <- scale(coef(fit),FALSE,1/fit$normx)
-arclength <- rowSums(abs(beta))
-library(reshape2)
-path <- data.frame(melt(beta),arclength)
-names(path)[1:3] <- c("step","variable","standardized.coef")
-
+  suppressPackageStartupMessages({
+    options(width=60)
+    library(grid)
+    big.last <- list(cex=1.5,"last.qp")
+    library(directlabels)
+    library(lattice)
+    library(ggplot2)
+    library(proto)
+    library(quadprog)
+    data(prostate,package="ElemStatLearn")
+    pros <- subset(prostate,select=-train,train==TRUE)
+    ycol <- which(names(pros)=="lpsa")
+    x <- as.matrix(pros[-ycol])
+    y <- pros[[ycol]]
+    library(lars)
+    fit <- lars(x,y,type="lasso")
+    beta <- scale(coef(fit),FALSE,1/fit$normx)
+    arclength <- rowSums(abs(beta))
+    library(reshape2)
+    path <- data.frame(melt(beta),arclength)
+    names(path)[1:3] <- c("step","variable","standardized.coef")
+  })
 @ 
 
 
@@ -56,7 +54,7 @@ head(loci)
 
 \begin{frame}[fragile]
   \frametitle{Problem 1: legend inconsistent with data}
-<<>>=
+<<dens-confusing>>=
 library(lattice)
 dens <- densityplot(~score,loci,groups=type,
   auto.key=list(space="top",columns=3),n=500,
@@ -68,7 +66,7 @@ print(dens)
 
 \begin{frame}[fragile]
   \frametitle{Problem 2: too many classes render legend unreadable}
-<<>>=
+<<rat-unreadable>>=
 data(BodyWeight,package="nlme")
 library(ggplot2)
 ratplot <- ggplot(BodyWeight,aes(Time,weight,colour=Rat))+
@@ -81,7 +79,7 @@ print(ratplot)
 
 \frame{\tableofcontents}
 \section{How to add direct labels to some common plots}
-\begin{frame}\frametitle{The protocol I use:}
+\begin{frame}\frametitle{The protocol I use for everyday plots in practice:}
   Do as many steps as needed until the plot is readable:
   \begin{enumerate}
   \item Make a lattice or ggplot2 plot \texttt{p} using colors and
@@ -99,7 +97,7 @@ print(ratplot)
 
 \begin{frame}[fragile]
   \frametitle{Add default direct labels at the mode of each density}
-<<>>=
+<<dens>>=
 library(directlabels)
 direct.label(dens)
 @   
@@ -114,18 +112,57 @@ sexdf <- function(sex,x)data.frame(Time,sex,deaths=as.integer(x))
 uk.lung <- rbind(sexdf("male",mdeaths),sexdf("female",fdeaths))
 @ 
 
-<<>>=
+<<lines2>>=
 p <- xyplot(deaths~Time,uk.lung,
             groups=sex,type=c("l","g"))
 direct.label(p)
 @   
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Label a scatterplot of the iris data by species}
+<<irisp>>=
+set.seed(1)
+irisp <- xyplot(jitter(Sepal.Length)~jitter(Petal.Length),
+                iris,groups=Species)
+direct.label(irisp)
+@   
+\end{frame}
+
+
+
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Default direct labels for lineplots}
+<<ratplot>>=
+direct.label(ratplot)
+@   
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Look up the Positioning Method on the directlabels website}
+<<ratplot-last-qp>>=
+direct.label(ratplot,"last.qp")
+@   
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Construct your own custom Positioning Method}
+<<big-last>>=
+rp2 <- ratplot+
+  xlim(0,70)+ylim(150,650)
+big.last <- list(cex=1.5,"last.qp")
+direct.label(rp2,"big.last") 
+@   
+\end{frame}
+
 
 
 \begin{frame}
-  \frametitle{lasso plot}
-<<>>=
+  \frametitle{Direct label the LASSO path to visualize variables}
+<<lasso>>=
 lasso.plot <- ggplot(path,aes(arclength,standardized.coef,colour=variable))+
   geom_line(aes(group=variable))+
   opts(title="LASSO path for prostate cancer data calculated using the LARS")+
@@ -136,46 +173,21 @@ direct.label(lasso.plot)
 \end{frame}
 
 \begin{frame}
-  \frametitle{lasso plot better}
-<<>>=
-lasso.plot <- ggplot(path,aes(arclength,standardized.coef,colour=variable))+
-  geom_line(aes(group=variable))+
-  opts(title="LASSO path for prostate cancer data calculated using the LARS")+
-  xlim(0,20)
-direct.label(lasso.plot,lasso.labels)  
+  \frametitle{Label the zero point to emphasize variable
+    importance}
+<<lasso-labels>>=
+direct.label(lasso.plot,"lasso.labels")
 
 @ 
 \end{frame}
 
-% http://directlabels.r-forge.r-project.org/docs/scatterplot/plots/iris.html
 
-% 2---- examples: lineplot, scatterplot
+\begin{frame}
+  \frametitle{Increase text size to make reading easier}
+<<lasso-labels-big>>=
+direct.label(lasso.plot,list(cex=2,"lasso.labels"))
 
-% lasso lineplot: try lasso.labels
-
-\begin{frame}[fragile]
-  \frametitle{Default direct labels for lineplots}
-<<>>=
-direct.label(ratplot)
-@   
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Look up the Positioning Method on the directlabels website}
-<<>>=
-direct.label(ratplot,"last.qp")
-@   
-\end{frame}
-
-
-\begin{frame}[fragile]
-  \frametitle{Label a scatterplot of the iris data by species}
-<<>>=
-set.seed(1)
-irisp <- xyplot(jitter(Sepal.Length)~jitter(Petal.Length),
-                iris,groups=Species)
-direct.label(irisp)
-@   
+@ 
 \end{frame}
 
 
@@ -226,8 +238,19 @@ label black and white plots   & \checkmark &  & \checkmark & \checkmark \\
 
 \begin{frame}[fragile]
   \frametitle{Label a scatterplot of the iris data by species}
-<<>>=
-direct.label(irisp,debug=TRUE)
+<<irisp2,results='hide'>>=
+direct.label(irisp) 
+@   
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Show the grid for the search}
+  Find a label position on a grid (grey rectangles)\\
+  that is near the center of each point cloud (green dots), \\
+  but does not overlap any points or other labels (black dots).
+<<irisp-debug,results='hide'>>=
+direct.label(irisp,debug=TRUE) 
 @   
 \end{frame}
 
@@ -237,8 +260,8 @@ direct.label(irisp,debug=TRUE)
 
  
 \begin{frame}[fragile]
-  \frametitle{Construct your own custom Positioning Method}
-<<>>=
+  \frametitle{Increase text size \alert{before} calculating label positions}
+<<big-last>>=
 rp2 <- ratplot+
   xlim(0,70)+ylim(150,650)
 big.last <- list(cex=1.5,"last.qp")
@@ -247,24 +270,88 @@ direct.label(rp2,"big.last")
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Construct your own custom Positioning Method}
-<<>>=
+  \frametitle{Show the label borders used in the position calculation}
+<<big-last-boxes>>=
 direct.label(rp2,
   list("big.last",
        "calc.boxes",
-       "draw.rects"))#p
+       "draw.rects"))
 @   
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Construct your own custom Positioning Method}
-<<>>=
-spaced.last <- list(last.points,cex=1.5,calc.boxes,
-                    dl.trans(h=h+h/3),calc.borders,
-                    draw.rects,qp.labels("y","h"))
-direct.label(rp2,spaced.last)
+  \frametitle{Label positions for lineplots are the solutions of a QP}
+  \begin{minipage}{1.1in}
+<<qp-fig,background='white',echo=FALSE,fig.width=2,fig.height=2,out.width='1in',out.height='1in'>>=
+par(mar=c(0,0,0,3))
+y <- c(1,2,5,6)
+x <- rep(0,length(y))
+h <- c(1,0.5,1,0.8)
+ymin <- 0.15
+ymax <- 0.35
+plot(c(ymin,ymax),c(0,7),type="n")
+rect(ymin,y-h/2,ymax,y+h/2,col="grey90")
+i <- c(1,2,"k-1","k")
+axis(4,y,sprintf("$t_{%s}$",i),las=2)
+axis(4,3.5,"$\\vdots$",las=2,tick=FALSE)
+arrows(0.2,y-h/2,0.2,y+h/2,0.1,code=3)
+text(0.25,y,sprintf("$h_{%s}$",i),adj=c(0,0.5))
+text(0.25,3.5,"$\\vdots$",adj=c(0,0.5))
+@   
+\end{minipage}
+\begin{minipage}{3in}
+    Assume that for each text label
+    $i=1,\dots,k$ 
+    we have its 
+    position $t_i$ and 
+    height $h_i$.
+
+    Then optimal direct labels do not overlap, and are as close as
+  possible to the target locations:
+\begin{equation*}
+\begin{aligned}
+&\min_{b\in\RR^k} && \sum_{i=1}^k (b_i-t_i)^2
+=||b-t||^2
+\\
+&\text{subject to} && b_{i+1} \geq b_i + h_{i+1}/2+h_i/2,
+\ \forall\ i=1,\dots,k-1
+\end{aligned}
+\end{equation*}
+This is a quadratic program (QP). QPs are convex so there is a
+unique global minimum which corresponds to the best labels. 
+
+We can solve this using \texttt{quadprog::solve.QP()} and use the
+optimal $b$ for the direct label positions.
+\end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Start with boxes at the end of each line}
+<<tall-boxes1>>=
+direct.label(rp2,list("last.points",cex=1.5,
+                      "calc.boxes", 
+                      "draw.rects"))
 @   
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Adjust box height if desired}
+<<tall-boxes2>>=
+direct.label(rp2,list("last.points",cex=1.5,"calc.boxes",
+                      dl.trans(h=h+h/3),"calc.borders",
+                      "draw.rects"))
+@   
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Apply QP solver to get optimal labels}
+<<tall-boxes3>>=
+direct.label(rp2,list("last.points",cex=1.5,"calc.boxes",
+                      dl.trans(h=h+h/3),"calc.borders",
+                      qp.labels("y","h")))
+@   
+\end{frame}
+
 
 
 
@@ -291,7 +378,7 @@ direct.label(rp2,spaced.last)
   \item Optimal labels for individual points on scatterplots.
     \\ (it is a bit more complicated:)
   \end{itemize}
-<<echo=FALSE,results='hide'>>=
+<<pointLabel,background='white',echo=FALSE,results='hide'>>=
 source("pointLabel.R")
 # Examples:
 set.seed(100)
@@ -300,22 +387,24 @@ x = rnorm(n)*10
 y = rnorm(n)*10
 plot(x,y, col="red",pch=20)
 pointLabel(x, y, as.character(round(x,5)), offset = 0, 
-           allowSmallOverlap = F,cex=.7, trace = TRUE)
+           allowSmallOverlap = FALSE,cex=0.7, trace = TRUE)
+
 @       
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Use directlabels instead of confusing legends!}
-
   \begin{itemize}
-  \item directlabels is useful for everyday data visualization.
-    \begin{itemize}
-    \item It works with lattice and ggplot2,
-    \item has sensible defaults,
-    \item smart Positioning Methods that avoid label collisions,
-    \item and you can write your own Positioning Methods!
-    \end{itemize}
-  \item Future work:
+    \item Works with lattice and ggplot2.
+    \item Sensible defaults.
+    \item Useful in everyday plots in practice.
+    \item Smart Positioning Methods that avoid label collisions.
+    \item Customizable: you can write your own Positioning Methods.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Future work}
     \begin{itemize}
     \item Automatically adjust xlim/ylim so labels stay on plot region?
     \item Contourplot labels as in \texttt{contour()}?
@@ -324,20 +413,7 @@ pointLabel(x, y, as.character(round(x,5)), offset = 0,
       {\scriptsize \url{http://rwiki.sciviews.org/doku.php?id=developers:projects:gsoc2012}}
 
     \end{itemize}
-  \end{itemize}
-<<echo=FALSE,results='hide',dev='png',fig.height=10,fig.width=10,out.width='2in'>>=
-set.seed(1)
-library(ggplot2)
-p <- ggplot(iris,aes(jitter(Sepal.Length),jitter(Petal.Length)))+
-  geom_point(aes(colour=Species))
-source("iris-images.R")
-pimg <- p+
-  GeomImageLabel$new(aes(label=Species),
-                      method=find.empty.box,
-                      images=iris.photos)
-library(directlabels)
-direct.label(pimg)  
-@   
+    \includegraphics[width=2in]{iris-images}
 \end{frame}
 
 \end{document}
