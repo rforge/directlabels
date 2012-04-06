@@ -309,11 +309,12 @@ calc.borders <- function
 ### to have previously called calc.boxes. Does not edit the data
 ### frame.
 draw.rects <- function(d,...){
+  if(is.null(d$box.color))d$box.color <- "black"
   for(i in 1:nrow(d)){
     with(d[i,],{
       grid.lines(c(left,left,right,right,left),
                  c(bottom,top,top,bottom,bottom),
-                 "cm",gp=gpar(col="grey"))
+                 "cm",gp=gpar(col=d$box.color))
     })
   }
   d
