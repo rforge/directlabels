@@ -43,19 +43,22 @@ print(overlapping)
 library(directlabels)
 ## You need to edit this function 
 adjust.boxes <- function(d,...){
-  ddply(d,.(y),function(d){
+  gapply(d,function(d,...){
     print(d)
     draw.rects(d)
-    browser()
     ## examine the top/bottom/left/right columns of d to get the
     ## locations of the text bounding box in cm. You need to return a
     ## data.frame with altered x/y columns.
+    bumped <- apply.method("top.bumpup",d)
+    bumped$box.color <- "red"
+    draw.rects(d)
+    browser()
     d
-  })
+  },groups="y")
 }
 
 ## this is the Positioning Method
 dont.overlap <- list(dl.trans(vjust=-0.1,hjust=0,cex=0.5),
                      "calc.boxes","adjust.boxes")
-direct.label(nolab,"dont.overlap")
+direct.label(no.labels,"dont.overlap")
 
