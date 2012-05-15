@@ -45,15 +45,16 @@ library(directlabels)
 adjust.boxes <- function(d,...){
   gapply(d,function(d,...){
     print(d)
+    d$box.color <- "grey"
     draw.rects(d)
     ## examine the top/bottom/left/right columns of d to get the
     ## locations of the text bounding box in cm. You need to return a
     ## data.frame with altered x/y columns.
-    bumped <- apply.method("top.bumpup",d)
+    bumped <- apply.method("top.bumptwice",d)
     bumped$box.color <- "red"
-    draw.rects(d)
+    draw.rects(bumped)
     browser()
-    d
+    bumped
   },groups="y")
 }
 
