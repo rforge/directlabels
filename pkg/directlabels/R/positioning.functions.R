@@ -67,7 +67,7 @@ direct.label <- structure(function # Direct labels for color decoding
 ### useful and clear alternative to a confusing legend in many common
 ### plots.
 (p,
-### The "lattice" or "ggplot" object with things drawn in different
+### The "trellis" or "ggplot" object with things drawn in different
 ### colors.
  method=NULL,
 ### Positioning Method, which determines the positions of the direct

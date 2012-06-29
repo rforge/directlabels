@@ -15,7 +15,7 @@ method for .zoo plots?
 handling custom # of bins/custom densityplot params?
 
 problems with plotting color labels in lattice when col= is specified,
-see etc/individual.R
+see etc/individual.R, and gabor.R
 
 see etc/xYplot.R for a problem with plotting some weird trellis
 objects.
@@ -28,6 +28,8 @@ with this - if any kind of bin adjustment is used within the
 stat_contour (e.g., stat_contour(aes(colour=..level..), binwidth=50)
 directlabels ignores the binned contour lines and labels everything
 (=whatever default contour lines are produced, even if not plotted!).
+
+See etc/area.R for an example of using fill in area plots.
 
 2.6 --- 5 June 2012
 
