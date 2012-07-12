@@ -12,7 +12,20 @@ lasso.labels <-
        ## calculate how wide the tilted box is
        dl.trans(hyp=h/sin(2*pi*rot/360)),
        ## avoid collisions between tilted boxes
-       qp.labels("x","hyp"))
+       function(d,...){
+         solver <- qp.labels("x","hyp")
+         ## apply the solver independently for top and bottom labels.
+         solution <- data.frame()
+         for(vj in c(0,1)){
+           these <- d$vjust == vj
+           if(any(these)){
+             one.side <- d[these,]
+             solved <- solver(one.side)
+             solution <- rbind(solution,solved)
+           }
+         }
+         solution
+       })
 
 ### Positioning Method for the first of a group of points.
 first.points <- label.endpoints(min,1)
