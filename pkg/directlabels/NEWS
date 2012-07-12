@@ -31,6 +31,11 @@ directlabels ignores the binned contour lines and labels everything
 
 See etc/area.R for an example of using fill in area plots.
 
+2.7 --- 12 July 2012
+
+New lasso.labels Positioning Method that applies the QP solver to both
+the top and bottom labels.
+
 2.6 --- 5 June 2012
 
 In ggplot2 >= 0.9.1, layer$data is an empty list of class "waiver" in
