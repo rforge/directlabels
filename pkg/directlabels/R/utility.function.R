@@ -368,18 +368,15 @@ ignore.na <- function(d,...){
 ### Use a QP solver to find the best places to put the points on a
 ### line, subject to the constraint that they should not
 ### overlap.
-qp.labels <- function(var,spacer)function(d,...){
+qp.labels <- function(var,spacer,tiebreaker=NULL)function(d,...){
   if(!spacer%in%names(d))stop("need to have calculated ",spacer)
   require(quadprog)
   ## calculate a tiebreaker for the ordering. If we are doing a
   ## standard lineplot, then we can calculate where the line is going
   ## by looking at the nearest point. TODO: how to tiebreak in other
   ## situations, like lasso.labels?
-  d$tiebreaker <- if(var=="y"){
-    sapply(seq_along(d$groups),function(i){
-      others <- subset(attr(d,"orig.data"),groups==d$groups[i] & x!=d$x[i])
-      others[which.min(abs(others$x-d$x[i])),"y"]
-    })
+  d$tiebreaker <- if(!is.null(tiebreaker)){
+    tiebreaker(d,...)
   }else{
     1
   }
@@ -601,7 +598,24 @@ project.onto.segments <- function
 
 ### Make a Positioning Function from a set of points on a vertical
 ### line that will be spaced out using qp.labels
-vertical.qp <- function(M)list(M,"calc.boxes",qp.labels("y","h"))
+vertical.qp <- function(M){
+  avoid.collisions <- qp.labels("y","h",make.tiebreaker("x","y"))
+  list(M,"calc.boxes",avoid.collisions)
+}
+
+### Make a tiebreaker function that can be used with qp.labels.
+make.tiebreaker <- function(exclude.var,tiebreak.var){
+  function(d,...){
+    orig <- attr(d,"orig.data")
+    sapply(seq_along(d$groups),function(i){
+      in.group <- orig$groups == d$groups[i]
+      not.same <- orig[,exclude.var] != d[i,exclude.var]
+      others <- orig[in.group & not.same,]
+      others$dist <- others[,exclude.var]-d[i,exclude.var]
+      others[which.min(abs(others$dist)),tiebreak.var]
+    })
+  }
+}
 
 ### Calculate the default alpha parameter for ashape based on the
 ### average size of label boxes.

@@ -36,6 +36,9 @@ See etc/area.R for an example of using fill in area plots.
 New lasso.labels Positioning Method that applies the QP solver to both
 the top and bottom labels.
 
+New tiebreaker argument for qp.labels so we can do that for top.qp as
+well.
+
 2.6 --- 5 June 2012
 
 In ggplot2 >= 0.9.1, layer$data is an empty list of class "waiver" in
