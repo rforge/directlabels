@@ -1,5 +1,7 @@
 TODO
 
+qp.labels: respect any predefined vjust for overlap calculation.
+
 image labels: draw a grob on screen instead of assuming it is
 text. Have a toggle for drawing images and/or text. Handle both in a
 uniform way in Positioning Methods by just asking for the grob size
