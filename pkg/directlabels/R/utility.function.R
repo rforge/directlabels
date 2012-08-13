@@ -21,7 +21,7 @@ dl.combine <- structure(function # Combine output of several methods
  ){
   FUNS <- list(...)
   pf <- function(d,...){
-    dfs <- lapply(FUNS,apply.method,d)
+    dfs <- lapply(FUNS,apply.method,d,...)
     res <- data.frame()
     for(df in dfs){
       if(nrow(res))res <- merge(df,res,all=TRUE)
