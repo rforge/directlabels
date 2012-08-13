@@ -370,6 +370,7 @@ ignore.na <- function(d,...){
 ### overlap.
 qp.labels <- function(var,spacer,tiebreaker=NULL)function(d,...){
   if(!spacer%in%names(d))stop("need to have calculated ",spacer)
+  if(nrow(d)==1)return(d)
   require(quadprog)
   ## calculate a tiebreaker for the ordering. If we are doing a
   ## standard lineplot, then we can calculate where the line is going
