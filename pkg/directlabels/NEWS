@@ -1,6 +1,8 @@
 TODO
 
-qp.labels: respect any predefined vjust for overlap calculation.
+qp.labels: respect any predefined vjust for overlap calculation?
+Perhaps this is already good enough since we calculate height and
+width in calc.borders using hjust and vjust?
 
 image labels: draw a grob on screen instead of assuming it is
 text. Have a toggle for drawing images and/or text. Handle both in a
