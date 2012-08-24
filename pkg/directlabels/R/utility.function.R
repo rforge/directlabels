@@ -41,16 +41,16 @@ dl.combine <- structure(function # Combine output of several methods
   both <- dl.combine("first.points","last.points")
   rat.both <- direct.label(ratplot,"both")
   print(rat.both)
-##   grid.edit(gPath("panel-3-3",".*","GRID.dlgrob"),
-##             method=list(cex=2,fontfamily="bold","both"),
-##             grep=TRUE)
+  ##   grid.edit(gPath("panel-3-3",".*","GRID.dlgrob"),
+  ##             method=list(cex=2,fontfamily="bold","both"),
+  ##             grep=TRUE)
   ## can also do this by repeatedly calling direct.label
   rat.repeated <-
     direct.label(direct.label(ratplot,"last.points"),"first.points")
   print(rat.repeated)
-##   grid.edit(gPath("panel-3-5",".*","GRID.dlgrob.first.points"),
-##             method=list(cex=2,fontfamily="bold","both"),
-##             grep=TRUE)
+  ##   grid.edit(gPath("panel-3-5",".*","GRID.dlgrob.first.points"),
+  ##             method=list(cex=2,fontfamily="bold","both"),
+  ##             grep=TRUE)
   library(ggplot2)
   rp2 <- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
   print(direct.label(direct.label(rp2,"last.points"),"first.points"))
@@ -247,7 +247,7 @@ dl.move <- structure(function # Manually move a direct label
   p <- qplot(log10(gamma),rate,data=svmtrain,group=data,colour=data,
              geom="line",facets=replicate~nu)
   dlcompare(list(p+xlim(-8,7)),list("last.points",
-    `+dl.move`=list(last.points,dl.move("KIF11",-0.9,hjust=1,vjust=1))))
+                                    `+dl.move`=list(last.points,dl.move("KIF11",-0.9,hjust=1,vjust=1))))
 })
 
 ### Jitter the label positions.
@@ -255,23 +255,23 @@ dl.jitter <- dl.trans(x=jitter(x),y=jitter(y))
 
 ### Calculate boxes around labels, for collision detection.
 calc.boxes <- function(d,debug=FALSE,...){
-  vp <- current.viewport()
-  convert <- function(worh){
-    conv <- get(paste("convert",worh,sep=""))
-    stri <- get(paste("string",worh,sep=""))
-    with(d,sapply(seq_along(groups),function(i){
-      if("cex"%in%names(d))vp$gp <- gpar(cex=cex[i])
-      pushViewport(vp)
-      if(debug)grid.rect() ##highlight current viewport
-      w <- conv(stri(as.character(groups[i])),"cm")
-      popViewport()
-      w
-    }))
-  }
-  ## abs since we have a weird bug with ggplot2 sometimes
-  w <- abs(convert("Width"))
-  h <- abs(convert("Height"))
-  calc.borders(transform(d,w=w,h=h))
+vp <- current.viewport()
+convert <- function(worh){
+  conv <- get(paste("convert",worh,sep=""))
+  stri <- get(paste("string",worh,sep=""))
+  with(d,sapply(seq_along(groups),function(i){
+    if("cex"%in%names(d))vp$gp <- gpar(cex=cex[i])
+    pushViewport(vp)
+    if(debug)grid.rect() ##highlight current viewport
+    w <- conv(stri(as.character(groups[i])),"cm")
+    popViewport()
+    w
+  }))
+}
+## abs since we have a weird bug with ggplot2 sometimes
+w <- abs(convert("Width"))
+h <- abs(convert("Height"))
+calc.borders(transform(d,w=w,h=h))
 }
 
 ### Calculate big boxes around the means of each cluster.
@@ -279,8 +279,8 @@ big.boxes <- list("get.means","calc.boxes","enlarge.box")
 
 ### Point halfway between the min and max
 midrange <- function(x){
-  r <- range(x)
-  (r[2]-r[1])/2+r[1]
+r <- range(x)
+(r[2]-r[1])/2+r[1]
 }
 
 ### Point in the middle of the min and max for each group.
@@ -365,37 +365,165 @@ ignore.na <- function(d,...){
   d[not.na,]
 }
 
+qp.labels <- structure(function
+### Make a Positioning Method for non-overlapping lineplot labels.
+###
 ### Use a QP solver to find the best places to put the points on a
-### line, subject to the constraint that they should not
-### overlap.
-qp.labels <- function(var,spacer,tiebreaker=NULL)function(d,...){
-  if(!spacer%in%names(d))stop("need to have calculated ",spacer)
-  if(nrow(d)==1)return(d)
-  require(quadprog)
-  ## calculate a tiebreaker for the ordering. If we are doing a
-  ## standard lineplot, then we can calculate where the line is going
-  ## by looking at the nearest point. TODO: how to tiebreak in other
-  ## situations, like lasso.labels?
-  d$tiebreaker <- if(!is.null(tiebreaker)){
-    tiebreaker(d,...)
-  }else{
-    1
+### line, subject to the constraint that they should not overlap.
+(target.var,
+### Variable name of the label target.
+ lower.var,
+### Variable name of the lower limit of each label bounding box.
+ upper.var,
+### Variable name of the upper limit of each label bounding box.
+ order.labels=function(d)order(d[,target.var]),
+### Function that takes the data.frame of labels and returns an
+### ordering, like from the order function. That ordering will be used
+### to reorder the rows.
+ limits=NULL
+### Function that takes the data.frame of labels an returns a numeric
+### vector of length 2. If finite, these values will be used to add
+### constraints to the QP: limits[1] is the lower limit for the first
+### label's lower.var, and limits[2] is the upper limit for the last
+### labels's upper.var. Or NULL for no limits.
+ ){
+  ## Reality checks. These also have the side effect of forcing
+  ## evaluation of all the arguments in the returned closure.
+  stopifnot(is.function(order.labels))
+  essential <- list(target.var,upper.var,lower.var)
+  for(v in essential){
+    stopifnot(is.character(v))
+    stopifnot(length(v)==1)
   }
-  ## sorts data so that target_1 <= target_2 <= ... <= target_n
-  d <- d[order(d[,var],d$tiebreaker),]
-  target <- d[,var]
-  k <- nrow(d)
-  D <- diag(rep(1,k))
-  ## These are the standard form matrices described in the
-  ## directlabels poster
-  Ik <- diag(rep(1,k-1))
-  A <- rbind(0,Ik)-rbind(Ik,0)
-  h <- d[,spacer]
-  b0 <- (h[-k]+h[-1])/2
-  sol <- solve.QP(D,target,A,b0)
-  d[,var] <- sol$solution
-  d
-}
+  stopifnot(is.function(limits)||is.null(limits))
+
+  function(d,...){
+
+    ## If there is only 1 label, there is no collision detection to
+    ## do, so just return it.
+    if(nrow(d)==1)return(d)
+
+    ## Reality checks.
+    for(v in essential){
+      if(! v %in% names(d)){
+        stop("need to have calculated ",v)
+      }
+    }
+    
+    require(quadprog)
+    
+    ## sorts data so that target_1 <= target_2 <= ... <= target_n.
+    d <- d[order.labels(d),]
+    target <- d[,target.var]
+    k <- nrow(d)
+    D <- diag(rep(1,k))
+
+    ## These are the standard form matrices described in the
+    ## directlabels poster.
+    Ik <- diag(rep(1,k-1))
+    A <- rbind(0,Ik)-rbind(Ik,0)
+    y.up <- d[,upper.var]
+    y.lo <- d[,lower.var]
+    b0 <- (y.up-target)[-k] + (target-y.lo)[-1]
+
+    ## limit constraints.
+    if(is.function(limits)){
+      l <- limits(d)
+      stopifnot(is.numeric(l))
+      stopifnot(length(l)==2)
+      stopifnot(l[1]<l[2])
+      if(is.finite(l[1])){
+        c.vec <- rep(0,k)
+        c.vec[1] <- 1
+        A <- cbind(A,c.vec)
+        b0 <- c(b0,l[1]+target[1]-y.lo[1])
+      }
+      if(is.finite(l[2])){
+        c.vec <- rep(0,k)
+        c.vec[k] <- -1
+        A <- cbind(A,c.vec)
+        b0 <- c(b0,y.up[k]-target[k]-l[2])
+      }
+    }
+
+    ##print(A)
+    ##print(b0)
+    ##browser()
+    sol <- solve.QP(D,target,A,b0)
+    d[,target.var] <- sol$solution
+    d
+  }
+},ex=function(){
+  data(SegCost,package="directlabels")
+  SegCost$error <- factor(SegCost$error,c("FP","FN","E","I"))
+  library(ggplot2)
+  fp.fn.colors <- c(FP="skyblue",FN="#E41A1C",I="black",E="black")
+  fp.fn.sizes <- c(FP=2.5,FN=2.5,I=1,E=1)
+  fp.fn.linetypes <- c(FP="solid",FN="solid",I="dashed",E="solid")
+  err.df <- subset(SegCost,type!="Signal")
+kplot <- ggplot(err.df,aes(segments,cost))+
+  geom_line(aes(colour=error,size=error,linetype=error))+
+  facet_grid(type~bases.per.probe)+
+  scale_linetype_manual(values=fp.fn.linetypes)+
+  scale_colour_manual(values=fp.fn.colors)+
+  scale_size_manual(values=fp.fn.sizes)+
+  scale_x_continuous(limits=c(0,20),breaks=c(1,7,20),minor_breaks=NULL)+
+  theme_bw()+theme(panel.margin=unit(0,"lines"))
+
+  ## The usual ggplot without direct labels.
+  print(kplot)
+
+  ## Get rid of legend for direct labels.
+  no.leg <- kplot+guides(colour="none",linetype="none",size="none")
+
+  ## Default direct labels.
+  direct.label(no.leg)
+
+  ## Explore several options for tiebreaking and limits. First let's
+  ## make a qp.labels Positioning Method that does not tiebreak.
+  no.tiebreak <- list("first.points",
+                      "calc.boxes",
+                      qp.labels("y","bottom","top"))
+  direct.label(no.leg, no.tiebreak)
+
+  ## Look at the weird labels in the upper left panel. The E curve is
+  ## above the FN curve, but the labels are the opposite! This is
+  ## because they have the same y value on the first points, which are
+  ## the targets for qp.labels. We need to tiebreak.
+  qp.break <- qp.labels("y","bottom","top",make.tiebreaker("x","y"))
+  tiebreak <- list("first.points",
+                   "calc.boxes",
+                   "qp.break")
+  direct.label(no.leg, tiebreak)
+
+  ## Enlarge the text size and spacing.
+  tiebreak.big <- list("first.points",
+                       cex=2,
+                       "calc.boxes",
+                       dl.trans(h=1.25*h),
+                       "calc.borders",
+                       "qp.break")
+  direct.label(no.leg, tiebreak.big)
+
+  ## Even on my big monitor, the FP runs off the bottom of the screen
+  ## in the top panels. To avoid that you can specify a limits
+  ## function.
+
+  ## Below, the ylimits function uses the limits of each
+  ## panel. However, if you resize your window so that it is very
+  ## small, you can get a "constraints are inconsistent, no solution!"
+  ## error which means that there are no non-overlapping labels for
+  ## the text size, space, and limits that you specified.
+  qp.limited <-  qp.labels("y","bottom","top",make.tiebreaker("x","y"),ylimits)
+  tiebreak.lim <- list("first.points",
+                       cex=2,
+                       "calc.boxes",
+                       dl.trans(h=1.25*h),
+                       "calc.borders",
+                       "qp.limited")
+  direct.label(no.leg, tiebreak.lim)
+})
+
 
 ### Make text bounding box larger by some amount.
 enlarge.box <- function(d,...){
@@ -599,22 +727,33 @@ project.onto.segments <- function
 
 ### Make a Positioning Function from a set of points on a vertical
 ### line that will be spaced out using qp.labels
-vertical.qp <- function(M){
-  avoid.collisions <- qp.labels("y","h",make.tiebreaker("x","y"))
+vertical.qp <- function(M,limits=NULL){
+  avoid.collisions <-
+    qp.labels("y","bottom","top",make.tiebreaker("x","y"),limits)
   list(M,"calc.boxes",avoid.collisions)
 }
 
 ### Make a tiebreaker function that can be used with qp.labels.
-make.tiebreaker <- function(exclude.var,tiebreak.var){
+make.tiebreaker <- function(x.var,tiebreak.var){
+  force(x.var)
+  force(tiebreak.var)
   function(d,...){
     orig <- attr(d,"orig.data")
-    sapply(seq_along(d$groups),function(i){
-      in.group <- orig$groups == d$groups[i]
-      not.same <- orig[,exclude.var] != d[i,exclude.var]
-      others <- orig[in.group & not.same,]
-      others$dist <- others[,exclude.var]-d[i,exclude.var]
-      others[which.min(abs(others$dist)),tiebreak.var]
-    })
+    xvals <- unique(orig[,x.var])
+    x <- unique(d[,x.var])
+    if(length(x)>1){
+      stop("labels are not aligned")
+    }
+    xvals <- xvals[order(xvals-x)]
+    group.dfs <- split(orig,orig$groups)
+    m <- do.call(cbind,lapply(d$groups,function(g){
+      df <- group.dfs[[as.character(g)]]
+      approx(df[,x.var],df[,tiebreak.var],xvals)$y
+    }))
+    ## useful for debugging:
+    ##print(m)
+    L <- lapply(1:nrow(m),function(i)m[i,])
+    do.call(order,L)
   }
 }
 
@@ -806,6 +945,18 @@ static.labels <- function(x,y,groups,...){
     L$groups <- groups
     do.call(data.frame,L)
   }
+}
+
+### Return the positions of the plot vertical limits in inches, for
+### use as the limit argument to qp.labels.
+ylimits <- function(...){
+  convertY(unit(c(0,1),"npc"),"cm",valueOnly=TRUE)
+}
+
+### Return the positions of the plot horizontal limits in inches, for
+### use as the limit argument to qp.labels.
+xlimits <- function(...){
+  convertX(unit(c(0,1),"npc"),"cm",valueOnly=TRUE)
 }
 
 empty.grid <- function

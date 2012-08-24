@@ -1,15 +1,24 @@
 \name{qp.labels}
 \alias{qp.labels}
 \title{qp labels}
-\description{Use a QP solver to find the best places to put the points on a
-line, subject to the constraint that they should not
-overlap.}
-\usage{qp.labels(var, spacer)}
+\description{Make a Positioning Method for non-overlapping lineplot labels.
+
+Use a QP solver to find the best places to put the points on a
+line, subject to the constraint that they should not overlap.}
+\usage{qp.labels(target.var, lower.var, upper.var, order.labels = function(d) order(d[, 
+    target.var]), limits = NULL)}
 \arguments{
-  \item{var}{
-}
-  \item{spacer}{
-}
+  \item{target.var}{Variable name of the label target.}
+  \item{lower.var}{Variable name of the lower limit of each label bounding box.}
+  \item{upper.var}{Variable name of the upper limit of each label bounding box.}
+  \item{order.labels}{Function that takes the data.frame of labels and returns an
+ordering, like from the order function. That ordering will be used
+to reorder the rows.}
+  \item{limits}{Function that takes the data.frame of labels an returns a numeric
+vector of length 2. If finite, these values will be used to add
+constraints to the QP: limits[1] is the lower limit for the first
+label's lower.var, and limits[2] is the upper limit for the last
+labels's upper.var. Or NULL for no limits.}
 }
 
 
@@ -19,4 +28,73 @@ overlap.}
 
 
 
+\examples{
+  data(SegCost,package="directlabels")
+  SegCost$error <- factor(SegCost$error,c("FP","FN","E","I"))
+  library(ggplot2)
+  fp.fn.colors <- c(FP="skyblue",FN="#E41A1C",I="black",E="black")
+  fp.fn.sizes <- c(FP=2.5,FN=2.5,I=1,E=1)
+  fp.fn.linetypes <- c(FP="solid",FN="solid",I="dashed",E="solid")
+  err.df <- subset(SegCost,type!="Signal")
+kplot <- ggplot(err.df,aes(segments,cost))+
+  geom_line(aes(colour=error,size=error,linetype=error))+
+  facet_grid(type~bases.per.probe)+
+  scale_linetype_manual(values=fp.fn.linetypes)+
+  scale_colour_manual(values=fp.fn.colors)+
+  scale_size_manual(values=fp.fn.sizes)+
+  scale_x_continuous(limits=c(0,20),breaks=c(1,7,20),minor_breaks=NULL)+
+  theme_bw()+theme(panel.margin=unit(0,"lines"))
 
+  ## The usual ggplot without direct labels.
+  print(kplot)
+
+  ## Get rid of legend for direct labels.
+  no.leg <- kplot+guides(colour="none",linetype="none",size="none")
+
+  ## Default direct labels.
+  direct.label(no.leg)
+
+  ## Explore several options for tiebreaking and limits. First let's
+  ## make a qp.labels Positioning Method that does not tiebreak.
+  no.tiebreak <- list("first.points",
+                      "calc.boxes",
+                      qp.labels("y","bottom","top"))
+  direct.label(no.leg, no.tiebreak)
+
+  ## Look at the weird labels in the upper left panel. The E curve is
+  ## above the FN curve, but the labels are the opposite! This is
+  ## because they have the same y value on the first points, which are
+  ## the targets for qp.labels. We need to tiebreak.
+  qp.break <- qp.labels("y","bottom","top",make.tiebreaker("x","y"))
+  tiebreak <- list("first.points",
+                   "calc.boxes",
+                   "qp.break")
+  direct.label(no.leg, tiebreak)
+
+  ## Enlarge the text size and spacing.
+  tiebreak.big <- list("first.points",
+                       cex=2,
+                       "calc.boxes",
+                       dl.trans(h=1.25*h),
+                       "calc.borders",
+                       "qp.break")
+  direct.label(no.leg, tiebreak.big)
+
+  ## Even on my big monitor, the FP runs off the bottom of the screen
+  ## in the top panels. To avoid that you can specify a limits
+  ## function.
+
+  ## Below, the ylimits function uses the limits of each
+  ## panel. However, if you resize your window so that it is very
+  ## small, you can get a "constraints are inconsistent, no solution!"
+  ## error which means that there are no non-overlapping labels for
+  ## the text size, space, and limits that you specified.
+  qp.limited <-  qp.labels("y","bottom","top",make.tiebreaker("x","y"),ylimits)
+  tiebreak.lim <- list("first.points",
+                       cex=2,
+                       "calc.boxes",
+                       dl.trans(h=1.25*h),
+                       "calc.borders",
+                       "qp.limited")
+  direct.label(no.leg, tiebreak.lim)
+}

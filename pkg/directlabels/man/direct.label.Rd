@@ -10,7 +10,7 @@ useful and clear alternative to a confusing legend in many common
 plots.}
 \usage{direct.label(p, method = NULL, debug = FALSE)}
 \arguments{
-  \item{p}{The "lattice" or "ggplot" object with things drawn in different
+  \item{p}{The "trellis" or "ggplot" object with things drawn in different
 colors.}
   \item{method}{Positioning Method, which determines the positions of the direct
 labels as a function of the plotted data. If NULL, we examine the

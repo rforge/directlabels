@@ -1,9 +1,5 @@
 TODO
 
-qp.labels: respect any predefined vjust for overlap calculation?
-Perhaps this is already good enough since we calculate height and
-width in calc.borders using hjust and vjust?
-
 image labels: draw a grob on screen instead of assuming it is
 text. Have a toggle for drawing images and/or text. Handle both in a
 uniform way in Positioning Methods by just asking for the grob size
@@ -34,6 +30,22 @@ directlabels ignores the binned contour lines and labels everything
 (=whatever default contour lines are produced, even if not plotted!).
 
 See etc/area.R for an example of using fill in area plots.
+
+2.8 --- 13-24 Aug 2012
+
+qp.labels: respect any predefined vjust for overlap calculation, by
+calculating top and bottom before and using these in the QP.
+
+qp.labels takes a new argument limits which specifies the lower limit
+for the bottom of the first label and the upper limit of the top of
+the last label.
+
+API change: qp.labels takes a function order.labels instead of
+tiebreak.
+
+Bugfix: pass on ... args in dl.combine.
+
+Bugfix: if only 1 row to call to qp.labels, then just return it.
 
 2.7 --- 12 July 2012
 
