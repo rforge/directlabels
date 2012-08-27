@@ -425,7 +425,8 @@ qp.labels <- structure(function
       h <- d[,upper.var]-d[,lower.var]
       h.occupied <- sum(h)
       if(h.occupied > h.available){ ## then the feasible set is empty.
-        cex <- h.available / h.occupied 
+        ## total hack:
+        cex <- h.available / h.occupied  * 0.9
         if("cex" %in% names(d)){
           d$cex <- d$cex * cex
         }else{
@@ -433,6 +434,7 @@ qp.labels <- structure(function
         }
         d <- calc.boxes(d)
       }
+
         ## that's weird: the height is a nonlinear function of cex!
         ## But it appears that the cex==height reduction factor line
         ## upper bounds the actual function.
