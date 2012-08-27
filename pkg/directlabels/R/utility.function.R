@@ -269,9 +269,9 @@ convert <- function(worh){
   }))
 }
 ## abs since we have a weird bug with ggplot2 sometimes
-w <- abs(convert("Width"))
-h <- abs(convert("Height"))
-calc.borders(transform(d,w=w,h=h))
+d$w <- abs(convert("Width"))
+d$h <- abs(convert("Height"))
+calc.borders(d)
 }
 
 ### Calculate big boxes around the means of each cluster.
@@ -409,17 +409,51 @@ qp.labels <- structure(function
         stop("need to have calculated ",v)
       }
     }
-    
-    require(quadprog)
-    
+
     ## sorts data so that target_1 <= target_2 <= ... <= target_n.
     d <- d[order.labels(d),]
+
+    ## check limits to see if there is enough space, given specified
+    ## cex.
+    if(is.function(limits)){
+      l <- limits(d)
+      stopifnot(is.numeric(l))
+      stopifnot(length(l)==2)
+      stopifnot(l[1]<l[2])
+
+      h.available <- l[2] - l[1]
+      h <- d[,upper.var]-d[,lower.var]
+      h.occupied <- sum(h)
+      if(h.occupied > h.available){ ## then the feasible set is empty.
+        cex <- h.available / h.occupied 
+        if("cex" %in% names(d)){
+          d$cex <- d$cex * cex
+        }else{
+          d$cex <- cex
+        }
+        d <- calc.boxes(d)
+      }
+        ## that's weird: the height is a nonlinear function of cex!
+        ## But it appears that the cex==height reduction factor line
+        ## upper bounds the actual function.
+        
+        ## geth <- function(cex){
+        ##   d$cex <- cex
+        ##   sum(calc.boxes(d)$w)
+        ## }
+        ## cex.vals <- c(1,seq(1/2,2,l=50))
+        ## h <- sapply(cex.vals,geth)
+        ## plot(cex.vals,h/h[1])
+        ## abline(0,1)
+        ## points(cex,geth(cex)/h[1],pch=2)
+    }
+    
+    require(quadprog)
+    ## These are the standard form matrices described in the
+    ## directlabels poster.
     target <- d[,target.var]
     k <- nrow(d)
     D <- diag(rep(1,k))
-
-    ## These are the standard form matrices described in the
-    ## directlabels poster.
     Ik <- diag(rep(1,k-1))
     A <- rbind(0,Ik)-rbind(Ik,0)
     y.up <- d[,upper.var]
@@ -428,10 +462,6 @@ qp.labels <- structure(function
 
     ## limit constraints.
     if(is.function(limits)){
-      l <- limits(d)
-      stopifnot(is.numeric(l))
-      stopifnot(length(l)==2)
-      stopifnot(l[1]<l[2])
       if(is.finite(l[1])){
         c.vec <- rep(0,k)
         c.vec[1] <- 1
