@@ -774,7 +774,7 @@ make.tiebreaker <- function(x.var,tiebreak.var){
     if(length(x)>1){
       stop("labels are not aligned")
     }
-    xvals <- xvals[order(xvals-x)]
+    xvals <- xvals[order(abs(xvals-x))]
     group.dfs <- split(orig,orig$groups)
     m <- do.call(cbind,lapply(d$groups,function(g){
       df <- group.dfs[[as.character(g)]]
