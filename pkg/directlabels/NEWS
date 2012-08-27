@@ -7,9 +7,6 @@ instead of the text size.
 
 Get rid of dl.summarize and gapply.fun for simplicity?
 
-how to automatically adjust axes to make direct labels immediately
-legible? For multipanel plots you would have to adjust all the scales!
-
 method for .zoo plots?
 
 handling custom # of bins/custom densityplot params?
@@ -31,7 +28,15 @@ directlabels ignores the binned contour lines and labels everything
 
 See etc/area.R for an example of using fill in area plots.
 
-2.8 --- 13-24 Aug 2012
+2.8 --- 13-27 Aug 2012
+
+qp.labels: reduce text size if there is not enough space to read all
+the labels. You can still increase the xlim and ylim if you want to
+labels to render at full size. This is the best fix I could think of
+for the following long-standing issue:
+
+how to automatically adjust axes to make direct labels immediately
+legible? For multipanel plots you would have to adjust all the scales!
 
 qp.labels: respect any predefined vjust for overlap calculation, by
 calculating top and bottom before and using these in the QP.
