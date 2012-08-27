@@ -253,25 +253,29 @@ dl.move <- structure(function # Manually move a direct label
 ### Jitter the label positions.
 dl.jitter <- dl.trans(x=jitter(x),y=jitter(y))
 
+calc.boxes <- function
 ### Calculate boxes around labels, for collision detection.
-calc.boxes <- function(d,debug=FALSE,...){
-vp <- current.viewport()
-convert <- function(worh){
-  conv <- get(paste("convert",worh,sep=""))
-  stri <- get(paste("string",worh,sep=""))
-  with(d,sapply(seq_along(groups),function(i){
-    if("cex"%in%names(d))vp$gp <- gpar(cex=cex[i])
-    pushViewport(vp)
-    if(debug)grid.rect() ##highlight current viewport
-    w <- conv(stri(as.character(groups[i])),"cm")
-    popViewport()
-    w
-  }))
-}
-## abs since we have a weird bug with ggplot2 sometimes
-d$w <- abs(convert("Width"))
-d$h <- abs(convert("Height"))
-calc.borders(d)
+(d,
+ debug=FALSE,
+ ...
+ ){
+  vp <- current.viewport()
+  convert <- function(worh){
+    conv <- get(paste("convert",worh,sep=""))
+    stri <- get(paste("string",worh,sep=""))
+    with(d,sapply(seq_along(groups),function(i){
+      if("cex"%in%names(d))vp$gp <- gpar(cex=cex[i])
+      pushViewport(vp)
+      if(debug)grid.rect() ##highlight current viewport
+      w <- conv(stri(as.character(groups[i])),"cm")
+      popViewport()
+      w
+    }))
+  }
+  ## abs since we have a weird bug with ggplot2 sometimes
+  d$w <- abs(convert("Width"))
+  d$h <- abs(convert("Height"))
+  calc.borders(d)
 }
 
 ### Calculate big boxes around the means of each cluster.
