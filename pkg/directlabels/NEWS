@@ -47,6 +47,9 @@ Bugfix: pass on ... args in dl.combine.
 
 Bugfix: if only 1 row to call to qp.labels, then just return it.
 
+Bugfix: calc.boxes does not use transform since that was ignoring the
+cex specified.
+
 2.7 --- 12 July 2012
 
 New lasso.labels Positioning Method that applies the QP solver to both
