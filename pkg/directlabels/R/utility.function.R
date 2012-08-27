@@ -762,10 +762,10 @@ project.onto.segments <- function
 }
 
 ### Make a Positioning Function from a set of points on a vertical
-### line that will be spaced out using qp.labels
-vertical.qp <- function(M,limits=NULL){
+### line that will be spaced out using qp.labels.
+vertical.qp <- function(M){
   avoid.collisions <-
-    qp.labels("y","bottom","top",make.tiebreaker("x","y"),limits)
+    qp.labels("y","bottom","top",make.tiebreaker("x","y"),ylimits)
   list(M,"calc.boxes",avoid.collisions)
 }
 
