@@ -150,10 +150,6 @@ dl.combine <- structure(function # Combine output of several methods
   }
 })
 
-##gapply.method <- function(method){
-##  function(d,...)gapply(d,method)
-##}
-
 gapply.fun <- structure(function # Direct label groups independently
 ### Makes a function you can use to specify the location of each group
 ### independently.
@@ -367,6 +363,18 @@ ignore.na <- function(d,...){
     not.na <- not.na & is.finite(d$y)
   }
   d[not.na,]
+}
+
+### If left or right edges of the text are going out of the plotting
+### region, then decrease cex until it fits.
+reduce.cex.lr <- function(d,...){
+  l <- xlimits()
+  positive.part <- function(x)ifelse(x>0,x,0)
+  right <- positive.part(d$right-l[2])
+  left <- positive.part(l[1]-d$left)
+  w <- d$right-d$left
+  d$cex <- (w-right)/w * (w-left)/w
+  calc.boxes(d)
 }
 
 qp.labels <- structure(function
@@ -766,7 +774,7 @@ project.onto.segments <- function
 vertical.qp <- function(M){
   avoid.collisions <-
     qp.labels("y","bottom","top",make.tiebreaker("x","y"),ylimits)
-  list(M,"calc.boxes",avoid.collisions)
+  list(M,"calc.boxes","reduce.cex.lr",avoid.collisions)
 }
 
 ### Make a tiebreaker function that can be used with qp.labels.
