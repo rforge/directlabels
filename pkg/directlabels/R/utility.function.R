@@ -279,8 +279,8 @@ big.boxes <- list("get.means","calc.boxes","enlarge.box")
 
 ### Point halfway between the min and max
 midrange <- function(x){
-r <- range(x)
-(r[2]-r[1])/2+r[1]
+  r <- range(x)
+  (r[2]-r[1])/2+r[1]
 }
 
 ### Point in the middle of the min and max for each group.
@@ -366,8 +366,11 @@ ignore.na <- function(d,...){
 }
 
 ### If left or right edges of the text are going out of the plotting
-### region, then decrease cex until it fits.
-reduce.cex.lr <- function(d,...){
+### region, then decrease cex until it fits. You do NOT have to do
+### calc.boxes before calling this, but you do have to set cex.
+reduce.cex.lr <- structure(function(d,...){
+  d <- calc.boxes(d)
+  browser()
   l <- xlimits()
   positive.part <- function(x)ifelse(x>0,x,0)
   right <- positive.part(d$right-l[2])
@@ -375,7 +378,37 @@ reduce.cex.lr <- function(d,...){
   w <- d$right-d$left
   d$cex <- (w-right)/w * (w-left)/w
   calc.boxes(d)
-}
+},ex=function(){
+  data(prostate,package="ElemStatLearn")
+  pros <- subset(prostate,select=-train,train==TRUE)
+  ycol <- which(names(pros)=="lpsa")
+  x <- as.matrix(pros[-ycol])
+  y <- pros[[ycol]]
+  library(lars)
+  fit <- lars(x,y,type="lasso")
+  beta <- scale(coef(fit),FALSE,1/fit$normx)
+  arclength <- rowSums(abs(beta))
+  library(reshape2)
+  path <- data.frame(melt(beta),arclength)
+  names(path)[1:3] <- c("step","variable","standardized.coef")
+  library(ggplot2)
+  p <- ggplot(path,aes(arclength,standardized.coef,colour=variable))+
+    geom_line(aes(group=variable))
+
+  ## the legend isn't very helpful.
+  print(p)
+
+  ## add direct labels at the end of the lines.
+  direct.label(p, "last.points")
+
+  ## on my screen, some of the labels go off the end, so we can use
+  ## this Positioning Method to reduce the text size until the labels
+  ## are on the plot.
+  direct.label(p, list("last.points","reduce.cex.lr"))
+
+  ## the default direct labels for lineplots are similar.
+  direct.label(p)
+})
 
 qp.labels <- structure(function
 ### Make a Positioning Method for non-overlapping lineplot labels.
@@ -446,20 +479,6 @@ qp.labels <- structure(function
         }
         d <- calc.boxes(d)
       }
-
-        ## that's weird: the height is a nonlinear function of cex!
-        ## But it appears that the cex==height reduction factor line
-        ## upper bounds the actual function.
-        
-        ## geth <- function(cex){
-        ##   d$cex <- cex
-        ##   sum(calc.boxes(d)$w)
-        ## }
-        ## cex.vals <- c(1,seq(1/2,2,l=50))
-        ## h <- sapply(cex.vals,geth)
-        ## plot(cex.vals,h/h[1])
-        ## abline(0,1)
-        ## points(cex,geth(cex)/h[1],pch=2)
     }
     
     require(quadprog)
@@ -777,7 +796,7 @@ project.onto.segments <- function
 vertical.qp <- function(M){
   avoid.collisions <-
     qp.labels("y","bottom","top",make.tiebreaker("x","y"),ylimits)
-  list(M,"calc.boxes","reduce.cex.lr",avoid.collisions)
+  list(M,"reduce.cex.lr",avoid.collisions)
 }
 
 ### Make a tiebreaker function that can be used with qp.labels.
