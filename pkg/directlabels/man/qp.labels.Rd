@@ -36,6 +36,9 @@ labels's upper.var. Or NULL for no limits.}
   fp.fn.sizes <- c(FP=2.5,FN=2.5,I=1,E=1)
   fp.fn.linetypes <- c(FP="solid",FN="solid",I="dashed",E="solid")
   err.df <- subset(SegCost,type!="Signal")
+  if(!"theme"\%in\%ls("package:ggplot2")){
+    theme <- opts
+  }
 kplot <- ggplot(err.df,aes(segments,cost))+
   geom_line(aes(colour=error,size=error,linetype=error))+
   facet_grid(type~bases.per.probe)+
