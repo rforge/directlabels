@@ -370,7 +370,6 @@ ignore.na <- function(d,...){
 ### calc.boxes before calling this, but you do have to set cex.
 reduce.cex.lr <- structure(function(d,...){
   d <- calc.boxes(d)
-  browser()
   l <- xlimits()
   positive.part <- function(x)ifelse(x>0,x,0)
   right <- positive.part(d$right-l[2])
