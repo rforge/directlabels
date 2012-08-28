@@ -409,9 +409,7 @@ reduce.cex.lr <- structure(function(d,...){
   direct.label(p)
 })
 
-qp.labels <- structure(function
-### Make a Positioning Method for non-overlapping lineplot labels.
-###
+qp.labels <- structure(function# Make a Positioning Method for non-overlapping lineplot labels
 ### Use a QP solver to find the best places to put the points on a
 ### line, subject to the constraint that they should not overlap.
 (target.var,
@@ -515,6 +513,9 @@ qp.labels <- structure(function
     d[,target.var] <- sol$solution
     d
   }
+### Positioning Method that adjusts target.var so there is no overlap
+### of the label bounding boxes, as specified by upper.var and
+### lower.var.
 },ex=function(){
   data(SegCost,package="directlabels")
   SegCost$error <- factor(SegCost$error,c("FP","FN","E","I"))

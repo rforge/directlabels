@@ -1,9 +1,7 @@
 \name{qp.labels}
 \alias{qp.labels}
-\title{qp labels}
-\description{Make a Positioning Method for non-overlapping lineplot labels.
-
-Use a QP solver to find the best places to put the points on a
+\title{Make a Positioning Method for non-overlapping lineplot labels}
+\description{Use a QP solver to find the best places to put the points on a
 line, subject to the constraint that they should not overlap.}
 \usage{qp.labels(target.var, lower.var, upper.var, order.labels = function(d) order(d[, 
     target.var]), limits = NULL)}
@@ -21,7 +19,9 @@ label's lower.var, and limits[2] is the upper limit for the last
 labels's upper.var. Or NULL for no limits.}
 }
 
-
+\value{Positioning Method that adjusts target.var so there is no overlap
+of the label bounding boxes, as specified by upper.var and
+lower.var.}
 
 \author{Toby Dylan Hocking}
 
