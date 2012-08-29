@@ -28,7 +28,12 @@ directlabels ignores the binned contour lines and labels everything
 
 See etc/area.R for an example of using fill in area plots.
 
-2.8 --- 13-27 Aug 2012
+2.8 --- 13-29 Aug 2012
+
+empty.grid: only consider boxes for which the class of the closest
+point is the target direct label. This avoids weird problems that can
+happen on smaller plots, where sometimes labels would appear next to
+another class.
 
 qp.labels: reduce text size if there is not enough space to read all
 the labels. You can still increase the xlim and ylim if you want to

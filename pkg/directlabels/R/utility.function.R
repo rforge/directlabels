@@ -1095,8 +1095,23 @@ empty.grid <- function
       expand <- expand+1 ## look further out if we can't find any labels inside
     }
     if(debug)draw(boxes)
-    no.points <- transform(no.points,len=(r$x-x)^2+(r$y-y)^2)
-    best <- subset(no.points,len==min(len))[1,]
+    
+    ## TDH 29 Aug 2012. For every box, figure out the class of the
+    ## point which is its nearest neighbor.
+    no.points$nearest <- NA
+    for(i in 1:nrow(no.points)){
+      b <- no.points[i,]
+      d.orig <- with(orig,(b$x-x)^2+(b$y-y)^2)
+      no.points[i,"nearest"] <- as.character(orig$groups[which.min(d.orig)])
+    }
+    ## Only consider boxes that are closest to this class.
+    closest <- subset(no.points,nearest == rownames(r))
+    if(nrow(closest) == 0){
+      closest <- no.points
+    }
+    closest$len <- with(closest,(r$x-x)^2+(r$y-y)^2)
+    best <- subset(closest, len == min(len))[1, ]
+
     res <- rbind(res,transform(r,x=best$x,y=best$y))
     ## add points to cloud
     newpts <- with(best,{
