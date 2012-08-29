@@ -24,6 +24,13 @@ dl.combine <- structure(function # Combine output of several methods
     dfs <- lapply(FUNS,apply.method,d,...)
     res <- data.frame()
     for(df in dfs){
+      ## if cex is undefined, we will get NAs which will not be
+      ## plotted.
+      if(!"cex"%in%names(df)){
+        df$cex <- 1
+      }
+      
+      ## we need to do merge to keep all the columns around.
       if(nrow(res))res <- merge(df,res,all=TRUE)
       else res <- df
     }
