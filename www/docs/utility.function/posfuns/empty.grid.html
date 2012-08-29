@@ -86,8 +86,23 @@ empty.grid &lt;- function
       expand &lt;- expand+1 ## look further out if we can't find any labels <a href="../../utility.function/posfuns/inside.html">inside</a>
     }
     if(debug)draw(boxes)
-    no.points &lt;- transform(no.points,len=(r$x-x)^2+(r$y-y)^2)
-    best &lt;- subset(no.points,len==min(len))[1,]
+    
+    ## TDH 29 Aug 2012. For every box, figure out the class of the
+    ## point which is its nearest neighbor.
+    no.points$nearest &lt;- NA
+    for(i in 1:nrow(no.points)){
+      b &lt;- no.points[i,]
+      d.orig &lt;- with(orig,(b$x-x)^2+(b$y-y)^2)
+      no.points[i,"nearest"] &lt;- as.character(orig$groups[which.min(d.orig)])
+    }
+    ## Only consider boxes that are closest to this class.
+    closest &lt;- subset(no.points,nearest == rownames(r))
+    if(nrow(closest) == 0){
+      closest &lt;- no.points
+    }
+    closest$len &lt;- with(closest,(r$x-x)^2+(r$y-y)^2)
+    best &lt;- subset(closest, len == min(len))[1, ]
+
     res &lt;- rbind(res,transform(r,x=best$x,y=best$y))
     ## add points to cloud
     newpts &lt;- with(best,{
@@ -111,8 +126,9 @@ empty.grid &lt;- function
 Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
 contribute, thanks!</td>
 </tr>
-<tr><td align="center">Documentation website generated from comments
-in R source code
+<tr><td align="center">Documentation website generated from source
+code version 2.8
+(svn revision 624)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

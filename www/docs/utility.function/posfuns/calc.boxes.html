@@ -19,7 +19,12 @@ Positioning Method - calc.boxes</h1>
 <p>Calculate boxes around labels, for collision detection.</p>
 
 <pre>
-calc.boxes &lt;- function(d,debug=FALSE,...){
+calc.boxes &lt;- function
+### Calculate boxes around labels, for collision detection.
+(d,
+ debug=FALSE,
+ ...
+ ){
   vp &lt;- current.viewport()
   convert &lt;- function(worh){
     conv &lt;- get(paste("convert",worh,sep=""))
@@ -34,9 +39,9 @@ calc.boxes &lt;- function(d,debug=FALSE,...){
     }))
   }
   ## abs since we have a weird bug with ggplot2 sometimes
-  w &lt;- abs(convert("Width"))
-  h &lt;- abs(convert("Height"))
-  <a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>(transform(d,w=w,h=h))
+  d$w &lt;- abs(convert("Width"))
+  d$h &lt;- abs(convert("Height"))
+  <a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>(d)
 }
 </pre>
 
@@ -48,8 +53,9 @@ calc.boxes &lt;- function(d,debug=FALSE,...){
 Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
 contribute, thanks!</td>
 </tr>
-<tr><td align="center">Documentation website generated from comments
-in R source code
+<tr><td align="center">Documentation website generated from source
+code version 2.8
+(svn revision 624)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

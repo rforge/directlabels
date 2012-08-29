@@ -26,9 +26,16 @@ dl.combine &lt;- structure(function # Combine output of several methods
  ){
   FUNS &lt;- list(...)
   pf &lt;- function(d,...){
-    dfs &lt;- lapply(FUNS,<a href="../../utility.function/posfuns/apply.method.html">apply.method</a>,d)
+    dfs &lt;- lapply(FUNS,<a href="../../utility.function/posfuns/apply.method.html">apply.method</a>,d,...)
     res &lt;- data.frame()
     for(df in dfs){
+      ## if cex is undefined, we will get NAs which will not be
+      ## plotted.
+      if(!"cex"%in%names(df)){
+        df$cex &lt;- 1
+      }
+      
+      ## we need to do merge to keep all the columns around.
       if(nrow(res))res &lt;- merge(df,res,all=TRUE)
       else res &lt;- df
     }
@@ -46,16 +53,16 @@ dl.combine &lt;- structure(function # Combine output of several methods
   both &lt;- dl.combine("<a href="../../lineplot/posfuns/first.points.html">first.points</a>","<a href="../../lineplot/posfuns/last.points.html">last.points</a>")
   rat.both &lt;- direct.label(ratplot,"both")
   print(rat.both)
-##   grid.edit(gPath("panel-3-3",".*","GRID.dlgrob"),
-##             method=list(cex=2,fontfamily="bold","both"),
-##             grep=TRUE)
+  ##   grid.edit(gPath("panel-3-3",".*","GRID.dlgrob"),
+  ##             method=list(cex=2,fontfamily="bold","both"),
+  ##             grep=TRUE)
   ## can also do this by repeatedly calling direct.label
   rat.repeated &lt;-
     direct.label(direct.label(ratplot,"<a href="../../lineplot/posfuns/last.points.html">last.points</a>"),"<a href="../../lineplot/posfuns/first.points.html">first.points</a>")
   print(rat.repeated)
-##   grid.edit(gPath("panel-3-5",".*","GRID.dlgrob.<a href="../../lineplot/posfuns/first.points.html">first.points</a>"),
-##             method=list(cex=2,fontfamily="bold","both"),
-##             grep=TRUE)
+  ##   grid.edit(gPath("panel-3-5",".*","GRID.dlgrob.<a href="../../lineplot/posfuns/first.points.html">first.points</a>"),
+  ##             method=list(cex=2,fontfamily="bold","both"),
+  ##             grep=TRUE)
   library(ggplot2)
   rp2 &lt;- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
   print(direct.label(direct.label(rp2,"<a href="../../lineplot/posfuns/last.points.html">last.points</a>"),"<a href="../../lineplot/posfuns/first.points.html">first.points</a>"))
@@ -164,8 +171,9 @@ dl.combine &lt;- structure(function # Combine output of several methods
 Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
 contribute, thanks!</td>
 </tr>
-<tr><td align="center">Documentation website generated from comments
-in R source code
+<tr><td align="center">Documentation website generated from source
+code version 2.8
+(svn revision 624)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

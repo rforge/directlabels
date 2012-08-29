@@ -17,10 +17,14 @@
 Positioning Method - vertical.qp</h1>
 
 <p>Make a Positioning Function from a set of points on a vertical
-line that will be spaced out using qp.labels</p>
+line that will be spaced out using qp.labels.</p>
 
 <pre>
-vertical.qp &lt;- function(M)list(M,"<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>",<a href="../../utility.function/posfuns/qp.labels.html">qp.labels</a>("y","h"))
+vertical.qp &lt;- function(M){
+  avoid.collisions &lt;-
+    <a href="../../utility.function/posfuns/qp.labels.html">qp.labels</a>("y","bottom","top",<a href="../../utility.function/posfuns/make.tiebreaker.html">make.tiebreaker</a>("x","y"),<a href="../../utility.function/posfuns/ylimits.html">ylimits</a>)
+  list(M,"<a href="../../utility.function/posfuns/reduce.cex.lr.html">reduce.cex.lr</a>",avoid.collisions)
+}
 </pre>
 
 
@@ -31,8 +35,9 @@ vertical.qp &lt;- function(M)list(M,"<a href="../../utility.function/posfuns/cal
 Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
 contribute, thanks!</td>
 </tr>
-<tr><td align="center">Documentation website generated from comments
-in R source code
+<tr><td align="center">Documentation website generated from source
+code version 2.8
+(svn revision 624)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>
