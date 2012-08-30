@@ -37,7 +37,8 @@ empty.grid &lt;- function
 ### ignored.
  ){
   NREP &lt;- 10
-  all.points &lt;- attr(d,"orig.data")[,c("x","y")]
+  orig &lt;- attr(d,"orig.data")
+  all.points &lt;- orig[,c("x","y")]
   if(any(table(d$groups)&gt;1))d &lt;- <a href="../../utility.function/posfuns/get.means.html">get.means</a>(d)
   label.targets &lt;- d
   ranges &lt;- list(x=convertX(unit(c(0,1),"npc"),"cm",valueOnly=TRUE),
@@ -128,7 +129,7 @@ contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
 code version 2.8
-(svn revision 624)
+(svn revision 626)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>
