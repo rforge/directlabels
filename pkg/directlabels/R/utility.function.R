@@ -1046,7 +1046,8 @@ empty.grid <- function
 ### ignored.
  ){
   NREP <- 10
-  all.points <- attr(d,"orig.data")[,c("x","y")]
+  orig <- attr(d,"orig.data")
+  all.points <- orig[,c("x","y")]
   if(any(table(d$groups)>1))d <- get.means(d)
   label.targets <- d
   ranges <- list(x=convertX(unit(c(0,1),"npc"),"cm",valueOnly=TRUE),
