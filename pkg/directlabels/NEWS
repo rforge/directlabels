@@ -30,6 +30,10 @@ See etc/area.R for an example of using fill in area plots.
 
 2.8 --- 13-29 Aug 2012
 
+draw.rects: use grid.polygon instead of grid.lines so we can fill the
+box. set the column fill="transparent" if you don't want the
+background.
+
 empty.grid: only consider boxes for which the class of the closest
 point is the target direct label. This avoids weird problems that can
 happen on smaller plots, where sometimes labels would appear next to

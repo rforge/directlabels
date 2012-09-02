@@ -317,11 +317,13 @@ calc.borders <- function
 ### frame.
 draw.rects <- function(d,...){
   if(is.null(d$box.color))d$box.color <- "black"
+  if(is.null(d$fill))d$fill <- "white"
   for(i in 1:nrow(d)){
     with(d[i,],{
-      grid.lines(c(left,left,right,right,left),
-                 c(bottom,top,top,bottom,bottom),
-                 "cm",gp=gpar(col=d$box.color))
+      grid.polygon(c(left,left,right,right),
+                   c(bottom,top,top,bottom),
+                   default.units="cm",
+                   gp=gpar(col=d$box.color,fill=fill))
     })
   }
   d
