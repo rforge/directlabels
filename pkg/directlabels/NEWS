@@ -30,6 +30,9 @@ See etc/area.R for an example of using fill in area plots.
 
 2.8 --- 13-29 Aug 2012
 
+top.points uses xlimits to avoid labels going off the left and right
+sides.
+
 draw.rects: use grid.polygon instead of grid.lines so we can fill the
 box. set the column fill="transparent" if you don't want the
 background.
