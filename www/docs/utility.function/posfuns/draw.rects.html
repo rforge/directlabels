@@ -23,11 +23,13 @@ frame.</p>
 <pre>
 draw.rects &lt;- function(d,...){
   if(is.null(d$box.color))d$box.color &lt;- "black"
+  if(is.null(d$fill))d$fill &lt;- "white"
   for(i in 1:nrow(d)){
     with(d[i,],{
-      grid.lines(c(left,left,right,right,left),
-                 c(bottom,top,top,bottom,bottom),
-                 "cm",gp=gpar(col=d$box.color))
+      grid.polygon(c(left,left,right,right),
+                   c(bottom,top,top,bottom),
+                   default.units="cm",
+                   gp=gpar(col=d$box.color,fill=fill))
     })
   }
   d
@@ -44,7 +46,7 @@ contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
 code version 2.8
-(svn revision 626)
+(svn revision 629)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>
