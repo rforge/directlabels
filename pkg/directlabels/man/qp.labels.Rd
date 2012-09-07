@@ -87,11 +87,10 @@ kplot <- ggplot(err.df,aes(segments,cost))+
   ## in the top panels. To avoid that you can specify a limits
   ## function.
 
-  ## Below, the ylimits function uses the limits of each
-  ## panel. However, if you resize your window so that it is very
-  ## small, you can get a "constraints are inconsistent, no solution!"
-  ## error which means that there are no non-overlapping labels for
-  ## the text size, space, and limits that you specified.
+  ## Below, the ylimits function uses the limits of each panel, so
+  ## labels appear inside the plot region. Also, if you resize your
+  ## window so that it is small, you can see that the text size of the
+  ## labels is decreased until they all fit in the plotting region.
   qp.limited <-  qp.labels("y","bottom","top",make.tiebreaker("x","y"),ylimits)
   tiebreak.lim <- list("first.points",
                        cex=2,
@@ -100,4 +99,5 @@ kplot <- ggplot(err.df,aes(segments,cost))+
                        "calc.borders",
                        "qp.limited")
   direct.label(no.leg, tiebreak.lim)
+
 }
