@@ -17,8 +17,8 @@
 Positioning Method - reduce.cex.lr</h1>
 
 <p>If left or right edges of the text are going out of the plotting
-region, then decrease cex until it fits. You do NOT have to do
-calc.boxes before calling this, but you do have to set cex.</p>
+region, then decrease cex until it fits. We call calc.boxes
+inside, so you should set cex before using this.</p>
 
 <pre>
 reduce.cex.lr &lt;- structure(function(d,...){
@@ -73,7 +73,7 @@ contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
 code version 2.8
-(svn revision 629)
+(svn revision 631)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

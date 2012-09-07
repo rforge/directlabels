@@ -186,11 +186,10 @@ kplot &lt;- ggplot(err.df,aes(segments,cost))+
   ## in the top panels. To avoid that you can specify a limits
   ## function.
 
-  ## Below, the <a href="../../utility.function/posfuns/ylimits.html">ylimits</a> function uses the limits of each
-  ## panel. However, if you resize your window so that it is very
-  ## small, you can get a "constraints are inconsistent, no solution!"
-  ## error which means that there are no non-overlapping labels for
-  ## the text size, space, and limits that you specified.
+  ## Below, the <a href="../../utility.function/posfuns/ylimits.html">ylimits</a> function uses the limits of each panel, so
+  ## labels appear <a href="../../utility.function/posfuns/inside.html">inside</a> the plot region. Also, if you resize your
+  ## window so that it is small, you can see that the text size of the
+  ## labels is decreased until they all fit in the plotting region.
   qp.limited &lt;-  qp.labels("y","bottom","top",<a href="../../utility.function/posfuns/make.tiebreaker.html">make.tiebreaker</a>("x","y"),<a href="../../utility.function/posfuns/ylimits.html">ylimits</a>)
   tiebreak.lim &lt;- list("<a href="../../lineplot/posfuns/first.points.html">first.points</a>",
                        cex=2,
@@ -199,6 +198,7 @@ kplot &lt;- ggplot(err.df,aes(segments,cost))+
                        "<a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>",
                        "qp.limited")
   direct.label(no.leg, tiebreak.lim)
+
 })
 </pre>
 
@@ -212,7 +212,7 @@ contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
 code version 2.8
-(svn revision 629)
+(svn revision 631)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>
