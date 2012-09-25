@@ -39,6 +39,7 @@ print(direct.label(scatter))
 ## the plot.
 data(BodyWeight,package="nlme")
 library(lattice)
+oldopt <- lattice.options(panel.error=NULL)
 ratplot <-
   xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
 ## Using the default Positioning Method (maxvar.qp), the labels are
