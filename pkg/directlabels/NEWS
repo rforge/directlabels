@@ -28,7 +28,13 @@ directlabels ignores the binned contour lines and labels everything
 
 See etc/area.R for an example of using fill in area plots.
 
+2.9 --- 25 Sep 2012
+
+Delete several examples to reduce timings.
+
 2.8 --- 13-29 Aug 2012
+
+Attempted submission to CRAN 25 Sept 2012.
 
 top.points uses xlimits to avoid labels going off the left and right
 sides.
