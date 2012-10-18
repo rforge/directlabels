@@ -246,9 +246,7 @@ direct.label(irisp)
 
 \begin{frame}[fragile]
   \frametitle{Show the grid for the search}
-  Find a label position on a grid (grey rectangles)\\
-  that is near the center of each point cloud (green dots), \\
-  but does not overlap any points or other labels (black dots).
+  TODO: animation with grey and black boxes, as in thesis.
 <<irisp-debug,results='hide'>>=
 direct.label(irisp,debug=TRUE) 
 @   
@@ -261,12 +259,7 @@ direct.label(irisp,debug=TRUE)
  
 \begin{frame}[fragile]
   \frametitle{Increase text size \alert{before} calculating label positions}
-<<big-last>>=
-rp2 <- ratplot+
-  xlim(0,70)+ylim(150,650)
-big.last <- list(cex=1.5,"last.qp")
-direct.label(rp2,"big.last") 
-@   
+<<big-last>>
 \end{frame}
 
 \begin{frame}[fragile]
@@ -313,8 +306,10 @@ text(0.25,3.5,"$\\vdots$",adj=c(0,0.5))
 &\min_{b\in\RR^k} && \sum_{i=1}^k (b_i-t_i)^2
 =||b-t||^2
 \\
-&\text{subject to} && b_{i+1} \geq b_i + h_{i+1}/2+h_i/2,
-\ \forall\ i=1,\dots,k-1
+&\text{subject to} && b_{i+1}- h_{i+1}\geq b_i/2+h_i/2,
+\ \forall\ i=1,\dots,k-1\\
+&&& b_1 - h_1/2 \geq \underbar L\\
+&&& b_K +h_k/2 \leq \overbar L
 \end{aligned}
 \end{equation*}
 This is a quadratic program (QP). QPs are convex so there is a
@@ -355,16 +350,6 @@ direct.label(rp2,list("last.points",cex=1.5,"calc.boxes",
 
 
 
-
-% - lineplot QP
-
-% - scatterplot grid search
-
-% - drawing grid grobs with a custom drawDetails method. => window
-% resize updates, ggplot2 support
-
-% - generating a website using plots and methods defined in the R
-% package.
 
 \frame{\tableofcontents}
 \section{Conclusions}
