@@ -28,6 +28,10 @@ directlabels ignores the binned contour lines and labels everything
 
 See etc/area.R for an example of using fill in area plots.
 
+2.10
+
+4 Nov 2012 fix some doc typos.
+
 2.9 --- 25 Sep 2012
 
 Delete several examples to reduce timings.

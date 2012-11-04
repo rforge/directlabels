@@ -1022,14 +1022,14 @@ static.labels <- function(x,y,groups,...){
   }
 }
 
-### Return the positions of the plot vertical limits in inches, for
-### use as the limit argument to qp.labels.
+### Return the positions of the plot vertical limits in cm, for use as
+### the limit argument to qp.labels.
 ylimits <- function(...){
   convertY(unit(c(0,1),"npc"),"cm",valueOnly=TRUE)
 }
 
-### Return the positions of the plot horizontal limits in inches, for
-### use as the limit argument to qp.labels.
+### Return the positions of the plot horizontal limits in cm, for use
+### as the limit argument to qp.labels.
 xlimits <- function(...){
   convertX(unit(c(0,1),"npc"),"cm",valueOnly=TRUE)
 }
