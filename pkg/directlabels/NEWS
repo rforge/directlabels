@@ -26,6 +26,8 @@ stat_contour (e.g., stat_contour(aes(colour=..level..), binwidth=50)
 directlabels ignores the binned contour lines and labels everything
 (=whatever default contour lines are produced, even if not plotted!).
 
+other contourplots.
+
 See etc/area.R for an example of using fill in area plots.
 
 2.10
