@@ -14,9 +14,9 @@ Description: The directlabels package provides an extensible framework
  portable Positioning Methods that can be re-used.
 URL: http://directlabels.r-forge.r-project.org/
 LazyData: true
-Suggests: ks, MASS, inlinedocs, quadprog, ggplot2 (>= 0.9.1), 
+Suggests: MASS, inlinedocs, quadprog, ggplot2 (>= 0.9.1), 
 	  lattice, alphahull, reshape2, nlme,
-	  ElemStatLearn, proto, lars, mlmRev, latticeExtra
+	  ElemStatLearn, proto, lars, latticeExtra
 Depends: grid
 Collate: utility.function.R compare.R dotplot.R lineplot.R 
 	 densityplot.R  ggplot2.R  positioning.functions.R 

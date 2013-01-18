@@ -894,15 +894,6 @@ follow.points <- function
   labtab
 }
 
-### Calculate a 2d density estimate then follow the gradient to a
-### point outside the convex hull.
-dens.gradient <- function(d,...){
-  require(ks)
-  est <- drvkde(with(d,cbind(x,y)),1:2,1,se=FALSE)
-  ##print(dens)
-  d
-}
-
 check.for.columns <- function
 ### Stop if a data.frame does not have some columns.
 (d,

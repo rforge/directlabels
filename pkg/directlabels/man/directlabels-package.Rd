@@ -19,9 +19,9 @@ License: \tab GPL-3\cr
 Title: \tab Direct labels for multicolor plots in lattice or ggplot2\cr
 URL: \tab http://directlabels.r-forge.r-project.org/\cr
 LazyData: \tab true\cr
-Suggests: \tab ks, MASS, inlinedocs, quadprog, ggplot2 (>= 0.9.1),
+Suggests: \tab MASS, inlinedocs, quadprog, ggplot2 (>= 0.9.1),
 lattice, alphahull, reshape2, nlme,
-ElemStatLearn, proto, lars, mlmRev, latticeExtra\cr
+ElemStatLearn, proto, lars, latticeExtra\cr
 Depends: \tab grid\cr
 Collate: \tab utility.function.R compare.R dotplot.R lineplot.R
 densityplot.R  ggplot2.R  positioning.functions.R
