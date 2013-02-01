@@ -1,5 +1,6 @@
 \name{directlabels-package}
 \alias{directlabels-package}
+\alias{directlabels}
 \docType{package}
 \title{Direct labels for multicolor plots in lattice or ggplot2}
 \description{The directlabels package provides an extensible framework
