@@ -1,0 +1,63 @@
+<html lang="en">
+  <head>
+    <title>Plotting SVGs in R</title>
+  </head>
+  <body>
+    <h2>Methods</h2>
+
+    <p>We would like to plot each of the 50 state flags in R. SVG
+      flags of the 50 states were downloaded from Wikimedia. They were
+      converted to PS using python, then to XML using grImport. They
+      were read into R and plotted using both the PNG and PDF graphics
+      devices. SVG, PS, and PDF output was converted to PNG for
+      display on this web page using ImageMagick convert. To redo the
+      analysis, execute the following code in a shell:</p>
+
+    <pre>
+svn checkout svn://svn.r-forge.r-project.org/svnroot/directlabels/pkg/directlabels/etc/flags
+cd flags
+make
+    </pre>
+
+    <h2>Results and discussion</h2>
+    
+    <ul>
+
+      <li>The images were faithfully translated into PS using
+      <a href="https://r-forge.r-project.org/scm/viewvc.php/pkg/directlabels/etc/flags/svg2ps.py?view=markup&revision=644&root=directlabels">python</a>. Can
+      this be done in R?</li>
+
+      <li>There are some problems with the conversion to XML, as
+      evidenced by the NA entries below, for which the PostScriptTrace
+      function gave an error. Can these be fixed?</li>
+
+      <li>For the graphics that were converted to XML, it is clear
+      that the PDF graphics device renders them better than the PNG
+      graphics device. Is this a problem?</li>
+
+      <li>The majority of flags are not rendered correctly in R. Can
+      this be fixed?</li>
+
+    </ul>
+
+    <table id="myTable" class="tablesorter" border="0" cellspacing="1" cellpadding="0">
+      <thead>
+        <tr>
+          <% for (name in names(out)) { -%>
+            <%= paste('<th>', name ,'</th>', sep = '') %>
+          <% } -%>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (i in 1:nrow(out)) { -%>
+        <tr>
+          <% for (j in 1:ncol(out)) { -%>
+            <td><%= as.character(out[i, j]) %></td>
+          <% } -%>
+        </tr>
+        <% } -%>
+      </tbody>
+    </table>
+    <p>Code by Toby Dylan Hocking, executed on <%= date() %>.</p>
+  </body>
+</html>

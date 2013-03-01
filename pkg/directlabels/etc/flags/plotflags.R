@@ -28,4 +28,15 @@ for(i in 1:nrow(xml.df)){
   }
 }
 
+for(from.suffix in c("ps","svg","pdf")){
+  files <- xml.df[,from.suffix]
+  for(from.file in files){
+    to.file <- sub("[.].*$",sprintf("-%s.png",from.suffix),from.file)
+    cmd <- sprintf("convert %s -geometry %dx%d %s",
+                   from.file, png.width, png.height, to.file)
+    cat(cmd,"\n")
+    system(cmd)
+  }
+}
+
 write.table(xml.df,"pngs.csv",quote=FALSE,row.names=TRUE,sep=",")

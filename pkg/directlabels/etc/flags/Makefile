@@ -1,4 +1,4 @@
-index.html: table.R pngs.csv functions.R
+index.html: table.R pngs.csv functions.R index-template.html
 	R --vanilla < $<
 pngs.csv: plotflags.R xml.csv functions.R
 	R --vanilla < $<

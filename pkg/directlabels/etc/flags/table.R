@@ -1,17 +1,7 @@
 source("functions.R")
-works_with_R("2.15.2",SortableHTMLTables="0.1.3")
+works_with_R("2.15.2",brew="1.0.6")
 
 df <- read.table("pngs.csv",sep=",",header=TRUE)
-for(from.suffix in c("ps","svg","pdf")){
-  files <- df[,from.suffix]
-  for(from.file in files){
-    to.file <- sub("[.].*$",sprintf("-%s.png",from.suffix),from.file)
-    cmd <- sprintf("convert %s -geometry %dx%d %s",
-                   from.file, png.width, png.height, to.file)
-    cat(cmd,"\n")
-    system(cmd)
-  }
-}
 
 to.display <- c(svg=".svg",svg.png="-svg.png",ps.png="-ps.png",
                 R.png="-xml.png",R.pdf.png="-pdf.png")
@@ -21,10 +11,14 @@ for(colname in names(to.display)){
   out[,colname] <- NA
   for(state in rownames(df)){
     base <- sub(".svg$","",df[state,"svg"])
-    out[state, colname] <-
-      sprintf('<img src="%s%s" width="%s",height="%s" />',
-              base, to.display[colname], png.width, png.height)
+    img.file <- paste(base, to.display[colname], sep="")
+    if(file.exists(img.file)){
+      out[state, colname] <-
+        sprintf('<a href="%s"><img src="%s" width="%s",height="%s" /></a>',
+                img.file, img.file, png.width, png.height)
+    }
   }
 }
-              
-sortable.html.table(out, "index.html", page.title="Plotting SVGs to R")
+
+brew("index-template.html","index.html")
+##sortable.html.table(out, "index.html", page.title="Plotting SVGs to R")
