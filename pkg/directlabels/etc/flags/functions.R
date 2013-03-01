@@ -1,3 +1,27 @@
+options(repos=c(#"http://cran.miroir-francais.fr/",
+          "http://www.bioconductor.org/packages/release/bioc",
+          "http://r-forge.r-project.org",
+          "http://cran.ism.ac.jp"))
+png.height <- png.width <- 200
+works_with_R <- function(Rvers,...){
+  pkg_ok_have <- function(pkg,ok,have){
+    stopifnot(is.character(ok))
+    if(!as.character(have) %in% ok){
+      warning("works with ",pkg," version ",
+              paste(ok,collapse=" or "),
+              ", have ",have)
+    }
+  }
+  pkg_ok_have("R",Rvers,getRversion())
+  pkg.vers <- list(...)
+  for(pkg in names(pkg.vers)){
+    if(!suppressWarnings(require(pkg, character.only=TRUE))){
+      install.packages(pkg)
+    }
+    pkg_ok_have(pkg, pkg.vers[[pkg]], packageVersion(pkg))
+    library(pkg, character.only=TRUE)
+  }
+}
 str_match_perl <- function(string,pattern){
   parsed <- regexpr(pattern,string,perl=TRUE)
   captured.text <- substr(string,parsed,parsed+attr(parsed,"match.length")-1)

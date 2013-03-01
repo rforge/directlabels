@@ -1,4 +1,4 @@
-source("regexp.R")
+source("functions.R")
 u <- url("http://en.wikipedia.org/wiki/Flags_of_the_U.S._states")
 html.lines <- readLines(u)
 close(u)
@@ -34,16 +34,21 @@ for(state in states$state){
   }
 }
 
-svg.urls <- str_match_perl(state.pages,
-                           "http://upload.*?Flag_of_(?<state>.*?)[.]svg")
-download.args <- data.frame(svg.urls)
-names(download.args) <- c("url","destfile")
-download.args <- within(download.args,{
-  destfile <- file.path("data",sprintf("%s.svg",destfile))
-  url <- as.character(url)
-})
-for(darg in split(download.args,1:nrow(download.args))){
-  print(darg)
-  do.call(download.file,darg)
+svg.pattern <- paste("(?<dompath>upload.*?Flag_of_",
+                     "(?<basename>.*?[.]svg)",
+                     ")",
+                     sep="")
+svg.info <- str_match_perl(state.pages, svg.pattern)
+svg.urls <- sprintf("http://%s",svg.info[,"dompath"])
+svg.df <- data.frame()
+for(i in seq_along(svg.urls)){
+  destfile <- file.path("data",svg.info[i,"basename"])
+  svg.df <- rbind(svg.df,data.frame(filename=destfile))
+  u <- svg.urls[i]
+  if(!file.exists(destfile)){
+    cat(sprintf("%s -> %s\n",u,destfile))
+    download.file(u,destfile)
+  }
 }
 
+write.csv(svg.df,"svg.csv",row.names=FALSE,quote=FALSE)

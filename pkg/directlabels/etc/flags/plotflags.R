@@ -1,16 +1,31 @@
-library(grImport)
-xml.files <- Sys.glob(file.path("data","*.xml"))
-names(xml.files) <- gsub(".xml$","",gsub(".*/","",xml.files))
+source("functions.R")
+works_with_R("2.15.2",grImport="0.8.4")
+
+xml.df <- read.csv("xml.csv")
+xml.df$png <- NA
+xml.df$pdf <- NA
+rownames(xml.df) <- gsub("_"," ",gsub(".ps$","",gsub(".*/","",xml.df$ps)))
+
 read.or.null <- function(x){
   tryCatch(readPicture(x),error=function(e)NULL)
 }
-pics <- lapply(xml.files,read.or.null)
-pdf("Rflags.pdf")
-for(p in pics){
+
+for(i in 1:nrow(xml.df)){
+  xml.file <- as.character(xml.df$xml[i])
+  png.file <- sub("[.]xml$","-xml.png",xml.file)
+  pdf.file <- sub("[.]xml$",".pdf",xml.file)
+  p <- read.or.null(xml.file)
   if(!is.null(p)){
-    grid.newpage()
+    png(png.file, png.height, png.width)
     grid.picture(p)
-    ##picturePaths(p)
+    dev.off()
+    xml.df$png[i] <- png.file
+
+    pdf(pdf.file)
+    grid.picture(p)
+    dev.off()
+    xml.df$pdf[i] <- pdf.file
   }
 }
-dev.off()
+
+write.table(xml.df,"pngs.csv",quote=FALSE,row.names=TRUE,sep=",")
