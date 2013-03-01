@@ -14,7 +14,7 @@ for(colname in names(to.display)){
     img.file <- paste(base, to.display[colname], sep="")
     if(file.exists(img.file)){
       out[state, colname] <-
-        sprintf('<a href="%s"><img src="%s" width="%s",height="%s" /></a>',
+        sprintf('<a href="%s"><img src="%s" width="%s" /></a>',
                 img.file, img.file, png.width, png.height)
     }
   }
