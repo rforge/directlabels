@@ -41,7 +41,7 @@ dl.combine <- structure(function # Combine output of several methods
 ### applying each specified Positioning Method.
 },ex=function(){
   ## Simple example: label the start and endpoints
-  data("BodyWeight",package="nlme")
+  library(nlme)
   library(lattice)
   ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
   ##ratplot <- qplot(Time,weight,data=BodyWeight,group=Rat,colour=Rat,geom="line",facets=.~Diet)
@@ -136,7 +136,6 @@ dl.combine <- structure(function # Combine output of several methods
   ## Calculate lasso path, plot and label
   mylasso <- dl.combine(lasso.labels,last.qp)
   if(require(ElemStatLearn)){
-    data("prostate")
     pros <- subset(prostate,select=-train,train==TRUE)
     ycol <- which(names(pros)=="lpsa")
     x <- as.matrix(pros[-ycol])
@@ -150,7 +149,7 @@ dl.combine <- structure(function # Combine output of several methods
   }
 
   if(require(lars)){
-    data("diabetes")
+    data(diabetes,envir=environment())
     dres <- with(diabetes,mylars(x,y))
     P <- xyplot(coef~arclength,dres,groups=variable,type="l")
     plot(direct.label(P,"mylasso"))
@@ -238,15 +237,13 @@ dl.move <- structure(function # Manually move a direct label
   pf
 ### A Positioning Function that moves a label into a good spot.
 },ex=function(){
-  data("mpg",package="ggplot2")
+  library(ggplot2)
   library(lattice)
   scatter <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
   dlcompare(list(scatter),
             list("extreme.grid",
                  `+dl.move`=list(extreme.grid,dl.move("suv",15,15))))
 
-  data("svmtrain",package="directlabels")
-  library(ggplot2)
   p <- qplot(log10(gamma),rate,data=svmtrain,group=data,colour=data,
              geom="line",facets=replicate~nu)
   dlcompare(list(p+xlim(-8,7)),list("last.points",
@@ -388,7 +385,6 @@ reduce.cex.lr <- structure(function(d,...){
   calc.boxes(d)
 },ex=function(){
   if(require(ElemStatLearn)){
-    data("prostate")
     pros <- subset(prostate,select=-train,train==TRUE)
     ycol <- which(names(pros)=="lpsa")
     x <- as.matrix(pros[-ycol])
@@ -528,7 +524,6 @@ qp.labels <- structure(function# Make a Positioning Method for non-overlapping l
 ### of the label bounding boxes, as specified by upper.var and
 ### lower.var.
 },ex=function(){
-  data("SegCost",package="directlabels")
   SegCost$error <- factor(SegCost$error,c("FP","FN","E","I"))
   library(ggplot2)
   fp.fn.colors <- c(FP="skyblue",FN="#E41A1C",I="black",E="black")

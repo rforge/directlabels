@@ -21,7 +21,6 @@ inside, so you should set cex before using this.}
 
 \examples{
 if(require(ElemStatLearn)){
-  data("prostate")
   pros <- subset(prostate,select=-train,train==TRUE)
   ycol <- which(names(pros)=="lpsa")
   x <- as.matrix(pros[-ycol])

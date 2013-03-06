@@ -76,7 +76,7 @@ geom_dl <- structure(function
   p+aes(linetype=demographic)+
     scale_linetype(guide="none")
   ## no color, just direct labels
-  data("BodyWeight",package="nlme")
+  library(nlme)
   bwbase <- ggplot(BodyWeight,aes(Time,weight,label=Rat))+
     geom_line(aes(group=Rat))+
     facet_grid(.~Diet)
