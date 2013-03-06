@@ -13,7 +13,7 @@ create Positioning Methods for specific plots or libraries of
 portable Positioning Methods that can be re-used.}
 \details{
 \tabular{ll}{Package: \tab directlabels\cr
-Maintainer: \tab Toby Dylan Hocking <toby.hocking@inria.fr>\cr
+Maintainer: \tab Toby Dylan Hocking <toby@sg.cs.titech.ac.jp>\cr
 Author: \tab Toby Dylan Hocking\cr
 Version: \tab 2.10\cr
 License: \tab GPL-3\cr

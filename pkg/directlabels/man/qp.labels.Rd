@@ -29,7 +29,7 @@ lower.var.}
 
 
 \examples{
-  data(SegCost,package="directlabels")
+  data("SegCost",package="directlabels")
   SegCost$error <- factor(SegCost$error,c("FP","FN","E","I"))
   library(ggplot2)
   fp.fn.colors <- c(FP="skyblue",FN="#E41A1C",I="black",E="black")

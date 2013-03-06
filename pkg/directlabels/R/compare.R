@@ -97,7 +97,7 @@ dlcompare <- structure(function # Direct label comparison plot
   }
 
   ## Compare a legend with direct labels on the same plot.
-  data(BodyWeight,package="nlme")
+  data("BodyWeight",package="nlme")
   ggrat <- qplot(Time,weight,data=BodyWeight,
                  colour=Rat,geom="line",facets=.~Diet)
   pfuns <- list("legend","direct labels"="last.qp")

@@ -36,7 +36,7 @@ print(direct.label(scatter))
 
 ## direct labels for lineplots that do not overlap and do not go off
 ## the plot.
-data(BodyWeight,package="nlme")
+data("BodyWeight",package="nlme")
 library(lattice)
 oldopt <- lattice.options(panel.error=NULL)
 ratplot <-

@@ -55,7 +55,7 @@ if(names(dev.cur())!="postscript"){##to avoid error on pkg check Try
 }
 
 ## Compare a legend with direct labels on the same plot.
-data(BodyWeight,package="nlme")
+data("BodyWeight",package="nlme")
 ggrat <- qplot(Time,weight,data=BodyWeight,
                colour=Rat,geom="line",facets=.~Diet)
 pfuns <- list("legend","direct labels"="last.qp")

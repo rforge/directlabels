@@ -32,6 +32,8 @@ See etc/area.R for an example of using fill in area plots.
 
 2.10
 
+data("quoted") for R-3.0 package checks.
+
 4 Nov 2012 fix some doc typos.
 
 2.9 --- 25 Sep 2012
