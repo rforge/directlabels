@@ -138,6 +138,7 @@ direct.label.ggplot <- function
   }
   dlgeom <- geom_dl(aes_string(label=colvar,colour=colvar),method,
                     stat=L$stat,debug=debug,data=data)
+  dlgeom$stat_params <- L$stat_params
   p+dlgeom+guides(color="none")
 ### The ggplot object with direct labels added.
 }

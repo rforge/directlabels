@@ -51,3 +51,9 @@ plot + geom_dl(aes(label=..level..), method="bottom.pieces")
 plot + geom_dl(aes(label=c), method="bottom.pieces")
 # Error in split.default(x = seq_len(nrow(x)), f = f, drop = drop, ...) :
 #  Grouplength is 0 but datalength is > 0
+
+plot <- ggplot(df_test, aes(x=a, y=b, z=c)) +
+  stat_contour(aes(colour=..level..),breaks=c(3,10))
+direct.label(plot, method="bottom.pieces")
+
+p <- qplot(a,data=df_test,geom="bar",binwidth=2)
