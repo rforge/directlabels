@@ -30,6 +30,8 @@ dlcompare(list(scatter),
 
 p <- qplot(log10(gamma),rate,data=svmtrain,group=data,colour=data,
            geom="line",facets=replicate~nu)
-dlcompare(list(p+xlim(-8,7)),list("last.points",
-                                  `+dl.move`=list(last.points,dl.move("KIF11",-0.9,hjust=1,vjust=1))))
+adjust.kif <- dl.move("KIF11",-0.9,hjust=1,vjust=1)
+dlcompare(list(p+xlim(-8,7)),
+          list("last.points",
+               `+dl.move`=list(last.points,adjust.kif)))
 }

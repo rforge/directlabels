@@ -3,8 +3,7 @@
 \title{Direct label comparison plot}
 \description{Compare several plots and/or label placement methods. This creates
 a custom grid graphics display based on lattice and/or ggplot2
-output. This is possible because the direct.label function is
-generic. Plots will be on the columns and positioning methods will
+output. Plots will be on the columns and positioning methods will
 be on the rows.}
 \usage{dlcompare(plots, pos.funs, rects = TRUE, row.items = "plots", 
     debug = FALSE)}

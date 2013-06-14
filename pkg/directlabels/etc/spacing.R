@@ -10,8 +10,7 @@ last.qp.spaced <-
        dl.trans(x=x+0.1), #move to the right 0.1cm.
        cex=1.5, #target text size if there is enough space on the right.
        ##Set the bounding box height to 7/6 the text height:
-       "calc.boxes",
-       dl.trans(h=7/6*h),"calc.borders",
+       "calc.boxes",dl.trans(h=7/6*h),"calc.borders",
        ##Move labels up and down to avoid collisions:
        qp.labels("y","bottom","top",make.tiebreaker("x","y"),ylimits),
        ##"calc.boxes","draw.rects", #uncomment to show bounding box

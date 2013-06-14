@@ -24,6 +24,10 @@ other contourplots, see etc/contour.R
 
 See etc/area.R for an example of using fill in area plots.
 
+2013.6.15
+
+Documentation updates.
+
 2013.6.14
 
 Depend on quadprog.
