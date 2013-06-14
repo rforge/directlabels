@@ -1,4 +1,4 @@
-works_with_R("2.15.2",directlabels="2.10",ggplot2="0.9.3.1")
+works_with_R("3.0.1",directlabels="2013.6.14",ggplot2="0.9.3.1")
 
 data(BodyWeight,package="nlme")
 ratplot <- ggplot(BodyWeight,aes(Time,weight,colour=Rat))+
@@ -14,7 +14,7 @@ last.qp.spaced <-
        dl.trans(h=7/6*h),"calc.borders",
        ##Move labels up and down to avoid collisions:
        qp.labels("y","bottom","top",make.tiebreaker("x","y"),ylimits),
-       "calc.boxes","draw.rects", #show bounding box
+       ##"calc.boxes","draw.rects", #uncomment to show bounding box
        reduce.cex.lr)#decrease text size if not enough space on the right.
 direct.label(ratplot,"last.qp.spaced")
 
