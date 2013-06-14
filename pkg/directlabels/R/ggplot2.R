@@ -28,14 +28,16 @@ geom_dl <- structure(function
       data$rot <- as.integer(data$angle)
       data$groups <- data$label
       axes2native <- function(data){
-        coord_transform(coordinates,data,scales)
+        ggplot2:::coord_transform(coordinates,data,scales)
       }
-      dlgrob(subset(axes2native(data),select=-group),
+      converted <- axes2native(data)
+      dldata <- converted[,names(converted)!="group"]
+      dlgrob(dldata,
              method,debug=debug,
              axes2native=axes2native)
     }
     draw_legend <- function(.,data,...){
-      data <- aesdefaults(data,.$default_aes(),list(...))
+      data <- ggplot2:::aesdefaults(data,.$default_aes(),list(...))
       with(data,{
         textGrob("dl",0.5,0.5,rot=angle,
                  gp=gpar(col=alpha(colour,alpha),fontsize=size*.pt))
@@ -43,7 +45,7 @@ geom_dl <- structure(function
     }
     objname <- "dl"
     desc <- "Direct labels"
-    default_stat <- function(.) StatIdentity
+    default_stat <- function(.) ggplot2:::StatIdentity
     required_aes <- c("x", "y", "label")
     default_aes <- function(.)
       aes(colour="black", size=5 , angle=0, hjust=0.5, vjust=0.5, alpha = 1)

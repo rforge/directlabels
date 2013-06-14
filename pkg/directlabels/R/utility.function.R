@@ -302,11 +302,16 @@ calc.borders <- function
  ...
 ### ignored.
  ){
-  hjust <- vjust <- 0.5 ##defaults in case unassigned in d
-  transform(d,
-            top=y+(1-vjust)*h,bottom=y-vjust*h,
-            right=x+(1-hjust)*w,left=x-hjust*w,
-            h=h,w=w)
+  for(just in c("hjust","vjust")){
+    if(!just %in% names(d)){
+      d[,just] <- 0.5
+    }
+  }
+  d$top <- d$y+(1-d$vjust)*d$h
+  d$bottom <- d$y-d$vjust*d$h
+  d$right <- d$x+(1-d$hjust)*d$w
+  d$left <- d$x-d$hjust*d$w
+  d
 }
 
 ### Positioning Function that draws boxes around label positions. Need
@@ -381,6 +386,9 @@ reduce.cex.lr <- structure(function(d,...){
   right <- positive.part(d$right-l[2])
   left <- positive.part(l[1]-d$left)
   w <- d$right-d$left
+  if(is.null(d$cex)){
+    d$cex <- 1
+  }
   d$cex <- (w-right)/w * (w-left)/w * d$cex
   calc.boxes(d)
 },ex=function(){
@@ -654,51 +662,6 @@ dl.summarize <- function
   NEW
 }
 
-perpendicular.lines <- function
-### Draw a line between the centers of each cluster, then draw a
-### perpendicular line for each cluster that goes through its
-### center. For each cluster, return the point the lies furthest out
-### along this line.
-(d,
-### Data frame with groups x y.
- debug=FALSE,
-### If TRUE will draw points at the center of each cluster and some
-### lines that show how the points returned were chosen.
- ...
-### ignored.
- ){
-  if(length(unique(d$groups))==1)return(extreme.points(d))
-  means <- with(get.means(d),data.frame(mx=x,my=y,groups))
-  big <- merge(d,means,by="groups")
-  fit <- lm(my~mx,means)
-  b <- coef(fit)[1]
-  m <- coef(fit)[2]
-  big2 <- transform(big,x1=(mx+x+(my-y)*m)/2)
-  big3 <- transform(big2,y1=m*(x1-x)+y)
-  big4 <- transform(big3,
-                    d=sqrt((x-x1)^2+(y-y1)^2),
-                    dm=sqrt((x-mx)^2+(y-my)^2))
-  big5 <- transform(big4,ratio=d/dm)
-  winners <- gapply(big5,function(d,...)d[which.min(d$ratio),])
-  ## gives back a function of a line that goes through the designated center
-  f <- function(v)function(x){
-    r <- means[means$groups==v,]
-    -1/m*(x-r$mx)+r$my
-  }
-  if(debug){
-    ## myline draws a line over the range of the data for a given fun F
-    myline <- function(F)
-      grid.lines(range(d$x),F(range(d$x)),default.units="cm")
-    ## Then draw a line between these means
-    myline(function(x)m*x+b)
-    ## Then draw perpendiculars that go through each center
-    for(v in means$groups)myline(f(v))
-  }
-  winners[,c("x","y","groups")]
-### Data frame with groups x y, giving the point for each cluster
-### which is the furthest out along the line drawn through its center.
-}
-
 gapply <- function
 ### apply a Positioning Method to every group. works like ddply from
 ### plyr package, but the grouping column is always called groups, and
@@ -747,7 +710,11 @@ edges.to.outside <- function
   closepts$vjust <- ifelse(closepts$y-centers$y>0,0,1)
   closepts$hjust <- ifelse(closepts$x-centers$x>0,0,1)
   r <- apply.method("big.boxes",closepts)
-  transform(r,x=(right-left)/2+left,y=(top-bottom)/2+bottom,hjust=0.5,vjust=0.5)
+  r$x <- (r$right-r$left)/2+r$left
+  r$y <- (r$top-r$bottom)/2+r$bottom
+  r$hjust <- 0.5
+  r$vjust <- 0.5
+  r
 }
 
 ### Calculate closest point on the alpha hull with size of the boxes,
@@ -770,31 +737,32 @@ project.onto.segments <- function
 ### m is 1 row, a center of a point cloud, we need to find the
 ### distance to the closest point on each segment of the convex
 ### hull.
- hull.segments,
+ h,
 ### Data frame describing the line segments of the convex or alpha
 ### hull.
  debug=FALSE,
  ...
 ### ignored
  ){
-  these <- within(hull.segments,{
-    s <- (y2-y1)/(x2-x1)
-    ## the closest point on the line formed by expanding this line
-    ## segment (this expression is calculated by finding the minimum
-    ## of the distance function).
-    xstar <- (m$x + m$y*s + x1*s^2 - s*y1)/(s^2+1)
-    minval <- apply(cbind(x1,x2),1,min)
-    maxval <- apply(cbind(x1,x2),1,max)
-    ## xopt is the closest point on the line segment
-    xopt <- ifelse(xstar<minval,minval,ifelse(xstar>maxval,maxval,xstar))
-    yopt <- s*(xopt-x1)+y1
-    ## distance to each point on line segment from the center
-    d <- (m$x-xopt)^2+(m$y-yopt)^2
-  })
-  i <- which.min(these$d)
-  h <- with(these[i,],data.frame(x=xopt,y=yopt))
-  if(debug)with(h,grid.segments(m$x,m$y,h$x,h$y,default.units="cm"))
-  h
+  h$s <- (h$y2-h$y1)/(h$x2-h$x1)
+  ## the closest point on the line formed by expanding this line
+  ## segment (this expression is calculated by finding the minimum
+  ## of the distance function).
+  h$xstar <- (m$x + m$y*h$s + h$x1*h$s^2 - h$s*h$y1)/(h$s^2+1)
+  h$minval <- apply(cbind(h$x1,h$x2),1,min)
+  h$maxval <- apply(cbind(h$x1,h$x2),1,max)
+  ## xopt is the closest point on the line segment
+  h$xopt <- ifelse(h$xstar<h$minval,h$minval,
+                   ifelse(h$xstar>h$maxval,h$maxval,h$xstar))
+  h$yopt <- h$s*(h$xopt-h$x1)+h$y1
+  ## distance to each point on line segment from the center
+  h$d <- (m$x-h$xopt)^2+(m$y-h$yopt)^2
+  i <- which.min(h$d)
+  result <- with(h[i,],data.frame(x=xopt,y=yopt))
+  if(debug){
+    grid.segments(m$x,m$y,result$x,result$y,default.units="cm")
+  }
+  result
 }
 
 ### Make a Positioning Function from a set of points on a vertical
@@ -847,48 +815,12 @@ ahull.points <- function(d,...,ahull=default.ahull(d)){
 ### Calculate the points on the convex hull.
 chull.points <- function(d,...){
   bpts <- d[with(d,chull(x,y)),]
-  transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
-            x1=bpts$x[i1],
-            y1=bpts$y[i1],
-            x2=bpts$x[i2],
-            y2=bpts$y[i2])
-}
-
-follow.points <- function
-### Draws a line between each center and every point, then follows the
-### line out far enough to give a box outside the cloud. Out of all
-### the boxes constructed in this way that do not contain any points,
-### take the one which has the smallest distance to the center. 
-(d,debug=FALSE,...){
-  allm <- apply.method(list("dl.jitter","big.boxes"),d)
-  if(debug)draw.rects(allm)
-  labtab <- data.frame()
-  for(g in levels(d$groups)){
-    x <- d
-    m <- subset(allm,groups==g)
-    x$a <- x$y - m$y
-    x$b <- x$x - m$x
-    x$h <- sqrt(x$a^2+x$b^2) ## hypotenuse of triangle, not box height!
-    x$x <- x$x + m$w/2 * x$b/x$h *1.01 ## b/h = cos(theta)
-    x$y <- x$y + m$h/2 * x$a/x$h *1.01 ## a/h = sin(theta)
-    x$dist <- (x$x-m$x)^2+(x$y-m$y)^2
-    x <- transform(x,
-                   left=x-m$w/2,right=x+m$w/2,
-                   top=y+m$h/2,bottom=y-m$h/2)
-    x$points <- inside(x,d)
-    ## consider only subset of boxes that contain no points
-    x <- subset(x,points==0)
-    ## take the box with the minimal distance
-    x <- subset(x,dist==min(dist))[1,]
-    labtab <- rbind(labtab,transform(x,x=x,y=y,groups=g))
-    ## add the box's 4 points to the list of points
-    newpoints <- d[1:4,]
-    newpoints$x <- c(x$left,x$right,x$right,x$left)
-    newpoints$groups <- g
-    newpoints$y <- c(x$top,x$top,x$bottom,x$bottom)
-    d <- rbind(d,newpoints)
-  }
-  labtab
+  r <- data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1))
+  r$x1 <- bpts$x[r$i1]
+  r$y1 <- bpts$y[r$i1]
+  r$x2 <- bpts$x[r$i2]
+  r$y2 <- bpts$y[r$i2]
+  r
 }
 
 check.for.columns <- function
@@ -1070,7 +1002,7 @@ empty.grid <- function
   label.targets <-
     label.targets[order(nchar(as.character(label.targets$groups))),]
   for(v in label.targets$groups){
-    r <- subset(label.targets,groups==v)
+    r <- label.targets[label.targets$groups==v,]
     no.points <- data.frame()
     expand <- 0
     while(nrow(no.points)==0){
@@ -1096,12 +1028,12 @@ empty.grid <- function
       no.points[i,"nearest"] <- as.character(orig$groups[which.min(d.orig)])
     }
     ## Only consider boxes that are closest to this class.
-    closest <- subset(no.points,nearest == rownames(r))
+    closest <- no.points[no.points$nearest == rownames(r),]
     if(nrow(closest) == 0){
       closest <- no.points
     }
     closest$len <- with(closest,(r$x-x)^2+(r$y-y)^2)
-    best <- subset(closest, len == min(len))[1, ]
+    best <- closest[closest$len == min(closest$len), ][1, ]
 
     res <- rbind(res,transform(r,x=best$x,y=best$y))
     ## add points to cloud

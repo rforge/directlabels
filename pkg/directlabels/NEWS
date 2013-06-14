@@ -24,6 +24,18 @@ other contourplots, see etc/contour.R
 
 See etc/area.R for an example of using fill in area plots.
 
+2013.6.14
+
+Depend on quadprog.
+
+Bugfix for reduce.cex.lr: decrease the text size based on previous
+cex, rather than assuming the previous cex is 1.
+
+Remove follow.points, perpendicular.(lines|grid).
+
+Change with/within/transform/subset to alternatives that do not
+generate NOTEs during package check.
+
 2.10
 
 Fixed: stat_contour(breaks=custom_breaks): From Doug Peterson: Side
