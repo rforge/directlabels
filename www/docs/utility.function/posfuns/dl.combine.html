@@ -46,7 +46,7 @@ dl.combine &lt;- structure(function # Combine output of several methods
 ### applying each specified Positioning Method.
 },ex=function(){
   ## Simple example: label the start and endpoints
-  data(BodyWeight,package="nlme")
+  library(nlme)
   library(lattice)
   ratplot &lt;- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
   ##ratplot &lt;- qplot(Time,weight,data=BodyWeight,group=Rat,colour=Rat,geom="line",facets=.~Diet)
@@ -141,7 +141,6 @@ dl.combine &lt;- structure(function # Combine output of several methods
   ## Calculate lasso path, plot and label
   mylasso &lt;- dl.combine(<a href="../../lineplot/posfuns/lasso.labels.html">lasso.labels</a>,<a href="../../lineplot/posfuns/last.qp.html">last.qp</a>)
   if(require(ElemStatLearn)){
-    data(prostate)
     pros &lt;- subset(prostate,select=-train,train==TRUE)
     ycol &lt;- which(names(pros)=="lpsa")
     x &lt;- as.matrix(pros[-ycol])
@@ -155,7 +154,7 @@ dl.combine &lt;- structure(function # Combine output of several methods
   }
 
   if(require(lars)){
-    data(diabetes)
+    data(diabetes,envir=environment())
     dres &lt;- with(diabetes,mylars(x,y))
     P &lt;- xyplot(coef~arclength,dres,groups=variable,type="l")
     plot(direct.label(P,"mylasso"))
@@ -167,13 +166,15 @@ dl.combine &lt;- structure(function # Combine output of several methods
 
 <center>
 <table>
-<tr><td>Please contact <a href="http://cbio.ensmp.fr/~thocking/">Toby
-Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
-contribute, thanks!</td>
+<tr><td>Please
+contact <a href="http://sugiyama-www.cs.titech.ac.jp/~toby/">Toby
+Dylan Hocking</a> if you are
+using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
+or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2.10
-(svn revision 636)
+code version 2013.6.15
+(svn revision 654)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

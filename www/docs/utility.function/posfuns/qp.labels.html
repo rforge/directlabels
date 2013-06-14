@@ -32,7 +32,8 @@ qp.labels &lt;- structure(function# Make a Positioning Method for non-overlappin
  order.labels=function(d)order(d[,target.var]),
 ### Function that takes the data.frame of labels and returns an
 ### ordering, like from the order function. That ordering will be used
-### to reorder the rows.
+### to reorder the rows. This is useful to e.g. break ties when two
+### groups have exactly the same value at the endpoint near the label.
  limits=NULL
 ### Function that takes the data.frame of labels an returns a numeric
 ### vector of length 2. If finite, these values will be used to add
@@ -128,7 +129,6 @@ qp.labels &lt;- structure(function# Make a Positioning Method for non-overlappin
 ### of the label bounding boxes, as specified by upper.var and
 ### lower.var.
 },ex=function(){
-  data(SegCost,package="directlabels")
   SegCost$error &lt;- factor(SegCost$error,c("FP","FN","E","I"))
   library(ggplot2)
   fp.fn.colors &lt;- c(FP="skyblue",FN="#E41A1C",I="black",E="black")
@@ -206,13 +206,15 @@ kplot &lt;- ggplot(err.df,aes(segments,cost))+
 
 <center>
 <table>
-<tr><td>Please contact <a href="http://cbio.ensmp.fr/~thocking/">Toby
-Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
-contribute, thanks!</td>
+<tr><td>Please
+contact <a href="http://sugiyama-www.cs.titech.ac.jp/~toby/">Toby
+Dylan Hocking</a> if you are
+using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
+or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2.10
-(svn revision 636)
+code version 2013.6.15
+(svn revision 654)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

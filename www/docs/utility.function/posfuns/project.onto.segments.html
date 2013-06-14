@@ -27,31 +27,32 @@ project.onto.segments &lt;- function
 ### m is 1 row, a center of a point cloud, we need to find the
 ### distance to the closest point on each segment of the convex
 ### hull.
- hull.segments,
+ h,
 ### Data frame describing the line segments of the convex or alpha
 ### hull.
  debug=FALSE,
  ...
 ### ignored
  ){
-  these &lt;- within(hull.segments,{
-    s &lt;- (y2-y1)/(x2-x1)
-    ## the closest point on the line formed by expanding this line
-    ## segment (this expression is calculated by finding the minimum
-    ## of the distance function).
-    xstar &lt;- (m$x + m$y*s + x1*s^2 - s*y1)/(s^2+1)
-    minval &lt;- apply(cbind(x1,x2),1,min)
-    maxval &lt;- apply(cbind(x1,x2),1,max)
-    ## xopt is the closest point on the line segment
-    xopt &lt;- ifelse(xstar&lt;minval,minval,ifelse(xstar&gt;maxval,maxval,xstar))
-    yopt &lt;- s*(xopt-x1)+y1
-    ## distance to each point on line segment from the center
-    d &lt;- (m$x-xopt)^2+(m$y-yopt)^2
-  })
-  i &lt;- which.min(these$d)
-  h &lt;- with(these[i,],data.frame(x=xopt,y=yopt))
-  if(debug)with(h,grid.segments(m$x,m$y,h$x,h$y,default.units="cm"))
-  h
+  h$s &lt;- (h$y2-h$y1)/(h$x2-h$x1)
+  ## the closest point on the line formed by expanding this line
+  ## segment (this expression is calculated by finding the minimum
+  ## of the distance function).
+  h$xstar &lt;- (m$x + m$y*h$s + h$x1*h$s^2 - h$s*h$y1)/(h$s^2+1)
+  h$minval &lt;- apply(cbind(h$x1,h$x2),1,min)
+  h$maxval &lt;- apply(cbind(h$x1,h$x2),1,max)
+  ## xopt is the closest point on the line segment
+  h$xopt &lt;- ifelse(h$xstar&lt;h$minval,h$minval,
+                   ifelse(h$xstar&gt;h$maxval,h$maxval,h$xstar))
+  h$yopt &lt;- h$s*(h$xopt-h$x1)+h$y1
+  ## distance to each point on line segment from the center
+  h$d &lt;- (m$x-h$xopt)^2+(m$y-h$yopt)^2
+  i &lt;- which.min(h$d)
+  result &lt;- with(h[i,],data.frame(x=xopt,y=yopt))
+  if(debug){
+    grid.segments(m$x,m$y,result$x,result$y,default.units="cm")
+  }
+  result
 }
 </pre>
 
@@ -59,13 +60,15 @@ project.onto.segments &lt;- function
 
 <center>
 <table>
-<tr><td>Please contact <a href="http://cbio.ensmp.fr/~thocking/">Toby
-Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
-contribute, thanks!</td>
+<tr><td>Please
+contact <a href="http://sugiyama-www.cs.titech.ac.jp/~toby/">Toby
+Dylan Hocking</a> if you are
+using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
+or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2.10
-(svn revision 636)
+code version 2013.6.15
+(svn revision 654)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

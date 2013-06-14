@@ -71,7 +71,7 @@ empty.grid &lt;- function
   label.targets &lt;-
     label.targets[order(nchar(as.character(label.targets$groups))),]
   for(v in label.targets$groups){
-    r &lt;- subset(label.targets,groups==v)
+    r &lt;- label.targets[label.targets$groups==v,]
     no.points &lt;- data.frame()
     expand &lt;- 0
     while(nrow(no.points)==0){
@@ -97,12 +97,12 @@ empty.grid &lt;- function
       no.points[i,"nearest"] &lt;- as.character(orig$groups[which.min(d.orig)])
     }
     ## Only consider boxes that are closest to this class.
-    closest &lt;- subset(no.points,nearest == rownames(r))
+    closest &lt;- no.points[no.points$nearest == rownames(r),]
     if(nrow(closest) == 0){
       closest &lt;- no.points
     }
     closest$len &lt;- with(closest,(r$x-x)^2+(r$y-y)^2)
-    best &lt;- subset(closest, len == min(len))[1, ]
+    best &lt;- closest[closest$len == min(closest$len), ][1, ]
 
     res &lt;- rbind(res,transform(r,x=best$x,y=best$y))
     ## add points to cloud
@@ -123,13 +123,15 @@ empty.grid &lt;- function
 
 <center>
 <table>
-<tr><td>Please contact <a href="http://cbio.ensmp.fr/~thocking/">Toby
-Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
-contribute, thanks!</td>
+<tr><td>Please
+contact <a href="http://sugiyama-www.cs.titech.ac.jp/~toby/">Toby
+Dylan Hocking</a> if you are
+using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
+or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2.10
-(svn revision 636)
+code version 2013.6.15
+(svn revision 654)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

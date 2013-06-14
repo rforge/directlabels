@@ -24,7 +24,8 @@ top.bumptwice &lt;- function(d,debug=FALSE,...){
   labtab &lt;- <a href="../../utility.function/posfuns/apply.method.html">apply.method</a>("<a href="../../densityplot/posfuns/top.bumpup.html">top.bumpup</a>",d)
   if(debug)<a href="../../utility.function/posfuns/draw.rects.html">draw.rects</a>(labtab)
   <a href="../../utility.function/posfuns/gapply.html">gapply</a>(labtab,function(l,...){
-    x &lt;- sort(c(range(d$x),subset(d,y&gt;l$bottom&amp;y&lt;l$top)$x))
+    between &lt;- d[d$y&gt;l$bottom &amp; d$y&lt;l$top,]
+    x &lt;- sort(c(range(d$x),between$x))
     if(length(x)==2)return(l)
     dif &lt;- diff(x)
     ok &lt;- dif&gt;with(l,right-left)
@@ -77,13 +78,15 @@ direct.label(p,"top.bumptwice")
 
 <center>
 <table>
-<tr><td>Please contact <a href="http://cbio.ensmp.fr/~thocking/">Toby
-Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
-contribute, thanks!</td>
+<tr><td>Please
+contact <a href="http://sugiyama-www.cs.titech.ac.jp/~toby/">Toby
+Dylan Hocking</a> if you are
+using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
+or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2.10
-(svn revision 636)
+code version 2013.6.15
+(svn revision 654)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

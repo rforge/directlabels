@@ -21,11 +21,12 @@ Positioning Method - chull.points</h1>
 <pre>
 chull.points &lt;- function(d,...){
   bpts &lt;- d[with(d,chull(x,y)),]
-  transform(data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1)),
-            x1=bpts$x[i1],
-            y1=bpts$y[i1],
-            x2=bpts$x[i2],
-            y2=bpts$y[i2])
+  r &lt;- data.frame(i1=1:nrow(bpts),i2=c(2:nrow(bpts),1))
+  r$x1 &lt;- bpts$x[r$i1]
+  r$y1 &lt;- bpts$y[r$i1]
+  r$x2 &lt;- bpts$x[r$i2]
+  r$y2 &lt;- bpts$y[r$i2]
+  r
 }
 </pre>
 
@@ -33,13 +34,15 @@ chull.points &lt;- function(d,...){
 
 <center>
 <table>
-<tr><td>Please contact <a href="http://cbio.ensmp.fr/~thocking/">Toby
-Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
-contribute, thanks!</td>
+<tr><td>Please
+contact <a href="http://sugiyama-www.cs.titech.ac.jp/~toby/">Toby
+Dylan Hocking</a> if you are
+using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
+or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2.10
-(svn revision 636)
+code version 2013.6.15
+(svn revision 654)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

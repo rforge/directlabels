@@ -27,11 +27,16 @@ calc.borders &lt;- function
  ...
 ### ignored.
  ){
-  hjust &lt;- vjust &lt;- 0.5 ##defaults in case unassigned in d
-  transform(d,
-            top=y+(1-vjust)*h,bottom=y-vjust*h,
-            right=x+(1-hjust)*w,left=x-hjust*w,
-            h=h,w=w)
+  for(just in c("hjust","vjust")){
+    if(!just %in% names(d)){
+      d[,just] &lt;- 0.5
+    }
+  }
+  d$top &lt;- d$y+(1-d$vjust)*d$h
+  d$bottom &lt;- d$y-d$vjust*d$h
+  d$right &lt;- d$x+(1-d$hjust)*d$w
+  d$left &lt;- d$x-d$hjust*d$w
+  d
 }
 </pre>
 
@@ -39,13 +44,15 @@ calc.borders &lt;- function
 
 <center>
 <table>
-<tr><td>Please contact <a href="http://cbio.ensmp.fr/~thocking/">Toby
-Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
-contribute, thanks!</td>
+<tr><td>Please
+contact <a href="http://sugiyama-www.cs.titech.ac.jp/~toby/">Toby
+Dylan Hocking</a> if you are
+using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
+or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2.10
-(svn revision 636)
+code version 2013.6.15
+(svn revision 654)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

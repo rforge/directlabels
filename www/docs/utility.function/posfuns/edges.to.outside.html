@@ -34,7 +34,11 @@ edges.to.outside &lt;- function
   closepts$vjust &lt;- ifelse(closepts$y-centers$y&gt;0,0,1)
   closepts$hjust &lt;- ifelse(closepts$x-centers$x&gt;0,0,1)
   r &lt;- <a href="../../utility.function/posfuns/apply.method.html">apply.method</a>("<a href="../../utility.function/posfuns/big.boxes.html">big.boxes</a>",closepts)
-  transform(r,x=(right-left)/2+left,y=(top-bottom)/2+bottom,hjust=0.5,vjust=0.5)
+  r$x &lt;- (r$right-r$left)/2+r$left
+  r$y &lt;- (r$top-r$bottom)/2+r$bottom
+  r$hjust &lt;- 0.5
+  r$vjust &lt;- 0.5
+  r
 }
 </pre>
 
@@ -42,13 +46,15 @@ edges.to.outside &lt;- function
 
 <center>
 <table>
-<tr><td>Please contact <a href="http://cbio.ensmp.fr/~thocking/">Toby
-Dylan Hocking</a> if you are using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a> or have ideas to
-contribute, thanks!</td>
+<tr><td>Please
+contact <a href="http://sugiyama-www.cs.titech.ac.jp/~toby/">Toby
+Dylan Hocking</a> if you are
+using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
+or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2.10
-(svn revision 636)
+code version 2013.6.15
+(svn revision 654)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>
