@@ -381,7 +381,7 @@ reduce.cex.lr <- structure(function(d,...){
   right <- positive.part(d$right-l[2])
   left <- positive.part(l[1]-d$left)
   w <- d$right-d$left
-  d$cex <- (w-right)/w * (w-left)/w
+  d$cex <- (w-right)/w * (w-left)/w * d$cex
   calc.boxes(d)
 },ex=function(){
   if(require(ElemStatLearn)){
