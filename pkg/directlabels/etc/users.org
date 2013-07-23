@@ -29,4 +29,4 @@
 | Andrew Buhl Barbour    | snook@ufl.edu                           | aquatic science          | Univ. Florida, USA                 |
 | Michael Bishop         | michaelbish@gmail.com                   |                          |                                    |
 | Andreas Leha           | andreas.leha@med.uni-goettingen.de      | medicine?                | Univ. Goettingen, Germany          |
-
+| Louis-Claude Canon     | louis-claude.canon@univ-fcomte.fr       | machine learning         | Univ. Franche Comté                |
