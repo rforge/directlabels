@@ -847,24 +847,32 @@ apply.method <- function # Apply a Positioning Method
 ### sequentially applying its elements to the input data to obtain the
 ### label positions.
 (method,
-### Direct labeling Positioning Method, which is a list comprised of
-### any of the following: (1) a Positioning Function, (2) a character
-### string, (3) named values, or (4) a Positioning Method
-### list. Starting from the data frame of points to plot for the
-### panel, the elements of the Positioning Method list are applied in
-### sequence, and then each row of the resulting data frame is used to
-### draw a direct label. The interpretation of Positioning Method list
-### is described below. (1) a Positioning Function is any
-### function(d,...) which takes a data.frame d with columns x,y,groups
-### and returns another data.frame representing the positions of the
-### desired direct labels. (2) a un-named list item which is a
-### character string is treated as the name of an R object, so
-### specifying "last.points" means to look up the variable called
-### last.points and use that. (3) Named values are used to add data
-### columns, e.g. cex=1.5 means set the cex column of the direct label
-### data.frame to 1.5. (4) the element of a Positioning Method list
-### can be another Positioning Method list, in which case the elements
-### of the inner list are applied.
+### Direct labeling Positioning Method. Starting from the data frame
+### of points to plot for the panel, the elements of the Positioning
+### Method list are applied in sequence, and then each row of the
+### resulting data frame is used to draw a direct label. The
+### interpretation of Positioning Method list is described below.
+### \itemize{
+### \item a Positioning Function is any function(d,...) which takes a
+### data.frame d with columns x,y,groups and returns another
+### data.frame representing the positions of the desired direct
+### labels. For a description of all the columns that are interpreted
+### for drawing direct labels, see ?drawDetails.dlgrob. For example,
+### maxvar.points is a Positioning Function that returns a data.frame
+### with columns x,y,groups,hjust,vjust.
+### \item a character vector of length 1 is treated as the name of an
+### R object. For example, specifying "maxvar.points" means to look up
+### the variable called maxvar.points and use that. Using the name of
+### a Positioning Function is preferable to specifying the Positioning
+### Function itself, since then the name is visible in the Positioning
+### Method list, which is more interpretable when debugging.
+### \item a named list element is used to add or update variables in the
+### data.frame of direct labels to plot. For example cex=1.5 means set the
+### cex column of the direct label data.frame to 1.5.
+### \item an element of a Positioning Method list can be another
+### Positioning Method list, in which case the elements of the inner
+### list are applied.
+### }
  d,
 ### Data frame to which we apply the Positioning Method.
  columns.to.check=c("x","y","groups"),
@@ -873,6 +881,8 @@ apply.method <- function # Apply a Positioning Method
  ...,
 ### Named arguments, passed to Positioning Functions.
  debug=FALSE
+### If TRUE, print each Positioning Method and the direct label
+### data.frame that results from its evaluation.
  ){
   attr(d,"orig.data") <- d ##DONT DELETE: if the first Positioning
                            ##Method needs orig.data, this needs to be

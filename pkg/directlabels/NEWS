@@ -24,6 +24,11 @@ other contourplots, see etc/contour.R
 
 See etc/area.R for an example of using fill in area plots.
 
+2013.7.24
+
+drawDetails.dlgrob documents interpretation of columns, apply.method
+uses itemize list.
+
 2013.6.15
 
 Documentation updates.
