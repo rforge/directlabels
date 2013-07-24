@@ -851,24 +851,25 @@ apply.method <- function # Apply a Positioning Method
 ### of points to plot for the panel, the elements of the Positioning
 ### Method list are applied in sequence, and then each row of the
 ### resulting data frame is used to draw a direct label. The
-### interpretation of Positioning Method list is described below.
+### elements of a Positioning Method list can be
 ### \itemize{
 ### \item a Positioning Function is any function(d,...) which takes a
 ### data.frame d with columns x,y,groups and returns another
 ### data.frame representing the positions of the desired direct
 ### labels. For a description of all the columns that are interpreted
-### for drawing direct labels, see ?drawDetails.dlgrob. For example,
-### maxvar.points is a Positioning Function that returns a data.frame
-### with columns x,y,groups,hjust,vjust.
+### for drawing direct labels, see \code{\link{drawDetails.dlgrob}}.
+### For example, maxvar.points is a Positioning Function that returns
+### a data.frame with columns x,y,groups,hjust,vjust.
 ### \item a character vector of length 1 is treated as the name of an
 ### R object. For example, specifying "maxvar.points" means to look up
 ### the variable called maxvar.points and use that. Using the name of
 ### a Positioning Function is preferable to specifying the Positioning
 ### Function itself, since then the name is visible in the Positioning
 ### Method list, which is more interpretable when debugging.
-### \item a named list element is used to add or update variables in the
-### data.frame of direct labels to plot. For example cex=1.5 means set the
-### cex column of the direct label data.frame to 1.5.
+### \item a named list element is used to add or update variables in
+### the data.frame of direct labels to plot. For example
+### list("first.points",cex=1.5) means take only the first points of
+### every group and then set the cex column to 1.5.
 ### \item an element of a Positioning Method list can be another
 ### Positioning Method list, in which case the elements of the inner
 ### list are applied.
@@ -876,13 +877,14 @@ apply.method <- function # Apply a Positioning Method
  d,
 ### Data frame to which we apply the Positioning Method.
  columns.to.check=c("x","y","groups"),
-### After applying each Positioning Function, we check for the
-### presence of these columns, and if not found we stop with an error.
+### After applying each Positioning Method list element, we check for
+### the presence of these columns, and if not found we stop with an
+### error.
  ...,
 ### Named arguments, passed to Positioning Functions.
  debug=FALSE
-### If TRUE, print each Positioning Method and the direct label
-### data.frame that results from its evaluation.
+### If TRUE, print each Positioning Method list elmenent and the
+### direct label data.frame that results from its evaluation.
  ){
   attr(d,"orig.data") <- d ##DONT DELETE: if the first Positioning
                            ##Method needs orig.data, this needs to be

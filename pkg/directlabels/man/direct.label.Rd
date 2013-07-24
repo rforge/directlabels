@@ -13,8 +13,9 @@ plots.}
 colors.}
   \item{method}{Positioning Method, which determines the positions of the direct
 labels as a function of the plotted data. If NULL, we examine the
-plot p and try to choose an appropriate default. See ?apply.method
-for more information about Positioning Methods.}
+plot p and try to choose an appropriate default. See
+\code{\link{apply.method}} for more information about Positioning
+Methods.}
   \item{debug}{Show debug output?}
 }
 

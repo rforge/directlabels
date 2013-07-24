@@ -49,7 +49,8 @@ direct.label.trellis <- function
 ### The lattice plot (result of a call to a high-level lattice
 ### function).
  method=NULL,
-### Method for direct labeling as described in ?label.positions.
+### Method for direct labeling as described in
+### \code{\link{apply.method}}.
  debug=FALSE
 ### Show debug output?
  ){

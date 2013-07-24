@@ -111,7 +111,8 @@ direct.label.ggplot <- function
 (p,
 ### The ggplot object.
  method=NULL,
-### Method for direct labeling as described in ?label.positions.
+### Method for direct labeling as described in
+### \code{\link{apply.method}}.
  debug=FALSE
 ### Show debug output?
  ){
