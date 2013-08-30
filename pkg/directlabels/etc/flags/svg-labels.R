@@ -1,14 +1,10 @@
-works_with_R("3.0.1",directlabels="2013.7.24",proto="0.3.10",EBImage="4.2.1")
-levels(iris$Species)
-iris.urls <- c(setosa="http://upload.wikimedia.org/wikipedia/commons/5/56/Kosaciec_szczecinkowaty_Iris_setosa.jpg",
-               virginica="http://upload.wikimedia.org/wikipedia/commons/9/9f/Iris_virginica.jpg",
-               versicolor="http://upload.wikimedia.org/wikipedia/commons/4/41/Iris_versicolor_3.jpg")
-iris.photos <- list()
-for(i in seq_along(iris.urls)){
-  species <- names(iris.urls)[i]
-  f <- sprintf("%s.jpg",species)
-  if(!file.exists(f))download.file(iris.urls[i],f)
-  iris.photos[[species]] <- readImage(f)
+works_with_R("3.0.1",directlabels="2013.7.24",grImport2="0.1.0")
+scatter <- ggplot(USArrests,aes(Murder, Assault))+
+  geom_point()
+svgs <- list()
+for(state in rownames(USArrests)){
+  fn <- sprintf("data/%s.svg", state)
+  svgs[[state]] <- readPicture(fn)
 }
 ### Process data points using the Positioning Method and draw the
 ### resulting direct labels. This is called for every panel with
@@ -58,8 +54,7 @@ drawDetails.dlgrob <- function(x,recording){
   }
   for(i in seq_along(image.labels$groups)){
     irow <- image.labels[i,]
-    grid.raster(x$images[[as.character(irow$groups)]],
-      vp=with(irow,viewport(x,y,w,h,"cm",just=c(hjust,vjust),angle=rot)))
+    
   }
 }
 ### needed to add images argument to draw
@@ -199,3 +194,12 @@ dev.off()
 ## NULL is invalid -- images must be a list!
 print(p+GeomDirectLabel$new(aes(label=Species),method=empty.grid,images=NULL))
 
+## Idea: take a few states and plot all the tornadoes in those states,
+## with a flag next to each state cluster.
+data(UStornadoes, package="animint")
+four <- subset(UStornadoes, state %in% c("CA","TX","IL","NY"))
+ggplot()+
+  geom_point(aes(log10(trackLength), log10(trackWidth), colour=state),
+             data=four)
+## PROBLEM: there are no clusters, so direct labels don't work well
+## here.
