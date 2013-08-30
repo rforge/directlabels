@@ -1,10 +1,17 @@
-works_with_R("3.0.1",directlabels="2013.7.24",grImport2="0.1.0")
+works_with_R("3.0.1",directlabels="2013.7.24",
+             grImport2="0.1.0",grConvert="0.1.0")
 scatter <- ggplot(USArrests,aes(Murder, Assault))+
   geom_point()
 svgs <- list()
+seconds <- c()
 for(state in rownames(USArrests)){
+  print(state)
   fn <- sprintf("data/%s.svg", state)
-  svgs[[state]] <- readPicture(fn)
+  converted <- sprintf("data/%s-converted.svg", state)
+  convertPicture(fn, converted)
+  seconds[[state]] <- system.time({
+    svgs[[state]] <- readPicture(converted)
+  })["elapsed"]
 }
 ### Process data points using the Positioning Method and draw the
 ### resulting direct labels. This is called for every panel with
