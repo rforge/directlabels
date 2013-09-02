@@ -24,6 +24,10 @@ other contourplots, see etc/contour.R
 
 See etc/area.R for an example of using fill in area plots.
 
+2013.8.2
+
+geom_dl aes inherits from the colored geom aes.
+
 2013.7.24
 
 Doc updates: drawDetails.dlgrob documents interpretation of columns,

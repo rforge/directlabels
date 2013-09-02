@@ -139,7 +139,9 @@ direct.label.ggplot <- function
   }else{
     NULL
   }
-  dlgeom <- geom_dl(aes_string(label=colvar,colour=colvar),method,
+  a <- aes_string(label=colvar,colour=colvar)
+  a2 <- structure(c(L$mapping, a), class="uneval")
+  dlgeom <- geom_dl(a2,method,
                     stat=L$stat,debug=debug,data=data)
   dlgeom$stat_params <- L$stat_params
   p+dlgeom+guides(color="none")

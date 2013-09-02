@@ -1,7 +1,7 @@
 Package: directlabels
 Maintainer: Toby Dylan Hocking <toby@sg.cs.titech.ac.jp>
 Author: Toby Dylan Hocking
-Version: 2013.7.24
+Version: 2013.8.2
 License: GPL-3
 Title: Direct labels for multicolor plots in lattice or ggplot2
 Description: An extensible framework
