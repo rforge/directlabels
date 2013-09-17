@@ -6,10 +6,25 @@ label.endpoints <- function
  HJUST
 ### hjust of the labels.
  ){
+  stopifnot(is.function(FUN))
+  stopifnot(length(HJUST)==1)
+  stopifnot(is.numeric(HJUST))
+  stopifnot(is.finite(HJUST))
   function(d,...)gapply(d,function(d,...){
     i <- FUN(d$x)==d$x
-    if(length(i))transform(d[i,],hjust=HJUST,vjust=0.5)
-    else data.frame()
+    if(length(i)==0){
+      data.frame()
+    }else{
+      sub.df <- d[i,]
+      if(nrow(sub.df) > 1){
+        y.target <- mean(range(sub.df$y))
+        sub.df <- sub.df[1,]
+        sub.df$y <- y.target
+      }
+      sub.df$hjust <- HJUST
+      sub.df$vjust <- 0.5
+      sub.df
+    }
   })
 ### A Positioning Method like first.points or last.points.
 }
