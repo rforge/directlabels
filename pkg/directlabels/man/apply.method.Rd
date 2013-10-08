@@ -35,7 +35,10 @@ every group and then set the cex column to 1.5.
 Positioning Method list, in which case the elements of the inner
 list are applied.
 }}
-  \item{d}{Data frame to which we apply the Positioning Method.}
+  \item{d}{Data frame to which we apply the Positioning Method. The x and y
+columns should be in centimeters (cm), so that Positioning Methods
+can easily calculate the L2/Euclidean/visual distance between
+pairs of points.}
   \item{columns.to.check}{After applying each Positioning Method list element, we check for
 the presence of these columns, and if not found we stop with an
 error.}
@@ -45,7 +48,7 @@ direct label data.frame that results from its evaluation.}
 }
 
 \value{The final data frame returned after applying all of the items in
-the Positioning Method list.}
+the Positioning Method list, with x and y in units of cm.}
 
 \author{Toby Dylan Hocking}
 

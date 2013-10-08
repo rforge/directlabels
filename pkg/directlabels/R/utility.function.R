@@ -890,7 +890,10 @@ apply.method <- function # Apply a Positioning Method
 ### list are applied.
 ### }
  d,
-### Data frame to which we apply the Positioning Method.
+### Data frame to which we apply the Positioning Method. The x and y
+### columns should be in centimeters (cm), so that Positioning Methods
+### can easily calculate the L2/Euclidean/visual distance between
+### pairs of points.
  columns.to.check=c("x","y","groups"),
 ### After applying each Positioning Method list element, we check for
 ### the presence of these columns, and if not found we stop with an
@@ -955,7 +958,7 @@ apply.method <- function # Apply a Positioning Method
   }
   d
 ### The final data frame returned after applying all of the items in
-### the Positioning Method list.
+### the Positioning Method list, with x and y in units of cm.
 }
 
 ### Create a 1-row data.frame consisting of only the columns for which
