@@ -1,33 +1,33 @@
-| user                   | email                                   | field                    | org                                |
-|------------------------+-----------------------------------------+--------------------------+------------------------------------|
-| Jan Schulz             | jasc@gmx.net                            |                          |                                    |
-| Trevor Kvaran          | tkvaran@gmail.com                       | market research          |                                    |
-| Mario Segal            | msegal@mtb.com                          |                          | M&T Bank                           |
-| Heather Turner         | ht@heatherturner.net                    | statistics               | Univ. Warwick, UK                  |
-| Gabor Grothendieck     | ggrothendieck@gmail.com                 | statistics               | GKX consulting                     |
-| Alvaro Martinez Barrio | martinezbarrio.alvaro@gmail.com         | medical biochemistry     | BMC Uppsala, Sweden                |
-| Shalini Santhakumaran  | s.santhakumaran@imperial.ac.uk          |                          |                                    |
-| Doug Peterson          | doug_peterson@fws.gov                   | fish biology             | Fish and wildlife service, WA, USA |
-| Jerome Sueur           | sueur@mnhn.fr                           | evolution                | Natural History Museum, France     |
-| Richard Stahlhut       | richard.stahlhut@me.com                 | environmental toxicology |                                    |
-| Felix Schönbrodt       | felix.schoenbrodt@psy.lmu.de            | psychology               | LMU Munich, Germany                |
-| Byman                  | bymanh@gmail.com                        |                          |                                    |
-| ahmadou dicko          | dicko.ahmadou@gmail.com                 |                          |                                    |
-| Roderick Marsh         | rod@netbalance.com                      |                          | Net Balance, Australia             |
-| Tyler Rinker           | trinker@buffalo.edu                     |                          | SUNY Buffalo, USA                  |
-| Eric Fail              | eric.fail@gmx.us                        |                          |                                    |
-| Karl Ove Hufthammer    | Karl-Ove.Hufthammer@fiskeridir.no       | fishing                  | Fisheries, Norway                  |
-| David Reitter          | reitter@cmu.edu                         | psychology               | Carnegie Mellon Univ, USA          |
-| Milan Bouchet-Valat    | nalimilan@club.fr                       |                          |                                    |
-| Felipe Carrillo        | mazatlanmexico@yahoo.com                | fishing                  | Fish and Wildlife Service, CA, USA |
-| Jonathan Hall          | jonathan.hall@uchicago.edu              | economics                | Univ. Chicago, USA                 |
-| Gregor Gorjanc         | gregor.gorjanc@bf.uni-lj.si             | animal biology           | Univ. Ljubljana, Slovenia          |
-| Matthias Wjst          | m@wjst.de                               |                          |                                    |
-| Hannes Datta           | h.datta@student.maastrichtuniversity.nl |                          | Univ. Maastricht, Holland          |
-| Georg Vogt             | gvogt@uni-bonn.de                       |                          | Univ. Bonn, Germany                |
-| Felix Andrews          | felix@nfrac.org                         | environmental policy     | ANU, Canberra, Australia           |
-| Andrew Buhl Barbour    | snook@ufl.edu                           | aquatic science          | Univ. Florida, USA                 |
-| Michael Bishop         | michaelbish@gmail.com                   |                          |                                    |
-| Andreas Leha           | andreas.leha@med.uni-goettingen.de      | medicine?                | Univ. Goettingen, Germany          |
-| Louis-Claude Canon     | louis-claude.canon@univ-fcomte.fr       | machine learning         | Univ. Franche Comté                |
-| Ackley Lane            | ackleylane@gmail.com                    | marine science           | Univ. Hong Kong                    |
+| user                   | email                                   | field                    | org                                       |
+|------------------------+-----------------------------------------+--------------------------+-------------------------------------------|
+| Jan Schulz             | jasc@gmx.net                            |                          |                                           |
+| Trevor Kvaran          | tkvaran@gmail.com                       | market research          |                                           |
+| Mario Segal            | msegal@mtb.com                          |                          | M&T Bank                                  |
+| Heather Turner         | ht@heatherturner.net                    | statistics               | Univ. Warwick, UK                         |
+| Gabor Grothendieck     | ggrothendieck@gmail.com                 | statistics               | GKX consulting                            |
+| Alvaro Martinez Barrio | martinezbarrio.alvaro@gmail.com         | medical biochemistry     | BMC Uppsala, Sweden                       |
+| Shalini Santhakumaran  | s.santhakumaran@imperial.ac.uk          |                          |                                           |
+| Doug Peterson          | doug_peterson@fws.gov                   | fish biology             | Fish and wildlife service, WA, USA        |
+| Jerome Sueur           | sueur@mnhn.fr                           | evolution                | Natural History Museum, France            |
+| Richard Stahlhut       | richard.stahlhut@me.com                 | environmental toxicology |                                           |
+| Felix Schönbrodt       | felix.schoenbrodt@psy.lmu.de            | psychology               | LMU Munich, Germany                       |
+| Byman                  | bymanh@gmail.com                        |                          |                                           |
+| ahmadou dicko          | dicko.ahmadou@gmail.com                 |                          |                                           |
+| Roderick Marsh         | rod@netbalance.com                      |                          | Net Balance, Australia                    |
+| Tyler Rinker           | trinker@buffalo.edu                     |                          | SUNY Buffalo, USA                         |
+| Eric Fail              | eric.fail@gmx.us                        |                          |                                           |
+| Karl Ove Hufthammer    | Karl-Ove.Hufthammer@fiskeridir.no       | fishing                  | Fisheries, Norway                         |
+| David Reitter          | reitter@cmu.edu                         | psychology               | Carnegie Mellon Univ, USA                 |
+| Milan Bouchet-Valat    | nalimilan@club.fr                       |                          |                                           |
+| Felipe Carrillo        | mazatlanmexico@yahoo.com                | fishing                  | Fish and Wildlife Service, CA, USA        |
+| Jonathan Hall          | jonathan.hall@uchicago.edu              | economics                | Univ. Chicago, USA                        |
+| Gregor Gorjanc         | gregor.gorjanc@bf.uni-lj.si             | animal biology           | Univ. Ljubljana, Slovenia                 |
+| Matthias Wjst          | m@wjst.de                               |                          |                                           |
+| Hannes Datta           | h.datta@student.maastrichtuniversity.nl |                          | Univ. Maastricht, Holland                 |
+| Georg Vogt             | gvogt@uni-bonn.de, vogta@uoguelph.ca    | microbiology             | Univ. Bonn, Germany, Univ. Guelph, Canada |
+| Felix Andrews          | felix@nfrac.org                         | environmental policy     | ANU, Canberra, Australia                  |
+| Andrew Buhl Barbour    | snook@ufl.edu                           | aquatic science          | Univ. Florida, USA                        |
+| Michael Bishop         | michaelbish@gmail.com                   |                          |                                           |
+| Andreas Leha           | andreas.leha@med.uni-goettingen.de      | medicine?                | Univ. Goettingen, Germany                 |
+| Louis-Claude Canon     | louis-claude.canon@univ-fcomte.fr       | machine learning         | Univ. Franche Comté                       |
+| Ackley Lane            | ackleylane@gmail.com                    | marine science           | Univ. Hong Kong                           |
