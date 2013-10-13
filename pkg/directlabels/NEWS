@@ -1,5 +1,7 @@
 TODO
 
+Define makeContent.dlgrob instead of drawDetails.dlgrob in R-3.0?
+
 image labels: draw a grob on screen instead of assuming it is
 text. Have a toggle for drawing images and/or text. Handle both in a
 uniform way in Positioning Methods by just asking for the grob size
