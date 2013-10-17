@@ -18,7 +18,6 @@ dlcompare <- structure(function # Direct label comparison plot
  debug=FALSE
 ### Show debug output?
  ){
-  require(grid)
   ## Augment positioning method list names if possible
   names(pos.funs) <- sapply(seq_along(pos.funs),function(i){
     N <- names(pos.funs)[i]

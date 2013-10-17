@@ -224,13 +224,7 @@ defaultpf.trellis <- function
 ### option to a function like this.
 (lattice.fun.name,groups,type,...){
   ldefault <- function(){
-    if(nlevels(groups)==2)"lines2" else {
-      if(require(quadprog))"maxvar.qp"
-      else {
-        warning("install quadprog package for labels that do not overlap")
-        "maxvar.points"
-      }
-    }
+    if(nlevels(groups)==2)"lines2" else "maxvar.qp"
   }
   lattice.fun.name <-
     switch(lattice.fun.name,

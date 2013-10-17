@@ -511,7 +511,6 @@ qp.labels <- structure(function# Make a Positioning Method for non-overlapping l
       }
     }
     
-    require(quadprog)
     ## These are the standard form matrices described in the
     ## directlabels poster.
     target <- d[,target.var]
