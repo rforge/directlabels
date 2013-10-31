@@ -1,5 +1,8 @@
 TODO
 
+Implement a solver for vertical.qp, to avoid depending on the compiled
+code in quadprog which I guess is not always available.
+
 Define makeContent.dlgrob instead of drawDetails.dlgrob in R-3.0?
 
 image labels: draw a grob on screen instead of assuming it is
