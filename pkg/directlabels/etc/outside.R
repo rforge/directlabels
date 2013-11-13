@@ -12,16 +12,19 @@ df.d.melt = melt(df[,c("x","One","Two","Threeeeeeeeee")], id.vars="x")
 df.d.melt$variable1 = df.d.melt$variable
 levels(df.d.melt$variable1) = paste("","Lable for",levels(df.d.melt$variable1))
 
-p = ggplot(df.d.melt, aes(x=x, y=value, color=variable)) + 
-  geom_line(size=1.1) +
-  geom_text(aes(x =3.4, y=8, label="Custom Outside\nChart Annotation"), show_guide=FALSE) + 
-  coord_cartesian(xlim=c(1,3)) +
-  geom_dl(aes(label=variable1), method=list("last.qp", cex=1), show_guide=FALSE) + 
-  theme(legend.position="top",plot.margin = unit(c(0, 4, 0, 0), "cm")) 
+do.not.reduce <-
+  list(cex=2, "last.points", "calc.boxes",
+       qp.labels("y", "bottom", "top", make.tiebreaker("x", "y")))
 
-p1 <- ggplot_gtable(ggplot_build(p))
-p1$layout$clip[p1$layout$name=="panel"] <- "off"
-grid.draw(p1)
+WithLegend <- ggplot(df.d.melt, aes(x=x, y=value, color=variable)) + 
+  geom_line(size=1.1) +
+  geom_text(aes(x =3.4, y=8, label="Custom Outside\nChart Annotation")) + 
+  coord_cartesian(xlim=c(1,3.4)) +
+  theme(plot.margin = unit(c(0, 4, 0, 0), "cm"))
+WithLabels <- direct.label(WithLegend, "do.not.reduce")
+GTable <- ggplot_gtable(ggplot_build(WithLabels))
+GTable$layout$clip[GTable$layout$name=="panel"] <- "off"
+grid.draw(GTable)
 
 my.reduce.cex <- function(d,...){
   old.vp <- current.vpPath()
