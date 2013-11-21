@@ -28,32 +28,47 @@ apply.method &lt;- function # Apply a Positioning Method
 ### sequentially applying its elements to the input data to obtain the
 ### label positions.
 (method,
-### Direct labeling Positioning Method, which is a list comprised of
-### any of the following: (1) a Positioning Function, (2) a character
-### string, (3) named values, or (4) a Positioning Method
-### list. Starting from the data frame of points to plot for the
-### panel, the elements of the Positioning Method list are applied in
-### sequence, and then each row of the resulting data frame is used to
-### draw a direct label. The interpretation of Positioning Method list
-### is described below. (1) a Positioning Function is any
-### function(d,...) which takes a data.frame d with columns x,y,groups
-### and returns another data.frame representing the positions of the
-### desired direct labels. (2) a un-named list item which is a
-### character string is treated as the name of an R object, so
-### specifying "<a href="../../lineplot/posfuns/last.points.html">last.points</a>" means to look up the variable called
-### <a href="../../lineplot/posfuns/last.points.html">last.points</a> and use that. (3) Named values are used to add data
-### columns, e.g. cex=1.5 means set the cex column of the direct label
-### data.frame to 1.5. (4) the element of a Positioning Method list
-### can be another Positioning Method list, in which case the elements
-### of the inner list are applied.
+### Direct labeling Positioning Method. Starting from the data frame
+### of points to plot for the panel, the elements of the Positioning
+### Method list are applied in sequence, and then each row of the
+### resulting data frame is used to draw a direct label. The
+### elements of a Positioning Method list can be
+### itemize{
+### item a Positioning Function is any function(d,...) which takes a
+### data.frame d with columns x,y,groups and returns another
+### data.frame representing the positions of the desired direct
+### labels. For a description of all the columns that are interpreted
+### for drawing direct labels, see code{link{drawDetails.dlgrob}}.
+### For example, <a href="../../lineplot/posfuns/maxvar.points.html">maxvar.points</a> is a Positioning Function that returns
+### a data.frame with columns x,y,groups,hjust,vjust.
+### item a character vector of length 1 is treated as the name of an
+### R object. For example, specifying "<a href="../../lineplot/posfuns/maxvar.points.html">maxvar.points</a>" means to look up
+### the variable called <a href="../../lineplot/posfuns/maxvar.points.html">maxvar.points</a> and use that. Using the name of
+### a Positioning Function is preferable to specifying the Positioning
+### Function itself, since then the name is visible in the Positioning
+### Method list, which is more interpretable when debugging.
+### item a named list element is used to add or update variables in
+### the data.frame of direct labels to plot. For example
+### list("<a href="../../lineplot/posfuns/first.points.html">first.points</a>",cex=1.5) means take only the first points of
+### every group and then set the cex column to 1.5.
+### item an element of a Positioning Method list can be another
+### Positioning Method list, in which case the elements of the inner
+### list are applied.
+### }
  d,
-### Data frame to which we apply the Positioning Method.
+### Data frame to which we apply the Positioning Method. The x and y
+### columns should be in centimeters (cm), so that Positioning Methods
+### can easily calculate the L2/Euclidean/visual distance between
+### pairs of points.
  columns.to.check=c("x","y","groups"),
-### After applying each Positioning Function, we check for the
-### presence of these columns, and if not found we stop with an error.
+### After applying each Positioning Method list element, we check for
+### the presence of these columns, and if not found we stop with an
+### error.
  ...,
 ### Named arguments, passed to Positioning Functions.
  debug=FALSE
+### If TRUE, print each Positioning Method list elmenent and the
+### direct label data.frame that results from its evaluation.
  ){
   attr(d,"orig.data") &lt;- d ##DONT DELETE: if the first Positioning
                            ##Method needs orig.data, this needs to be
@@ -109,7 +124,7 @@ apply.method &lt;- function # Apply a Positioning Method
   }
   d
 ### The final data frame returned after applying all of the items in
-### the Positioning Method list.
+### the Positioning Method list, with x and y in units of cm.
 }
 </pre>
 
@@ -124,8 +139,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2013.6.15
-(svn revision 654)
+code version 2013.11.21
+(svn revision 673)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

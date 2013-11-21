@@ -31,6 +31,10 @@ See etc/area.R for an example of using fill in area plots.
 
 2013.11.21
 
+projectionSeconds data set and angled.boxes Positioning Method,
+inspired by Mark Schmidt's prettyPlot.
+http://www.di.ens.fr/~mschmidt/Software/prettyPlot.html
+
 draw.rects draws a rotated box when rot is specified.
 
 2013.9.17

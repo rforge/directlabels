@@ -26,10 +26,8 @@ draw.rects &lt;- function(d,...){
   if(is.null(d$fill))d$fill &lt;- "white"
   for(i in 1:nrow(d)){
     with(d[i,],{
-      grid.polygon(c(left,left,right,right),
-                   c(bottom,top,top,bottom),
-                   default.units="cm",
-                   gp=gpar(col=d$box.color,fill=fill))
+      grid.rect(gp = gpar(col = box.color, fill = fill),
+                vp = viewport(x, y, w, h, "cm", c(hjust, vjust), angle=rot))
     })
   }
   d
@@ -47,8 +45,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2013.6.15
-(svn revision 654)
+code version 2013.11.21
+(svn revision 673)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

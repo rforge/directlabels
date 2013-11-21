@@ -1,3 +1,46 @@
+### Find the point on each curve which maximizes the distance to the
+### plot border or to another curve.
+far.from.others.borders <- function(all.groups,...){
+  ## From Mark Schmidt: "For the location of the boxes, I found the
+  ## data point on the line that has the maximum distance (in the
+  ## image coordinates) to the nearest data point on another line or
+  ## to the image boundary."
+  group.list <- split(all.groups, all.groups$group)
+  output <- data.frame()
+  for(group.i in seq_along(group.list)){
+    one.group <- group.list[[group.i]]
+    dist.mat <- matrix(NA, nrow(one.group), 3)
+    colnames(dist.mat) <- c("x","y","other")
+    for(xy in c("x", "y")){
+      xy.vec <- one.group[,xy]
+      xy.mat <- rbind(xy.vec, xy.vec)
+      lim.fun <- get(sprintf("%slimits", xy))
+      diff.mat <- xy.mat - lim.fun()
+      dist.mat[,xy] <- apply(abs(diff.mat), 2, min)
+    }
+    other.groups <- group.list[-group.i]
+    other.df <- do.call(rbind, other.groups)
+    for(row.i in 1:nrow(dist.mat)){
+      r <- one.group[row.i,]
+      other.dist <- with(other.df, (x-r$x)^2 + (y-r$y)^2)
+      dist.mat[row.i,"other"] <- sqrt(min(other.dist))
+    }
+    shortest.dist <- apply(dist.mat, 1, min)
+    picked.i <- which.max(shortest.dist)
+    picked <- one.group[picked.i,]
+    ## Mark's label rotation: "For the angle, I computed the slope
+    ## between neighboring data points (which isn't ideal for noisy
+    ## data, it should probably be based on a smoothed estimate)."
+    offset <- 10
+    before <- one.group[max(picked.i-offset, 1),]
+    after <- one.group[min(picked.i+offset, nrow(one.group)),]
+    slope <- (after$y-before$y)/(after$x-before$x)
+    picked$rot <- 180*atan(slope)/pi
+    output <- rbind(output, picked)
+  }
+  output
+}
+
 label.endpoints <- function
 ### Make a Positioning Method that labels a certain x value.
 (FUN,

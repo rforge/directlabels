@@ -27,10 +27,25 @@ label.endpoints &lt;- function
  HJUST
 ### hjust of the labels.
  ){
+  stopifnot(is.function(FUN))
+  stopifnot(length(HJUST)==1)
+  stopifnot(is.numeric(HJUST))
+  stopifnot(is.finite(HJUST))
   function(d,...)<a href="../../utility.function/posfuns/gapply.html">gapply</a>(d,function(d,...){
     i &lt;- FUN(d$x)==d$x
-    if(length(i))transform(d[i,],hjust=HJUST,vjust=0.5)
-    else data.frame()
+    if(length(i)==0){
+      data.frame()
+    }else{
+      sub.df &lt;- d[i,]
+      if(nrow(sub.df) &gt; 1){
+        y.target &lt;- mean(range(sub.df$y))
+        sub.df &lt;- sub.df[1,]
+        sub.df$y &lt;- y.target
+      }
+      sub.df$hjust &lt;- HJUST
+      sub.df$vjust &lt;- 0.5
+      sub.df
+    }
   })
 ### A Positioning Method like <a href="../../lineplot/posfuns/first.points.html">first.points</a> or last.points.
 }
@@ -47,8 +62,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2013.6.15
-(svn revision 654)
+code version 2013.11.21
+(svn revision 673)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

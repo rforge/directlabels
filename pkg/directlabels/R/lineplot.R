@@ -106,3 +106,8 @@ lines2 <- function
     transform(pos,vjust=if(bigger.on.average)top else bottom)
   })
 }
+
+### Draw a box with the label inside, at the point furthest away from
+### the plot border and any other curve.
+angled.boxes <-
+  list("far.from.others.borders","calc.boxes","enlarge.box","draw.rects")
