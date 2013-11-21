@@ -29,6 +29,10 @@ other contourplots, see etc/contour.R
 
 See etc/area.R for an example of using fill in area plots.
 
+2013.11.21
+
+draw.rects draws a rotated box when rot is specified.
+
 2013.9.17
 
 label.endpoints can handle the case (common for scatterplots) where

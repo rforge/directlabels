@@ -339,10 +339,8 @@ draw.rects <- function(d,...){
   if(is.null(d$fill))d$fill <- "white"
   for(i in 1:nrow(d)){
     with(d[i,],{
-      grid.polygon(c(left,left,right,right),
-                   c(bottom,top,top,bottom),
-                   default.units="cm",
-                   gp=gpar(col=d$box.color,fill=fill))
+      grid.rect(gp = gpar(col = box.color, fill = fill),
+                vp = viewport(x, y, w, h, "cm", c(hjust, vjust), angle=rot))
     })
   }
   d
