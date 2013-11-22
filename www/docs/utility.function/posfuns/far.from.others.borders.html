@@ -20,17 +20,31 @@ Positioning Method - far.from.others.borders</h1>
 plot border or to another curve.</p>
 
 <pre>
-far.from.others.borders &lt;- function(all.groups,...){
-  ## From Mark Schmidt: "For the location of the boxes, I found the
-  ## data point on the line that has the maximum distance (in the
-  ## image coordinates) to the nearest data point on another line or
-  ## to the image boundary."
-  group.list &lt;- split(all.groups, all.groups$group)
+far.from.others.borders &lt;- function(all.groups,...,debug=FALSE){
+  group.data &lt;- split(all.groups, all.groups$group)
+  group.list &lt;- list()
+  for(groups in names(group.data)){
+    ## Run linear interpolation to get a set of points on which we
+    ## could place the label (this is useful for e.g. the lasso path
+    ## where there are only a few points plotted).
+    approx.list &lt;- with(group.data[[groups]], approx(x, y))
+    if(debug){
+      with(approx.list, grid.points(x, y, default.units="cm"))
+    }
+    group.list[[groups]] &lt;- data.frame(approx.list, groups)
+  }
   output &lt;- data.frame()
   for(group.i in seq_along(group.list)){
     one.group &lt;- group.list[[group.i]]
-    dist.mat &lt;- matrix(NA, nrow(one.group), 3)
+    ## From Mark Schmidt: "For the location of the boxes, I found the
+    ## data point on the line that has the maximum distance (in the
+    ## image coordinates) to the nearest data point on another line or
+    ## to the image boundary."
+    dist.mat &lt;- matrix(NA, length(one.group$x), 3)
     colnames(dist.mat) &lt;- c("x","y","other")
+    ## dist.mat has 3 columns: the first two are the shortest distance
+    ## to the nearest x and y border, and the third is the shortest
+    ## distance to another data point.
     for(xy in c("x", "y")){
       xy.vec &lt;- one.group[,xy]
       xy.mat &lt;- rbind(xy.vec, xy.vec)
@@ -46,15 +60,14 @@ far.from.others.borders &lt;- function(all.groups,...){
       dist.mat[row.i,"other"] &lt;- sqrt(min(other.dist))
     }
     shortest.dist &lt;- apply(dist.mat, 1, min)
-    picked.i &lt;- which.max(shortest.dist)
-    picked &lt;- one.group[picked.i,]
+    picked &lt;- <a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>(one.group[which.max(shortest.dist),])
     ## Mark's label rotation: "For the angle, I computed the slope
     ## between neighboring data points (which isn't ideal for noisy
     ## data, it should probably be based on a smoothed estimate)."
-    offset &lt;- 10
-    before &lt;- one.group[max(picked.i-offset, 1),]
-    after &lt;- one.group[min(picked.i+offset, nrow(one.group)),]
-    slope &lt;- (after$y-before$y)/(after$x-before$x)
+    left &lt;- max(picked$left, min(one.group$x))
+    right &lt;- min(picked$right, max(one.group$x))
+    neighbors &lt;- approx(one.group$x, one.group$y, c(left, right))
+    slope &lt;- with(neighbors, (y[2]-y[1])/(x[2]-x[1]))
     picked$rot &lt;- 180*atan(slope)/pi
     output &lt;- rbind(output, picked)
   }
@@ -74,7 +87,7 @@ or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
 code version 2013.11.21
-(svn revision 673)
+(svn revision 674)
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>
