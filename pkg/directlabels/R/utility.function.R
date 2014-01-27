@@ -400,7 +400,10 @@ polygon.method <- function(method, space, data.col, na.col){
          d
        },
        "reduce.cex.lr",
-       dl.trans(h=h*1.5),
+       function(d,...){
+         d$h <- d$h * 1.5
+         d
+       },
        "calc.borders",
        qp.labels("y","bottom","top", make.tiebreaker("x","y"), ylimits),
        "calc.borders", draw.polygons)
