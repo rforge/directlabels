@@ -1,0 +1,6 @@
+data(BodyWeight,package="nlme")
+library(ggplot2)
+qpdl <- qplot(Time,weight,data=BodyWeight,colour=Rat,geom="line",facets=.~Diet)
+library(directlabels)
+direct.label(qpdl, "first.polygons")
+direct.label(qpdl, "last.polygons")

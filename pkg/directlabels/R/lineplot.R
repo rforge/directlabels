@@ -61,6 +61,12 @@ last.qp <- vertical.qp("last.points")
 ### Label first points from QP solver that ensures labels do not collide.
 first.qp <- vertical.qp("first.points")
 
+### Draw a speech polygon to the first point.
+first.polygons <- polygon.method("first.points", -0.1, "right", "left")
+
+### Draw a speech polygon to the last point.
+last.polygons <- polygon.method("last.points", 0.1, "left", "right")
+
 ### Label first or last points, whichever are more spread out, and use
 ### a QP solver to make sure the labels do not collide.
 maxvar.qp <- vertical.qp("maxvar.points")

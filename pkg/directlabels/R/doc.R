@@ -102,7 +102,7 @@ dldoc <- function # Make directlabels documentation
         pngurls[f$name,p$name] <- pngfile
         if(!file.exists(pngfile)){
           cat(" ",f$name,sep="")
-          png(pngfile)
+          png(pngfile, type="cairo")
           set.seed(1)
           tryCatch({
             print(direct.label(p$plot,f$fun))

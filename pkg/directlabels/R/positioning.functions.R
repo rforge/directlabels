@@ -32,16 +32,20 @@ drawDetails.dlgrob <- function
   ## save original levels for later in case Positioning Methods mess
   ## them up.
   levs <- unique(cm.data[,c("groups","colour")])
-  code <- as.character(cm.data$colour)
-  names(code) <- as.character(cm.data$groups)
+  code <- as.character(levs$colour)
+  names(code) <- as.character(levs$groups)
   ## apply ignore.na function -- these points are not plotted
   cm.data <- ignore.na(cm.data)
   cm.data <- apply.method(x$method,cm.data,
                           debug=x$debug,axes2native=x$axes2native)
   if(nrow(cm.data)==0)return()## empty data frames can cause many bugs
-  ## rearrange factors in case Positioning Methods messed up the
-  ## order:
-  cm.data$col <- code[as.character(cm.data$groups)]
+  ## Take col from colour or groups.
+  colour <- cm.data[["colour"]]
+  cm.data$col <- if(is.null(colour)){
+    code[as.character(cm.data$groups)]
+  } else {
+    colour
+  }
   ## defaults for grid parameter values:
   defaults <- list(hjust=0.5,vjust=0.5,rot=0)
   for(p in names(defaults)){

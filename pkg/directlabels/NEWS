@@ -29,6 +29,10 @@ other contourplots, see etc/contour.R
 
 See etc/area.R for an example of using fill in area plots.
 
+2014.1.27
+
+polygon.methods for lineplots.
+
 2013.11.21
 
 projectionSeconds data set and angled.boxes Positioning Method,

@@ -387,6 +387,48 @@ calc.borders <- function
   d
 }
 
+### Make a Positioning Method that places non-overlapping speech
+### polygons at the first or last points.
+polygon.method <- function(method, space, data.col, na.col){
+  list(method, "calc.boxes",
+       function(d,...){
+         for(xy in c("x", "y")){
+           d[[sprintf("%s.%s", data.col, xy)]] <- d[[xy]]
+           d[[sprintf("%s.%s", na.col, xy)]] <- NA
+         }
+         d$x <- d$x + space
+         d
+       },
+       "reduce.cex.lr",
+       dl.trans(h=h*1.5),
+       "calc.borders",
+       qp.labels("y","bottom","top", make.tiebreaker("x","y"), ylimits),
+       "calc.borders", draw.polygons)
+}
+
+### Draw polygons around label positions.
+draw.polygons <- function(d,...){
+  stopifnot(c("left.y", "left.x", "right.y", "right.x") %in% names(d))
+  if(! "box.color" %in% names(d)){
+    d$box.color <- "black"
+  }
+  for(i in 1:nrow(d)){
+    with(d[i,], {
+      L <- 
+        list(x=c(left.x, left, right, right.x, right, left),
+             y=c(left.y, top, top, right.y, bottom, bottom))
+      for(xy.name in names(L)){
+        xy <- L[[xy.name]]
+        L[[xy.name]] <- xy[!is.na(xy)]
+      }
+      grid.polygon(L$x, L$y,
+                   default.units="cm", gp=gpar(col=box.color, fill=colour))
+    })
+  }
+  d$colour <- "white"
+  d
+}
+
 ### Positioning Function that draws boxes around label positions. Need
 ### to have previously called calc.boxes. Does not edit the data
 ### frame.
