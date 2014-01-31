@@ -37,11 +37,7 @@ geom_dl <- structure(function
              axes2native=axes2native)
     }
     draw_legend <- function(.,data,...){
-      data <- ggplot2:::aesdefaults(data,.$default_aes(),list(...))
-      with(data,{
-        textGrob("dl",0.5,0.5,rot=angle,
-                 gp=gpar(col=alpha(colour,alpha),fontsize=size*.pt))
-      })
+      nullGrob()
     }
     objname <- "dl"
     desc <- "Direct labels"
@@ -117,20 +113,26 @@ direct.label.ggplot <- function
 ### Show debug output?
  ){
   require(ggplot2)
-  ## First look through layers for a colour aesthetic, TODO: look for
-  ## fill aesthetic as well!
-  maps <- lapply(p$layers,function(L){
-    m <- p$mapping
-    m[names(L$mapping)] <- L$mapping
-    m
-  })
-  cvars <- lapply(maps,"[[","colour")
-  has.colour <- !sapply(cvars,is.null)
-  if(any(has.colour)){
-    i <- which(has.colour)[1] ##just pick the first one
-    L <- p$layers[[i]]
-    colvar <- as.character(cvars[[i]])
-  }else stop("Need colour aesthetic to infer default direct labels.")
+  getData <- function(colour.or.fill){
+    for(L in p$layers){
+      m <- p$mapping
+      m[names(L$mapping)] <- L$mapping
+      ## TODO: what if this is an expression and not a variable name?
+      colvar <- m[[colour.or.fill]]
+      if(!is.null(colvar)){
+        return(list(layer=L, colvar=as.character(colvar)))
+      }
+    }
+  }
+  dl.info <- getData("colour")
+  if(is.null(dl.info)){
+    dl.info <- getData("fill")
+  }
+  if(is.null(dl.info)){
+    stop("Need colour or fill aesthetic to infer default direct labels.")
+  }
+  L <- dl.info$layer
+  colvar <- dl.info$colvar
   ## Try to figure out a good default based on the colored geom
   geom <- L$geom$objname
   if(is.null(method))method <- default.picker("ggplot")
@@ -139,13 +141,128 @@ direct.label.ggplot <- function
   }else{
     NULL
   }
-  a <- aes_string(label=colvar,colour=colvar)
+  a <- aes_string(label=colvar, colour=colvar)
   a2 <- structure(c(L$mapping, a), class="uneval")
   dlgeom <- geom_dl(a2,method,
                     stat=L$stat,debug=debug,data=data)
   dlgeom$stat_params <- L$stat_params
-  p+dlgeom+guides(color="none")
+  ## Look through legends for a colour/fill legend.
+  leg.info <- legends2hide(p)
+  guide.args <- as.list(rep("none", length(leg.info$hide)))
+  names(guide.args) <- leg.info$hide
+  guide.args$colour <- "none"
+  guide <- do.call(guides, guide.args)
+  p+dlgeom+guide
 ### The ggplot object with direct labels added.
+}
+
+### Extract guides to hide from a ggplot.
+legends2hide <- function(p){
+  plistextra <- ggplot2:::ggplot_build(p)
+  plot <- plistextra$plot
+  scales = plot$scales
+  layers = plot$layers
+  default_mapping = plot$mapping
+  theme <- ggplot2:::plot_theme(plot)
+  position <- theme$legend.position
+  # by default, guide boxes are vertically aligned
+  theme$legend.box <- if(is.null(theme$legend.box)) "vertical" else theme$legend.box
+  
+  # size of key (also used for bar in colorbar guide)
+  theme$legend.key.width <- if(is.null(theme$legend.key.width)) theme$legend.key.size
+  theme$legend.key.height <- if(is.null(theme$legend.key.height)) theme$legend.key.size
+  # by default, direction of each guide depends on the position of the guide.
+  theme$legend.direction <- if(is.null(theme$legend.direction)){
+    if (length(position) == 1 && position %in% c("top", "bottom", "left", "right"))
+      switch(position[1], top =, bottom = "horizontal", left =, right = "vertical")
+    else
+      "vertical"
+  }
+  # justification of legend boxes
+  theme$legend.box.just <-
+    if(is.null(theme$legend.box.just)) {
+      if (length(position) == 1 && position %in% c("top", "bottom", "left", "right"))
+        switch(position, bottom =, top = c("center", "top"), left =, right = c("left", "top"))
+      else
+        c("center", "center")
+    } 
+  
+  position <- theme$legend.position
+  defaults <- function (x, y) {
+    c(x, y[setdiff(names(y), names(x))])
+  }
+
+  guides <- defaults(plot$guides, guides(colour="legend", fill="legend"))
+  labels <- plot$labels
+  gdefs <- ggplot2:::guides_train(scales = scales, theme = theme,
+                                  guides = guides, labels = labels)
+  if (length(gdefs) != 0) {
+    gdefs <- ggplot2:::guides_merge(gdefs)
+    gdefs <- ggplot2:::guides_geom(gdefs, layers, default_mapping)
+  } else (ggplot2:::zeroGrob())
+  var.list <- lapply(gdefs, getLegendVariables)
+  for(v in c("colour", "fill")){
+    for(L in var.list){
+      if(v %in% L$var){
+        return(list(colour=v, hide=L$var, data=L$data))
+      }
+    }
+  }
+### NULL if no legends with colour or fill to hide.
+}
+
+### get the aes which are variable in one legend.
+getLegendVariables <- function(mb){
+  guidetype <- mb$name
+  key <- mb$key
+  results <- list()
+  for(g in mb$geoms){
+    orig <- g$data
+    geom <- g$geom$objname
+    if(nrow(orig)==0) return(data.frame()); # if no rows, return an empty df.
+    orig$order <- 1:nrow(orig)
+    count.na <- function(x)sum(is.na(x))
+    orig.na <- sapply(orig, count.na)>0
+    key.na <- sapply(key, count.na)>0
+    by <- intersect(names(orig.na)[!orig.na], names(key.na)[!key.na])
+    data <- merge(orig, key, by=by)
+    data <- data[order(data$order),]
+    ## old code above.
+    data <- data.frame(orig, key)
+    ## if there are no labels, return an empty df.
+    if(!".label"%in%names(data)) return(data.frame()); 
+    ## remove cols that are entirely na
+    results[[length(results)+1]] <- data[,which(colSums(!is.na(data))>0)] 
+  }
+  results <- results[which(sapply(results, nrow)>0)]
+  df <- merge_recurse(results)
+  variable <- c()
+  for(v in c("colour", "fill", "size", "shape", "linetype")){
+    vals <- df[[v]]
+    first <- vals[1]
+    if(!is.null(first) && !is.na(first)){
+      constant <- all(first == vals)
+      if(!constant){
+        variable <- c(variable, v)
+      }
+    }
+  }
+  list(variable=variable,
+       data=df)
+}
+
+### Copied from reshape.
+merge_recurse <- function (dfs, ...) {
+  if (length(dfs) == 1) {
+    dfs[[1]]
+  }
+  else if (length(dfs) == 2) {
+    merge(dfs[[1]], dfs[[2]], all.x = TRUE, sort = FALSE, ...)
+  }
+  else {
+    merge(dfs[[1]], Recall(dfs[-1]), all.x = TRUE, sort = FALSE, 
+          ...)
+  }
 }
 
 defaultpf.ggplot <- function
@@ -160,6 +277,7 @@ defaultpf.ggplot <- function
          },
          point="smart.grid",
          path="bottom.pieces",
+         ribbon="maxvar.qp",
          stop("No default label placement for this type of ggplot."))
 }
 

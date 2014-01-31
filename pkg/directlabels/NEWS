@@ -27,7 +27,11 @@ in r-source/src/main/plot3d.c
 
 other contourplots, see etc/contour.R
 
-See etc/area.R for an example of using fill in area plots.
+2014.1.31
+
+use fill if no colour in ggplots.
+
+guides(others_with_colour="none")
 
 2014.1.27
 

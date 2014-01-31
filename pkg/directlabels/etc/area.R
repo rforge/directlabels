@@ -5,8 +5,7 @@ require(RCurl)
 require(directlabels)
 
 link <- getURL("http://dl.dropbox.com/u/25609375/so_data/final.txt")
-dat <- read.csv(textConnection(link), sep=' ', header=FALSE, 
-         col.names=c('count', 'name', 'episode'))
+dat <- read.csv(textConnection(link), sep=' ', header=FALSE)
 
 
 dat <- ddply(dat, .(episode), transform, percent = count / sum(count))
