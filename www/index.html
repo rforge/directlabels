@@ -31,7 +31,7 @@ takes a lattice or ggplot2 plot <tt>p</tt> and adds direct labels:</p>
 
 
 <pre>
-install.packages("directlabels")
+install.packages("directlabels", repo="http://r-forge.r-project.org")
 library(lattice)
 library(directlabels)
 direct.label(xyplot(jitter(Sepal.Length)~jitter(Petal.Length),iris,groups=Species))
