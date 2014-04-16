@@ -48,17 +48,39 @@ legends? Why not just add direct labels by hand?</a></li>
 <li><a href="smart.html">Smart label Positioning Methods that avoid label collisions</a></li>
 </ul>
 
-<h2>New in directlabels 2.x</h2>
+<h2>Frequently asked questions</h2>
 
 <ul>
-<li>Direct label positions are re-calculated when the plot window is
-resized.</li>
-<li>ggplot2 support for smart Positioning Methods that avoid label
-collisions.</li>
-<li>ggplot2 support for <tt>fontface</tt>, <tt>fontfamily</tt>,
-etc. text parameters. See <tt>example(dlcompare)</tt>.</li>
-<li>ggplot2 support for direct labeling aesthetics other than
-colour. See <tt>example(geom_dl)</tt>.</li>
+<li><a href="http://stackoverflow.com/search?q=directlabels">Before
+emailing me, please search and post on stackoverflow</a>.</li>
+<li>How to avoid overlapping labels? Use a Positioning Method
+with <a href="http://directlabels.r-forge.r-project.org/docs/utility.function/posfuns/calc.boxes.html">calc.boxes</a>
+to compute the label bounding box. For
+example, <a href="http://directlabels.r-forge.r-project.org/docs/scatterplot/posfuns/smart.grid.html">smart.grid</a>
+for scatterplots
+and <a href="http://directlabels.r-forge.r-project.org/docs/lineplot/posfuns/last.polygons.html">last.polygons</a>
+or <a href="http://directlabels.r-forge.r-project.org/docs/lineplot/posfuns/last.qp.html">last.qp</a>
+for lineplots.</li>
+<li>Can I increase text size? Yes, but do it before calling
+Positioning Methods that calculate the label bounding
+box: <tt>direct.label(p, list(cex=2, "last.qp"))</tt> for a lineplot <tt>p</tt>.</li>
+<li>Why are some labels small when using lineplot labeling methods
+like <a href="http://directlabels.r-forge.r-project.org/docs/lineplot/posfuns/last.polygons.html">last.polygons</a>?
+Because the labels are automatically resized to fit in the plotting
+area. To increase the text size you can increase the x axis limits as in
+the <a href="http://directlabels.r-forge.r-project.org/docs/lineplot/plots/lars.html">lars</a>
+and <a href="http://directlabels.r-forge.r-project.org/docs/lineplot/plots/ridge.html">ridge</a>
+examples.</li>
+<li>How to adjust all labels left or right?  For example you can
+use <tt>direct.label(p, list(dl.trans(x=x+0.1), "last.qp"))</tt> to
+move labels to the right 0.1cm and then
+apply <a href="http://directlabels.r-forge.r-project.org/docs/lineplot/posfuns/last.qp.html">last.qp</a>
+for a lineplot <tt>p</tt>.</li>
+<li>How
+about <tt>fontface</tt>, <tt>fontfamily</tt>, <tt>rot</tt>, <tt>alpha</tt>
+text parameters? See <tt>example(dlcompare)</tt>.</li>
+<li>How about direct labeling aesthetics other than colour in ggplot2?
+See <tt>example(geom_dl)</tt>.</li>
 </ul>
 
 
