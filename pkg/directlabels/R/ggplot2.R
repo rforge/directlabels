@@ -158,7 +158,7 @@ direct.label.ggplot <- function
 
 ### Extract guides to hide from a ggplot.
 legends2hide <- function(p){
-  plistextra <- ggplot2:::ggplot_build(p)
+  plistextra <- ggplot2::ggplot_build(p)
   plot <- plistextra$plot
   scales = plot$scales
   layers = plot$layers
