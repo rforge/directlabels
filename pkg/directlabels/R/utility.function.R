@@ -450,6 +450,8 @@ draw.rects <- function(d,...){
 ### Sequentially bump labels up, starting from the bottom, if they
 ### collide with the label underneath.
 bumpup <- function(d,...){
+  ## If there is only 1, then there is no collision detection to do.
+  if(nrow(d) == 1)return(d)
   d <- calc.boxes(d)[order(d$y),]
   "%between%" <- function(v,lims)lims[1]<v&v<lims[2]
   obox <- function(x,y){
@@ -474,7 +476,7 @@ bumpup <- function(d,...){
     ## each other that we don't want to move, that would be detected
     ## as overlapping. Solution: use the midpoint of the box as well!
     overlap <- c(obox(d[i,],d[i-1,]),obox(d[i-1,],d[i,]))
-    if(dif<0&&any(overlap)){
+    if(dif < 0 && any(overlap)){
       d$bottom[i] <- d$bottom[i]-dif
       d$top[i] <- d$top[i]-dif
       d$y[i] <- d$y[i]-dif
