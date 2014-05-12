@@ -27,6 +27,10 @@ in r-source/src/main/plot3d.c
 
 other contourplots, see etc/contour.R
 
+2014.5.12
+
+custom colors for dotplots in lattice, see etc/lattice-custom-colors.R
+
 2014.4.25
 
 BUGFIX: bumpup works when there is only 1 group.

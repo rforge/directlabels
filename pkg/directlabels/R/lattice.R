@@ -120,7 +120,12 @@ panel.superpose.dl <- structure(function
   col.text <-
     switch(type,p="superpose.symbol",l="superpose.line","superpose.line")
   tpar <- trellis.par.get()
-  key <- rep(tpar[[col.text]]$col,length.out=nlevels(d$groups))
+  col.values <- if("col" %in% names(rgs)){
+    rgs$col
+  }else{
+    tpar[[col.text]]$col
+  }
+  key <- rep(col.values, length.out=nlevels(d$groups))
   names(key) <- levels(d$groups)
   ## maybe eventually allow these to be specified in options()??
   translator <- lattice.translators[[lattice.fun.name]]
