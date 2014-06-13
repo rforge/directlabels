@@ -14,8 +14,10 @@ geom_dl <- structure(function
 ### aes(label=variable_that_will_be_used_as_groups_in_Positioning_Methods).
  method,
 ### Positioning Method.
- ...
+ ...,
 ### passed to GeomDirectLabel$new. ie stat= position= debug=
+ show_guide=FALSE
+### show legend? default FALSE since direct labels replace a legend.
  ){
   require(ggplot2)
   require(proto)
@@ -46,7 +48,7 @@ geom_dl <- structure(function
     default_aes <- function(.)
       aes(colour="black", size=5 , angle=0, hjust=0.5, vjust=0.5, alpha = 1)
   })
-  GeomDirectLabel$new(mapping,method=method,...)
+  GeomDirectLabel$new(mapping, method=method, show_guide=show_guide, ...)
 ### Layer that will plot direct labels.
 },ex=function(){
   library(ggplot2)
