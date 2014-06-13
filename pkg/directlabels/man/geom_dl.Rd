@@ -2,11 +2,12 @@
 \alias{geom_dl}
 \title{geom dl}
 \description{Geom that will plot direct labels.}
-\usage{geom_dl(mapping = NULL, method, ...)}
+\usage{geom_dl(mapping = NULL, method, ..., show_guide = FALSE)}
 \arguments{
   \item{mapping}{aes(label=variable_that_will_be_used_as_groups_in_Positioning_Methods).}
   \item{method}{Positioning Method.}
   \item{\dots}{passed to GeomDirectLabel$new. ie stat= position= debug=}
+  \item{show_guide}{show legend? default FALSE since direct labels replace a legend.}
 }
 
 \value{Layer that will plot direct labels.}
