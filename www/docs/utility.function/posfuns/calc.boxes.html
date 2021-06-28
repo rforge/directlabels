@@ -26,21 +26,22 @@ calc.boxes &lt;- function
  ...
  ){
   vp &lt;- current.viewport()
-  convert &lt;- function(worh){
+  convert &lt;- function(str.prop, worh=str.prop){
     conv &lt;- get(paste("convert",worh,sep=""))
-    stri &lt;- get(paste("string",worh,sep=""))
-    with(d,sapply(seq_along(groups),function(i){
-      if("cex"%in%names(d))vp$gp &lt;- gpar(cex=cex[i])
+    stri &lt;- get(paste("string", str.prop, sep=""))
+    as.numeric(sapply(seq_along(d$groups),function(i){
+      if("cex"%in%names(d))vp$gp &lt;- gpar(cex=d$cex[i])
       pushViewport(vp)
       if(debug)grid.rect() ##highlight current viewport
-      w &lt;- conv(stri(as.character(groups[i])),"cm")
+      cm &lt;- conv(stri(as.character(d$label[i])),"cm")
       popViewport()
-      w
+      cm
     }))
   }
   ## abs since we have a weird bug with ggplot2 sometimes
   d$w &lt;- abs(convert("Width"))
   d$h &lt;- abs(convert("Height"))
+  d$descent &lt;- abs(convert("Descent", "Height"))
   <a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>(d)
 }
 </pre>
@@ -56,8 +57,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2014.1.27
-(svn revision 675)
+code version 2020.6.17
+(svn revision )
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

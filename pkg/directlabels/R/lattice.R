@@ -8,7 +8,7 @@ uselegend.trellis <- function
   if(is.null(p$legend))update(p,auto.key=TRUE)
   else p
 }
- 
+
 ### Some lattice plot functions do some magic in the background to
 ### translate the data you give them into the data points that are
 ### plotted onscreen. We have to replicate this magic in native
@@ -19,13 +19,13 @@ lattice.translators <- list(qqmath=function(d,distribution,f.value,qtype=7,...){
   ## from panel.qqmath. (total hack)
   gapply(d,function(d,...){
     x <- as.numeric(d$x)
-    distribution <- if (is.function(distribution)) 
+    distribution <- if (is.function(distribution))
       distribution
-    else if (is.character(distribution)) 
+    else if (is.character(distribution))
       get(distribution)
     else eval(distribution)
     nobs <- sum(!is.na(x))
-    if (is.null(f.value)) 
+    if (is.null(f.value))
       data.frame(x = distribution(ppoints(nobs)), y = sort(x))
     else data.frame(x = distribution(
                       if (is.numeric(f.value))f.value
@@ -91,7 +91,7 @@ panel.superpose.dl <- structure(function
  method=NULL,
 ### Positioning Method for direct labeling. NULL indicates to choose a
 ### Positioning Method based on the panel.groups function.
- .panel.superpose=panel.superpose,
+ .panel.superpose=lattice::panel.superpose,
 ### The panel function to use for drawing data points.
  type="p",
 ### Plot type, used for default method dispatch.
@@ -114,12 +114,12 @@ panel.superpose.dl <- structure(function
   if(is.null(method))method <- default.picker("trellis")
   groups <- as.factor(groups)
   groups <- groups[subscripts]
-  d <- data.frame(x,groups)
+  d <- data.frame(x, groups, label=groups)
   d$y <- if(missing(y))NA else y
   type <- type[type!="g"] ## printing the grid twice looks bad.
   col.text <-
     switch(type,p="superpose.symbol",l="superpose.line","superpose.line")
-  tpar <- trellis.par.get()
+  tpar <- lattice::trellis.par.get()
   col.values <- if("col" %in% names(rgs)){
     rgs$col
   }else{
@@ -133,7 +133,8 @@ panel.superpose.dl <- structure(function
     d <- apply.method(translator,d,...)
   }
   d$colour <- key[as.character(d$groups)]
-  g <- dlgrob(d,method,debug=debug)
+  g <- dlgrob(
+    d,method,debug=debug)
   grid.draw(g)
 },ex=function(){
   loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
@@ -145,7 +146,7 @@ panel.superpose.dl <- structure(function
                      ))
   print(direct.label( ## exactly the same as above but with specific panel fns
                      densityplot(~ppp,loci,groups=type,n=500,
-                                 panel=panel.superpose,
+                                 panel=lattice::panel.superpose,
                                  panel.groups="panel.densityplot")
                      ))
   ## using panel.superpose.dl as the panel function automatically adds
@@ -154,11 +155,11 @@ panel.superpose.dl <- structure(function
                     panel=panel.superpose.dl,panel.groups="panel.densityplot"))
 
   ## Exploring custom panel and panel.groups functions
-  library(ggplot2)
   library(nlme)
   ## Say we want to use a simple linear model to explain rat body weight:
   fit <- lm(weight~Time+Diet+Rat,BodyWeight)
-  bw <- fortify(fit,BodyWeight)
+  bw <- BodyWeight
+  bw$.fitted <- predict(fit,BodyWeight)
   ## lots of examples to come, all with these arguments:
   ratxy <- function(...){
     xyplot(weight~Time|Diet,bw,groups=Rat,type="l",layout=c(3,1),...)
@@ -189,7 +190,7 @@ panel.superpose.dl <- structure(function
     panel.xyplot(x=x,subscripts=subscripts,col.line=col.line,...)
     llines(x,bw[subscripts,".fitted"],col=col.line,lty=2)
   }
-  pg <- ratxy(panel=panel.superpose,panel.groups=panel.model)
+  pg <- ratxy(panel=lattice::panel.superpose,panel.groups=panel.model)
   print(pg)
   ## If you use panel.superpose.dl with a custom panel.groups function,
   ## you need to manually specify the Positioning Method, since the
@@ -199,7 +200,7 @@ panel.superpose.dl <- structure(function
               method="first.qp"))
 
   ## Custom panel function that draws a box around values:
-  panel.line1 <- function(ps=panel.superpose){
+  panel.line1 <- function(ps=lattice::panel.superpose){
     function(y,...){
       panel.abline(h=range(y))
       ps(y=y,...)

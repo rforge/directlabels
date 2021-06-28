@@ -17,7 +17,7 @@
 Positioning Method - draw.rects</h1>
 
 <p>Positioning Function that draws boxes around label positions. Need
-to have previously called calc.boxes. Does not edit the data
+to have previously called code{link{calc.boxes}}. Does not edit the data
 frame.</p>
 
 <pre>
@@ -25,10 +25,11 @@ draw.rects &lt;- function(d,...){
   if(is.null(d$box.color))d$box.color &lt;- "black"
   if(is.null(d$fill))d$fill &lt;- "white"
   for(i in 1:nrow(d)){
-    with(d[i,],{
-      grid.rect(gp = gpar(col = box.color, fill = fill),
-                vp = viewport(x, y, w, h, "cm", c(hjust, vjust), angle=rot))
-    })
+    with(d[i,], grid.rect(
+      gp = gpar(col = box.color, fill = fill),
+      vp = viewport(x, y, w, h, "cm", c(hjust, vjust), angle=rot),
+      name="directlabels.draw.rects"
+    ))
   }
   d
 }
@@ -45,8 +46,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2014.1.27
-(svn revision 675)
+code version 2020.6.17
+(svn revision )
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

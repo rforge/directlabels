@@ -57,6 +57,8 @@ qp.labels &lt;- structure(function# Make a Positioning Method for non-overlappin
     ## do, so just return it.
     if(nrow(d)==1)return(d)
 
+    ##browser()
+
     ## Reality checks.
     for(v in essential){
       if(! v %in% names(d)){
@@ -89,7 +91,7 @@ qp.labels &lt;- structure(function# Make a Positioning Method for non-overlappin
         d &lt;- <a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>(d)
       }
     }
-    
+
     ## These are the standard form matrices described in the
     ## directlabels poster.
     target &lt;- d[,target.var]
@@ -129,75 +131,73 @@ qp.labels &lt;- structure(function# Make a Positioning Method for non-overlappin
 ### lower.var.
 },ex=function(){
   SegCost$error &lt;- factor(SegCost$error,c("FP","FN","E","I"))
-  library(ggplot2)
-  fp.fn.colors &lt;- c(FP="skyblue",FN="#E41A1C",I="black",E="black")
-  fp.fn.sizes &lt;- c(FP=2.5,FN=2.5,I=1,E=1)
-  fp.fn.linetypes &lt;- c(FP="solid",FN="solid",I="dashed",E="solid")
-  err.df &lt;- subset(SegCost,type!="Signal")
-  if(!"theme"%in%ls("package:ggplot2")){
-    theme &lt;- opts
+  if(require(ggplot2)){
+    fp.fn.colors &lt;- c(FP="skyblue",FN="#E41A1C",I="black",E="black")
+    fp.fn.sizes &lt;- c(FP=2.5,FN=2.5,I=1,E=1)
+    fp.fn.linetypes &lt;- c(FP="solid",FN="solid",I="dashed",E="solid")
+    err.df &lt;- subset(SegCost,type!="Signal")
+
+    kplot &lt;- ggplot(err.df,aes(segments,cost))+
+      geom_line(aes(colour=error,size=error,linetype=error))+
+      facet_grid(type~bases.per.probe)+
+      scale_linetype_manual(values=fp.fn.linetypes)+
+      scale_colour_manual(values=fp.fn.colors)+
+      scale_size_manual(values=fp.fn.sizes)+
+      scale_x_continuous(limits=c(0,20),breaks=c(1,7,20),minor_breaks=NULL)+
+      theme_bw()+theme(panel.margin=grid::unit(0,"lines"))
+
+    ## The usual ggplot without direct labels.
+    print(kplot)
+
+    ## Get rid of legend for direct labels.
+    no.leg &lt;- kplot+guides(colour="none",linetype="none",size="none")
+
+    ## Default direct labels.
+    direct.label(no.leg)
+
+    ## Explore several options for tiebreaking and limits. First let's
+    ## make a qp.labels Positioning Method that does not tiebreak.
+    no.tiebreak &lt;- list("<a href="../../lineplot/posfuns/first.points.html">first.points</a>",
+                        "<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>",
+                        qp.labels("y","bottom","top"))
+    direct.label(no.leg, no.tiebreak)
+
+    ## Look at the weird labels in the upper left panel. The E curve is
+    ## above the FN curve, but the labels are the opposite! This is
+    ## because they have the same y value on the first points, which are
+    ## the targets for qp.labels. We need to tiebreak.
+    qp.break &lt;- qp.labels("y","bottom","top",<a href="../../utility.function/posfuns/make.tiebreaker.html">make.tiebreaker</a>("x","y"))
+    tiebreak &lt;- list("<a href="../../lineplot/posfuns/first.points.html">first.points</a>",
+                     "<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>",
+                     "qp.break")
+    direct.label(no.leg, tiebreak)
+
+    ## Enlarge the text size and spacing.
+    tiebreak.big &lt;- list("<a href="../../lineplot/posfuns/first.points.html">first.points</a>",
+                         cex=2,
+                         "<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>",
+                         <a href="../../utility.function/posfuns/dl.trans.html">dl.trans</a>(h=1.25*h),
+                         "<a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>",
+                         "qp.break")
+    direct.label(no.leg, tiebreak.big)
+
+    ## Even on my big monitor, the FP runs off the bottom of the screen
+    ## in the top panels. To avoid that you can specify a limits
+    ## function.
+
+    ## Below, the <a href="../../utility.function/posfuns/ylimits.html">ylimits</a> function uses the limits of each panel, so
+    ## labels appear <a href="../../utility.function/posfuns/inside.html">inside</a> the plot region. Also, if you resize your
+    ## window so that it is small, you can see that the text size of the
+    ## labels is decreased until they all fit in the plotting region.
+    qp.limited &lt;-  qp.labels("y","bottom","top",<a href="../../utility.function/posfuns/make.tiebreaker.html">make.tiebreaker</a>("x","y"),<a href="../../utility.function/posfuns/ylimits.html">ylimits</a>)
+    tiebreak.lim &lt;- list("<a href="../../lineplot/posfuns/first.points.html">first.points</a>",
+                         cex=2,
+                         "<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>",
+                         <a href="../../utility.function/posfuns/dl.trans.html">dl.trans</a>(h=1.25*h),
+                         "<a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>",
+                         "qp.limited")
+    direct.label(no.leg, tiebreak.lim)
   }
-kplot &lt;- ggplot(err.df,aes(segments,cost))+
-  geom_line(aes(colour=error,size=error,linetype=error))+
-  facet_grid(type~bases.per.probe)+
-  scale_linetype_manual(values=fp.fn.linetypes)+
-  scale_colour_manual(values=fp.fn.colors)+
-  scale_size_manual(values=fp.fn.sizes)+
-  scale_x_continuous(limits=c(0,20),breaks=c(1,7,20),minor_breaks=NULL)+
-  theme_bw()+theme(panel.margin=unit(0,"lines"))
-
-  ## The usual ggplot without direct labels.
-  print(kplot)
-
-  ## Get rid of legend for direct labels.
-  no.leg &lt;- kplot+guides(colour="none",linetype="none",size="none")
-
-  ## Default direct labels.
-  direct.label(no.leg)
-
-  ## Explore several options for tiebreaking and limits. First let's
-  ## make a qp.labels Positioning Method that does not tiebreak.
-  no.tiebreak &lt;- list("<a href="../../lineplot/posfuns/first.points.html">first.points</a>",
-                      "<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>",
-                      qp.labels("y","bottom","top"))
-  direct.label(no.leg, no.tiebreak)
-
-  ## Look at the weird labels in the upper left panel. The E curve is
-  ## above the FN curve, but the labels are the opposite! This is
-  ## because they have the same y value on the first points, which are
-  ## the targets for qp.labels. We need to tiebreak.
-  qp.break &lt;- qp.labels("y","bottom","top",<a href="../../utility.function/posfuns/make.tiebreaker.html">make.tiebreaker</a>("x","y"))
-  tiebreak &lt;- list("<a href="../../lineplot/posfuns/first.points.html">first.points</a>",
-                   "<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>",
-                   "qp.break")
-  direct.label(no.leg, tiebreak)
-
-  ## Enlarge the text size and spacing.
-  tiebreak.big &lt;- list("<a href="../../lineplot/posfuns/first.points.html">first.points</a>",
-                       cex=2,
-                       "<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>",
-                       <a href="../../utility.function/posfuns/dl.trans.html">dl.trans</a>(h=1.25*h),
-                       "<a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>",
-                       "qp.break")
-  direct.label(no.leg, tiebreak.big)
-
-  ## Even on my big monitor, the FP runs off the bottom of the screen
-  ## in the top panels. To avoid that you can specify a limits
-  ## function.
-
-  ## Below, the <a href="../../utility.function/posfuns/ylimits.html">ylimits</a> function uses the limits of each panel, so
-  ## labels appear <a href="../../utility.function/posfuns/inside.html">inside</a> the plot region. Also, if you resize your
-  ## window so that it is small, you can see that the text size of the
-  ## labels is decreased until they all fit in the plotting region.
-  qp.limited &lt;-  qp.labels("y","bottom","top",<a href="../../utility.function/posfuns/make.tiebreaker.html">make.tiebreaker</a>("x","y"),<a href="../../utility.function/posfuns/ylimits.html">ylimits</a>)
-  tiebreak.lim &lt;- list("<a href="../../lineplot/posfuns/first.points.html">first.points</a>",
-                       cex=2,
-                       "<a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>",
-                       <a href="../../utility.function/posfuns/dl.trans.html">dl.trans</a>(h=1.25*h),
-                       "<a href="../../utility.function/posfuns/calc.borders.html">calc.borders</a>",
-                       "qp.limited")
-  direct.label(no.leg, tiebreak.lim)
-
 })
 </pre>
 
@@ -212,8 +212,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2014.1.27
-(svn revision 675)
+code version 2020.6.17
+(svn revision )
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

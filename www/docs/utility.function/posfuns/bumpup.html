@@ -21,6 +21,8 @@ collide with the label underneath.</p>
 
 <pre>
 bumpup &lt;- function(d,...){
+  ## If there is only 1, then there is no collision detection to do.
+  if(nrow(d) == 1)return(d)
   d &lt;- <a href="../../utility.function/posfuns/calc.boxes.html">calc.boxes</a>(d)[order(d$y),]
   "%between%" &lt;- function(v,lims)lims[1]&lt;v&amp;v&lt;lims[2]
   obox &lt;- function(x,y){
@@ -45,7 +47,7 @@ bumpup &lt;- function(d,...){
     ## each other that we don't want to move, that would be detected
     ## as overlapping. Solution: use the midpoint of the box as well!
     overlap &lt;- c(obox(d[i,],d[i-1,]),obox(d[i-1,],d[i,]))
-    if(dif&lt;0&amp;&amp;any(overlap)){
+    if(dif &lt; 0 &amp;&amp; any(overlap)){
       d$bottom[i] &lt;- d$bottom[i]-dif
       d$top[i] &lt;- d$top[i]-dif
       d$y[i] &lt;- d$y[i]-dif
@@ -66,8 +68,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2014.1.27
-(svn revision 675)
+code version 2020.6.17
+(svn revision )
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

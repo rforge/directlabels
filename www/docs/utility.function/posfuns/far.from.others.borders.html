@@ -27,13 +27,17 @@ far.from.others.borders &lt;- function(all.groups,...,debug=FALSE){
     ## Run linear interpolation to get a set of points on which we
     ## could place the label (this is useful for e.g. the lasso path
     ## where there are only a few points plotted).
-    approx.list &lt;- with(group.data[[groups]], approx(x, y))
+    one.group &lt;- group.data[[groups]]
+    approx.list &lt;- with(one.group, approx(x, y))
     if(debug){
       with(approx.list, grid.points(x, y, default.units="cm"))
     }
-    group.list[[groups]] &lt;- data.frame(approx.list, groups)
+    group.list[[groups]] &lt;- data.frame(
+      approx.list,
+      groups,
+      label=one.group$label[1])
   }
-  output &lt;- data.frame()
+  output.list &lt;- list()
   for(group.i in seq_along(group.list)){
     one.group &lt;- group.list[[group.i]]
     ## From Mark Schmidt: "For the location of the boxes, I found the
@@ -69,8 +73,10 @@ far.from.others.borders &lt;- function(all.groups,...,debug=FALSE){
     neighbors &lt;- approx(one.group$x, one.group$y, c(left, right))
     slope &lt;- with(neighbors, (y[2]-y[1])/(x[2]-x[1]))
     picked$rot &lt;- 180*atan(slope)/pi
-    output &lt;- rbind(output, picked)
+    output.list[[group.i]] &lt;- picked
   }
+  output &lt;- do.call(rbind, output.list)
+  ##browser()
   output
 }
 </pre>
@@ -86,8 +92,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2014.1.27
-(svn revision 675)
+code version 2020.6.17
+(svn revision )
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

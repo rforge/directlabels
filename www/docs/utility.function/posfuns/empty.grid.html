@@ -58,14 +58,19 @@ empty.grid &lt;- function
     (-expand:(hboxes+expand-1))*r[,w]+r[,w]/2+min(ranges[[x]])
   }
   if(debug)with(label.targets,{
-    grid.points(x,y,default.units="cm",gp=gpar(col="green"))
+    grid.points(
+      x,y,default.units="cm",gp=gpar(col="green"),
+      name="directlabels.points.empty.grid.label.targets"
+    )
   })
   draw &lt;- function(g){
     gridlines &lt;- with(g,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
-    drawlines &lt;- function(a,b,c,d)
-      grid.segments(a,b,c,d,"cm",gp=gpar(col="grey"))
-    with(gridlines,drawlines(min(x),y,max(x),y))
-    with(gridlines,drawlines(x,min(y),x,max(y)))
+    drawlines &lt;- function(a,b,c,d,name)
+      grid.segments(a,b,c,d,"cm",name=name,gp=gpar(col="grey"))
+    with(gridlines,drawlines(
+      min(x),y,max(x),y,"directlabels.segments.empty.grid.vertical"))
+    with(gridlines,drawlines(
+      x,min(y),x,max(y),"directlabels.segments.empty.grid.horizontal"))
   }
   res &lt;- data.frame()
   label.targets &lt;-
@@ -87,7 +92,7 @@ empty.grid &lt;- function
       expand &lt;- expand+1 ## look further out if we can't find any labels <a href="../../utility.function/posfuns/inside.html">inside</a>
     }
     if(debug)draw(boxes)
-    
+
     ## TDH 29 Aug 2012. For every box, figure out the class of the
     ## point which is its nearest neighbor.
     no.points$nearest &lt;- NA
@@ -112,7 +117,8 @@ empty.grid &lt;- function
     })
     all.points &lt;- rbind(all.points,newpts)
   }
-  if(debug)with(all.points,grid.points(x,y,default.units="cm"))
+  if(debug)with(all.points,grid.points(
+    x,y,default.units="cm",name="directlabels.points.empty.grid.all.points"))
   res
 ### Data frame with columns groups x y, 1 line for each group, giving
 ### the positions on the grid closest to each cluster.
@@ -130,8 +136,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2014.1.27
-(svn revision 675)
+code version 2020.6.17
+(svn revision )
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

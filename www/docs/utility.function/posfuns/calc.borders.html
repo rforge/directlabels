@@ -32,8 +32,11 @@ calc.borders &lt;- function
       d[,just] &lt;- 0.5
     }
   }
+  if(!"descent" %in% names(d)){
+    d$descent &lt;- 0
+  }
   d$top &lt;- d$y+(1-d$vjust)*d$h
-  d$bottom &lt;- d$y-d$vjust*d$h
+  d$bottom &lt;- d$y-d$vjust*d$h - d$descent
   d$right &lt;- d$x+(1-d$hjust)*d$w
   d$left &lt;- d$x-d$hjust*d$w
   d
@@ -51,8 +54,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2014.1.27
-(svn revision 675)
+code version 2020.6.17
+(svn revision )
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

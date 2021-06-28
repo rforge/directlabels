@@ -15,8 +15,14 @@ myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
   limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
   rbind(limpts,molt)
 }
-data(prostate,package="ElemStatLearn")
-pros <- subset(prostate,train==TRUE,select=-train)
+data(Prostate,package="lasso2")
+Prostate$train <- c(
+  1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 
+  1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 
+  0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 
+  1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 
+  0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0)
+pros <- subset(Prostate,train==1,select=-train)
 m <- myridge(lpsa~.,pros)
 library(lattice)
 xyplot(value~df,m,groups=variable,type="o",pch="+",

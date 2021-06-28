@@ -52,7 +52,7 @@ dl.move &lt;- structure(function # Manually move a direct label
     ## maybe generalize this to be symmetric on x and y one day?
     if("x" %in% names(L) &amp;&amp; (!"y" %in% names(L))){
       orig &lt;- attr(d,"orig.data")
-      orig &lt;- orig[orig$groups==group,]
+      orig &lt;- orig[orig$label==group,]
       ## do linear interpolation to find a good y-value
       f &lt;- with(orig,approxfun(x,y))
       d[v,"y"] &lt;- f(L$x)
@@ -62,19 +62,19 @@ dl.move &lt;- structure(function # Manually move a direct label
   pf
 ### A Positioning Function that moves a label into a good spot.
 },ex=function(){
-  library(ggplot2)
-  library(lattice)
-  scatter &lt;- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
-  dlcompare(list(scatter),
-            list("<a href="../../scatterplot/posfuns/extreme.grid.html">extreme.grid</a>",
-                 `+dl.move`=list(<a href="../../scatterplot/posfuns/extreme.grid.html">extreme.grid</a>,dl.move("suv",15,15))))
-
-  p &lt;- qplot(log10(gamma),rate,data=svmtrain,group=data,colour=data,
-             geom="line",facets=replicate~nu)
-  adjust.kif &lt;- dl.move("KIF11",-0.9,hjust=1,vjust=1)
-  dlcompare(list(p+xlim(-8,7)),
-            list("<a href="../../lineplot/posfuns/last.points.html">last.points</a>",
-                 `+dl.move`=list(<a href="../../lineplot/posfuns/last.points.html">last.points</a>,adjust.kif)))
+  if(require(ggplot2)){
+    library(lattice)
+    scatter &lt;- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
+    dlcompare(list(scatter),
+              list("<a href="../../scatterplot/posfuns/extreme.grid.html">extreme.grid</a>",
+                   `+dl.move`=list(<a href="../../scatterplot/posfuns/extreme.grid.html">extreme.grid</a>,dl.move("suv",15,15))))
+    p &lt;- qplot(log10(gamma),rate,data=svmtrain,group=data,colour=data,
+               geom="line",facets=replicate~nu)
+    adjust.kif &lt;- dl.move("KIF11",-0.9,hjust=1,vjust=1)
+    dlcompare(list(p+xlim(-8,7)),
+              list("<a href="../../lineplot/posfuns/last.points.html">last.points</a>",
+                   `+dl.move`=list(<a href="../../lineplot/posfuns/last.points.html">last.points</a>,adjust.kif)))
+  }
 })
 </pre>
 
@@ -89,8 +89,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2014.1.27
-(svn revision 675)
+code version 2020.6.17
+(svn revision )
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

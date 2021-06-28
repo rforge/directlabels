@@ -34,7 +34,7 @@ dl.combine &lt;- structure(function # Combine output of several methods
       if(!"cex"%in%names(df)){
         df$cex &lt;- 1
       }
-      
+
       ## we need to do merge to keep all the columns around.
       if(nrow(res))res &lt;- merge(df,res,all=TRUE)
       else res &lt;- df
@@ -45,29 +45,31 @@ dl.combine &lt;- structure(function # Combine output of several methods
 ### A Positioning Method that returns the combined data frame after
 ### applying each specified Positioning Method.
 },ex=function(){
+
   ## Simple example: label the start and endpoints
   library(nlme)
   library(lattice)
-  ratplot &lt;- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
-  ##ratplot &lt;- qplot(Time,weight,data=BodyWeight,group=Rat,colour=Rat,geom="line",facets=.~Diet)
+  ratplot &lt;- xyplot(
+    weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
   both &lt;- dl.combine("<a href="../../lineplot/posfuns/first.points.html">first.points</a>","<a href="../../lineplot/posfuns/last.points.html">last.points</a>")
   rat.both &lt;- direct.label(ratplot,"both")
   print(rat.both)
-  ##   grid.edit(gPath("panel-3-3",".*","GRID.dlgrob"),
-  ##             method=list(cex=2,fontfamily="bold","both"),
-  ##             grep=TRUE)
-  ## can also do this by repeatedly calling direct.label
+
+  ## same as repeated call to direct.label:
   rat.repeated &lt;-
     direct.label(direct.label(ratplot,"<a href="../../lineplot/posfuns/last.points.html">last.points</a>"),"<a href="../../lineplot/posfuns/first.points.html">first.points</a>")
   print(rat.repeated)
-  ##   grid.edit(gPath("panel-3-5",".*","GRID.dlgrob.<a href="../../lineplot/posfuns/first.points.html">first.points</a>"),
-  ##             method=list(cex=2,fontfamily="bold","both"),
-  ##             grep=TRUE)
-  library(ggplot2)
-  rp2 &lt;- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
-  print(direct.label(direct.label(rp2,"<a href="../../lineplot/posfuns/last.points.html">last.points</a>"),"<a href="../../lineplot/posfuns/first.points.html">first.points</a>"))
-  print(direct.label(rp2,"both"))
 
+  ## same with ggplot2:
+  if(require(ggplot2)){
+    rp2 &lt;- qplot(
+      Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
+    print(direct.label(direct.label(rp2,"<a href="../../lineplot/posfuns/last.points.html">last.points</a>"),"<a href="../../lineplot/posfuns/first.points.html">first.points</a>"))
+    print(direct.label(rp2,"both"))
+  }
+
+  ## more complex example: first here is a function for computing the
+  ## lasso path.
   mylars &lt;- function
   ## Least angle regression algorithm for calculating lasso solutions.
   (x,
@@ -84,7 +86,6 @@ dl.combine &lt;- structure(function # Combine output of several methods
     j &lt;- which.max(ycor) # variables in active set, starts with most correlated
     alpha.total &lt;- 0
     out &lt;- data.frame()
-    
     while(1){## lar loop
       xak &lt;- xscale[,j] # current variables
       r &lt;- y-xscale%*%b # current residual
@@ -102,10 +103,8 @@ dl.combine &lt;- structure(function # Combine output of several methods
                                   alpha=alpha.total,
                                   arclength=sum(abs(b)),
                                   coef.unscaled=b/attr(xscale,"scaled:scale")))
-
       if(sum(abs(intercept)) &lt; epsilon)#corr==0 so we are done
         return(transform(out,s=arclength/max(arclength)))
-      
       ## If there are more variables we can enter into the regression,
       ## then see which one will cross the highest correlation line
       ## first, and record the alpha value of where the lines cross.
@@ -119,7 +118,6 @@ dl.combine &lt;- structure(function # Combine output of several methods
       subd &lt;- subd[which.min(subd$alpha),]
       nextvar &lt;- subd$variable
       alpha &lt;- if(nrow(subd))subd$alpha else 1
-      
       ## If one of the coefficients would hit 0 at a smaller alpha
       ## value, take it out of the regression and continue.
       hit0 &lt;- xor(b[j]&gt;0,delta&gt;0)&amp;b[j]!=0
@@ -129,36 +127,24 @@ dl.combine &lt;- structure(function # Combine output of several methods
         i &lt;- which.min(alpha0)
         alpha &lt;- alpha0[i]
       }
-      
       b[j] &lt;- b[j]+alpha*delta ## evolve parameters
       alpha.total &lt;- alpha.total+alpha
       ## add or remove a variable from the active set
       j &lt;- if(takeout)j[j!=which(names(i)==colnames(x))]
-      else c(j,which(nextvar==colnames(x)))
+           else c(j,which(nextvar==colnames(x)))
     }
   }
 
-  ## Calculate lasso path, plot and label
-  mylasso &lt;- dl.combine(<a href="../../lineplot/posfuns/lasso.labels.html">lasso.labels</a>,<a href="../../lineplot/posfuns/last.qp.html">last.qp</a>)
-  if(require(ElemStatLearn)){
-    pros &lt;- subset(prostate,select=-train,train==TRUE)
-    ycol &lt;- which(names(pros)=="lpsa")
-    x &lt;- as.matrix(pros[-ycol])
-    y &lt;- unlist(pros[ycol])
-    res &lt;- mylars(x,y)
-    P &lt;- xyplot(coef~arclength,res,groups=variable,type="l")
-    plot(direct.label(P,"mylasso"))
-    p &lt;- ggplot(res,aes(arclength,coef,colour=variable))+
-      geom_line(aes(group=variable))
-    direct.label(p,"mylasso")
-  }
-
+  ## Calculate lasso path, plot labels at two points: (1) where the
+  ## variable enters the path, and (2) at the end of the path.
   if(require(lars)){
     data(diabetes,envir=environment())
     dres &lt;- with(diabetes,mylars(x,y))
     P &lt;- xyplot(coef~arclength,dres,groups=variable,type="l")
+    mylasso &lt;- dl.combine("<a href="../../lineplot/posfuns/lasso.labels.html">lasso.labels</a>", "<a href="../../lineplot/posfuns/last.qp.html">last.qp</a>")
     plot(direct.label(P,"mylasso"))
   }
+
 })
 </pre>
 
@@ -173,8 +159,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2014.1.27
-(svn revision 675)
+code version 2020.6.17
+(svn revision )
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

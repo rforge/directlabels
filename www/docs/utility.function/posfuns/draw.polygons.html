@@ -20,24 +20,36 @@ Positioning Method - draw.polygons</h1>
 
 <pre>
 draw.polygons &lt;- function(d,...){
-  stopifnot(c("left.y", "left.x", "right.y", "right.x") %in% names(d))
+  for(side in c("left", "right", "top", "bottom")){
+    for(xy in c("x", "y")){
+      col.name &lt;- paste0(side, ".", xy)
+      if(!col.name %in% names(d)){
+        d[[col.name]] &lt;- NA
+      }
+    }
+  }
   if(! "box.color" %in% names(d)){
     d$box.color &lt;- "black"
   }
-  for(i in 1:nrow(d)){
-    with(d[i,], {
-      L &lt;- 
-        list(x=c(left.x, left, right, right.x, right, left),
-             y=c(left.y, top, top, right.y, bottom, bottom))
-      for(xy.name in names(L)){
-        xy &lt;- L[[xy.name]]
-        L[[xy.name]] &lt;- xy[!is.na(xy)]
-      }
-      grid.polygon(L$x, L$y,
-                   default.units="cm", gp=gpar(col=box.color, fill=colour))
-    })
+  if(! "text.color" %in% names(d)){
+    d$text.color &lt;- "white"
   }
-  d$colour &lt;- "white"
+  for(i in 1:nrow(d))with(d[i,], {
+    L &lt;- list(
+      x=c(left.x, left, top.x, right, right.x, right, bottom.x, left),
+      y=c(left.y, top, top.y, top, right.y, bottom, bottom.y, bottom))
+    for(xy.name in names(L)){
+      xy &lt;- L[[xy.name]]
+      L[[xy.name]] &lt;- xy[!is.na(xy)]
+    }
+    grid::grid.polygon(
+      L$x, L$y,
+      default.units="cm",
+      gp=grid::gpar(col=box.color, fill=colour),
+      name="directlabels.draw.polygon"
+    )
+  })
+  d$colour &lt;- d$text.color
   d
 }
 </pre>
@@ -53,8 +65,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2014.1.27
-(svn revision 675)
+code version 2020.6.17
+(svn revision )
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

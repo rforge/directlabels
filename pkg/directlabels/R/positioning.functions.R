@@ -36,8 +36,14 @@ drawDetails.dlgrob <- function
   names(code) <- as.character(levs$groups)
   ## apply ignore.na function -- these points are not plotted
   cm.data <- ignore.na(cm.data)
-  cm.data <- apply.method(x$method,cm.data,
-                          debug=x$debug,axes2native=x$axes2native)
+  if(is.null(cm.data$label)){
+    cm.data$label <- cm.data$groups
+  }
+  cm.data <- apply.method(
+    x$method,
+    cm.data,
+    debug=x$debug,
+    axes2native=x$axes2native)
   if(nrow(cm.data)==0)return()## empty data frames can cause many bugs
   ## Take col from colour or groups.
   colour <- cm.data[["colour"]]
@@ -59,10 +65,13 @@ drawDetails.dlgrob <- function
     print(cm.data)
     ##browser()
   }
-  with(cm.data,{
-    grid.text(groups,x,y,hjust=hjust,vjust=vjust,rot=rot,default.units="cm",
-              gp=gp)
-  })
+  text.name <- paste0(
+    "directlabels.text.",
+    if(is.character(x$method))x$method)
+  with(cm.data, grid.text(
+    label,x,y,hjust=hjust,vjust=vjust,rot=rot,default.units="cm",
+    gp=gp,
+    name=text.name))
 }
 
 dlgrob <- function
@@ -80,7 +89,7 @@ dlgrob <- function
        name=if(is.character(method)){
          sprintf("GRID.dlgrob.%s",method[1])
        }else{
-         NULL
+         "GRID.dlgrob"
        },...)
 }
 
@@ -103,20 +112,21 @@ direct.label <- structure(function # Direct labels for color decoding
  debug=FALSE
 ### Show debug output?
  ){
-  ##alias < < directlabels #disabled
+  ##alias<< directlabels
   if(is.character(method)&&method[1]=="legend")
     UseMethod("uselegend")
   else
     UseMethod("direct.label")
 ### A plot with direct labels and no color legend.
 },ex=function(){
-  ## Add direct labels to a ggplot2 scatterplot, making sure that each
-  ## label is close to its point cloud, and doesn't overlap points or
-  ## other labels.
-  library(ggplot2)
-  scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
-                   main="Fuel efficiency depends on car size")
-  print(direct.label(scatter))
+  if(require(ggplot2)){
+    ## Add direct labels to a ggplot2 scatterplot, making sure that each
+    ## label is close to its point cloud, and doesn't overlap points or
+    ## other labels.
+    scatter <- qplot(jitter(hwy),jitter(cty),data=mpg,colour=class,
+                     main="Fuel efficiency depends on car size")
+    print(direct.label(scatter))
+  }
 
   ## direct labels for lineplots that do not overlap and do not go off
   ## the plot.

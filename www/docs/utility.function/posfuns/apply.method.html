@@ -60,7 +60,7 @@ apply.method &lt;- function # Apply a Positioning Method
 ### columns should be in centimeters (cm), so that Positioning Methods
 ### can easily calculate the L2/Euclidean/visual distance between
 ### pairs of points.
- columns.to.check=c("x","y","groups"),
+ columns.to.check=c("x","y","groups","label"),
 ### After applying each Positioning Method list element, we check for
 ### the presence of these columns, and if not found we stop with an
 ### error.
@@ -104,13 +104,22 @@ apply.method &lt;- function # Apply a Positioning Method
       group.specific &lt;- lapply(group.dfs,<a href="../../utility.function/posfuns/only.unique.vals.html">only.unique.vals</a>)
       to.restore &lt;- Reduce(intersect,lapply(group.specific,names))
       d &lt;- method[[1]](d,debug=debug,...)
-      <a href="../../utility.function/posfuns/check.for.columns.html">check.for.columns</a>(d,columns.to.check)
-      ## do not restore if they are present in the returned list!
-      to.restore &lt;- to.restore[!to.restore %in% names(d)]
-      for(N in to.restore){
-        d[[N]] &lt;- NA
-        for(g in unique(d$groups)){
-          d[d$groups==g,N] &lt;- group.specific[[g]][,N]
+      if(length(d)==0){#NULL or list()
+        return(data.frame())
+      }else{
+        <a href="../../utility.function/posfuns/check.for.columns.html">check.for.columns</a>(d,columns.to.check)
+        if("groups" %in% names(d)){
+          ## do not restore if they are present in the returned list!
+          to.restore &lt;- to.restore[!to.restore %in% names(d)]
+          for(N in to.restore){
+            d[[N]] &lt;- NA
+            group.vec &lt;- paste(unique(d$groups))
+            for(g in group.vec){
+              old.val &lt;- group.specific[[g]][,N]
+              if(is.factor(old.val))old.val &lt;- paste(old.val)
+              d[d$groups==g,N] &lt;- old.val
+            }
+          }
         }
       }
       attr(d,"orig.data") &lt;-
@@ -139,8 +148,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2014.1.27
-(svn revision 675)
+code version 2020.6.17
+(svn revision )
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

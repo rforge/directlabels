@@ -16,29 +16,31 @@ applying each specified Positioning Method.}
 
 
 \examples{
+
 ## Simple example: label the start and endpoints
 library(nlme)
 library(lattice)
-ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
-##ratplot <- qplot(Time,weight,data=BodyWeight,group=Rat,colour=Rat,geom="line",facets=.~Diet)
+ratplot <- xyplot(
+  weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
 both <- dl.combine("first.points","last.points")
 rat.both <- direct.label(ratplot,"both")
 print(rat.both)
-##   grid.edit(gPath("panel-3-3",".*","GRID.dlgrob"),
-##             method=list(cex=2,fontfamily="bold","both"),
-##             grep=TRUE)
-## can also do this by repeatedly calling direct.label
+
+## same as repeated call to direct.label:
 rat.repeated <-
   direct.label(direct.label(ratplot,"last.points"),"first.points")
 print(rat.repeated)
-##   grid.edit(gPath("panel-3-5",".*","GRID.dlgrob.first.points"),
-##             method=list(cex=2,fontfamily="bold","both"),
-##             grep=TRUE)
-library(ggplot2)
-rp2 <- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
-print(direct.label(direct.label(rp2,"last.points"),"first.points"))
-print(direct.label(rp2,"both"))
 
+## same with ggplot2:
+if(require(ggplot2)){
+  rp2 <- qplot(
+    Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
+  print(direct.label(direct.label(rp2,"last.points"),"first.points"))
+  print(direct.label(rp2,"both"))
+}
+
+## more complex example: first here is a function for computing the
+## lasso path.
 mylars <- function
 ## Least angle regression algorithm for calculating lasso solutions.
 (x,
@@ -55,7 +57,6 @@ mylars <- function
   j <- which.max(ycor) # variables in active set, starts with most correlated
   alpha.total <- 0
   out <- data.frame()
-  
   while(1){## lar loop
     xak <- xscale[,j] # current variables
     r <- y-xscale\%*\%b # current residual
@@ -73,10 +74,8 @@ mylars <- function
                                 alpha=alpha.total,
                                 arclength=sum(abs(b)),
                                 coef.unscaled=b/attr(xscale,"scaled:scale")))
-
     if(sum(abs(intercept)) < epsilon)#corr==0 so we are done
       return(transform(out,s=arclength/max(arclength)))
-    
     ## If there are more variables we can enter into the regression,
     ## then see which one will cross the highest correlation line
     ## first, and record the alpha value of where the lines cross.
@@ -90,7 +89,6 @@ mylars <- function
     subd <- subd[which.min(subd$alpha),]
     nextvar <- subd$variable
     alpha <- if(nrow(subd))subd$alpha else 1
-    
     ## If one of the coefficients would hit 0 at a smaller alpha
     ## value, take it out of the regression and continue.
     hit0 <- xor(b[j]>0,delta>0)&b[j]!=0
@@ -100,34 +98,22 @@ mylars <- function
       i <- which.min(alpha0)
       alpha <- alpha0[i]
     }
-    
     b[j] <- b[j]+alpha*delta ## evolve parameters
     alpha.total <- alpha.total+alpha
     ## add or remove a variable from the active set
     j <- if(takeout)j[j!=which(names(i)==colnames(x))]
-    else c(j,which(nextvar==colnames(x)))
+         else c(j,which(nextvar==colnames(x)))
   }
 }
 
-## Calculate lasso path, plot and label
-mylasso <- dl.combine(lasso.labels,last.qp)
-if(require(ElemStatLearn)){
-  pros <- subset(prostate,select=-train,train==TRUE)
-  ycol <- which(names(pros)=="lpsa")
-  x <- as.matrix(pros[-ycol])
-  y <- unlist(pros[ycol])
-  res <- mylars(x,y)
-  P <- xyplot(coef~arclength,res,groups=variable,type="l")
-  plot(direct.label(P,"mylasso"))
-  p <- ggplot(res,aes(arclength,coef,colour=variable))+
-    geom_line(aes(group=variable))
-  direct.label(p,"mylasso")
-}
-
+## Calculate lasso path, plot labels at two points: (1) where the
+## variable enters the path, and (2) at the end of the path.
 if(require(lars)){
   data(diabetes,envir=environment())
   dres <- with(diabetes,mylars(x,y))
   P <- xyplot(coef~arclength,dres,groups=variable,type="l")
+  mylasso <- dl.combine("lasso.labels", "last.qp")
   plot(direct.label(P,"mylasso"))
 }
+
 }

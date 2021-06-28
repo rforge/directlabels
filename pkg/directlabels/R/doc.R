@@ -13,6 +13,7 @@ dldoc <- function # Make directlabels documentation
   docdirs <- dir(docdir)
   plotfiles <- sapply(docdirs,function(d)Sys.glob(file.path(docdir,d,"*.R")))
   Rfiles <- paste(file.path("R",docdirs),".R",sep="")
+  print(Rfiles)
   posfuns <- lapply(Rfiles,extract.posfun)
   names(posfuns) <- docdirs
   plots <- lapply(plotfiles,lapply,extract.plot)
@@ -48,7 +49,7 @@ dldoc <- function # Make directlabels documentation
   (L
    ## List of posfuns and plots to match up
    ){
-    
+
     plotcodes <-
       paste("{\n",sapply(L$plots,"[[","code"),"\n}",sep="",collapse=",\n")
     forloop <- paste("\nfor(p in list(",plotcodes,"))",sep="")
@@ -70,14 +71,11 @@ dldoc <- function # Make directlabels documentation
   for(i in 1:nrow(m))if(length(m[i,]$plots))for(j in seq_along(m[i,]$plots)){
     m[i,]$plots[[j]]$code <- rhtmlescape(m[i,]$plots[[j]]$code)
   }
-  theme_set(theme_grey())
+  ggplot2::theme_set(ggplot2::theme_grey())
 
   version <- read.dcf("DESCRIPTION")[,"Version"]
-  info.lines <- system("svn info -R",intern=TRUE)
-  rev.lines <- grep("Revision",info.lines,value=TRUE)
-  revs <- sub("Revision: ","",rev.lines)
-  latest <- max(as.integer(revs))
-  foot.info <- list(version=version,svn=as.character(latest))
+  git.line <- system('git log -1 --pretty=format:"%h %aD"', intern=TRUE)
+  foot.info <- list(version=version,git=as.character(git.line))
   setwd(file.path("..","..","www","docs"))
   foot <- filltemplate(foot.info,"templates/foot.html")
   makehtml <- function # Make HTML documentation
@@ -188,9 +186,7 @@ extract.posfun <- function # Extract Positioning Method for documentation
 ### can be used with examples defined in the doc/ subdirectory with
 ### the same name.
  ){
-  require(inlinedocs)
-  require(directlabels)
-  L <- extract.docs.file(f)
+  L <- inlinedocs::extract.docs.file(f)
   e <- new.env()
   sys.source(f,e)
   for(N in names(L)){

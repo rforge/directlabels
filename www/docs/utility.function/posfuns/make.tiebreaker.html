@@ -16,7 +16,7 @@
 <h1><a href="../../index.html">directlabels</a> - utility.function -
 Positioning Method - make.tiebreaker</h1>
 
-<p>Make a tiebreaker function that can be used with qp.labels.</p>
+<p>Make a tiebreaker function that can be used with code{link{qp.labels}}.</p>
 
 <pre>
 make.tiebreaker &lt;- function(x.var,tiebreak.var){
@@ -33,7 +33,22 @@ make.tiebreaker &lt;- function(x.var,tiebreak.var){
     group.dfs &lt;- split(orig,orig$groups)
     m &lt;- do.call(cbind,lapply(d$groups,function(g){
       df &lt;- group.dfs[[as.character(g)]]
-      approx(df[,x.var],df[,tiebreak.var],xvals)$y
+      group.x &lt;- df[,x.var]
+      group.y &lt;- df[,tiebreak.var]
+      all.unique &lt;- length(unique(group.x)) == length(group.x)
+      ## approx gives the following error if we only have one point:
+      ## need at least two non-NA values to interpolate
+      x.not.missing &lt;- !is.na(group.x)
+      y.not.missing &lt;- !is.na(group.y)
+      not.missing &lt;- sum(x.not.missing &amp; y.not.missing)
+      if(all.unique &amp;&amp; 1 &lt; not.missing){
+        ## rule=2 means to use the most extreme value instead of the
+        ## default NA, for any points that are outside the range -
+        ## this is required to get a good ordering in some cases.
+        approx(group.x, group.y, xvals, rule=2)$y
+      }else{
+        group.y
+      }
     }))
     ## useful for debugging:
     ##print(m)
@@ -54,8 +69,8 @@ using <a href="http://directlabels.r-forge.r-project.org/">directlabels</a>
 or have ideas to contribute, thanks!</td>
 </tr>
 <tr><td align="center">Documentation website generated from source
-code version 2014.1.27
-(svn revision 675)
+code version 2020.6.17
+(svn revision )
 using <a href="http://inlinedocs.r-forge.r-project.org">inlinedocs</a>.</td>
 </tr>
 <tr>

@@ -5,8 +5,10 @@ lasso.labels <-
          d <- d[order(d$x),]
          zero <- d$y[1]
          i <- which(d$y!=zero)[1]
-         just <- as.integer(d[i,"y"]>zero)
-         transform(d[i-1,],hjust=just,vjust=just)
+         if(!is.na(i)){
+           just <- as.integer(d[i,"y"]>zero)
+           transform(d[i-1,],hjust=just,vjust=just)
+         }
        }),
        "calc.boxes",
        ## calculate how wide the tilted box is
@@ -16,16 +18,16 @@ lasso.labels <-
        function(d,...){
          solver <- qp.labels("x","left","right")
          ## apply the solver independently for top and bottom labels.
-         solution <- data.frame()
+         solution.list <- list()
          for(vj in c(0,1)){
            these <- d$vjust == vj
            if(any(these)){
              one.side <- d[these,]
              solved <- solver(one.side)
-             solution <- rbind(solution,solved)
+             solution.list[[paste(vj)]] <- solved
            }
          }
-         solution
+         do.call(rbind, solution.list)
        })
 
 ### Positioning Method for the first of a group of points.
@@ -33,6 +35,12 @@ first.points <- label.endpoints(min,1)
 
 ### Positioning Method for the last of a group of points.
 last.points <- label.endpoints(max,0)
+
+### Positioning Method for the first of a group of points.
+left.points <- first.points
+
+### Positioning Method for the last of a group of points.
+right.points <- last.points
 
 ### Do first or last, whichever has points most spread out.
 maxvar.points <- function(d,...){
@@ -62,10 +70,22 @@ last.qp <- vertical.qp("last.points")
 first.qp <- vertical.qp("first.points")
 
 ### Draw a speech polygon to the first point.
-first.polygons <- polygon.method("first.points", -0.1, "right", "left")
+left.polygons <- polygon.method("left")
 
 ### Draw a speech polygon to the last point.
-last.polygons <- polygon.method("last.points", 0.1, "left", "right")
+right.polygons <- polygon.method("right")
+
+### Draw a speech polygon to the first point.
+first.polygons <- left.polygons
+
+### Draw a speech polygon to the last point.
+last.polygons <- right.polygons
+
+### Draw a speech polygon to the top point.
+top.polygons <- polygon.method("top")
+
+### Draw a speech polygon to the bottom point.
+bottom.polygons <- polygon.method("bottom")
 
 ### Label first or last points, whichever are more spread out, and use
 ### a QP solver to make sure the labels do not collide.

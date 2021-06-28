@@ -7,13 +7,17 @@ far.from.others.borders <- function(all.groups,...,debug=FALSE){
     ## Run linear interpolation to get a set of points on which we
     ## could place the label (this is useful for e.g. the lasso path
     ## where there are only a few points plotted).
-    approx.list <- with(group.data[[groups]], approx(x, y))
+    one.group <- group.data[[groups]]
+    approx.list <- with(one.group, approx(x, y))
     if(debug){
       with(approx.list, grid.points(x, y, default.units="cm"))
     }
-    group.list[[groups]] <- data.frame(approx.list, groups)
+    group.list[[groups]] <- data.frame(
+      approx.list,
+      groups,
+      label=one.group$label[1])
   }
-  output <- data.frame()
+  output.list <- list()
   for(group.i in seq_along(group.list)){
     one.group <- group.list[[group.i]]
     ## From Mark Schmidt: "For the location of the boxes, I found the
@@ -49,8 +53,10 @@ far.from.others.borders <- function(all.groups,...,debug=FALSE){
     neighbors <- approx(one.group$x, one.group$y, c(left, right))
     slope <- with(neighbors, (y[2]-y[1])/(x[2]-x[1]))
     picked$rot <- 180*atan(slope)/pi
-    output <- rbind(output, picked)
+    output.list[[group.i]] <- picked
   }
+  output <- do.call(rbind, output.list)
+  ##browser()
   output
 }
 
@@ -100,7 +106,7 @@ dl.combine <- structure(function # Combine output of several methods
       if(!"cex"%in%names(df)){
         df$cex <- 1
       }
-      
+
       ## we need to do merge to keep all the columns around.
       if(nrow(res))res <- merge(df,res,all=TRUE)
       else res <- df
@@ -111,29 +117,31 @@ dl.combine <- structure(function # Combine output of several methods
 ### A Positioning Method that returns the combined data frame after
 ### applying each specified Positioning Method.
 },ex=function(){
+
   ## Simple example: label the start and endpoints
   library(nlme)
   library(lattice)
-  ratplot <- xyplot(weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
-  ##ratplot <- qplot(Time,weight,data=BodyWeight,group=Rat,colour=Rat,geom="line",facets=.~Diet)
+  ratplot <- xyplot(
+    weight~Time|Diet,BodyWeight,groups=Rat,type='l',layout=c(3,1))
   both <- dl.combine("first.points","last.points")
   rat.both <- direct.label(ratplot,"both")
   print(rat.both)
-  ##   grid.edit(gPath("panel-3-3",".*","GRID.dlgrob"),
-  ##             method=list(cex=2,fontfamily="bold","both"),
-  ##             grep=TRUE)
-  ## can also do this by repeatedly calling direct.label
+
+  ## same as repeated call to direct.label:
   rat.repeated <-
     direct.label(direct.label(ratplot,"last.points"),"first.points")
   print(rat.repeated)
-  ##   grid.edit(gPath("panel-3-5",".*","GRID.dlgrob.first.points"),
-  ##             method=list(cex=2,fontfamily="bold","both"),
-  ##             grep=TRUE)
-  library(ggplot2)
-  rp2 <- qplot(Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
-  print(direct.label(direct.label(rp2,"last.points"),"first.points"))
-  print(direct.label(rp2,"both"))
 
+  ## same with ggplot2:
+  if(require(ggplot2)){
+    rp2 <- qplot(
+      Time,weight,data=BodyWeight,geom="line",facets=.~Diet,colour=Rat)
+    print(direct.label(direct.label(rp2,"last.points"),"first.points"))
+    print(direct.label(rp2,"both"))
+  }
+
+  ## more complex example: first here is a function for computing the
+  ## lasso path.
   mylars <- function
   ## Least angle regression algorithm for calculating lasso solutions.
   (x,
@@ -150,7 +158,6 @@ dl.combine <- structure(function # Combine output of several methods
     j <- which.max(ycor) # variables in active set, starts with most correlated
     alpha.total <- 0
     out <- data.frame()
-    
     while(1){## lar loop
       xak <- xscale[,j] # current variables
       r <- y-xscale%*%b # current residual
@@ -168,10 +175,8 @@ dl.combine <- structure(function # Combine output of several methods
                                   alpha=alpha.total,
                                   arclength=sum(abs(b)),
                                   coef.unscaled=b/attr(xscale,"scaled:scale")))
-
       if(sum(abs(intercept)) < epsilon)#corr==0 so we are done
         return(transform(out,s=arclength/max(arclength)))
-      
       ## If there are more variables we can enter into the regression,
       ## then see which one will cross the highest correlation line
       ## first, and record the alpha value of where the lines cross.
@@ -185,7 +190,6 @@ dl.combine <- structure(function # Combine output of several methods
       subd <- subd[which.min(subd$alpha),]
       nextvar <- subd$variable
       alpha <- if(nrow(subd))subd$alpha else 1
-      
       ## If one of the coefficients would hit 0 at a smaller alpha
       ## value, take it out of the regression and continue.
       hit0 <- xor(b[j]>0,delta>0)&b[j]!=0
@@ -195,36 +199,24 @@ dl.combine <- structure(function # Combine output of several methods
         i <- which.min(alpha0)
         alpha <- alpha0[i]
       }
-      
       b[j] <- b[j]+alpha*delta ## evolve parameters
       alpha.total <- alpha.total+alpha
       ## add or remove a variable from the active set
       j <- if(takeout)j[j!=which(names(i)==colnames(x))]
-      else c(j,which(nextvar==colnames(x)))
+           else c(j,which(nextvar==colnames(x)))
     }
   }
 
-  ## Calculate lasso path, plot and label
-  mylasso <- dl.combine(lasso.labels,last.qp)
-  if(require(ElemStatLearn)){
-    pros <- subset(prostate,select=-train,train==TRUE)
-    ycol <- which(names(pros)=="lpsa")
-    x <- as.matrix(pros[-ycol])
-    y <- unlist(pros[ycol])
-    res <- mylars(x,y)
-    P <- xyplot(coef~arclength,res,groups=variable,type="l")
-    plot(direct.label(P,"mylasso"))
-    p <- ggplot(res,aes(arclength,coef,colour=variable))+
-      geom_line(aes(group=variable))
-    direct.label(p,"mylasso")
-  }
-
+  ## Calculate lasso path, plot labels at two points: (1) where the
+  ## variable enters the path, and (2) at the end of the path.
   if(require(lars)){
     data(diabetes,envir=environment())
     dres <- with(diabetes,mylars(x,y))
     P <- xyplot(coef~arclength,dres,groups=variable,type="l")
+    mylasso <- dl.combine("lasso.labels", "last.qp")
     plot(direct.label(P,"mylasso"))
   }
+
 })
 
 gapply.fun <- structure(function # Direct label groups independently
@@ -298,7 +290,7 @@ dl.move <- structure(function # Manually move a direct label
     ## maybe generalize this to be symmetric on x and y one day?
     if("x" %in% names(L) && (!"y" %in% names(L))){
       orig <- attr(d,"orig.data")
-      orig <- orig[orig$groups==group,]
+      orig <- orig[orig$label==group,]
       ## do linear interpolation to find a good y-value
       f <- with(orig,approxfun(x,y))
       d[v,"y"] <- f(L$x)
@@ -308,19 +300,19 @@ dl.move <- structure(function # Manually move a direct label
   pf
 ### A Positioning Function that moves a label into a good spot.
 },ex=function(){
-  library(ggplot2)
-  library(lattice)
-  scatter <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
-  dlcompare(list(scatter),
-            list("extreme.grid",
-                 `+dl.move`=list(extreme.grid,dl.move("suv",15,15))))
-
-  p <- qplot(log10(gamma),rate,data=svmtrain,group=data,colour=data,
-             geom="line",facets=replicate~nu)
-  adjust.kif <- dl.move("KIF11",-0.9,hjust=1,vjust=1)
-  dlcompare(list(p+xlim(-8,7)),
-            list("last.points",
-                 `+dl.move`=list(last.points,adjust.kif)))
+  if(require(ggplot2)){
+    library(lattice)
+    scatter <- xyplot(jitter(cty)~jitter(hwy),mpg,groups=class,aspect=1)
+    dlcompare(list(scatter),
+              list("extreme.grid",
+                   `+dl.move`=list(extreme.grid,dl.move("suv",15,15))))
+    p <- qplot(log10(gamma),rate,data=svmtrain,group=data,colour=data,
+               geom="line",facets=replicate~nu)
+    adjust.kif <- dl.move("KIF11",-0.9,hjust=1,vjust=1)
+    dlcompare(list(p+xlim(-8,7)),
+              list("last.points",
+                   `+dl.move`=list(last.points,adjust.kif)))
+  }
 })
 
 ### Jitter the label positions.
@@ -333,21 +325,22 @@ calc.boxes <- function
  ...
  ){
   vp <- current.viewport()
-  convert <- function(worh){
+  convert <- function(str.prop, worh=str.prop){
     conv <- get(paste("convert",worh,sep=""))
-    stri <- get(paste("string",worh,sep=""))
-    with(d,sapply(seq_along(groups),function(i){
-      if("cex"%in%names(d))vp$gp <- gpar(cex=cex[i])
+    stri <- get(paste("string", str.prop, sep=""))
+    as.numeric(sapply(seq_along(d$groups),function(i){
+      if("cex"%in%names(d))vp$gp <- gpar(cex=d$cex[i])
       pushViewport(vp)
       if(debug)grid.rect() ##highlight current viewport
-      w <- conv(stri(as.character(groups[i])),"cm")
+      cm <- conv(stri(as.character(d$label[i])),"cm")
       popViewport()
-      w
+      cm
     }))
   }
   ## abs since we have a weird bug with ggplot2 sometimes
   d$w <- abs(convert("Width"))
   d$h <- abs(convert("Height"))
+  d$descent <- abs(convert("Descent", "Height"))
   calc.borders(d)
 }
 
@@ -380,55 +373,120 @@ calc.borders <- function
       d[,just] <- 0.5
     }
   }
+  if(!"descent" %in% names(d)){
+    d$descent <- 0
+  }
   d$top <- d$y+(1-d$vjust)*d$h
-  d$bottom <- d$y-d$vjust*d$h
+  d$bottom <- d$y-d$vjust*d$h - d$descent
   d$right <- d$x+(1-d$hjust)*d$w
   d$left <- d$x-d$hjust*d$w
   d
 }
 
+polygon.method <- function
 ### Make a Positioning Method that places non-overlapping speech
 ### polygons at the first or last points.
-polygon.method <- function(method, space, data.col, na.col){
-  list(method, "calc.boxes",
-       function(d,...){
-         for(xy in c("x", "y")){
-           d[[sprintf("%s.%s", data.col, xy)]] <- d[[xy]]
-           d[[sprintf("%s.%s", na.col, xy)]] <- NA
-         }
-         d$x <- d$x + space
-         d
-       },
-       "reduce.cex.lr",
-       function(d,...){
-         d$h <- d$h * 1.5
-         d
-       },
-       "calc.borders",
-       qp.labels("y","bottom","top", make.tiebreaker("x","y"), ylimits),
-       "calc.borders", draw.polygons)
+(top.bottom.left.right,
+### Character string indicating what side of the plot to label.
+  offset.cm=0.1,
+### Offset from the polygon to the most extreme data point.
+  padding.cm=0.05
+### Padding inside the polygon.
+){
+  opposite.side <- c(
+    left="right",
+    right="left",
+    top="bottom",
+    bottom="top")[[top.bottom.left.right]]
+  direction <- if(
+    top.bottom.left.right %in% c("bottom", "left")
+  ) -1 else 1
+  min.or.max <- if(
+    top.bottom.left.right %in% c("top", "right")
+  ) max else min
+  if(top.bottom.left.right %in% c("left", "right")){
+    min.or.max.xy <- "x"
+    qp.target <- "y"
+    qp.max <- "top"
+    qp.min <- "bottom"
+    padding.h.factor <- 2
+    padding.w.factor <- 1
+    limits.fun <- ylimits
+    reduce.method <- "reduce.cex.lr"
+  }else{
+    min.or.max.xy <- "y"
+    qp.target <- "x"
+    qp.max <- "right"
+    qp.min <- "left"
+    padding.h.factor <- 1
+    padding.w.factor <- 2
+    limits.fun <- xlimits
+    reduce.method <- "reduce.cex.tb"
+  }
+  list(
+    paste0(top.bottom.left.right, ".points"),
+    function(d,...){
+      ## set the end of the speech polygon to the original data point.
+      for(xy in c("x", "y")){
+        extra.coord <- sprintf(# e.g. left.x
+          "%s.%s", opposite.side, xy)
+        d[[extra.coord]] <- d[[xy]]
+      }
+      ## set the speech polygon position to the min or max of all
+      ## label positions. e.g. max
+      d[[min.or.max.xy]] <- min.or.max(d[[min.or.max.xy]]) + offset.cm*direction
+      d
+    },
+    "calc.boxes",
+    reduce.method,
+    function(d, ...){
+      d$h <- d$h + padding.cm * padding.h.factor
+      d$w <- d$w + padding.cm * padding.w.factor
+      d
+    },
+    "calc.borders",
+    qp.labels(
+      qp.target,
+      qp.min,
+      qp.max,
+      make.tiebreaker(min.or.max.xy, qp.target),
+      limits.fun),
+    "calc.borders",
+    "draw.polygons")
 }
 
 ### Draw polygons around label positions.
 draw.polygons <- function(d,...){
-  stopifnot(c("left.y", "left.x", "right.y", "right.x") %in% names(d))
+  for(side in c("left", "right", "top", "bottom")){
+    for(xy in c("x", "y")){
+      col.name <- paste0(side, ".", xy)
+      if(!col.name %in% names(d)){
+        d[[col.name]] <- NA
+      }
+    }
+  }
   if(! "box.color" %in% names(d)){
     d$box.color <- "black"
   }
-  for(i in 1:nrow(d)){
-    with(d[i,], {
-      L <- 
-        list(x=c(left.x, left, right, right.x, right, left),
-             y=c(left.y, top, top, right.y, bottom, bottom))
-      for(xy.name in names(L)){
-        xy <- L[[xy.name]]
-        L[[xy.name]] <- xy[!is.na(xy)]
-      }
-      grid.polygon(L$x, L$y,
-                   default.units="cm", gp=gpar(col=box.color, fill=colour))
-    })
+  if(! "text.color" %in% names(d)){
+    d$text.color <- "white"
   }
-  d$colour <- "white"
+  for(i in 1:nrow(d))with(d[i,], {
+    L <- list(
+      x=c(left.x, left, top.x, right, right.x, right, bottom.x, left),
+      y=c(left.y, top, top.y, top, right.y, bottom, bottom.y, bottom))
+    for(xy.name in names(L)){
+      xy <- L[[xy.name]]
+      L[[xy.name]] <- xy[!is.na(xy)]
+    }
+    grid::grid.polygon(
+      L$x, L$y,
+      default.units="cm",
+      gp=grid::gpar(col=box.color, fill=colour),
+      name="directlabels.draw.polygon"
+    )
+  })
+  d$colour <- d$text.color
   d
 }
 
@@ -439,10 +497,11 @@ draw.rects <- function(d,...){
   if(is.null(d$box.color))d$box.color <- "black"
   if(is.null(d$fill))d$fill <- "white"
   for(i in 1:nrow(d)){
-    with(d[i,],{
-      grid.rect(gp = gpar(col = box.color, fill = fill),
-                vp = viewport(x, y, w, h, "cm", c(hjust, vjust), angle=rot))
-    })
+    with(d[i,], grid.rect(
+      gp = gpar(col = box.color, fill = fill),
+      vp = viewport(x, y, w, h, "cm", c(hjust, vjust), angle=rot),
+      name="directlabels.draw.rects"
+    ))
   }
   d
 }
@@ -494,54 +553,6 @@ ignore.na <- function(d,...){
   d[not.na,]
 }
 
-### If left or right edges of the text are going out of the plotting
-### region, then decrease cex until it fits. We call calc.boxes
-### inside, so you should set cex before using this.
-reduce.cex.lr <- structure(function(d,...){
-  d <- calc.boxes(d)
-  l <- xlimits()
-  positive.part <- function(x)ifelse(x>0,x,0)
-  right <- positive.part(d$right-l[2])
-  left <- positive.part(l[1]-d$left)
-  w <- d$right-d$left
-  if(is.null(d$cex)){
-    d$cex <- 1
-  }
-  d$cex <- (w-right)/w * (w-left)/w * d$cex
-  calc.boxes(d)
-},ex=function(){
-  if(require(ElemStatLearn)){
-    pros <- subset(prostate,select=-train,train==TRUE)
-    ycol <- which(names(pros)=="lpsa")
-    x <- as.matrix(pros[-ycol])
-    y <- pros[[ycol]]
-    library(lars)
-    fit <- lars(x,y,type="lasso")
-    beta <- scale(coef(fit),FALSE,1/fit$normx)
-    arclength <- rowSums(abs(beta))
-    library(reshape2)
-    path <- data.frame(melt(beta),arclength)
-    names(path)[1:3] <- c("step","variable","standardized.coef")
-    library(ggplot2)
-    p <- ggplot(path,aes(arclength,standardized.coef,colour=variable))+
-      geom_line(aes(group=variable))
-
-    ## the legend isn't very helpful.
-    print(p)
-
-    ## add direct labels at the end of the lines.
-    direct.label(p, "last.points")
-
-    ## on my screen, some of the labels go off the end, so we can use
-    ## this Positioning Method to reduce the text size until the labels
-    ## are on the plot.
-    direct.label(p, list("last.points","reduce.cex.lr"))
-
-    ## the default direct labels for lineplots are similar.
-    direct.label(p)
-  }
-})
-
 qp.labels <- structure(function# Make a Positioning Method for non-overlapping lineplot labels
 ### Use a QP solver to find the best places to put the points on a
 ### line, subject to the constraint that they should not overlap.
@@ -579,6 +590,8 @@ qp.labels <- structure(function# Make a Positioning Method for non-overlapping l
     ## do, so just return it.
     if(nrow(d)==1)return(d)
 
+    ##browser()
+
     ## Reality checks.
     for(v in essential){
       if(! v %in% names(d)){
@@ -611,7 +624,7 @@ qp.labels <- structure(function# Make a Positioning Method for non-overlapping l
         d <- calc.boxes(d)
       }
     }
-    
+
     ## These are the standard form matrices described in the
     ## directlabels poster.
     target <- d[,target.var]
@@ -651,75 +664,73 @@ qp.labels <- structure(function# Make a Positioning Method for non-overlapping l
 ### lower.var.
 },ex=function(){
   SegCost$error <- factor(SegCost$error,c("FP","FN","E","I"))
-  library(ggplot2)
-  fp.fn.colors <- c(FP="skyblue",FN="#E41A1C",I="black",E="black")
-  fp.fn.sizes <- c(FP=2.5,FN=2.5,I=1,E=1)
-  fp.fn.linetypes <- c(FP="solid",FN="solid",I="dashed",E="solid")
-  err.df <- subset(SegCost,type!="Signal")
-  if(!"theme"%in%ls("package:ggplot2")){
-    theme <- opts
+  if(require(ggplot2)){
+    fp.fn.colors <- c(FP="skyblue",FN="#E41A1C",I="black",E="black")
+    fp.fn.sizes <- c(FP=2.5,FN=2.5,I=1,E=1)
+    fp.fn.linetypes <- c(FP="solid",FN="solid",I="dashed",E="solid")
+    err.df <- subset(SegCost,type!="Signal")
+
+    kplot <- ggplot(err.df,aes(segments,cost))+
+      geom_line(aes(colour=error,size=error,linetype=error))+
+      facet_grid(type~bases.per.probe)+
+      scale_linetype_manual(values=fp.fn.linetypes)+
+      scale_colour_manual(values=fp.fn.colors)+
+      scale_size_manual(values=fp.fn.sizes)+
+      scale_x_continuous(limits=c(0,20),breaks=c(1,7,20),minor_breaks=NULL)+
+      theme_bw()+theme(panel.margin=grid::unit(0,"lines"))
+
+    ## The usual ggplot without direct labels.
+    print(kplot)
+
+    ## Get rid of legend for direct labels.
+    no.leg <- kplot+guides(colour="none",linetype="none",size="none")
+
+    ## Default direct labels.
+    direct.label(no.leg)
+
+    ## Explore several options for tiebreaking and limits. First let's
+    ## make a qp.labels Positioning Method that does not tiebreak.
+    no.tiebreak <- list("first.points",
+                        "calc.boxes",
+                        qp.labels("y","bottom","top"))
+    direct.label(no.leg, no.tiebreak)
+
+    ## Look at the weird labels in the upper left panel. The E curve is
+    ## above the FN curve, but the labels are the opposite! This is
+    ## because they have the same y value on the first points, which are
+    ## the targets for qp.labels. We need to tiebreak.
+    qp.break <- qp.labels("y","bottom","top",make.tiebreaker("x","y"))
+    tiebreak <- list("first.points",
+                     "calc.boxes",
+                     "qp.break")
+    direct.label(no.leg, tiebreak)
+
+    ## Enlarge the text size and spacing.
+    tiebreak.big <- list("first.points",
+                         cex=2,
+                         "calc.boxes",
+                         dl.trans(h=1.25*h),
+                         "calc.borders",
+                         "qp.break")
+    direct.label(no.leg, tiebreak.big)
+
+    ## Even on my big monitor, the FP runs off the bottom of the screen
+    ## in the top panels. To avoid that you can specify a limits
+    ## function.
+
+    ## Below, the ylimits function uses the limits of each panel, so
+    ## labels appear inside the plot region. Also, if you resize your
+    ## window so that it is small, you can see that the text size of the
+    ## labels is decreased until they all fit in the plotting region.
+    qp.limited <-  qp.labels("y","bottom","top",make.tiebreaker("x","y"),ylimits)
+    tiebreak.lim <- list("first.points",
+                         cex=2,
+                         "calc.boxes",
+                         dl.trans(h=1.25*h),
+                         "calc.borders",
+                         "qp.limited")
+    direct.label(no.leg, tiebreak.lim)
   }
-kplot <- ggplot(err.df,aes(segments,cost))+
-  geom_line(aes(colour=error,size=error,linetype=error))+
-  facet_grid(type~bases.per.probe)+
-  scale_linetype_manual(values=fp.fn.linetypes)+
-  scale_colour_manual(values=fp.fn.colors)+
-  scale_size_manual(values=fp.fn.sizes)+
-  scale_x_continuous(limits=c(0,20),breaks=c(1,7,20),minor_breaks=NULL)+
-  theme_bw()+theme(panel.margin=unit(0,"lines"))
-
-  ## The usual ggplot without direct labels.
-  print(kplot)
-
-  ## Get rid of legend for direct labels.
-  no.leg <- kplot+guides(colour="none",linetype="none",size="none")
-
-  ## Default direct labels.
-  direct.label(no.leg)
-
-  ## Explore several options for tiebreaking and limits. First let's
-  ## make a qp.labels Positioning Method that does not tiebreak.
-  no.tiebreak <- list("first.points",
-                      "calc.boxes",
-                      qp.labels("y","bottom","top"))
-  direct.label(no.leg, no.tiebreak)
-
-  ## Look at the weird labels in the upper left panel. The E curve is
-  ## above the FN curve, but the labels are the opposite! This is
-  ## because they have the same y value on the first points, which are
-  ## the targets for qp.labels. We need to tiebreak.
-  qp.break <- qp.labels("y","bottom","top",make.tiebreaker("x","y"))
-  tiebreak <- list("first.points",
-                   "calc.boxes",
-                   "qp.break")
-  direct.label(no.leg, tiebreak)
-
-  ## Enlarge the text size and spacing.
-  tiebreak.big <- list("first.points",
-                       cex=2,
-                       "calc.boxes",
-                       dl.trans(h=1.25*h),
-                       "calc.borders",
-                       "qp.break")
-  direct.label(no.leg, tiebreak.big)
-
-  ## Even on my big monitor, the FP runs off the bottom of the screen
-  ## in the top panels. To avoid that you can specify a limits
-  ## function.
-
-  ## Below, the ylimits function uses the limits of each panel, so
-  ## labels appear inside the plot region. Also, if you resize your
-  ## window so that it is small, you can see that the text size of the
-  ## labels is decreased until they all fit in the plotting region.
-  qp.limited <-  qp.labels("y","bottom","top",make.tiebreaker("x","y"),ylimits)
-  tiebreak.lim <- list("first.points",
-                       cex=2,
-                       "calc.boxes",
-                       dl.trans(h=1.25*h),
-                       "calc.borders",
-                       "qp.limited")
-  direct.label(no.leg, tiebreak.lim)
-
 })
 
 
@@ -797,7 +808,9 @@ gapply <- function
   dfs <- split(d,as.character(d[[groups]]))
   f <- function(d,...){
     res <- apply.method(method,d,columns.to.check=c("x","y"),...)
-    res[[groups]] <- d[[groups]][1]
+    if(nrow(res)){
+      res[[groups]] <- d[[groups]][1]
+    }
     res
   }
   results <- lapply(dfs,f,...)
@@ -821,8 +834,14 @@ edges.to.outside <- function
 ### outside of the hull.
 (edges,centers,debug=FALSE,...){
   if(debug){
-    with(centers,grid.points(x,y,pch="+",default.units="cm"))
-    with(edges,grid.segments(x1,y1,x2,y2,default.units="cm"))
+    with(centers,grid.points(
+      x,y,pch="+",default.units="cm",
+      name="directlabels.points.edges.to.outside"
+    ))
+    with(edges,grid.segments(
+      x1,y1,x2,y2,default.units="cm",
+      name="directlabels.segments.edges.to.outside"
+    ))
   }
   closepts <- gapply(centers,project.onto.segments,edges,debug=debug,...)
   closepts$vjust <- ifelse(closepts$y-centers$y>0,0,1)
@@ -878,7 +897,10 @@ project.onto.segments <- function
   i <- which.min(h$d)
   result <- with(h[i,],data.frame(x=xopt,y=yopt))
   if(debug){
-    grid.segments(m$x,m$y,result$x,result$y,default.units="cm")
+    grid.segments(
+      m$x,m$y,result$x,result$y,default.units="cm",
+      name="directlabels.segments.project.onto.segments"
+    )
   }
   result
 }
@@ -906,7 +928,22 @@ make.tiebreaker <- function(x.var,tiebreak.var){
     group.dfs <- split(orig,orig$groups)
     m <- do.call(cbind,lapply(d$groups,function(g){
       df <- group.dfs[[as.character(g)]]
-      approx(df[,x.var],df[,tiebreak.var],xvals)$y
+      group.x <- df[,x.var]
+      group.y <- df[,tiebreak.var]
+      all.unique <- length(unique(group.x)) == length(group.x)
+      ## approx gives the following error if we only have one point:
+      ## need at least two non-NA values to interpolate
+      x.not.missing <- !is.na(group.x)
+      y.not.missing <- !is.na(group.y)
+      not.missing <- sum(x.not.missing & y.not.missing)
+      if(all.unique && 1 < not.missing){
+        ## rule=2 means to use the most extreme value instead of the
+        ## default NA, for any points that are outside the range -
+        ## this is required to get a good ordering in some cases.
+        approx(group.x, group.y, xvals, rule=2)$y
+      }else{
+        group.y
+      }
     }))
     ## useful for debugging:
     ##print(m)
@@ -924,9 +961,8 @@ default.ahull <- function(d,...){
 
 ### Calculate the points on the ashape.
 ahull.points <- function(d,...,ahull=default.ahull(d)){
-  require(alphahull)
   xy <- unique(d[,c("x","y")])
-  as <- ashape(xy,alpha=ahull)
+  as <- alphahull::ashape(xy,alpha = ahull)
   as.data.frame(as$edges)
 }
 
@@ -994,7 +1030,7 @@ apply.method <- function # Apply a Positioning Method
 ### columns should be in centimeters (cm), so that Positioning Methods
 ### can easily calculate the L2/Euclidean/visual distance between
 ### pairs of points.
- columns.to.check=c("x","y","groups"),
+ columns.to.check=c("x","y","groups","label"),
 ### After applying each Positioning Method list element, we check for
 ### the presence of these columns, and if not found we stop with an
 ### error.
@@ -1003,7 +1039,8 @@ apply.method <- function # Apply a Positioning Method
  debug=FALSE
 ### If TRUE, print each Positioning Method list elmenent and the
 ### direct label data.frame that results from its evaluation.
- ){
+){
+  browser()
   attr(d,"orig.data") <- d ##DONT DELETE: if the first Positioning
                            ##Method needs orig.data, this needs to be
                            ##here!
@@ -1038,13 +1075,22 @@ apply.method <- function # Apply a Positioning Method
       group.specific <- lapply(group.dfs,only.unique.vals)
       to.restore <- Reduce(intersect,lapply(group.specific,names))
       d <- method[[1]](d,debug=debug,...)
-      check.for.columns(d,columns.to.check)
-      ## do not restore if they are present in the returned list!
-      to.restore <- to.restore[!to.restore %in% names(d)]
-      for(N in to.restore){
-        d[[N]] <- NA
-        for(g in unique(d$groups)){
-          d[d$groups==g,N] <- group.specific[[g]][,N]
+      if(length(d)==0){#NULL or list()
+        return(data.frame())
+      }else{
+        check.for.columns(d,columns.to.check)
+        if("groups" %in% names(d)){
+          ## do not restore if they are present in the returned list!
+          to.restore <- to.restore[!to.restore %in% names(d)]
+          for(N in to.restore){
+            d[[N]] <- NA
+            group.vec <- paste(unique(d$groups))
+            for(g in group.vec){
+              old.val <- group.specific[[g]][,N]
+              if(is.factor(old.val))old.val <- paste(old.val)
+              d[d$groups==g,N] <- old.val
+            }
+          }
         }
       }
       attr(d,"orig.data") <-
@@ -1096,6 +1142,78 @@ xlimits <- function(...){
   convertX(unit(c(0,1),"npc"),"cm",valueOnly=TRUE)
 }
 
+reduce.cex <- structure(function
+### If edges of the text are going out of the plotting
+### region, then decrease cex until it fits. We call calc.boxes
+### inside, so you should set cex before using this.
+(sides
+### string: lr (left and right) or tb (top and bottom).
+){
+  if(sides=="lr"){
+    hi <- "right"
+    lo <- "left"
+    limits.fun <- xlimits
+  }else{
+    hi <- "top"
+    lo <- "bottom"
+    limits.fun <- ylimits
+  }
+  function(d,...){
+    d <- calc.boxes(d)
+    l <- limits.fun()
+    positive.part <- function(x)ifelse(x>0,x,0)
+    hi.pp <- positive.part(d[, hi]-l[2])
+    lo.pp <- positive.part(l[1]-d[, lo])
+    w <- d[, hi]-d[, lo]
+    if(is.null(d$cex)){
+      d$cex <- 1
+    }
+    d$cex <- (w-hi.pp)/w * (w-lo.pp)/w * d$cex
+    calc.boxes(d)
+  }
+},ex=function(){
+
+  if(require(lars) && require(ggplot2)){
+    data(diabetes,package="lars",envir=environment())
+    X <- diabetes$x
+    colnames(X) <- paste(colnames(X), colnames(X))
+    fit <- lars(X,diabetes$y,type="lasso")
+    beta <- scale(coef(fit),FALSE,1/fit$normx)
+    arclength <- rowSums(abs(beta))
+    path.list <- list()
+    for(variable in colnames(beta)){
+      standardized.coef <- beta[, variable]
+      path.list[[variable]] <-
+        data.frame(step=seq_along(standardized.coef),
+                   arclength,
+                   variable,
+                   standardized.coef)
+    }
+    path <- do.call(rbind, path.list)
+    p <- ggplot(path,aes(arclength,standardized.coef,colour=variable))+
+      geom_line(aes(group=variable))
+    ## the legend isn't very helpful.
+    print(p)
+    ## add direct labels at the end of the lines.
+    direct.label(p, "last.points")
+    ## on my screen, some of the labels go off the end, so we can use
+    ## this Positioning Method to reduce the text size until the labels
+    ## are on the plot.
+    direct.label(p, list("last.points",reduce.cex("lr")))
+    ## the default direct labels for lineplots are similar.
+    direct.label(p)
+  }
+
+})
+
+### If edges of the text are going left or right out of the plotting
+### region, then decrease cex until it fits.
+reduce.cex.lr <- reduce.cex("lr")
+
+### If edges of the text are going over the top or bottom of the
+### plotting region, then decrease cex until it fits.
+reduce.cex.tb <- reduce.cex("tb")
+
 empty.grid <- function
 ### Label placement method for scatterplots that ensures labels are
 ### placed in different places. A grid is drawn over the whole
@@ -1131,14 +1249,19 @@ empty.grid <- function
     (-expand:(hboxes+expand-1))*r[,w]+r[,w]/2+min(ranges[[x]])
   }
   if(debug)with(label.targets,{
-    grid.points(x,y,default.units="cm",gp=gpar(col="green"))
+    grid.points(
+      x,y,default.units="cm",gp=gpar(col="green"),
+      name="directlabels.points.empty.grid.label.targets"
+    )
   })
   draw <- function(g){
     gridlines <- with(g,list(x=unique(c(left,right)),y=unique(c(top,bottom))))
-    drawlines <- function(a,b,c,d)
-      grid.segments(a,b,c,d,"cm",gp=gpar(col="grey"))
-    with(gridlines,drawlines(min(x),y,max(x),y))
-    with(gridlines,drawlines(x,min(y),x,max(y)))
+    drawlines <- function(a,b,c,d,name)
+      grid.segments(a,b,c,d,"cm",name=name,gp=gpar(col="grey"))
+    with(gridlines,drawlines(
+      min(x),y,max(x),y,"directlabels.segments.empty.grid.vertical"))
+    with(gridlines,drawlines(
+      x,min(y),x,max(y),"directlabels.segments.empty.grid.horizontal"))
   }
   res <- data.frame()
   label.targets <-
@@ -1160,7 +1283,7 @@ empty.grid <- function
       expand <- expand+1 ## look further out if we can't find any labels inside
     }
     if(debug)draw(boxes)
-    
+
     ## TDH 29 Aug 2012. For every box, figure out the class of the
     ## point which is its nearest neighbor.
     no.points$nearest <- NA
@@ -1185,7 +1308,8 @@ empty.grid <- function
     })
     all.points <- rbind(all.points,newpts)
   }
-  if(debug)with(all.points,grid.points(x,y,default.units="cm"))
+  if(debug)with(all.points,grid.points(
+    x,y,default.units="cm",name="directlabels.points.empty.grid.all.points"))
   res
 ### Data frame with columns groups x y, 1 line for each group, giving
 ### the positions on the grid closest to each cluster.

@@ -71,6 +71,7 @@ loci <- data.frame(ppp=c(rbeta(800,10,10),rbeta(100,0.15,1),rbeta(100,1,0.15)),
 library(ggplot2)
 p <- qplot(ppp,data=loci,colour=type,geom="density")
 })){
+  print(direct.label(p,"bottom.points"))
   print(direct.label(p,"top.bumptwice"))
   print(direct.label(p,"top.bumpup"))
   print(direct.label(p,"top.points"))
@@ -112,8 +113,14 @@ p <- qqmath(~gcsescore,Chem97,groups=gender,
        type=c("l","g"),f.value=ppoints(100))
 },
 {
-data(prostate,package="ElemStatLearn")
-pros <- subset(prostate,select=-train,train==TRUE)
+data(Prostate,package="lasso2")
+Prostate$train <- c(
+  1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 
+  1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 
+  0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 
+  1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 
+  0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0)
+pros <- subset(Prostate,select=-train,train==1)
 ycol <- which(names(pros)=="lpsa")
 x <- as.matrix(pros[-ycol])
 y <- pros[[ycol]]
@@ -127,7 +134,7 @@ names(path)[1:3] <- c("step","variable","standardized.coef")
 library(ggplot2)
 p <- ggplot(path,aes(arclength,standardized.coef,colour=variable))+
   geom_line(aes(group=variable))+
-  ggtitle("LASSO path for prostate cancer data calculated using the LARS")+
+  ggtitle("LASSO path for Prostate cancer data calculated using the LARS")+
   xlim(0,20)
 },
 {
@@ -158,8 +165,14 @@ myridge <- function(f,data,lambda=c(exp(-seq(-15,15,l=200)),0)){
   limpts <- transform(subset(molt,lambda==0),lambda=Inf,df=0,value=0)
   rbind(limpts,molt)
 }
-data(prostate,package="ElemStatLearn")
-pros <- subset(prostate,train==TRUE,select=-train)
+data(Prostate,package="lasso2")
+Prostate$train <- c(
+  1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 
+  1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 
+  0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 
+  1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 
+  0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0)
+pros <- subset(Prostate,train==1,select=-train)
 m <- myridge(lpsa~.,pros)
 library(lattice)
 p <- xyplot(value~df,m,groups=variable,type="o",pch="+",
@@ -184,6 +197,7 @@ p <- qplot(Time,deaths,data=uk.lung,colour=sex,geom="line")+
   xlim(ISOdate(1973,9,1),ISOdate(1980,4,1))
 })){
   print(direct.label(p,"angled.boxes"))
+  print(direct.label(p,"bottom.polygons"))
   print(direct.label(p,"first.bumpup"))
   print(direct.label(p,"first.points"))
   print(direct.label(p,"first.polygons"))
@@ -193,9 +207,14 @@ p <- qplot(Time,deaths,data=uk.lung,colour=sex,geom="line")+
   print(direct.label(p,"last.points"))
   print(direct.label(p,"last.polygons"))
   print(direct.label(p,"last.qp"))
+  print(direct.label(p,"left.points"))
+  print(direct.label(p,"left.polygons"))
   print(direct.label(p,"lines2"))
   print(direct.label(p,"maxvar.points"))
   print(direct.label(p,"maxvar.qp"))
+  print(direct.label(p,"right.points"))
+  print(direct.label(p,"right.polygons"))
+  print(direct.label(p,"top.polygons"))
 }
 
 ### scatterplot Positioning Methods

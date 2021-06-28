@@ -12,96 +12,112 @@ geom_dl <- structure(function
 ### Geom that will plot direct labels.
 (mapping=NULL,
 ### aes(label=variable_that_will_be_used_as_groups_in_Positioning_Methods).
- method,
-### Positioning Method.
+ data=NULL,
+### data.frame to start with for direct label computation.
  ...,
-### passed to GeomDirectLabel$new. ie stat= position= debug=
- show_guide=FALSE
-### show legend? default FALSE since direct labels replace a legend.
+### passed to params.
+ method=stop("must specify method= argument"),
+### Positioning Method for direct label placement, passed to apply.method.
+ debug=FALSE,
+### Show directlabels debugging output?
+ stat = "identity",
+### passed to layer.
+ position = "identity",
+### passed to layer.
+ inherit.aes = TRUE
+### inherit aes from global ggplot definition?
  ){
-  require(ggplot2)
-  require(proto)
-  ## Geom for direct labeling that creates dlgrobs in the draw()
-  ## method.
-  GeomDirectLabel <- proto(ggplot2:::Geom, {
-    draw_groups <- function(., ...) .$draw(...)
-    draw <- function(., data, scales, coordinates,
-                     method=NULL,debug=FALSE, ...) {
-      data$rot <- as.integer(data$angle)
-      data$groups <- data$label
+### ggproto object implementing direct labels.
+  GeomDl <- ggplot2::ggproto(
+    "GeomDl", ggplot2::Geom,
+    draw_panel = function(data, panel_scales, coord, method = NULL, debug = FALSE) {
+      data$rot <- as.numeric(data[["angle"]])
+      groups.col <- if(all(is.na(data[["label.group"]])))"label" else "label.group"
+      data$groups <- data[[groups.col]]
       axes2native <- function(data){
-        ggplot2:::coord_transform(coordinates,data,scales)
+        coord$transform(data, panel_scales)
       }
       converted <- axes2native(data)
-      dldata <- converted[,names(converted)!="group"]
-      dlgrob(dldata,
-             method,debug=debug,
-             axes2native=axes2native)
-    }
-    draw_legend <- function(.,data,...){
-      nullGrob()
-    }
-    objname <- "dl"
-    desc <- "Direct labels"
-    default_stat <- function(.) ggplot2:::StatIdentity
-    required_aes <- c("x", "y", "label")
-    default_aes <- function(.)
-      aes(colour="black", size=5 , angle=0, hjust=0.5, vjust=0.5, alpha = 1)
-  })
-  GeomDirectLabel$new(mapping, method=method, show_guide=show_guide, ...)
-### Layer that will plot direct labels.
+      ## for some reason ggplot2 gives us a group column even when the
+      ## user does not specify one in aes.
+      dldata <- converted[, names(converted) != "group"]
+      dlgrob(
+        dldata, method, debug = debug, axes2native = axes2native)
+    },
+    draw_legend = ggplot2::draw_key_text,
+    required_aes = c("x", "y", "label"),
+    default_aes = ggplot2::aes(
+      colour = "black", size = 5, angle = 0, hjust = 0.5,
+      vjust = 0.5, alpha = 1, label.group = NA)
+  )
+  ## Geom for direct labeling that creates dlgrobs in the draw()
+  ## method.
+  ggplot2::layer(
+    data = data,
+    mapping = mapping,
+    geom = GeomDl,
+    stat = stat,
+    position = position,
+    show.legend = FALSE, # since direct labels replace a legend.
+    inherit.aes = inherit.aes,
+    params = list(
+      method = method,
+      debug = debug,
+      ...)
+  )
 },ex=function(){
-  library(ggplot2)
-  vad <- as.data.frame.table(VADeaths)
-  names(vad) <- c("age","demographic","deaths")
-  ## color + legend
-  leg <- ggplot(vad,aes(deaths,age,colour=demographic))+
-    geom_line(aes(group=demographic))+
-    xlim(8,80)
-  print(direct.label(leg,list("last.points",rot=30)))
-  ## this is what direct.label is doing internally:
-  labeled <- leg+
-    geom_dl(aes(label=demographic),list("last.points",rot=30))+
-    scale_colour_discrete(guide="none")
-  print(labeled)
-  ## no color, just direct labels!
-  p <- ggplot(vad,aes(deaths,age))+
-    geom_line(aes(group=demographic))+
-    geom_dl(aes(label=demographic),method="top.qp")
-  print(p)
-  ## add color:
-  p+aes(colour=demographic)+
-    scale_colour_discrete(guide="none")
-  ## add linetype:
-  p+aes(linetype=demographic)+
-    scale_linetype(guide="none")
-  ## no color, just direct labels
-  library(nlme)
-  bwbase <- ggplot(BodyWeight,aes(Time,weight,label=Rat))+
-    geom_line(aes(group=Rat))+
-    facet_grid(.~Diet)
-  bw <- bwbase+geom_dl(method="last.qp")
-  print(bw)
-  ## add some more direct labels
-  bw2 <- bw+geom_dl(method="first.qp")
-  print(bw2)
-  ## add color
-  colored <- bw2+aes(colour=Rat)+
-    scale_colour_discrete(guide="none")
-  print(colored)
-  ## or just use direct.label if you use color:
-  direct.label(bwbase+aes(colour=Rat),dl.combine("first.qp","last.qp"))
+  if(require(ggplot2)){
+    vad <- as.data.frame.table(VADeaths)
+    names(vad) <- c("age","demographic","deaths")
+    ## color + legend
+    leg <- ggplot(vad,aes(deaths,age,colour=demographic))+
+      geom_line(aes(group=demographic))+
+      xlim(8,80)
+    print(direct.label(leg,list("last.points",rot=30)))
+    ## this is what direct.label is doing internally:
+    labeled <- leg+
+      geom_dl(aes(label=demographic), method=list("last.points",rot=30))+
+      scale_colour_discrete(guide="none")
+    print(labeled)
+    ## no color, just direct labels!
+    p <- ggplot(vad,aes(deaths,age))+
+      geom_line(aes(group=demographic))+
+      geom_dl(aes(label=demographic),method="top.qp")
+    print(p)
+    ## add color:
+    p+aes(colour=demographic)+
+      scale_colour_discrete(guide="none")
+    ## add linetype:
+    p+aes(linetype=demographic)+
+      scale_linetype(guide="none")
+    ## no color, just direct labels
+    library(nlme)
+    bwbase <- ggplot(BodyWeight,aes(Time,weight,label=Rat))+
+      geom_line(aes(group=Rat))+
+      facet_grid(.~Diet)
+    bw <- bwbase+geom_dl(method="last.qp")
+    print(bw)
+    ## add some more direct labels
+    bw2 <- bw+geom_dl(method="first.qp")
+    print(bw2)
+    ## add color
+    colored <- bw2+aes(colour=Rat)+
+      scale_colour_discrete(guide="none")
+    print(colored)
+    ## or just use direct.label if you use color:
+    direct.label(bwbase+aes(colour=Rat),dl.combine("first.qp","last.qp"))
 
-  ## iris data example
-  giris <- ggplot(iris,aes(Petal.Length,Sepal.Length))+
-    geom_point(aes(shape=Species))
-  giris.labeled <- giris+
-    geom_dl(aes(label=Species),method="smart.grid")+
-    scale_shape_manual(values=c(setosa=1,virginica=6,versicolor=3),
-                       guide="none")
-  ##png("~/R/directlabels/www/scatter-bw-ggplot2.png",h=503,w=503)
-  print(giris.labeled)
-  ##dev.off()
+    ## iris data example
+    giris <- ggplot(iris,aes(Petal.Length,Sepal.Length))+
+      geom_point(aes(shape=Species))
+    giris.labeled <- giris+
+      geom_dl(aes(label=Species),method="smart.grid")+
+      scale_shape_manual(values=c(setosa=1,virginica=6,versicolor=3),
+                         guide="none")
+    ##png("~/R/directlabels/www/scatter-bw-ggplot2.png",h=503,w=503)
+    print(giris.labeled)
+    ##dev.off()
+  }
 })
 
 direct.label.ggplot <- function
@@ -114,15 +130,19 @@ direct.label.ggplot <- function
  debug=FALSE
 ### Show debug output?
  ){
-  require(ggplot2)
   getData <- function(colour.or.fill){
     for(L in p$layers){
       m <- p$mapping
       m[names(L$mapping)] <- L$mapping
       ## TODO: what if this is an expression and not a variable name?
       colvar <- m[[colour.or.fill]]
+      colvar.str <- if(is.null(colvar) || utils::packageVersion("ggplot2") <= "2.2.1"){
+        paste(colvar)
+      }else{
+        rlang::quo_name(colvar)
+      }
       if(!is.null(colvar)){
-        return(list(layer=L, colvar=as.character(colvar)))
+        return(list(layer=L, colvar=colvar.str))
       }
     }
   }
@@ -136,26 +156,37 @@ direct.label.ggplot <- function
   L <- dl.info$layer
   colvar <- dl.info$colvar
   ## Try to figure out a good default based on the colored geom
-  geom <- L$geom$objname
+  geom <- tolower(sub("^Geom", "", class(L$geom)[1]))
   if(is.null(method))method <- default.picker("ggplot")
   data <- if( (!is.null(L$data)) && (length(L$data) > 0) ){
     L$data
   }else{
     NULL
   }
-  a <- aes_string(label=colvar, colour=colvar)
-  a2 <- structure(c(L$mapping, a), class="uneval")
-  dlgeom <- geom_dl(a2,method,
+  a <- ggplot2::aes_string(label=paste0("`", colvar, "`"), colour=paste0("`", colvar, "`"))
+  not.label.colour <- L$mapping[!names(L$mapping) %in% names(a)]
+  a2 <- structure(c(not.label.colour, a), class="uneval")
+  dlgeom <- geom_dl(mapping=a2,method=method,
                     stat=L$stat,debug=debug,data=data)
   dlgeom$stat_params <- L$stat_params
   ## Look through legends for a colour/fill legend.
-  leg.info <- legends2hide(p)
+  leg.info <- tryCatch({
+    legends2hide(p)
+  }, error=function(E){
+    NULL #ignore errors in parsing custom/non-standard ggplots.
+  })
   guide.args <- as.list(rep("none", length(leg.info$hide)))
   names(guide.args) <- leg.info$hide
   guide.args$colour <- "none"
-  guide <- do.call(guides, guide.args)
+  guide <- do.call(ggplot2::guides, guide.args)
   p+dlgeom+guide
 ### The ggplot object with direct labels added.
+}
+
+### https://github.com/tdhock/directlabels/issues/2 CRAN won't
+### complain about this version of :::
+pkgFun <- function(fun, pkg="ggplot2") {
+  get(fun, envir = asNamespace(pkg))
 }
 
 ### Extract guides to hide from a ggplot.
@@ -165,11 +196,11 @@ legends2hide <- function(p){
   scales = plot$scales
   layers = plot$layers
   default_mapping = plot$mapping
-  theme <- ggplot2:::plot_theme(plot)
+  plot_theme <- pkgFun("plot_theme")
+  theme <- plot_theme(plot)
   position <- theme$legend.position
   # by default, guide boxes are vertically aligned
   theme$legend.box <- if(is.null(theme$legend.box)) "vertical" else theme$legend.box
-  
   # size of key (also used for bar in colorbar guide)
   theme$legend.key.width <- if(is.null(theme$legend.key.width)) theme$legend.key.size
   theme$legend.key.height <- if(is.null(theme$legend.key.height)) theme$legend.key.size
@@ -187,21 +218,25 @@ legends2hide <- function(p){
         switch(position, bottom =, top = c("center", "top"), left =, right = c("left", "top"))
       else
         c("center", "center")
-    } 
-  
+    }
+
   position <- theme$legend.position
   defaults <- function (x, y) {
     c(x, y[setdiff(names(y), names(x))])
   }
 
-  guides <- defaults(plot$guides, guides(colour="legend", fill="legend"))
+  guides <- defaults(
+    plot$guides, ggplot2::guides(colour="legend", fill="legend"))
   labels <- plot$labels
-  gdefs <- ggplot2:::guides_train(scales = scales, theme = theme,
-                                  guides = guides, labels = labels)
+  guides_train <- pkgFun("guides_train")
+  gdefs <- guides_train(scales = scales, theme = theme,
+                        guides = guides, labels = labels)
   if (length(gdefs) != 0) {
-    gdefs <- ggplot2:::guides_merge(gdefs)
-    gdefs <- ggplot2:::guides_geom(gdefs, layers, default_mapping)
-  } else (ggplot2:::zeroGrob())
+    guides_merge <- pkgFun("guides_merge")
+    gdefs <- guides_merge(gdefs)
+    guides_geom <- pkgFun("guides_geom")
+    gdefs <- guides_geom(gdefs, layers, default_mapping)
+  } else (ggplot2::zeroGrob())
   var.list <- lapply(gdefs, getLegendVariables)
   for(v in c("colour", "fill")){
     for(L in var.list){
@@ -232,9 +267,9 @@ getLegendVariables <- function(mb){
     ## old code above.
     data <- data.frame(orig, key)
     ## if there are no labels, return an empty df.
-    if(!".label"%in%names(data)) return(data.frame()); 
+    if(!".label"%in%names(data)) return(data.frame());
     ## remove cols that are entirely na
-    results[[length(results)+1]] <- data[,which(colSums(!is.na(data))>0)] 
+    results[[length(results)+1]] <- data[,which(colSums(!is.na(data))>0)]
   }
   results <- results[which(sapply(results, nrow)>0)]
   df <- merge_recurse(results)
@@ -262,7 +297,7 @@ merge_recurse <- function (dfs, ...) {
     merge(dfs[[1]], dfs[[2]], all.x = TRUE, sort = FALSE, ...)
   }
   else {
-    merge(dfs[[1]], Recall(dfs[-1]), all.x = TRUE, sort = FALSE, 
+    merge(dfs[[1]], Recall(dfs[-1]), all.x = TRUE, sort = FALSE,
           ...)
   }
 }
